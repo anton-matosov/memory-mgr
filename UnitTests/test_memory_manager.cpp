@@ -15,16 +15,18 @@ typedef memmgr_t::ptr_t ptr_t;
 
 class TestClass
 {
+	int m_i;
 public:
 
 	TestClass()
+		:m_i(0)
 	{}
 	~TestClass()
 	{}
 
 	static void* operator new( size_t size )
 	{
-		return mgr.allocate( size ).get();
+		return mgr.allocate( size ).get_ptr(mgr);
 	}
 
 	static void* operator new(  size_t, void* p )
@@ -39,7 +41,7 @@ public:
 
 	static void operator delete( void* p, size_t size )
 	{
-		mgr.deallocate( memmgr_t::ptr_t(p), size );
+		mgr.deallocate( memmgr_t::ptr_t( mgr, p ), size );
 	}
 };
 

@@ -16,6 +16,11 @@ namespace managers
 			return static_cast< const char* >( p );
 		}
 
+		static inline char* unconst_char( const char* p )
+		{
+			return const_cast< char* >( p );
+		}
+
 		static inline ptrdiff_t diff( const void* p1, const void* p2 )
 		{
 			return char_cast(p1) - char_cast(p2);
@@ -26,10 +31,10 @@ namespace managers
 			return char_cast(p) + offset;
 		}
 
-// 		static inline const char* shift( const void* p, const size_t offset )
-// 		{
-// 			return char_cast(p) + offset;
-// 		}
+ 		static inline const char* shift( const void* p, const size_t offset )
+ 		{
+ 			return char_cast(p) + offset;
+ 		}
 	}
 
 	
@@ -63,25 +68,32 @@ namespace managers
 			size_type m_offset;
 			friend mgr_t;
 
-			const size_type get_offset() const
+			const char* do_get_ptr( const memory_manager& mgr ) const
 			{
-				return m_offset;
+				return detail::shift( mgr.get_base(), m_offset );
 			}
 		public:
 			explicit ptr_t( const size_type offset )
 				:m_offset( offset )
 			{}
 
-			explicit ptr_t( const void* ptr )
-				//TODO: Retrieve real memory base address here
-				:m_offset( detail::diff( 0, ptr ) )
+			explicit ptr_t( const memory_manager& mgr, const void* ptr )			
+				:m_offset( detail::diff( ptr, mgr.get_base() ) )
 			{}
 			
-			void* get() const
+			const size_type get_off() const
 			{
-				//TODO: Retrieve real memory base address here
-				//and use it in shift call
-				return detail::shift( 0, m_offset );
+				return m_offset;
+			}
+
+			void* get_ptr( const memory_manager& mgr )
+			{
+				return detail::unconst_char( do_get_ptr( mgr ) );
+			}
+
+			const void* get_ptr( const memory_manager& mgr ) const
+			{
+				return do_get_ptr( mgr );
 			}
 		};
 
@@ -98,9 +110,13 @@ namespace managers
 
  		void deallocate( const ptr_t off, size_type size )
  		{
- 			m_bitmgr.deallocate( chunk_index( off.get_offset() ), chunks_required( size ) );
+ 			m_bitmgr.deallocate( chunk_index( off.get_off() ), chunks_required( size ) );
  		}
 
+		const char* get_base() const
+		{
+			return m_membase;
+		}
 	private:
 		static inline size_type chunk_index( size_type size )
 		{ return size / chunk_size; }
@@ -127,7 +143,7 @@ namespace managers
 
 		size_type* size_cast( ptr_t p ) const
 		{
-			return static_cast< size_type* >( p.get() );
+			return static_cast< size_type* >( p.get_ptr(m_memmgr) );
 		}
 
 		memmgr_t m_memmgr;
@@ -147,14 +163,14 @@ namespace managers
 			ptr_t ptr = m_memmgr.allocate( size );
 			size_type* psize = size_cast( ptr );
 			*psize = size;
-			return ptr_t( ++psize );
+			return ptr_t( m_memmgr, ++psize );
 		}
 
 		void deallocate( ptr_t ptr )
 		{
 			size_type *ps = size_cast( ptr );
 			--ps;
-			m_memmgr.deallocate( ptr_t( ps ), *ps );
+			m_memmgr.deallocate( ptr_t( m_memmgr, ps ), *ps );
 		}
 	};
 }
