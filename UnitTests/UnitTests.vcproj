@@ -197,6 +197,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\test_bit_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_case.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_memory_manager.cpp"
 				>
 			</File>
@@ -216,6 +224,10 @@
 			>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\test_case.h"
 				>
 			</File>
 		</Filter>

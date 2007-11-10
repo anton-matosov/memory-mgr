@@ -1,8 +1,9 @@
 #pragma once
 
 #include <limits>
+#include <ostream>
 #include <assert.h>
-#include <boost/static_assert.hpp>
+#include "../static_assert.h"
 #include "Helpers.h"
 
 namespace managers
@@ -10,24 +11,30 @@ namespace managers
 	enum arrayType{ StaticArray, DynamicArray, CustomArray };
 	namespace detail
 	{
+		//Structure used to calculate number of blocks
+		//required to store requested number of bits
 		template<size_t BitsCount, size_t BitsPerBlock>
 		struct calc_num_blocks
 		{
 			enum {result = (BitsCount / BitsPerBlock) + (BitsCount % BitsPerBlock ? 1 : 0)};
 		};
 
+		//Structure used to calculate bit index
+		//in block
 		template< size_t Pos, size_t BitsPerBlock >
 		struct bit_index
 		{
 			enum{ result = Pos % BitsPerBlock };
 		};
 
+		//Structure used to calculate number of extra bits in block
 		template<size_t BitsCount, size_t BitsPerBlock>
 		struct extra_bits
 		{
 			enum { result = bit_index< BitsCount, BitsPerBlock >::result };
 		};
 
+		//Set strategy
 		struct set_op 
 		{
 			template<class T>
@@ -37,6 +44,7 @@ namespace managers
 			}
 		};
 
+		//Reset strategy
 		struct reset_op 
 		{
 			template<class T>
@@ -46,15 +54,15 @@ namespace managers
 			}
 		};
 
-
+		//Helper structure used for functions overriding
+		//based on integer values
 		template<int i>
 		struct int2type
 		{
 			enum{ value = i };
 		};
 
-		
-
+		//Type traits for all array types
 		template< class BlockType, int BitsCount >
 		struct ArrayTraits
 		{
@@ -74,19 +82,19 @@ namespace managers
 			};
 		};
 
-		template< class BlockType, int BitsCount, arrayType Type >
-		struct Array
-		{};
+		//Basic array structure for array specializations 
+		template< class BlockType, size_t BitsCount, arrayType Type >
+		struct Array{};
 
-		//Static array
-		template< class BlockType, int BitsCount >
+		//Array specializations for static array
+		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, StaticArray> : public ArrayTraits<BlockType, BitsCount>
 		{			
 			block_type m_bits[num_blocks];
 		};
 
-		//Dynamic array
-		template< class BlockType, int BitsCount >
+		//Array specializations for dynamic array
+		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, DynamicArray> : public ArrayTraits<BlockType, BitsCount>
 		{			
 			Array()
@@ -99,8 +107,8 @@ namespace managers
 			block_type* m_bits;
 		};
 
-		//Custom array
-		template< class BlockType, int BitsCount >
+		//Array specializations for custom array
+		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, CustomArray> : public ArrayTraits<BlockType, BitsCount>
 		{		
 			Array( block_ptr_type arr_ptr )
@@ -111,10 +119,10 @@ namespace managers
 		};
 	}
 
-	template< class BlockType, int BitsCount, arrayType StaticArr = StaticArray >
+	template< class BlockType, size_t BitsCount, arrayType StaticArr = StaticArray >
 	class static_bitset: public detail::Array< BlockType, BitsCount, StaticArr >
-	{
-		BOOST_STATIC_ASSERT( BitsCount != 0 );
+	{		
+		STATIC_ASSERT( BitsCount != 0, Bitset_cant_be_empty );
 
 		static_bitset( const static_bitset& );
 		static_bitset& operator=( const static_bitset& );
@@ -137,10 +145,14 @@ namespace managers
 
 		const static size_type npos = ~size_type(0);
 	
+		//Default constructor
+		//Resets all bits
 		static_bitset()
 		{ reset(); }
 
-		static_bitset( block_ptr_type bits_ptr )
+		//Constructor used only by custom arrays to initialize
+		//array's pointer
+		explicit static_bitset( block_ptr_type bits_ptr )
 			:base_t(bits_ptr)
 		{ reset(); }
 
@@ -148,12 +160,36 @@ namespace managers
 		{}
 
 		size_type size() const
-		{return num_bits;}
+		{ return num_bits; }
 
-		bool test(size_type pos) const
+		bool test( size_type pos ) const
 		{
 			assert(pos < num_bits);
 			return unchecked_test(pos);
+		}
+
+		bool test( size_type pos, size_type count ) const
+		{
+			assert(pos < num_bits);
+			assert(count > 0);
+
+			size_type blk = block_index( pos );
+			size_type ind = pos;
+			ptrdiff_t left = count;
+			while( left > 0 )
+			{
+				if ( contains_bits(blk, ind, left) )
+				{
+					++blk;
+					left -= bits_per_block - ind;
+					ind = 0;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 		
 		self_ref_t set()
@@ -176,31 +212,6 @@ namespace managers
 		{			
 			return do_set<detail::set_op>( pos, count );
 		}
-
-		template< class set_op >
-		self_ref_t do_set( size_type pos, size_type count )
-		{
-			assert(pos < num_bits);
-			count = (count != npos ? count : num_bits - pos); 
-
-			assert( (pos + count) < num_bits );
-
-			size_type block_ind = block_index(pos);
-			const size_type block_end	= block_index(pos + count);
-			const size_type last_index = bit_index(pos + count);
-
-			
-			size_type bits_fill_count = count;
-			do
-			{
-				set_op::update(m_bits[block_ind++], bit_mask(pos, bits_fill_count) );
-				pos = 0;
-				bits_fill_count = (block_ind != block_end) ? bits_per_block : last_index;
-			}
-			while (block_ind <= block_end);
-			
-			return *this;
-		};
 
 		self_ref_t reset(size_type pos)
 		{
@@ -238,6 +249,10 @@ namespace managers
 
 		size_type find_n( size_type count,  size_type first_block = 0 )
 		{
+			if( count == 0 )
+			{
+				return npos;
+			}
 			size_type lowest_bit = do_find_from(first_block);
 
 			size_type blk = first_block;
@@ -278,25 +293,25 @@ namespace managers
 		}
 		
 	private:
-		size_type block_index(size_type pos) const
+		static inline size_type block_index(size_type pos) 
 		{ return pos / bits_per_block; }
 		
-		block_width_type bit_index(size_type pos) const
+		static inline block_width_type bit_index(size_type pos) 
 		{ return pos % bits_per_block; }
 
-		block_type bit_mask(size_type pos) const
+		static inline block_type bit_mask(size_type pos) 
 		{ return static_cast<block_type>( block_type(1) << bit_index(pos) ); }
 		
-		block_type bit_mask(size_type pos, size_type count) const
+		static inline block_type bit_mask(size_type pos, size_type count) 
 		{ return block_type( ((block_type(1) << count ) - 1) << bit_index(pos) ); }
 
-		block_type higher_bit_mask(size_type pos) const
+		static inline block_type higher_bit_mask(size_type pos) 
 		{ return block_type( ~block_type(0) << bit_index(pos) ); }
 
-		block_type lower_bit_mask(size_type pos) const
+		static inline block_type lower_bit_mask(size_type pos) 
 		{ return ~higher_bit_mask(pos); }
 
-		size_type blocks_count( size_type bits_count ) const
+		static inline size_type blocks_count( size_type bits_count ) 
 		{ return block_index( bits_count ); }
 
 		bool unchecked_test(size_type pos) const
@@ -337,7 +352,7 @@ namespace managers
 				do_find_from( ++blk_ind );
 		}
 
-		bool contains_bits( size_type block, size_type first, size_type count )
+		bool contains_bits( size_type block, size_type first, size_type count ) const
 		{
 			const block_type mask = bit_mask( first, count );
 			return (m_bits[block] &  mask) == mask;
@@ -351,7 +366,7 @@ namespace managers
 		}
 
 		template<>
-		void do_zero_unused_bits< detail::int2type<0> >()
+		void do_zero_unused_bits< detail::int2type<0> >() 
 		{}
 
 		// If size() is not a multiple of bits_per_block
@@ -378,6 +393,31 @@ namespace managers
 		{
 			return m_bits[num_blocks - 1];
 		}
+
+		template< class set_op >
+		self_ref_t do_set( size_type pos, size_type count )
+		{
+			assert(pos < num_bits);
+			count = (count != npos ? count : num_bits - pos); 
+
+			assert( (pos + count) < num_bits );
+
+			size_type block_ind = block_index(pos);
+			const size_type block_end	= block_index(pos + count);
+			const size_type last_index = bit_index(pos + count);
+
+
+			size_type bits_fill_count = count;
+			do
+			{
+				set_op::update(m_bits[block_ind++], bit_mask(pos, bits_fill_count) );
+				pos = 0;
+				bits_fill_count = (block_ind != block_end) ? bits_per_block : last_index;
+			}
+			while (block_ind <= block_end);
+
+			return *this;
+		};
 	};
 
 	template< class BlockType, int BitsCount, arrayType Type >

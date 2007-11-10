@@ -179,11 +179,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\PerfTimer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\static_bitset.cpp"
+				RelativePath="..\perf_timer.cpp"
 				>
 			</File>
 			<File
@@ -225,7 +221,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\PerfTimer.h"
+				RelativePath="..\perf_timer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\static_assert.h"
 				>
 			</File>
 			<File

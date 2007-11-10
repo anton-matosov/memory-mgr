@@ -37,10 +37,12 @@ namespace managers
  		}
 	}
 
-	
-
 	//Memory manager
-	//TODO: Make memory manager a singleton
+	//Encapsulates work with memory
+	//Template parameters:
+	//BlockType	 - integral type, it will be used in static_bitset
+	//MemorySize - memory maximum which manager can allocate
+	//ChunkSize  - size of minimum block in bytes, which manager can allocate
 	template< class BlockType, size_t MemorySize, size_t ChunkSize >
 	class memory_manager
 	{
@@ -50,17 +52,17 @@ namespace managers
 			memory_size = MemorySize,
 			num_chunks = memory_size / chunk_size			
 		};
-		typedef bit_manager<BlockType, num_chunks> bitmgr_t;
+		typedef bit_manager<BlockType, num_chunks, mcNone> bitmgr_t;
 		bitmgr_t m_bitmgr;
 
 		char* m_membase;
-
 	public:
 
 		typedef typename bitmgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename bitmgr_t::size_type			size_type;
 		typedef memory_manager<BlockType, MemorySize, ChunkSize> self_type;
-		//Offset class
+		
+		//Offset pointer class
 		class ptr_t
 		{
 			typedef self_type mgr_t;
@@ -103,30 +105,39 @@ namespace managers
 			m_membase = detail::shift( mem_base, bitmgr_t::memory_usage );
 		}
 
+		//Call this method to allocate memory block
+		//size - block size in bytes
 		ptr_t allocate( size_type size )
 		{
 			return ptr_t( m_bitmgr.allocate( chunks_required( size ) ) * chunk_size );
 		}
 
+		//Call this method to deallocate memory block
+		//size - block size in bytes
  		void deallocate( const ptr_t off, size_type size )
  		{
  			m_bitmgr.deallocate( chunk_index( off.get_off() ), chunks_required( size ) );
  		}
 
+		//Returns base address
 		const char* get_base() const
 		{
 			return m_membase;
 		}
 	private:
-		static inline size_type chunk_index( size_type size )
-		{ return size / chunk_size; }
+		//Returns chunk index by offset
+		static inline size_type chunk_index( size_type offset )
+		{ return offset / chunk_size; }
 
+		//Returns chunks count by bytes count
 		static inline size_type chunks_count( size_type size )
 		{ return chunk_index( size ); }
 
+		//Returns number of extra bytes
 		static inline size_type extra_bytes( size_type size )
 		{ return size % chunk_size; }
 
+		//Returns number of chunks required to store requested bytes number
 		static inline size_type chunks_required( size_type size )
 		{
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);

@@ -4,10 +4,11 @@
 
 namespace managers
 {
-	template< class BlockType, int BitsCount >
+	enum bitMgrMemCtrl{ mcAuto = StaticArray, mcNone = CustomArray };
+	template< class BlockType, int BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 	class bit_manager
 	{
-		typedef static_bitset< BlockType, BitsCount, CustomArray > bitset_t;
+		typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;
 		bitset_t m_bitset;
 	public:
 		typedef typename bitset_t::block_type			block_type;
@@ -19,6 +20,11 @@ namespace managers
 		};
 
 		const static size_type npos = bitset_t::npos;
+
+		bit_manager()			
+		{
+			m_bitset.set();
+		}
 
 		bit_manager( block_ptr_type ptr )
 			:m_bitset( ptr )
@@ -52,8 +58,8 @@ namespace managers
 		}
 	};
 
-	template< class BlockType, int BitsCount >
-	std::ostream& operator<<( std::ostream& ostr, const bit_manager<BlockType, BitsCount>& b )
+	template< class BlockType, int BitsCount, bitMgrMemCtrl memoryCtrl >
+	std::ostream& operator<<( std::ostream& ostr, const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
 	{
 		return b.print( ostr );
 	}
