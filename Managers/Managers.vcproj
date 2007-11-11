@@ -172,11 +172,31 @@
 				>
 			</File>
 			<File
+				RelativePath="..\critical_section.h"
+				>
+			</File>
+			<File
+				RelativePath=".\heap_memory_manager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\helpers.h"
 				>
 			</File>
 			<File
+				RelativePath="..\locks.h"
+				>
+			</File>
+			<File
 				RelativePath=".\memory_manager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\scoped_ptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\singleton.h"
 				>
 			</File>
 			<File

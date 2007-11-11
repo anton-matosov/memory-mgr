@@ -70,29 +70,35 @@ namespace managers
 			size_type m_offset;
 			friend mgr_t;
 
+		protected:
 			const char* do_get_ptr( const memory_manager& mgr ) const
 			{
 				return detail::shift( mgr.get_base(), m_offset );
 			}
 		public:
+			//Construct pointer from offset
 			explicit ptr_t( const size_type offset )
 				:m_offset( offset )
 			{}
 
+			//Construct pointer from memory address
 			explicit ptr_t( const memory_manager& mgr, const void* ptr )			
 				:m_offset( detail::diff( ptr, mgr.get_base() ) )
 			{}
 			
+			//Call this method to get offset
 			const size_type get_off() const
 			{
 				return m_offset;
 			}
 
+			//Call this method to get real memory address
 			void* get_ptr( const memory_manager& mgr )
 			{
 				return detail::unconst_char( do_get_ptr( mgr ) );
 			}
 
+			//Call this method to get real memory address
 			const void* get_ptr( const memory_manager& mgr ) const
 			{
 				return do_get_ptr( mgr );
