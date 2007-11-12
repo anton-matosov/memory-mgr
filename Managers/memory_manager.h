@@ -110,12 +110,25 @@ namespace managers
 		{
 			m_membase = detail::shift( mem_base, bitmgr_t::memory_usage );
 		}
-
+		
 		//Call this method to allocate memory block
 		//size - block size in bytes
 		ptr_t allocate( size_type size )
 		{
-			return ptr_t( m_bitmgr.allocate( chunks_required( size ) ) * chunk_size );
+			size_type chunk_ind = do_allocate( size );
+			if( chunk_ind == bitmgr_t::npos )
+			{
+				throw std::bad_alloc();
+			}
+			return ptr_t( calc_offset( chunk_ind ) );
+		}
+
+
+		//Call this method to allocate memory block
+		//size - block size in bytes
+		ptr_t allocate( size_type size, const std::nothrow_t& )/*throw()*/
+		{
+			return ptr_t( calc_offset( do_allocate( size ) ) );
 		}
 
 		//Call this method to deallocate memory block
@@ -131,6 +144,10 @@ namespace managers
 			return m_membase;
 		}
 	private:
+		//Returns offset by chunk index
+		static inline size_type calc_offset( size_type chunk_ind )
+		{ return chunk_ind * chunk_size; }
+
 		//Returns chunk index by offset
 		static inline size_type chunk_index( size_type offset )
 		{ return offset / chunk_size; }
@@ -148,6 +165,15 @@ namespace managers
 		{
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
+
+
+		//Call this method to allocate memory block
+		//size - block size in bytes
+		//returns chunk index
+		inline size_type do_allocate( size_type size )
+		{			
+			return m_bitmgr.allocate( chunks_required( size ) );
+		}
 	};
 
 	//Size tracking decorator for memory manager

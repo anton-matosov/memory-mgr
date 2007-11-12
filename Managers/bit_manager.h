@@ -49,6 +49,7 @@ namespace managers
 
 		void deallocate( size_type pos, size_type bits_count )
 		{
+			assert( ( m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
 			m_bitset.set( pos, bits_count );
 		}
 

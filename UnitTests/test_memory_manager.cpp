@@ -52,15 +52,21 @@ bool test_memory_manager()
 	TestClass* t = new TestClass();
 
 	t->set( 100 );
+
+ 	for( int i = 0; i < 1000; ++i )
+ 	{
+ 		track_mgr.allocate( 128 );
+ 	}
 // 
 // 
-//  	ptr_t p1 = track_mgr.allocate( 4 );
+ 	ptr_t p1 = track_mgr.allocate( 4 );
 //  	ptr_t p2 = track_mgr.allocate( 4 );
 //  	ptr_t p3 = track_mgr.allocate( 4 );
 //  	ptr_t p4 = track_mgr.allocate( 4 );
 //  
 //  	track_mgr.deallocate( p3 );
-//  	track_mgr.deallocate( p1 );
+	track_mgr.deallocate( p1 );
+  	track_mgr.deallocate( p1 );
 //  	track_mgr.deallocate( p4 );
 //  
   	delete t;

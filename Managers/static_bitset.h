@@ -174,7 +174,7 @@ namespace managers
 			assert(count > 0);
 
 			size_type blk = block_index( pos );
-			size_type ind = pos;
+			size_type ind = bit_index( pos );
 			ptrdiff_t left = count;
 			while( left > 0 )
 			{

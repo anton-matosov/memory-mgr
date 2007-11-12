@@ -16,9 +16,6 @@ namespace managers
 				
 		scoped_ptr<char, ::detail::array_deleter> m_memory;
 		scoped_ptr<mgr_t> m_mgr;
-
-		
-
 	public:	
 		typedef typename mgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename mgr_t::size_type			size_type;
@@ -38,6 +35,8 @@ namespace managers
 			return *m_mgr;
 		}
 
+		//Call this method to allocate memory block
+		//size - block size in bytes
  		ptr_t allocate( size_type size )
  		{
  			return m_mgr->allocate( size );

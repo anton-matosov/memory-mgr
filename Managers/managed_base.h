@@ -11,24 +11,17 @@ namespace managers
 
 		typedef MemMgr mem_mgr;
 	public:	
-		static void* operator new( size_t size )
+		static void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
-			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );
+			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
 		}
 
-		static void* operator new( size_t size, const std::nothrow_t& )
+		static void* operator new( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
-			try
-			{
-				return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );
-			}
-			catch (...)
-			{
-				return 0;	
-			}		
+			return mem_mgr::instance().allocate( size, nothrow ).get_ptr( mem_mgr::instance() );			
 		}
 
-		static void* operator new(  size_t, void* p )
+		static void* operator new(  size_t, void* p ) /*throw()*/
 		{
 			return p;
 		}
