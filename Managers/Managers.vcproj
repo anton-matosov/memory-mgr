@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\managed_base.h"
+				>
+			</File>
+			<File
 				RelativePath=".\memory_manager.h"
 				>
 			</File>

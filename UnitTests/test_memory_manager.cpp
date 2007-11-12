@@ -2,6 +2,8 @@
 #include <vector>
 #include "test_case.h"
 #include "memory_manager.h"
+#include "heap_memory_manager.h"
+#include "managed_base.h"
 
 typedef unsigned char chunk_t;
 static const size_t chunk_size = 4;
@@ -14,25 +16,7 @@ template class managers::size_tracking< memmgr_t >;
 typedef memmgr_t::ptr_t ptr_t;
 
 
-#include "heap_memory_manager.h"
-class CC{
-
-public:
-	CC()
-	{
-
-	}
-
-	~CC()
-	{
-
-	}
-};
-typedef managers::singleton<CC> ccsing;
-template class managers::singleton<int>;
-
-template< class mem_mgr = managers::def_heap_mgr >
-class TestClass
+class TestClass: public managers::managed_base< managers::def_heap_mgr >
 {
 	int m_i;
 public:
@@ -40,6 +24,7 @@ public:
 	TestClass()
 		:m_i(0)
 	{}
+	
 	~TestClass()
 	{
 		m_i = 0;
@@ -49,28 +34,12 @@ public:
 	{
 		m_i = i;
 	}
-	static void* operator new( size_t size )
-	{
-		return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );
-	}
 
-	static void* operator new(  size_t, void* p )
+	int get()
 	{
-		return p;
-	}
-
-	// 	static void operator delete( void* p )
-	// 	{
-	// 		mgr.deallocate( p );
-	// 	}
-
-	static void operator delete( void* p, size_t size )
-	{
-		mem_mgr::instance().deallocate( mem_mgr::ptr_t( mem_mgr::instance(), p ), size );
+		return m_i;
 	}
 };
-
-
 
 bool test_memory_manager()
 {
@@ -80,9 +49,7 @@ bool test_memory_manager()
 	managers::size_tracking< memmgr_t > track_mgr( &*memory.begin() );
 
 
-	ccsing::instance();
-
-	TestClass<>* t = new TestClass<>();
+	TestClass* t = new TestClass();
 
 	t->set( 100 );
 // 
