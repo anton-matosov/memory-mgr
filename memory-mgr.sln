@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Managers", "Managers\Managers.vcproj", "{317AB518-3AB8-4F87-9977-E413EDA3F859}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerfTests", "PerfTests\PerfTests.vcproj", "{58975002-C388-401F-B159-301B5DF09350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Debug|Win32.Build.0 = Debug|Win32
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.ActiveCfg = Release|Win32
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.Build.0 = Release|Win32
+		{58975002-C388-401F-B159-301B5DF09350}.Debug|Win32.ActiveCfg = Debug|Win32
+		{58975002-C388-401F-B159-301B5DF09350}.Debug|Win32.Build.0 = Debug|Win32
+		{58975002-C388-401F-B159-301B5DF09350}.Release|Win32.ActiveCfg = Release|Win32
+		{58975002-C388-401F-B159-301B5DF09350}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

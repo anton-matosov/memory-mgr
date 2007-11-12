@@ -1,7 +1,7 @@
 // CPerfTimer - a simple Win32 performance counter wrapper
 // by Dean Wyant dwyant@mindspring.com
 
-#include "stdafx.h"
+#include "config/config.h"
 #include "perf_timer.h"
 
 // Declare and initialize static member vars that get set only once and never change

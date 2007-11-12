@@ -3,7 +3,7 @@
 #include <limits>
 #include <ostream>
 #include <assert.h>
-#include "../static_assert.h"
+#include "static_assert.h"
 #include "helpers.h"
 
 namespace managers
@@ -342,7 +342,7 @@ namespace managers
 				return npos; // not found
 			}
 
-			return helpers::lowest_bit(m_bits[first_block]);
+			return detail::helpers::lowest_bit(m_bits[first_block]);
 		}
 
 		size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
@@ -353,7 +353,7 @@ namespace managers
 			}
 			const block_type fore = m_bits[blk_ind] & ( higher_bit_mask(bit_ind) );
 
-			return fore ? helpers::lowest_bit(fore):
+			return fore ? detail::helpers::lowest_bit(fore):
 				do_find_from( ++blk_ind );
 		}
 

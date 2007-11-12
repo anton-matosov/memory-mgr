@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "test_case.h"
-#include "static_bitset.h"
+#include "detail/static_bitset.h"
 
 typedef unsigned char block_type;
 

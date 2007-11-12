@@ -2,7 +2,7 @@
 
 #include "memory_manager.h"
 #include "singleton_manager.h"
-#include "../scoped_ptr.h"
+#include "detail/scoped_ptr.h"
 
 
 namespace managers

@@ -8,8 +8,8 @@ namespace managers
 	template 
 	<
 		class T,
-		class SyncObj = ::sync::critical_section, 
-		template <class> class ThreadingModel = ::sync::class_level_lockable
+		class SyncObj = detail::sync::critical_section, 
+		template <class> class ThreadingModel = detail::sync::class_level_lockable
 	>
 	class  singleton : private ThreadingModel< SyncObj >
 	{

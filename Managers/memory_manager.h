@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bit_manager.h"
+#include "detail/bit_manager.h"
 
 namespace managers
 {
@@ -52,7 +52,7 @@ namespace managers
 			memory_size = MemorySize,
 			num_chunks = memory_size / chunk_size			
 		};
-		typedef bit_manager<BlockType, num_chunks, mcNone> bitmgr_t;
+		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_t;
 		bitmgr_t m_bitmgr;
 
 		char* m_membase;
