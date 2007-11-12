@@ -16,7 +16,8 @@ namespace managers
 		typedef typename bitset_t::size_type			size_type;
 
 		enum {
-			memory_usage = bitset_t::memory_usage
+			memory_usage = bitset_t::memory_usage,
+			num_bits = BitsCount
 		};
 
 		const static size_type npos = bitset_t::npos;
@@ -56,6 +57,16 @@ namespace managers
 		std::ostream& print( std::ostream& ostr ) const
 		{
 			return ostr << m_bitset;
+		}
+
+		bool empty()
+		{
+			return m_bitset.empty();
+		}
+
+		bool free()
+		{
+			return !empty();
 		}
 	};
 

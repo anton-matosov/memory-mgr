@@ -143,6 +143,16 @@ namespace managers
 		{
 			return m_membase;
 		}
+
+		bool empty()
+		{
+			return m_bitmgr.empty();
+		}
+
+		bool free()
+		{
+			return m_bitmgr.free();
+		}
 	private:
 		//Returns offset by chunk index
 		static inline size_type calc_offset( size_type chunk_ind )
@@ -214,6 +224,22 @@ namespace managers
 			size_type *ps = size_cast( ptr );
 			--ps;
 			m_memmgr.deallocate( ptr_t( m_memmgr, ps ), *ps );
+		}
+
+		bool empty()
+		{
+			return m_memmgr.empty();
+		}
+
+		bool free()
+		{
+			return m_memmgr.free();
+		}
+
+		//Returns base address
+		const char* get_base() const
+		{
+			return m_memmgr.get_base();
 		}
 	};
 }

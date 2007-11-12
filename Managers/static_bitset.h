@@ -292,6 +292,11 @@ namespace managers
 			return blk_index * bits_per_block + do_find_next( bit_index(pos), blk_index );
 		}
 		
+		bool empty()
+		{
+			return find_first_block(0) >= num_blocks;
+		}
+
 	private:
 		static inline size_type block_index(size_type pos) 
 		{ return pos / bits_per_block; }

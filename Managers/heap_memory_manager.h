@@ -54,6 +54,16 @@ namespace managers
   		{
   			return m_mgr->get_base();
   		}
+
+		bool empty()
+		{
+			return m_mgr->empty();
+		}
+
+		bool free()
+		{
+			return m_mgr->free();
+		}
 	};
 
 	typedef singleton_manager< heap_memory_manager<size_t, 1024 * 1024, 4> > def_heap_mgr;
