@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\singleton_manager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\static_assert.h"
 				>
 			</File>
