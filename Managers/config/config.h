@@ -27,13 +27,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#	define MGR_WINDOWS_PLATFORM
-#	define MGR_PLATFORM_INCLUDE "../config/platform/win32.h"
+#if defined(linux) || defined(__linux) || defined(__linux__)
+// linux:
+#  define MGR_PLATFORM_CONFIG "../config/platform/linux.h"
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#	define MGR_PLATFORM_CONFIG "../config/platform/win32.h"
 #else 
 #	error "Unsupported platform. In future all the platforms will be supported."
 #endif
 
-#include MGR_PLATFORM_INCLUDE
+#include MGR_PLATFORM_CONFIG
 
 #endif// MGR_CONFIG_HEADER

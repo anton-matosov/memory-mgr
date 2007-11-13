@@ -20,42 +20,44 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_WIN32_HEADER
-#define MGR_WIN32_HEADER
+#ifndef MGR_LINUX_HEADER
+#define MGR_LINUX_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#define MGR_LINUX_PLATFORM
 
-#define MGR_WINDOWS_PLATFORM
-#include <windows.h>
+#include <pthread.h>
 
 namespace managers
 {
 	namespace osapi
 	{
-		typedef CRITICAL_SECTION critical_section;
+		typedef pthread_mutex_t critical_section;
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
-			return InitializeCriticalSection( cs );
+			pthread_mutexattr_t mutexattr;   // Mutex attribute variable
+			// Set the mutex as a recursive mutex
+			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
+			pthread_mutex_init( cs, &mutexattr );
+			//After initializing the mutex, the thread attribute can be destroyed
+			pthread_mutexattr_destroy(&mutexattr);
 		}
 
 		static inline void delete_critical_section( critical_section* cs )
 		{
-			return DeleteCriticalSection( cs );
+			pthread_mutex_destroy( cs );
 		}
 
 		static inline void enter_critical_section( critical_section* cs )
 		{
-			return EnterCriticalSection( cs );
+			pthread_mutex_lock( cs );
 		}
 
 		static inline void leave_critical_section( critical_section* cs )
 		{
-			return LeaveCriticalSection( cs );
+			pthread_mutex_unlock( cs );
 		}
 	}
 }
 
-#endif //MGR_WIN32_HEADER
+#endif// MGR_LINUX_HEADER

@@ -225,6 +225,10 @@
 				Name="platform"
 				>
 				<File
+					RelativePath=".\config\platform\linux.h"
+					>
+				</File>
+				<File
 					RelativePath=".\config\platform\win32.h"
 					>
 				</File>

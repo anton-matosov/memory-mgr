@@ -29,8 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "../config/config.h"
 
-#if defined(MGR_WINDOWS_PLATFORM)
-
 namespace managers
 {
 	namespace detail
@@ -40,12 +38,12 @@ namespace managers
 			//-------------------------------------
 			class critical_section{
 			public:
-				critical_section()	{ InitializeCriticalSection	(&m_cs); }
-				~critical_section()	{ DeleteCriticalSection		(&m_cs); }
-				void Enter() const	{ EnterCriticalSection		(&m_cs); }
-				void Leave() const	{ LeaveCriticalSection		(&m_cs); }
+				critical_section()	{ osapi::initialize_critical_section	(&m_cs); }
+				~critical_section()	{ osapi::delete_critical_section		(&m_cs); }
+				void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
+				void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
 			private:
-				mutable CRITICAL_SECTION m_cs;
+				mutable osapi::critical_section m_cs;
 
 				critical_section(const critical_section &);
 				critical_section & operator=(const critical_section &);
@@ -56,6 +54,6 @@ namespace managers
 	}//detail
 
 }//managers
-#endif
+
 
 #endif// MGR_CRITICAL_SECTION_HEADER
