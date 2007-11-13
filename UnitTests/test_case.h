@@ -1,4 +1,31 @@
-#pragma once
+/* 
+Generic Memory Manager (memory-mgr)
+Copyright (c) 2007 Anton Matosov
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3, 29 June 2007 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http://fsf.org/>
+
+
+Please feel free to contact me via e-mail: shikin@users.sourceforge.net
+*/
+
+#ifndef MGR_TEST_CASE_HEADER
+#define MGR_TEST_CASE_HEADER
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
 
 class test_case
 {
@@ -31,3 +58,5 @@ public:
 #define TEST_CHECH_MSG( expr, msg ) if (!(expr)){__Test__Case__Entry__.failed(msg); return false;} else {std::wcout << L"Succeeded\n";}
 #define TEST_PRINT( msg ) std::wcout << (msg) << L"\n";
 #define TEST_METHOD_PRINT( method_name ) std::wcout << L"Testing " << (method_name) << L" method...\n";
+
+#endif MGR_TEST_CASE_HEADER
