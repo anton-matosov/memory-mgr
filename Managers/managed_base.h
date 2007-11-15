@@ -55,7 +55,7 @@ namespace managers
 
 		static void operator delete( void* p, size_t size )
 		{
-			mem_mgr::instance().deallocate( mem_mgr::ptr_t( mem_mgr::instance(), p ), size );
+			mem_mgr::instance().deallocate( p, size );
 		}
 	};
 }

@@ -30,6 +30,46 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/singleton.h"
 namespace managers
 {
+// 	template< class MgrT >
+// 	class singleton_ptr_t: public detail::off_ptr_t< MgrT >
+// 	{		
+// 		typedef MgrT mgr_t;
+// 	public:			
+// 		typedef typename detail::off_ptr_t< mgr_t >	base_t;
+// 		typedef typename base_t::size_type			size_type;
+// 
+// 		singleton_ptr_t( const base_t& ptr )
+// 			:base_t( ptr.get_off() )
+// 		{}
+// 
+// 		//Construct pointer from offset
+// 		explicit singleton_ptr_t( const size_type offset )
+// 			:base_t( offset )
+// 		{}
+// 
+// 		//Construct pointer from memory address
+// 		singleton_ptr_t( const mgr_t& mgr, const void* ptr )			
+// 			:base_t( mgr, ptr )
+// 		{}
+// 
+// 		void* get_ptr()
+// 		{
+// 			return base_t::get_ptr( mgr_t::instance() );
+// 		}
+// 
+// 		const void* get_ptr() const
+// 		{
+// 			return base_t::get_ptr( mgr_t::instance() );
+// 		}
+// 
+// 		//Call this method to get real memory address
+// 		const void* get_ptr( const mgr_t& mgr ) const
+// 		{
+// 			return base_t::get_ptr( mgr );
+// 		}
+// 	};
+	
+
 	template 
 	<
 		class Mgr,
@@ -42,8 +82,10 @@ namespace managers
 		typedef Mgr									mgr_t;
 		typedef typename mgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename mgr_t::size_type			size_type;
-
+		typedef singleton_manager<mgr_t, SyncObj, ThreadingModel> self_type;
 		typedef typename mgr_t::ptr_t				ptr_t;
+		//typedef singleton_ptr_t<self_type>				ptr_t;
+		
 	};
 }
 

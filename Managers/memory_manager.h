@@ -64,6 +64,50 @@ namespace managers
  		{
  			return char_cast(p) + offset;
  		}
+
+		//Offset pointer class
+		template< class Mgr >
+		class off_ptr_t
+		{
+		protected:
+			typedef Mgr mgr_t;
+
+			const char* do_get_ptr( const mgr_t& mgr ) const
+			{
+				return detail::shift( mgr.get_base(), m_offset );
+			}
+		public:
+			typedef typename mgr_t::size_type size_type;
+			//Construct pointer from offset
+			explicit off_ptr_t( const size_type offset )
+				:m_offset( offset )
+			{}
+
+			//Construct pointer from memory address
+			off_ptr_t( const mgr_t& mgr, const void* ptr )			
+				:m_offset( detail::diff( ptr, mgr.get_base() ) )
+			{}
+
+			//Call this method to get offset
+			const size_type get_off() const
+			{
+				return m_offset;
+			}
+
+			//Call this method to get real memory address
+			void* get_ptr( const mgr_t& mgr )
+			{
+				return detail::unconst_char( do_get_ptr( mgr ) );
+			}
+
+			//Call this method to get real memory address
+			const void* get_ptr( const mgr_t& mgr ) const
+			{
+				return do_get_ptr( mgr );
+			}
+		private:
+			size_type m_offset;	
+		};
 	}
 
 	//Memory manager
@@ -72,7 +116,13 @@ namespace managers
 	//BlockType	 - integral type, it will be used in static_bitset
 	//MemorySize - memory maximum which manager can allocate
 	//ChunkSize  - size of minimum block in bytes, which manager can allocate
-	template< class BlockType, size_t MemorySize, size_t ChunkSize, class SyncObj = detail::sync::critical_section >
+	template
+	<
+		class BlockType, 
+		size_t MemorySize,
+		size_t ChunkSize, 
+		template <class> class PtrT = detail::off_ptr_t,
+		class SyncObj = detail::sync::critical_section >
 	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
 	{
 	public:
@@ -95,48 +145,8 @@ namespace managers
 		typedef memory_manager<BlockType, MemorySize, ChunkSize>	self_type;
 		typedef SyncObj												sync_object;
 
-		//Offset pointer class
-		class ptr_t
-		{
-			typedef self_type mgr_t;
-
-			size_type m_offset;
-			friend mgr_t;
-
-		protected:
-			const char* do_get_ptr( const memory_manager& mgr ) const
-			{
-				return detail::shift( mgr.get_base(), m_offset );
-			}
-		public:
-			//Construct pointer from offset
-			explicit ptr_t( const size_type offset )
-				:m_offset( offset )
-			{}
-
-			//Construct pointer from memory address
-			explicit ptr_t( const memory_manager& mgr, const void* ptr )			
-				:m_offset( detail::diff( ptr, mgr.get_base() ) )
-			{}
-			
-			//Call this method to get offset
-			const size_type get_off() const
-			{
-				return m_offset;
-			}
-
-			//Call this method to get real memory address
-			void* get_ptr( const memory_manager& mgr )
-			{
-				return detail::unconst_char( do_get_ptr( mgr ) );
-			}
-
-			//Call this method to get real memory address
-			const void* get_ptr( const memory_manager& mgr ) const
-			{
-				return do_get_ptr( mgr );
-			}
-		};
+		typedef PtrT<self_type> ptr_t;
+		
 
 		explicit memory_manager( void* mem_base )
 			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )
@@ -160,18 +170,27 @@ namespace managers
 		//Call this method to allocate memory block
 		//size - block size in bytes
 		ptr_t allocate( size_type size, const std::nothrow_t& )/*throw()*/
-		{
-			lock l(*this);
+		{			
 			return ptr_t( calc_offset( do_allocate( size ) ) );
 		}
 
 		//Call this method to deallocate memory block
+		//off - offset returned by allocate method
 		//size - block size in bytes
  		void deallocate( const ptr_t off, size_type size )
  		{
 			lock l(*this);
  			m_bitmgr.deallocate( chunk_index( off.get_off() ), chunks_required( size ) );
  		}
+
+		//Call this method to deallocate memory block
+		//p - pointer calculated as mgr_base + offset, returned by allocate method
+		//size - block size in bytes
+		void deallocate( const void* p, size_type size )
+		{
+			assert( p > m_membase && "Invalid pointer value" );
+			deallocate( ptr_t( *this, p ), size );
+		}
 
 		//Returns base address
 		const char* get_base() const
@@ -217,6 +236,7 @@ namespace managers
 		//returns chunk index
 		inline size_type do_allocate( size_type size )
 		{			
+			lock l(*this);
 			return m_bitmgr.allocate( chunks_required( size ) );
 		}
 	};
@@ -266,6 +286,14 @@ namespace managers
 			size_type *ps = size_cast( ptr );
 			--ps;
 			m_memmgr.deallocate( ptr_t( m_memmgr, ps ), *ps );
+		}
+
+		//Call this method to deallocate memory block
+		//p - pointer calculated as mgr_base + offset, returned by allocate method
+		void deallocate( const void* p )
+		{
+			assert( p > m_memmgr.get_base() && "Invalid pointer value" );
+			deallocate( ptr_t( m_memmgr, p ) );
 		}
 
 		bool empty()

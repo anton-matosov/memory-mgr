@@ -63,7 +63,12 @@ namespace managers
 		~heap_memory()
 		{}
 
-		operator memmgr_t&()
+ 		operator memmgr_t&()
+ 		{
+ 			return *m_mgr;
+ 		}
+
+		operator const memmgr_t&() const
 		{
 			return *m_mgr;
 		}
@@ -75,12 +80,21 @@ namespace managers
  			return m_mgr->allocate( size );
  		}
  
- 		//Call this method to deallocate memory block
- 		//size - block size in bytes
- 		void deallocate( const ptr_t ptr, size_type size )
+		//Call this method to deallocate memory block
+		//off - offset returned by allocate method
+		//size - block size in bytes
+		void deallocate( const ptr_t ptr, size_type size )
  		{
  			m_mgr->deallocate( ptr, size );
  		}
+
+		//Call this method to deallocate memory block
+		//p - pointer calculated as mgr_base + offset, returned by allocate method
+		//size - block size in bytes
+		void deallocate( const void* p, size_type size )
+		{
+			m_mgr->deallocate( p, size );
+		}
   
   		//Returns base address
   		const char* get_base() const
@@ -99,7 +113,7 @@ namespace managers
 		}
 	};
 
-	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4> > > def_heap_mgr;
+	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4/*, singleton_ptr_t*/> > > def_heap_mgr;
 }
 
 #endif// MGR_HEAP_MEMORY_HEADER
