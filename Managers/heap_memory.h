@@ -35,29 +35,35 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace managers
 {
 
-	template< class BlockType, size_t MemorySize, size_t ChunkSize >	
-	class heap_memory_manager
+	template< class MemMgr >	
+	class heap_memory
 	{
-		typedef memory_manager<BlockType, MemorySize, ChunkSize>		mgr_t;
-		typedef heap_memory_manager<BlockType, MemorySize, ChunkSize>	self_type;
+		typedef MemMgr		memmgr_t;
+		typedef heap_memory<MemMgr>	self_type;
 				
 		scoped_ptr<char, ::detail::array_deleter> m_memory;
-		scoped_ptr<mgr_t> m_mgr;
+		scoped_ptr<memmgr_t> m_mgr;
 	public:	
-		typedef typename mgr_t::block_ptr_type		block_ptr_type;		
-		typedef typename mgr_t::size_type			size_type;
+		enum
+		{
+			chunk_size = memmgr_t::chunk_size,
+			memory_size =  memmgr_t::memory_size,
+			num_chunks =  memmgr_t::num_chunks
+		};
+		typedef typename memmgr_t::block_ptr_type		block_ptr_type;		
+		typedef typename memmgr_t::size_type			size_type;
 
-		typedef typename mgr_t::ptr_t				ptr_t;
+		typedef typename memmgr_t::ptr_t				ptr_t;
 
-		heap_memory_manager()
-			:m_memory( new char[MemorySize] ),
-			m_mgr( new mgr_t( &*m_memory ) )
+		heap_memory()
+			:m_memory( new char[memory_size] ),
+			m_mgr( new memmgr_t( &*m_memory ) )
 		{}
 
-		~heap_memory_manager()
+		~heap_memory()
 		{}
 
-		operator mgr_t&()
+		operator memmgr_t&()
 		{
 			return *m_mgr;
 		}
@@ -93,7 +99,7 @@ namespace managers
 		}
 	};
 
-	typedef singleton_manager< heap_memory_manager<size_t, 1024 * 1024, 4> > def_heap_mgr;
+	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4> > > def_heap_mgr;
 }
 
 #endif// MGR_HEAP_MEMORY_HEADER

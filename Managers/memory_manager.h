@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "detail/bit_manager.h"
+#include "detail/critical_section.h"
+#include "detail/locks.h"
 
 namespace managers
 {
@@ -70,25 +72,29 @@ namespace managers
 	//BlockType	 - integral type, it will be used in static_bitset
 	//MemorySize - memory maximum which manager can allocate
 	//ChunkSize  - size of minimum block in bytes, which manager can allocate
-	template< class BlockType, size_t MemorySize, size_t ChunkSize >
-	class memory_manager
+	template< class BlockType, size_t MemorySize, size_t ChunkSize, class SyncObj = detail::sync::critical_section >
+	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
 	{
+	public:
 		enum
 		{
 			chunk_size = ChunkSize,
 			memory_size = MemorySize,
 			num_chunks = memory_size / chunk_size			
 		};
+
+	private:
 		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_t;
 		bitmgr_t m_bitmgr;
 
 		char* m_membase;
-	public:
 
-		typedef typename bitmgr_t::block_ptr_type		block_ptr_type;		
-		typedef typename bitmgr_t::size_type			size_type;
-		typedef memory_manager<BlockType, MemorySize, ChunkSize> self_type;
-		
+	public:
+		typedef typename bitmgr_t::block_ptr_type					block_ptr_type;		
+		typedef typename bitmgr_t::size_type						size_type;
+		typedef memory_manager<BlockType, MemorySize, ChunkSize>	self_type;
+		typedef SyncObj												sync_object;
+
 		//Offset pointer class
 		class ptr_t
 		{
@@ -155,6 +161,7 @@ namespace managers
 		//size - block size in bytes
 		ptr_t allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{
+			lock l(*this);
 			return ptr_t( calc_offset( do_allocate( size ) ) );
 		}
 
@@ -162,6 +169,7 @@ namespace managers
 		//size - block size in bytes
  		void deallocate( const ptr_t off, size_type size )
  		{
+			lock l(*this);
  			m_bitmgr.deallocate( chunk_index( off.get_off() ), chunks_required( size ) );
  		}
 
@@ -228,6 +236,13 @@ namespace managers
 
 		memmgr_t m_memmgr;
 	public:
+		enum
+		{
+			chunk_size = memmgr_t::chunk_size,
+			memory_size =  memmgr_t::memory_size,
+			num_chunks =  memmgr_t::num_chunks
+		};
+
 		typedef typename memmgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename memmgr_t::size_type			size_type;
 		typedef typename memmgr_t::ptr_t				ptr_t;

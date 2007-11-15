@@ -34,45 +34,68 @@ namespace managers
 		namespace sync
 		{
 			//-------------------------------------
+			// Locks do nothing
+			template<class SyncObjT>
+			class pseudo_lockable
+			{  
+			public:
+				pseudo_lockable()
+				{}
+
+				class lock
+				{
+				public:
+					lock() 
+					{};
+
+					lock( const pseudo_lockable &c ) 
+					{};
+					~lock()
+					{};
+
+				private:
+					lock(const lock &c);
+					lock& operator=(const lock &c);
+				};
+
+			private:
+				pseudo_lockable( const pseudo_lockable& );
+				pseudo_lockable& operator=( const pseudo_lockable& );
+			};
+
+			//-------------------------------------
 			// Object level blocking
 			template<class SyncObjT>
 			class object_level_lockable
 			{  
 			public:
-				friend class LockT;
+				friend class lock;
 
-				object_level_lockable(){}
+				object_level_lockable()
+				{}
 
-				// 		template< typename T >
-				// 		object_level_lockable( T val )
-				// 			:m_syncObj( val )
-				// 		{}
-
-				template<class LocableT>
-				class LockT
+				class lock
 				{
 				public:
-					LockT( const LocableT &c ) 
+					lock( const object_level_lockable &c ) 
 						: m_lackable(c)
 					{ 
 						m_lackable.m_syncObj.Enter();
 					};
 
-					~LockT()
+					~lock()
 					{ 
 						m_lackable.m_syncObj.Leave();
 					};
 
 				private:
-					LocableT const &m_lackable;
+					object_level_lockable const &m_lackable;
 
-					LockT(const LockT &c);
-					LockT& operator=(const LockT &c);
+					lock(const lock &c);
+					lock& operator=(const lock &c);
 				};
-
-				typedef LockT< object_level_lockable > Lock;
 			private:
-				mutable volatile SyncObjT m_syncObj;
+				mutable SyncObjT m_syncObj;
 				object_level_lockable( const object_level_lockable& );
 				object_level_lockable& operator=( const object_level_lockable& );
 			};
@@ -84,25 +107,20 @@ namespace managers
 				static SyncObjT sm_syncObj;
 
 			public:
-				//class Lock;
-				friend class Lock;
+				//class lock;
+				friend class lock;
 
-				class Lock
+				class lock
 				{
-					Lock(const Lock&);
-					Lock& operator=(const Lock&);
+					lock(const lock&);
+					lock& operator=(const lock&);
 				public:
-					Lock()
+					lock()
 					{
 						sm_syncObj.Enter();
 					}
 
-					// 			explicit Lock(const class_level_lockable&)
-					// 			{
-					// 				sm_syncObj.Enter();
-					// 			}
-
-					~Lock()
+					~lock()
 					{
 						sm_syncObj.Leave();
 					}

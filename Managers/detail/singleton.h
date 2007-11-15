@@ -45,7 +45,7 @@ namespace managers
 		{
 			if ( !m_instance )
 			{
-				Lock lock;
+				lock l;
 				if ( !m_instance )
 				{
 					m_instance = new T();
@@ -60,7 +60,7 @@ namespace managers
 		{
 			if ( m_instance )
 			{
-				Lock lock;
+				lock l;
 				if ( m_instance )
 				{
 					delete m_instance;

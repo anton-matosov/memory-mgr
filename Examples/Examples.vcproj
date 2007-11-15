@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Managers"
-	ProjectGUID="{317AB518-3AB8-4F87-9977-E413EDA3F859}"
-	RootNamespace="BitManager"
+	Name="Examples"
+	ProjectGUID="{985CBA43-B791-41D3-9C79-4D512F3DD42E}"
+	RootNamespace="Examples"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -44,8 +44,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
-				WarningLevel="4"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -59,10 +59,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -72,6 +79,12 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -104,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
-				WarningLevel="4"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -157,86 +170,20 @@
 	</References>
 	<Files>
 		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\main.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\heap_memory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\managed_base.h"
-				>
-			</File>
-			<File
-				RelativePath=".\memory_manager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\singleton_manager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="detail"
-			>
-			<File
-				RelativePath=".\detail\bit_manager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\critical_section.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\helpers.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\locks.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\pseudo_sync.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\scoped_ptr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\singleton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\static_assert.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\static_bitset.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="config"
-			>
-			<File
-				RelativePath=".\config\config.h"
-				>
-			</File>
-			<Filter
-				Name="platform"
-				>
-				<File
-					RelativePath=".\config\platform\linux.h"
-					>
-				</File>
-				<File
-					RelativePath=".\config\platform\win32.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
