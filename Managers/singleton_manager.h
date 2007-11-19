@@ -85,8 +85,12 @@ namespace managers
 		typedef singleton_manager<mgr_t, SyncObj, ThreadingModel> self_type;
 		typedef typename mgr_t::ptr_t				ptr_t;
 		//typedef singleton_ptr_t<self_type>				ptr_t;
-		
+	
+		static const ptr_t null_ptr;
 	};
+
+	template< class MemMgr, class SyncObj, template <class> class ThreadingModel >
+	typename const singleton_manager<MemMgr, SyncObj, ThreadingModel>::ptr_t singleton_manager<MemMgr, SyncObj, ThreadingModel>::null_ptr( singleton_manager<MemMgr, SyncObj, ThreadingModel>::mgr_t::null_ptr );
 }
 
 #endif// MGR_SINGLETON_MANAGER_HEADER

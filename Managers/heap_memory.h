@@ -55,6 +55,8 @@ namespace managers
 
 		typedef typename memmgr_t::ptr_t				ptr_t;
 
+		static const ptr_t null_ptr;
+
 		heap_memory()
 			:m_memory( new char[memory_size] ),
 			m_mgr( new memmgr_t( &*m_memory ) )
@@ -112,6 +114,9 @@ namespace managers
 			return m_mgr->free();
 		}
 	};
+
+	template< class MemMgr >
+	typename const heap_memory<MemMgr>::ptr_t heap_memory<MemMgr>::null_ptr( heap_memory<MemMgr>::memmgr_t::null_ptr );
 
 	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4/*, singleton_ptr_t*/> > > def_heap_mgr;
 }

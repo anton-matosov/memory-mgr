@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <assert.h>
 #include "static_assert.h"
 #include "helpers.h"
+#include "type_manip.h"
 
 namespace managers
 {
@@ -79,14 +80,6 @@ namespace managers
 			{
 				lhs &= ~rhs;
 			}
-		};
-
-		//Helper structure used for functions overriding
-		//based on integer values
-		template<int i>
-		struct int2type
-		{
-			enum{ value = i };
 		};
 
 		//Type traits for all array types
@@ -398,7 +391,7 @@ namespace managers
 		}
 
 		template<>
-		void do_zero_unused_bits< detail::int2type<0> >() 
+		void do_zero_unused_bits< type_manip::int2type<0> >() 
 		{}
 
 		// If size() is not a multiple of bits_per_block
@@ -409,7 +402,7 @@ namespace managers
 		void zero_unused_bits()
 		{
 			// if != 0 this is the number of bits used in the last block
-			do_zero_unused_bits< detail::int2type< detail::extra_bits<num_bits, bits_per_block>::result > >();
+			do_zero_unused_bits< type_manip::int2type< detail::extra_bits<num_bits, bits_per_block>::result > >();
 		}		
 
 		// gives a reference to the highest block

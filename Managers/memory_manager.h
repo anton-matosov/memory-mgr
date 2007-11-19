@@ -146,6 +146,7 @@ namespace managers
 		typedef SyncObj												sync_object;
 
 		typedef PtrT<self_type> ptr_t;
+		static const ptr_t null_ptr;
 		
 
 		explicit memory_manager( void* mem_base )
@@ -241,6 +242,9 @@ namespace managers
 		}
 	};
 
+	template < class BlockType, size_t MemorySize, size_t ChunkSize, template <class> class PtrT, class SyncObj >
+	typename const memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::ptr_t memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::null_ptr( memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::bitmgr_t::npos );
+
 	//Size tracking decorator for memory manager
 	template< class MemMgr >
 	class size_tracking
@@ -266,6 +270,8 @@ namespace managers
 		typedef typename memmgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename memmgr_t::size_type			size_type;
 		typedef typename memmgr_t::ptr_t				ptr_t;
+
+		static const ptr_t null_ptr;
 
 		explicit size_tracking( void* mem_base )
 			:m_memmgr( mem_base )
@@ -312,6 +318,9 @@ namespace managers
 			return m_memmgr.get_base();
 		}
 	};
+
+	template< class MemMgr >
+	typename const size_tracking<MemMgr>::ptr_t size_tracking<MemMgr>::null_ptr( size_tracking<MemMgr>::memmgr_t::null_ptr );
 }
 
 

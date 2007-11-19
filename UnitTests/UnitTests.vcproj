@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_simple_ptr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_static_bitset.cpp"
 				>
 			</File>
