@@ -49,19 +49,25 @@ public:
 	}
 };
 
+class DerivedTestClass : public TestClass
+{	
+};
+
 typedef int builtin_type;
 
 
 typedef managers::def_heap_mgr pointers_memory_mgr;
 typedef managers::simple_ptr< builtin_type, pointers_memory_mgr > builtin_ptr;
-typedef managers::simple_ptr< TestClass, pointers_memory_mgr > class_ptr;
+typedef managers::simple_ptr< TestClass, pointers_memory_mgr > base_class_ptr;
+typedef managers::simple_ptr< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
 
 template builtin_ptr;
 
 bool test_construction()
 {
 	SUBTEST_START( L"construction/destruction" );
-	
+	base_class_ptr base_ptr;
+	derived_class_ptr derived_ptr( base_ptr );
 
 	SUBTEST_END( pointers_memory_mgr::instance().free() );
 }

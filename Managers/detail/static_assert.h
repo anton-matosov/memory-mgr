@@ -42,7 +42,7 @@ namespace detail
 ////////////////////////////////////////////////////////////////////////////////
 
 #define STATIC_ASSERT(expr, msg)\
-	::detail::CompileTimeError<((expr) != 0)> ERROR_##msg;/* (void)ERROR_##msg;*/
+	::detail::CompileTimeError<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
 
 
 #endif// MGR_STATIC_ASSERT_HEADER

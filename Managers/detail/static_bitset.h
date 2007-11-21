@@ -142,8 +142,6 @@ namespace managers
 	template< class BlockType, size_t BitsCount, arrayType StaticArr = StaticArray >
 	class static_bitset: public detail::Array< BlockType, BitsCount, StaticArr >
 	{		
-		STATIC_ASSERT( BitsCount != 0, Bitset_cant_be_empty );
-
 		static_bitset( const static_bitset& );
 		static_bitset& operator=( const static_bitset& );
 	public:	
@@ -168,7 +166,10 @@ namespace managers
 		//Default constructor
 		//Resets all bits
 		static_bitset()
-		{ reset(); }
+		{ 
+			STATIC_ASSERT( BitsCount != 0, Bitset_cant_be_empty );
+			reset(); 
+		}
 
 		//Constructor used only by custom arrays to initialize
 		//array's pointer

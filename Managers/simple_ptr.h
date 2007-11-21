@@ -33,6 +33,8 @@ namespace managers
 	template < typename T, typename MemMgr > 
 	class simple_ptr
 	{
+		template< typename T, typename MemMgr >
+		friend typename const MemMgr::ptr_t& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
 	public:
 		typedef MemMgr mgr_t;
 		
@@ -66,7 +68,7 @@ namespace managers
 		simple_ptr( const simple_ptr< U, mgr_t >& ptr )
 			:m_ptr( detail::get_ptr( ptr ) )
 		{
-			STATIC_ASSERT( (type_manip::super_subclass<T, U>::value), invalid_conversion );
+			STATIC_ASSERT( ( type_manip::super_subclass<U, T>::value ), invalid_conversion );
 		}
 
 
