@@ -190,11 +190,11 @@ namespace managers
 		//
 		// Caveat: might not work if T and U are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
-		template <class T, class U>
+		template <class B, class D>
 		struct super_subclass
 		{
-			enum { value = (conversion<const volatile U*, const volatile T*>::exists &&
-				!conversion<const volatile T*, const volatile void*>::same_type) };
+			enum { value = (conversion<const volatile D*, const volatile B*>::exists &&
+				!conversion<const volatile B*, const volatile void*>::same_type) };
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
@@ -204,12 +204,12 @@ namespace managers
 		//
 		// Caveat: might not work if T and U are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
-		template<class T,class U>
+		template<class B,class D>
 		struct super_subclass_strict
 		{
-			enum { value = (conversion<const volatile U*, const volatile T*>::exists &&
-				!conversion<const volatile T*, const volatile void*>::same_type &&
-				!conversion<const volatile T*, const volatile U*>::same_type) };
+			enum { value = (conversion<const volatile D*, const volatile B*>::exists &&
+				!conversion<const volatile B*, const volatile void*>::same_type &&
+				!conversion<const volatile B*, const volatile U*>::same_type) };
 		};
 
 

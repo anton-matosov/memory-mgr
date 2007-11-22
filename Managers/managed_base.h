@@ -29,6 +29,20 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace managers
 {
+	class object_name
+	{	
+		const wchar_t* m_name;
+	public:
+		object_name( const wchar_t* name )
+			: m_name( name )
+		{}
+
+		const wchar_t* get_name()
+		{
+			return m_name;
+		}
+	};
+
 	template< class MemMgr >
 	class managed_base
 	{
@@ -40,6 +54,12 @@ namespace managers
 	public:	
 		static void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
+			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
+		}
+
+		static void* operator new( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
+		{
+			//TODO:implement this method
 			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
 		}
 
@@ -57,7 +77,15 @@ namespace managers
 		{
 			mem_mgr::instance().deallocate( p, size );
 		}
+
+		static void operator delete( void* /*p*/, const object_name& /*name*/ )
+		{
+			//TODO:implement this method
+			//mem_mgr::instance().deallocate( p, size );
+		}
 	};
+	
+	
 }
 
 #endif// MGR_MANAGED_BASE_HEADER

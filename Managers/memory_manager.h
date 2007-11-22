@@ -83,10 +83,19 @@ namespace managers
 				:m_offset( offset )
 			{}
 
+			off_ptr_t( const off_ptr_t& ptr )
+				:m_offset( ptr.m_offset )
+			{}
+
 			//Construct pointer from memory address
 			off_ptr_t( const mgr_t& mgr, const void* ptr )			
 				:m_offset( detail::diff( ptr, mgr.get_base() ) )
 			{}
+
+			off_ptr_t& operator=( const off_ptr_t& ptr )				
+			{
+				m_offset = ptr.m_offset;
+			}
 
 			//Call this method to get offset
 			const size_type get_off() const

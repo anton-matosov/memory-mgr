@@ -24,30 +24,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "heap_memory.h"
 #include "simple_ptr.h"
+#include "TestClass.h"
 
-class TestClass
-{
-	int m_i;
-public:
-	TestClass()
-		:m_i(0)
-	{}
+#include "allocator.h"
 
-	~TestClass()
-	{
-		m_i = 0;
-	}
+template class managers::allocator<int, managers::def_heap_mgr>;
 
-	void set( int i )
-	{
-		m_i = i;
-	}
+#include <vector>
+#include <string>
+#include <map>
 
-	int get()
-	{
-		return m_i;
-	}
-};
+std::vector<int, managers::allocator<int, managers::def_heap_mgr> > vec;
 
 class DerivedTestClass : public TestClass
 {	
@@ -65,9 +52,10 @@ template builtin_ptr;
 
 bool test_construction()
 {
-	SUBTEST_START( L"construction/destruction" );
-	base_class_ptr base_ptr;
-	derived_class_ptr derived_ptr( base_ptr );
+	SUBTEST_START( L"construction/destruction" );	
+	using managers::object_name;
+	derived_class_ptr derived_ptr( new(object_name(L"Derived")) DerivedTestClass() );
+	base_class_ptr base_ptr( derived_ptr );
 
 	SUBTEST_END( pointers_memory_mgr::instance().free() );
 }

@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestClass.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UnitTests.cpp"
 				>
 			</File>
@@ -232,6 +236,10 @@
 			</File>
 			<File
 				RelativePath=".\test_case.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestClass.h"
 				>
 			</File>
 		</Filter>

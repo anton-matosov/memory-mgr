@@ -25,7 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "memory_manager.h"
 #include "heap_memory.h"
-#include "managed_base.h"
+#include "TestClass.h"
 
 typedef unsigned char chunk_t;
 static const size_t chunk_size = 4;
@@ -38,32 +38,7 @@ template class managers::size_tracking< memmgr_t >;
 typedef memmgr_t::ptr_t ptr_t;
 
 
-class TestClass: public managers::managed_base< managers::def_heap_mgr >
-{
-	int m_i;
-public:
-	typedef managers::managed_base< managers::def_heap_mgr > base_t;
-	typedef base_t::mem_mgr mem_mgr;
 
-	TestClass()
-		:m_i(0)
-	{}
-	
-	~TestClass()
-	{
-		m_i = 0;
-	}
-
-	void set( int i )
-	{
-		m_i = i;
-	}
-
-	int get()
-	{
-		return m_i;
-	}
-};
 
 bool test_alloc_dealloc()
 {

@@ -86,7 +86,19 @@ namespace managers
 		typedef typename mgr_t::ptr_t				ptr_t;
 		//typedef singleton_ptr_t<self_type>				ptr_t;
 	
+		enum
+		{
+			chunk_size = mgr_t::chunk_size,
+			memory_size =  mgr_t::memory_size,
+			num_chunks =  mgr_t::num_chunks
+		};
+
 		static const ptr_t null_ptr;
+	private:
+		singleton_manager();
+		~singleton_manager();
+		singleton_manager(const singleton_manager&);
+		singleton_manager& operator=(const singleton_manager&);
 	};
 
 	template< class MemMgr, class SyncObj, template <class> class ThreadingModel >

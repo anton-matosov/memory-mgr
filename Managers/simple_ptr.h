@@ -6,7 +6,7 @@
 namespace managers
 {
 	//Forward declaration
- 	template < typename T, typename MemMgr > 
+ 	template< typename T, typename MemMgr > 
  	class simple_ptr;
 
 	namespace detail
@@ -47,6 +47,7 @@ namespace managers
 
 		typedef simple_ptr< value_t, mgr_t > self_type;
 
+		typedef ptrdiff_t difference_type;
 		//friend class simple_ptr< value_t, mgr_t >;
 
 		//Default constructor
@@ -57,7 +58,7 @@ namespace managers
 		}
 
 		//Constructor from common pointer
-		explicit simple_ptr( value_t* ptr )
+		explicit simple_ptr( const value_t* ptr )
 			:m_ptr( mgr_t::instance(), ptr )
 		{
 
@@ -68,7 +69,7 @@ namespace managers
 		simple_ptr( const simple_ptr< U, mgr_t >& ptr )
 			:m_ptr( detail::get_ptr( ptr ) )
 		{
-			STATIC_ASSERT( ( type_manip::super_subclass<U, T>::value ), invalid_conversion );
+			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 		}
 
 
@@ -105,18 +106,58 @@ namespace managers
 		const_pointer_t operator&() const
 		{
 			return get_poiner();
-		}
-		
-		bool is_not_null()  const { return m_ptr.get_off() != mgr_t::null_ptr.get_off(); }
+		}		
+		bool is_not_null() const { return m_ptr.get_off() != mgr_t::null_ptr.get_off(); }
 		bool is_null() const { return m_ptr.get_off() == mgr_t::null_ptr.get_off(); }
 		bool operator!() const { return  is_null(); }
 
 		//It is risky to add such an operator
 		//operator bool() const { return  !m_ptr.is_null(); }
 		
+		self_type operator+( const size_t count ) const
+		{			
+			return self_type( get_poiner() + count );
+		}
+
+		self_type operator-( const size_t count ) const
+		{			
+			return self_type( get_poiner() - count );
+		}
+
+		self_type& operator--()
+		{			
+			m_ptr = ptr_t( mgr_t::instance(), get_poiner() - 1 );
+			return *this;
+		}
+
+
+		difference_type operator-( const self_type& ptr ) const
+		{			
+			return get_poiner() - &ptr;
+		}
+		//////////////////////////////////////////////////////////////////////////
 		bool operator==(  const self_type& ptr ) const
 		{
 			return m_ptr.get_off() == ptr.m_ptr.get_off();
+		}
+
+		self_type& operator=(  const int val )
+		{
+			assert( val == 0 );
+			m_ptr = mgr_t::null_ptr;
+			return *this;
+		}
+
+		bool operator!=(  const int val ) const
+		{
+			assert( val == 0 );
+			return is_not_null();
+		}
+
+		bool operator==(  const int val ) const
+		{
+			assert( val == 0 );
+			return is_null();
 		}
 
 		bool operator!=(  const self_type& ptr ) const
@@ -145,12 +186,12 @@ namespace managers
 		}
 
 		
-		/*
-				//Call this function to construct object using default constructor	
-				template < typename T, typename sh_mem_mgr >
-				friend void construct( simple_ptr<T, sh_mem_mgr>& arr_ptr, const wchar_t* name );
 		
-				//Call this function to construct object using constructor with one parameter
+				//Call this function to construct object using default constructor	
+		//template < typename T, typename mem_mgr >
+		//friend void construct( simple_ptr<T, mem_mgr>& arr_ptr );
+		
+			/*	//Call this function to construct object using constructor with one parameter
 				template < typename T, typename parT, typename sh_mem_mgr >
 				friend void construct( simple_ptr<T, sh_mem_mgr>& arr_ptr, const wchar_t* name, parT par );
 		
