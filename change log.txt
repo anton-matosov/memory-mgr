@@ -1,0 +1,37 @@
+Version 0.6.3 beta
+ - license agreement was added
+ - compiler dependent code was removed
+ - added support for linux platform
+ - added synchronization to managers
+ - heap_memory_manager was re-implemented as decorator heap_memory
+ - added deallocate method overload
+ - pointer type was made a template parameter of memory_manager
+ - fixed allocation sync issues
+ - added null_ptr - a null pointer of ptr_t type
+ - added type manipulation library
+ - added simple_ptr template class - a basic class for all smart pointers
+
+Version 0.6.0
+ - implemented generic singleton
+ - implemented singleton manager (heap_memory_manager)
+ - some design modifications made
+ - added separate template singleton_manager which allows to make singleton any manager 
+ - solution was renamed
+ - added base class for managed objects
+ - implemented memory limits checking (std::bad_alloc will be thrown if manager is out of memory)
+ - implemented deallocation checking (on second deallocation of the same pointer assertion will stop program execution)
+ - implemented nothrow version of operator new in managed_base class
+ - fixed issue in static_bitset test() method 
+ - unit tests updated
+ - added empty() and free() methods to memory managers
+ - fixed test case object name in tests macro
+ - files were restructured
+ - removed unused project's folders 
+
+Version 0.1.0a
+ - removed boost dependencies 
+ - unit tests implementation started
+ - comments were added
+ 
+Version 0.0.3 
+ - basic functionality implemented
