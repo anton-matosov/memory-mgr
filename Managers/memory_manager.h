@@ -95,6 +95,7 @@ namespace managers
 			off_ptr_t& operator=( const off_ptr_t& ptr )				
 			{
 				m_offset = ptr.m_offset;
+				return *this;
 			}
 
 			//Call this method to get offset

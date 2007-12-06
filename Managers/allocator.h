@@ -54,7 +54,7 @@ namespace managers
 		template<class other>
 		struct rebind
 		{	// convert an allocator<_Ty> to an allocator <_Other>
-			typedef allocator< other, memmgr_t > other;
+			typedef managers::allocator< other, memmgr_t > other;
 		};
 
 		// return address of mutable _Val

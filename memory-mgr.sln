@@ -1,6 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{565E49DA-AFA6-43A6-8CD8-B3165868B2A2}"
+	ProjectSection(SolutionItems) = preProject
+		change log.txt = change log.txt
+		LGPL.TXT = LGPL.TXT
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Managers", "Managers\Managers.vcproj", "{317AB518-3AB8-4F87-9977-E413EDA3F859}"
@@ -8,12 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerfTests", "PerfTests\PerfTests.vcproj", "{58975002-C388-401F-B159-301B5DF09350}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Examples", "Examples\Examples.vcproj", "{985CBA43-B791-41D3-9C79-4D512F3DD42E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{565E49DA-AFA6-43A6-8CD8-B3165868B2A2}"
-	ProjectSection(SolutionItems) = preProject
-		change log.txt = change log.txt
-		LGPL.TXT = LGPL.TXT
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

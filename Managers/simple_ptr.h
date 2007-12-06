@@ -106,7 +106,17 @@ namespace managers
 		const_pointer_t operator&() const
 		{
 			return get_poiner();
-		}		
+		}
+		operator T* ()
+		{
+			return get_poiner();
+		}
+
+		operator const T*() const
+		{
+			return get_poiner();
+		}
+
 		bool is_not_null() const { return m_ptr.get_off() != mgr_t::null_ptr.get_off(); }
 		bool is_null() const { return m_ptr.get_off() == mgr_t::null_ptr.get_off(); }
 		bool operator!() const { return  is_null(); }

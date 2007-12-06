@@ -31,10 +31,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 template class managers::allocator<int, managers::def_heap_mgr>;
 
 #include <vector>
-#include <string>
+#include <list>
 #include <map>
 
-std::vector<int, managers::allocator<int, managers::def_heap_mgr> > vec;
+typedef managers::allocator<int, managers::def_heap_mgr>::rebind<float>::other::pointer fptr;
+//template std::map<int, int, std::less<int>, managers::allocator<std::pair<const int, int>, managers::def_heap_mgr> >;
+//std::list<int, managers::allocator<int, managers::def_heap_mgr> > g_list;
 
 class DerivedTestClass : public TestClass
 {	
@@ -65,6 +67,7 @@ bool test_simple_ptr()
 
 	TEST_START( L"memory managers" );
 
+	//g_map[1]++;
 	TEST_END( test_construction()/*
 		 &&
 				test_size_tracking() &&
