@@ -148,7 +148,7 @@ namespace managers
 		bitmgr_t m_bitmgr;
 
 		char* m_membase;
-
+		
 	public:
 		typedef typename bitmgr_t::block_ptr_type					block_ptr_type;		
 		typedef typename bitmgr_t::size_type						size_type;
@@ -199,7 +199,7 @@ namespace managers
 		//size - block size in bytes
 		void deallocate( const void* p, size_type size )
 		{
-			assert( p > m_membase && "Invalid pointer value" );
+			assert( p >= m_membase && "Invalid pointer value" );
 			deallocate( ptr_t( *this, p ), size );
 		}
 

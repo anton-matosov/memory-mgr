@@ -37,8 +37,7 @@ namespace managers
 		template< class BlockType, int BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
-			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;
-			bitset_t m_bitset;
+			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;			
 		public:
 			typedef typename bitset_t::block_type			block_type;
 			typedef typename bitset_t::block_ptr_type		block_ptr_type;
@@ -51,13 +50,15 @@ namespace managers
 
 			const static size_type npos = bitset_t::npos;
 
-			bit_manager()			
+			bit_manager()
+				:m_last_block( 0 )
 			{
-				m_bitset.set();
+				m_bitset.set();				
 			}
 
 			bit_manager( block_ptr_type ptr )
-				:m_bitset( ptr )
+				:m_bitset( ptr ),
+				 m_last_block( 0 )
 			{
 				m_bitset.set();
 			}
@@ -69,10 +70,19 @@ namespace managers
 
 			size_type allocate( size_type bits_count )
 			{
-				size_type pos = m_bitset.find_n( bits_count );
+				size_type pos = m_bitset.find_n( bits_count, m_last_block );
 				if( pos != npos )
 				{
+					m_last_block = block_index(pos);
 					m_bitset.reset( pos, bits_count );
+				}
+				else
+				{
+					if (m_last_block != 0)
+					{
+						m_last_block = 0;
+						return allocate( bits_count );
+					}					
 				}
 				return pos;
 			}
@@ -81,6 +91,7 @@ namespace managers
 			{
 				assert( ( m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
 				m_bitset.set( pos, bits_count );
+				m_last_block = block_index(pos);
 			}
 
 			std::ostream& print( std::ostream& ostr ) const
@@ -96,6 +107,15 @@ namespace managers
 			bool free()
 			{
 				return !empty();
+			}
+
+		private:
+			bitset_t m_bitset;
+			size_type m_last_block;
+
+			static inline size_type block_index(size_type pos) 
+			{
+				return detail::block_index<bitset_t::bits_per_block>(pos);
 			}
 		};
 

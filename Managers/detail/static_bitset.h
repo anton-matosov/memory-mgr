@@ -39,6 +39,12 @@ namespace managers
 	enum arrayType{ StaticArray, DynamicArray, CustomArray };
 	namespace detail
 	{
+		template<size_t BitsPerBlock>
+		static inline size_t block_index(size_t pos) 
+		{ 
+			return pos / BitsPerBlock;
+		}
+
 		//Structure used to calculate number of blocks
 		//required to store requested number of bits
 		template<size_t BitsCount, size_t BitsPerBlock>
