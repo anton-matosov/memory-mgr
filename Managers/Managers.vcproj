@@ -250,6 +250,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="containers"
+			>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

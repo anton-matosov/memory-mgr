@@ -43,18 +43,27 @@ namespace managers
 		typedef T									value_type;
 		typedef allocator< value_type, memmgr_t >	self_type;
 
-		typedef simple_ptr< value_type, memmgr_t >								pointer;
-		typedef const simple_ptr< value_type, memmgr_t >						const_pointer;
+		//*
+		typedef typename simple_ptr< value_type, memmgr_t >		pointer;
+		typedef typename const simple_ptr< value_type, memmgr_t >	const_pointer;
 		typedef typename simple_ptr< value_type, memmgr_t >::reference_t		reference;
 		typedef typename simple_ptr< value_type, memmgr_t >::const_reference_t	const_reference;
+		//*/
+
+		/*
+		typedef value_type*								pointer;
+		typedef const value_type*						const_pointer;
+		typedef value_type&		reference;
+		typedef const value_type&	const_reference;
+		//*/
 
 		typedef typename memmgr_t::size_type size_type;
 		typedef ptrdiff_t difference_type;
 
-		template<class other>
+		template<class Other>
 		struct rebind
 		{	// convert an allocator<_Ty> to an allocator <_Other>
-			typedef managers::allocator< other, memmgr_t > other;
+			typedef typename managers::allocator< Other, memmgr_t > other;
 		};
 
 		// return address of mutable _Val
@@ -105,14 +114,14 @@ namespace managers
 		// construct object at _Ptr with value _Val
 		void construct(pointer ptr, const_reference val)
 		{	
-			::new (&ptr) T(val);
+			::new (&*ptr) T(val);
 			//managers::construct( ptr );
 		}
 
 		// destroy object at _Ptr
 		void destroy(pointer ptr)
 		{	
-			(&ptr)->~T();
+			(&*ptr)->~T();
 			//destruct( ptr );
 			//sh_mem_mgr::Instance().deallocate( sh_ptr(ptr) );
 		}

@@ -124,15 +124,15 @@ namespace managers
 		//It is risky to add such an operator
 		//operator bool() const { return  !m_ptr.is_null(); }
 		
-		self_type operator+( const size_t count ) const
-		{			
-			return self_type( get_poiner() + count );
-		}
-
-		self_type operator-( const size_t count ) const
-		{			
-			return self_type( get_poiner() - count );
-		}
+// 		self_type operator+( const size_t count ) const
+// 		{			
+// 			return self_type( get_poiner() + count );
+// 		}
+// 
+// 		self_type operator-( const size_t count ) const
+// 		{			
+// 			return self_type( get_poiner() - count );
+// 		}
 
 		self_type& operator--()
 		{			
@@ -151,24 +151,24 @@ namespace managers
 			return m_ptr.get_off() == ptr.m_ptr.get_off();
 		}
 
-		self_type& operator=(  const int val )
-		{
-			assert( val == 0 );
-			m_ptr = mgr_t::null_ptr;
-			return *this;
-		}
-
-		bool operator!=(  const int val ) const
-		{
-			assert( val == 0 );
-			return is_not_null();
-		}
-
-		bool operator==(  const int val ) const
-		{
-			assert( val == 0 );
-			return is_null();
-		}
+// 		self_type& operator=(  const int val )
+// 		{
+// 			assert( val == 0 );
+// 			m_ptr = mgr_t::null_ptr;
+// 			return *this;
+// 		}
+// 
+// 		bool operator!=(  const int val ) const
+// 		{
+// 			assert( val == 0 );
+// 			return is_not_null();
+// 		}
+// 
+// 		bool operator==(  const int val ) const
+// 		{
+// 			assert( val == 0 );
+// 			return is_null();
+// 		}
 
 		bool operator!=(  const self_type& ptr ) const
 		{

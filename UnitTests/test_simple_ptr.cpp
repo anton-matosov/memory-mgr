@@ -32,9 +32,13 @@ template class managers::allocator<int, managers::def_heap_mgr>;
 
 #include <vector>
 #include <list>
-#include <map>
+//#include <map>
+
+//#include "containers/map.h"
 
 typedef managers::allocator<int, managers::def_heap_mgr>::rebind<float>::other::pointer fptr;
+//typedef stlp_std::map<int, int> sgi_map;
+//template sgi_map;
 //template std::map<int, int, std::less<int>, managers::allocator<std::pair<const int, int>, managers::def_heap_mgr> >;
 //std::list<int, managers::allocator<int, managers::def_heap_mgr> > g_list;
 
@@ -67,7 +71,8 @@ bool test_simple_ptr()
 
 	TEST_START( L"memory managers" );
 
-	//g_map[1]++;
+	//sgi_map map;
+	//map[1]++;
 	TEST_END( test_construction()/*
 		 &&
 				test_size_tracking() &&
