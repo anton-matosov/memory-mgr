@@ -39,7 +39,7 @@ namespace managers
 	class heap_memory
 	{
 		typedef MemMgr		memmgr_t;
-		typedef heap_memory<MemMgr>	self_type;
+		
 				
 		scoped_ptr<char, ::detail::array_deleter> m_memory;
 		scoped_ptr<memmgr_t> m_mgr;
@@ -53,6 +53,7 @@ namespace managers
 		typedef typename memmgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename memmgr_t::size_type			size_type;
 
+		typedef typename memmgr_t::self_type			self_type;
 		typedef typename memmgr_t::ptr_t				ptr_t;
 
 		static const ptr_t null_ptr;
@@ -118,7 +119,7 @@ namespace managers
 	template< class MemMgr >
 	typename const heap_memory<MemMgr>::ptr_t heap_memory<MemMgr>::null_ptr( heap_memory<MemMgr>::memmgr_t::null_ptr );
 
-	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4/*, singleton_ptr_t*/> > > def_heap_mgr;
+	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4/*, detail::std_pointer*/> > > def_heap_mgr;
 }
 
 #endif// MGR_HEAP_MEMORY_HEADER

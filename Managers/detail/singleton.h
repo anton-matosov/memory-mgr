@@ -35,6 +35,7 @@ namespace managers
 	template 
 	<
 		class T,
+		class InstT = T,
 		class SyncObj = detail::sync::critical_section, 
 		template <class> class ThreadingModel = detail::sync::class_level_lockable
 	>
@@ -48,7 +49,7 @@ namespace managers
 				lock l;
 				if ( !m_instance )
 				{
-					m_instance = new T();
+					m_instance = new InstT();
 					atexit( destruct );
 				}
 			}
@@ -78,7 +79,7 @@ namespace managers
 		//! Destructor.
 		~singleton(){}
 	private:			
-		static T* m_instance;
+		static InstT* m_instance;
 
 		
 		singleton & operator=(const singleton &);
@@ -88,10 +89,11 @@ namespace managers
 	template 
 	<
 		class T,
+		class InstT,
 		class SyncObj,
 		template <class> class ThreadingModel
 	>
-	typename T* singleton<T, SyncObj, ThreadingModel>::m_instance = NULL;
+	typename InstT* singleton<T, InstT, SyncObj, ThreadingModel>::m_instance = NULL;
 
 }
 

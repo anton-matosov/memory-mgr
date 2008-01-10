@@ -50,6 +50,11 @@ namespace managers
 			return const_cast< char* >( p );
 		}
 
+		static inline void* unconst_void( const void* p )
+		{
+			return const_cast< void* >( p );
+		}
+
 		static inline ptrdiff_t diff( const void* p1, const void* p2 )
 		{
 			return char_cast(p1) - char_cast(p2);
@@ -69,13 +74,13 @@ namespace managers
 		template< class Mgr >
 		class off_ptr_t
 		{
-		protected:
 			typedef Mgr mgr_t;
 
 			const char* do_get_ptr( const mgr_t& mgr ) const
 			{
 				return detail::shift( mgr.get_base(), m_offset );
 			}
+			typename mgr_t::size_type m_offset;
 		public:
 			typedef typename mgr_t::size_type size_type;
 			//Construct pointer from offset
@@ -99,7 +104,7 @@ namespace managers
 			}
 
 			//Call this method to get offset
-			const size_type get_off() const
+			const size_type get_off( const mgr_t& /*mgr*/ ) const
 			{
 				return m_offset;
 			}
@@ -115,9 +120,67 @@ namespace managers
 			{
 				return do_get_ptr( mgr );
 			}
-		private:
-			size_type m_offset;	
+
+			bool is_null() const
+			{
+				return m_offset != mgr_t::null_ptr.m_offset;
+			}	
 		};
+
+		/*
+		//Standard pointer class
+		template< class Mgr >
+		class std_pointer
+		{
+			typedef Mgr mgr_t;
+			void* m_pointer;
+		public:
+			typedef typename mgr_t::size_type size_type;
+			//Construct pointer from offset
+ 			explicit std_pointer( const mgr_t& mgr, const size_type offset )
+ 				:m_pointer( unconst_void( shift( mgr.get_base(), offset ) ) )
+ 			{}
+
+			std_pointer( const std_pointer& ptr )
+				:m_pointer( ptr.m_pointer )
+			{}
+
+			//Construct pointer from memory address
+			std_pointer( const mgr_t&, const void* ptr )			
+				:m_pointer( unconst_void( ptr ) )
+			{}
+
+			std_pointer& operator=( const std_pointer& ptr )				
+			{
+				m_pointer = unconst_void( ptr.m_pointer );
+				return *this;
+			}
+
+			//Call this method to get offset
+			const size_type get_off( const mgr_t& mgr ) const
+			{
+				return detail::diff( m_pointer, mgr.get_base() );
+			}
+
+			//Call this method to get real memory address
+			void* get_ptr( const mgr_t& )
+			{
+				return m_pointer;
+			}
+
+			//Call this method to get real memory address
+			const void* get_ptr( const mgr_t& ) const
+			{
+				return m_pointer;
+			}
+
+			bool is_null() const
+			{
+				return m_pointer != mgr_t::null_ptr.m_pointer;
+			}				
+		};
+		*/
+		
 	}
 
 	//Memory manager
@@ -152,7 +215,7 @@ namespace managers
 	public:
 		typedef typename bitmgr_t::block_ptr_type					block_ptr_type;		
 		typedef typename bitmgr_t::size_type						size_type;
-		typedef memory_manager<BlockType, MemorySize, ChunkSize>	self_type;
+		typedef memory_manager										self_type;
 		typedef SyncObj												sync_object;
 
 		typedef PtrT<self_type> ptr_t;
@@ -191,7 +254,7 @@ namespace managers
  		void deallocate( const ptr_t off, size_type size )
  		{
 			lock l(*this);
- 			m_bitmgr.deallocate( chunk_index( off.get_off() ), chunks_required( size ) );
+ 			m_bitmgr.deallocate( chunk_index( off.get_off( *this ) ), chunks_required( size ) );
  		}
 
 		//Call this method to deallocate memory block
@@ -301,7 +364,7 @@ namespace managers
 		{
 			size_type *ps = size_cast( ptr );
 			--ps;
-			m_memmgr.deallocate( ptr_t( m_memmgr, ps ), *ps );
+			m_memmgr.deallocate( ps, *ps );
 		}
 
 		//Call this method to deallocate memory block

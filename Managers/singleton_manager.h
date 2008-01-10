@@ -76,13 +76,13 @@ namespace managers
 		class SyncObj = detail::sync::critical_section, 
 		template <class> class ThreadingModel = detail::sync::class_level_lockable
 	>
-	class  singleton_manager : public singleton< Mgr, SyncObj, ThreadingModel >
+	class  singleton_manager : public singleton< typename Mgr::self_type, Mgr, SyncObj, ThreadingModel >
 	{
 	public:
 		typedef Mgr									mgr_t;
 		typedef typename mgr_t::block_ptr_type		block_ptr_type;		
 		typedef typename mgr_t::size_type			size_type;
-		typedef singleton_manager<mgr_t, SyncObj, ThreadingModel> self_type;
+		typedef typename Mgr::self_type				self_type;
 		typedef typename mgr_t::ptr_t				ptr_t;
 		//typedef singleton_ptr_t<self_type>				ptr_t;
 	

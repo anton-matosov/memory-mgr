@@ -117,8 +117,8 @@ namespace managers
 			return get_poiner();
 		}
 
-		bool is_not_null() const { return m_ptr.get_off() != mgr_t::null_ptr.get_off(); }
-		bool is_null() const { return m_ptr.get_off() == mgr_t::null_ptr.get_off(); }
+		bool is_null() const { return m_ptr.is_null(); }
+		bool is_not_null() const { return !is_null(); }
 		bool operator!() const { return  is_null(); }
 
 		//It is risky to add such an operator
@@ -143,12 +143,13 @@ namespace managers
 
 		difference_type operator-( const self_type& ptr ) const
 		{			
-			return get_poiner() - &ptr;
+			return get_poiner() - ptr.get_poiner();
 		}
 		//////////////////////////////////////////////////////////////////////////
 		bool operator==(  const self_type& ptr ) const
 		{
-			return m_ptr.get_off() == ptr.m_ptr.get_off();
+			
+			return get_offset() == ptr.get_offset();
 		}
 
 // 		self_type& operator=(  const int val )
@@ -171,28 +172,28 @@ namespace managers
 // 		}
 
 		bool operator!=(  const self_type& ptr ) const
-		{
-			return m_ptr.get_off() != ptr.m_ptr.get_off();
+		{			
+			return get_offset() != ptr.get_offset();
 		}
 
 		bool operator<(  const self_type& ptr ) const
-		{
-			return m_ptr.get_off() < ptr.m_ptr.get_off();
+		{			
+			return get_offset() < ptr.get_offset();
 		}
 
 		bool operator<=(  const self_type& ptr ) const
-		{
-			return m_ptr.get_off() <= ptr.m_ptr.get_off();
+		{			
+			return get_offset() <= ptr.get_offset();
 		}
 
 		bool operator>(  const self_type& ptr ) const
-		{
-			return m_ptr.get_off() > ptr.m_ptr.get_off();
+		{			
+			return get_offset() > ptr.get_offset();
 		}
 
 		bool operator>=(  const self_type& ptr ) const
-		{
-			return m_ptr.get_off() >= ptr.m_ptr.get_off();
+		{			
+			return get_offset() >= ptr.get_offset();
 		}
 
 		
@@ -213,6 +214,7 @@ namespace managers
 
 	private:
 		typedef typename mgr_t::ptr_t ptr_t;
+		typedef typename ptr_t::size_type size_type;
 		ptr_t m_ptr;
 
 		inline pointer_t unconst_poiner( const_pointer_t ptr )
@@ -228,6 +230,11 @@ namespace managers
 		inline const_pointer_t get_poiner() const
 		{
 			return do_get_poiner();
+		}
+
+		inline size_type get_offset() const
+		{
+			return m_ptr.get_off( mgr_t::instance() );
 		}
 
 		inline const_pointer_t do_get_poiner() const
