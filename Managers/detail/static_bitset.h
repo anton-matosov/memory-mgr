@@ -151,18 +151,18 @@ namespace memory_mgr
 		static_bitset( const static_bitset& );
 		static_bitset& operator=( const static_bitset& );
 	public:	
-		typedef static_bitset	self_t;		
-		typedef self_t&		self_ref_t;
+		typedef static_bitset	self_type;		
+		typedef self_type&		self_ref_type;
 
-		typedef Array< BlockType, BitsCount, StaticArr >	base_t;
+		typedef Array< BlockType, BitsCount, StaticArr >	base_type;
 
-		typedef typename base_t::block_type				block_type;
+		typedef typename base_type::block_type				block_type;
 		
-		typedef typename base_t::block_ref_type			block_ref_type;
-		typedef typename base_t::const_block_ref_type	const_block_ref_type;
+		typedef typename base_type::block_ref_type			block_ref_type;
+		typedef typename base_type::const_block_ref_type	const_block_ref_type;
 		
-		typedef typename base_t::block_ptr_type			block_ptr_type;
-		typedef typename base_t::const_block_ptr_type	const_block_ptr_type;
+		typedef typename base_type::block_ptr_type			block_ptr_type;
+		typedef typename base_type::const_block_ptr_type	const_block_ptr_type;
 
 		typedef size_t		size_type;
 		typedef size_type	block_width_type;
@@ -180,7 +180,7 @@ namespace memory_mgr
 		//Constructor used only by custom arrays to initialize
 		//array's pointer
 		explicit static_bitset( block_ptr_type bits_ptr )
-			:base_t(bits_ptr)
+			:base_type(bits_ptr)
 		{ reset(); }
 
 		~static_bitset()
@@ -219,14 +219,14 @@ namespace memory_mgr
 			return true;
 		}
 		
-		self_ref_t set()
+		self_ref_type set()
 		{
 			std::fill(m_bits, m_bits + num_blocks, ~block_type(0));
 			zero_unused_bits();
 			return *this;
 		}
 
-		self_ref_t set( size_type pos)
+		self_ref_type set( size_type pos)
 		{
 			assert(pos < num_bits);
 
@@ -235,37 +235,37 @@ namespace memory_mgr
 		}
 
 
-		self_ref_t set( size_type pos, size_type count )
+		self_ref_type set( size_type pos, size_type count )
 		{			
 			return do_set<detail::set_op>( pos, count );
 		}
 
-		self_ref_t reset(size_type pos)
+		self_ref_type reset(size_type pos)
 		{
 			assert(pos < num_bits);
 			m_bits[block_index(pos)] &= ~bit_mask(pos);
 			return *this;
 		}
 
-		self_ref_t reset( size_type pos, size_type count )
+		self_ref_type reset( size_type pos, size_type count )
 		{			
 			return do_set<detail::reset_op>( pos, count );
 		}
 
-		self_ref_t reset()
+		self_ref_type reset()
 		{
 			std::fill(m_bits, m_bits + num_blocks, block_type(0));
 			return *this;
 		}
 
-		self_ref_t flip(size_type pos)
+		self_ref_type flip(size_type pos)
 		{
 			assert(pos < num_bits);
 			m_bits[block_index(pos)] ^= bit_mask(pos);
 			return *this;
 		}
 
-		self_ref_t flip()
+		self_ref_type flip()
 		{
 			for (size_type i = 0; i < num_blocks; ++i)
 				m_bits[i] = ~m_bits[i];
@@ -427,7 +427,7 @@ namespace memory_mgr
 		}
 
 		template< class set_op >
-		self_ref_t do_set( size_type pos, size_type count )
+		self_ref_type do_set( size_type pos, size_type count )
 		{
 			assert(pos < num_bits);
 			count = (count != npos ? count : num_bits - pos); 

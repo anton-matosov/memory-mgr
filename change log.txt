@@ -1,3 +1,16 @@
+In dev:
+ - namespace managers was renamed to memory_mgr
+ - pointer classes were moved to separate files
+ - pointers and cast helper function were moved to ptr_helpers.h file
+ - RTTI was disabled for VS2008 projects
+ - added VS2005 projects
+ - singleton updated to have to separate parameters for instantiation type
+   and for return type
+ - implemented std_pointer class for heap_memory
+ - implemented pointer traits class
+ - type definitions were standardized: 
+   suffix "_type" will be used in all typedefs
+
 Version 0.6.3 beta
  - license agreement was added
  - compiler dependent code was removed
@@ -15,11 +28,14 @@ Version 0.6.0
  - implemented generic singleton
  - implemented singleton manager (heap_memory_manager)
  - some design modifications made
- - added separate template singleton_manager which allows to make singleton any manager 
+ - added separate template singleton_manager which allows to make singleton 
+   any manager 
  - solution was renamed
  - added base class for managed objects
- - implemented memory limits checking (std::bad_alloc will be thrown if manager is out of memory)
- - implemented deallocation checking (on second deallocation of the same pointer assertion will stop program execution)
+ - implemented memory limits checking (std::bad_alloc will be thrown 
+   if manager is out of memory)
+ - implemented deallocation checking (on second deallocation of the same 
+   pointer assertion will stop program execution)
  - implemented nothrow version of operator new in managed_base class
  - fixed issue in static_bitset test() method 
  - unit tests updated

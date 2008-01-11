@@ -34,7 +34,7 @@ typedef memory_mgr::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
 template memmgr_t;
 template class memory_mgr::size_tracking< memmgr_t >;
 
-typedef memmgr_t::ptr_t ptr_t;
+typedef memmgr_t::ptr_type ptr_t;
 
 
 class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >

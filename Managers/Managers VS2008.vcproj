@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\pointer_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\pseudo_sync.h"
 				>
 			</File>

@@ -46,8 +46,8 @@ namespace memory_mgr
 		//*
 		typedef typename simple_ptr< value_type, memmgr_t >		pointer;
 		typedef typename const simple_ptr< value_type, memmgr_t >	const_pointer;
-		typedef typename simple_ptr< value_type, memmgr_t >::reference_t		reference;
-		typedef typename simple_ptr< value_type, memmgr_t >::const_reference_t	const_reference;
+		typedef typename simple_ptr< value_type, memmgr_t >::reference_type		reference;
+		typedef typename simple_ptr< value_type, memmgr_t >::const_reference_type	const_reference;
 		//*/
 
 		/*

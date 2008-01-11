@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory_manager.h"
 #include "singleton_manager.h"
 #include "detail/scoped_ptr.h"
-
+#include "std_pointer.h"
 
 namespace memory_mgr
 {
@@ -54,9 +54,9 @@ namespace memory_mgr
 		typedef typename memmgr_t::size_type			size_type;
 
 		typedef typename memmgr_t::self_type			self_type;
-		typedef typename memmgr_t::ptr_t				ptr_t;
+		typedef typename memmgr_t::ptr_type				ptr_type;
 
-		static const ptr_t null_ptr;
+		static const ptr_type null_ptr;
 
 		heap_memory()
 			:m_memory( new char[memory_size] ),
@@ -78,7 +78,7 @@ namespace memory_mgr
 
 		//Call this method to allocate memory block
 		//size - block size in bytes
- 		ptr_t allocate( size_type size )
+ 		ptr_type allocate( size_type size )
  		{
  			return m_mgr.allocate( size );
  		}
@@ -86,7 +86,7 @@ namespace memory_mgr
 		//Call this method to deallocate memory block
 		//off - offset returned by allocate method
 		//size - block size in bytes
-		void deallocate( const ptr_t ptr, size_type size )
+		void deallocate( const ptr_type ptr, size_type size )
  		{
  			m_mgr.deallocate( ptr, size );
  		}
@@ -117,9 +117,9 @@ namespace memory_mgr
 	};
 
 	template< class MemMgr >
-	typename const heap_memory<MemMgr>::ptr_t heap_memory<MemMgr>::null_ptr( heap_memory<MemMgr>::memmgr_t::null_ptr );
+	typename const heap_memory<MemMgr>::ptr_type heap_memory<MemMgr>::null_ptr( heap_memory<MemMgr>::memmgr_t::null_ptr );
 
-	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4/*, detail::std_pointer*/> > > def_heap_mgr;
+	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4, std_pointer> > > def_heap_mgr;
 }
 
 #endif// MGR_HEAP_MEMORY_HEADER

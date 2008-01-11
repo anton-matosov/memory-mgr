@@ -59,51 +59,51 @@ namespace memory_mgr
 		};
 
 	private:
-		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_t;
-		bitmgr_t m_bitmgr;
+		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+		bitmgr_type m_bitmgr;
 
 		char* m_membase;
 		
 	public:
-		typedef typename bitmgr_t::block_ptr_type					block_ptr_type;		
-		typedef typename bitmgr_t::size_type						size_type;
+		typedef typename bitmgr_type::block_ptr_type					block_ptr_type;		
+		typedef typename bitmgr_type::size_type						size_type;
 		typedef memory_manager										self_type;
-		typedef SyncObj												sync_object;
+		typedef SyncObj												sync_object_type;
 
-		typedef PtrT<self_type> ptr_t;
-		static const ptr_t null_ptr;
+		typedef PtrT<self_type> ptr_type;
+		static const ptr_type null_ptr;
 		
 
 		explicit memory_manager( void* mem_base )
 			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )
 		{
-			m_membase = detail::shift( mem_base, bitmgr_t::memory_usage );
+			m_membase = detail::shift( mem_base, bitmgr_type::memory_usage );
 		}
 		
 		//Call this method to allocate memory block
 		//size - block size in bytes
-		ptr_t allocate( size_type size )
+		ptr_type allocate( size_type size )
 		{
 			size_type chunk_ind = do_allocate( size );
-			if( chunk_ind == bitmgr_t::npos )
+			if( chunk_ind == bitmgr_type::npos )
 			{
 				throw std::bad_alloc();
 			}
-			return ptr_t( calc_offset( chunk_ind ) );
+			return ptr_type( *this, calc_offset( chunk_ind ) );
 		}
 
 
 		//Call this method to allocate memory block
 		//size - block size in bytes
-		ptr_t allocate( size_type size, const std::nothrow_t& )/*throw()*/
+		ptr_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
-			return ptr_t( calc_offset( do_allocate( size ) ) );
+			return ptr_type( *this, calc_offset( do_allocate( size ) ) );
 		}
 
 		//Call this method to deallocate memory block
 		//off - offset returned by allocate method
 		//size - block size in bytes
- 		void deallocate( const ptr_t off, size_type size )
+ 		void deallocate( const ptr_type off, size_type size )
  		{
 			lock l(*this);
  			m_bitmgr.deallocate( chunk_index( off.get_off( *this ) ), chunks_required( size ) );
@@ -115,7 +115,7 @@ namespace memory_mgr
 		void deallocate( const void* p, size_type size )
 		{
 			assert( p >= m_membase && "Invalid pointer value" );
-			deallocate( ptr_t( *this, p ), size );
+			deallocate( ptr_type( *this, p ), size );
 		}
 
 		//Returns base address
@@ -168,51 +168,42 @@ namespace memory_mgr
 	};
 
 	template < class BlockType, size_t MemorySize, size_t ChunkSize, template <class> class PtrT, class SyncObj >
-	typename const memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::ptr_t memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::null_ptr( memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::bitmgr_t::npos );
+	typename const memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::ptr_type memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::null_ptr( pointer_traits< PtrT<memory_manager> >::null_ptr );
 
 	//Size tracking decorator for memory manager
 	template< class MemMgr >
 	class size_tracking
 	{
-		typedef MemMgr memmgr_t;
-		typedef typename memmgr_t::size_type			size_type;
-		typedef typename memmgr_t::ptr_t				ptr_t;
-
-		size_type* size_cast( ptr_t p ) const
-		{
-			return static_cast< size_type* >( p.get_ptr(m_memmgr) );
-		}
-
-		memmgr_t m_memmgr;
+		typedef MemMgr									memmgr_type;				
 	public:
 		enum
 		{
-			chunk_size = memmgr_t::chunk_size,
-			memory_size =  memmgr_t::memory_size,
-			num_chunks =  memmgr_t::num_chunks
+			chunk_size = memmgr_type::chunk_size,
+			memory_size =  memmgr_type::memory_size,
+			num_chunks =  memmgr_type::num_chunks
 		};
 
-		typedef typename memmgr_t::block_ptr_type		block_ptr_type;		
-		typedef typename memmgr_t::size_type			size_type;
-		typedef typename memmgr_t::ptr_t				ptr_t;
+		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
+		typedef typename memmgr_type::size_type			size_type;
+		typedef typename memmgr_type::ptr_type			ptr_type;
 
-		static const ptr_t null_ptr;
+		static const ptr_type null_ptr;
 
 		explicit size_tracking( void* mem_base )
 			:m_memmgr( mem_base )
 		{}
 
-		ptr_t allocate( size_type size )
+		ptr_type allocate( size_type size )
 		{
 			//allocate additional memory for size storing
 			size += sizeof( size_type );
-			ptr_t ptr = m_memmgr.allocate( size );
+			ptr_type ptr = m_memmgr.allocate( size );
 			size_type* psize = size_cast( ptr );
 			*psize = size;
-			return ptr_t( m_memmgr, ++psize );
+			return ptr_type( m_memmgr, ++psize );
 		}
 
-		void deallocate( ptr_t ptr )
+		void deallocate( ptr_type ptr )
 		{
 			size_type *ps = size_cast( ptr );
 			--ps;
@@ -224,7 +215,7 @@ namespace memory_mgr
 		void deallocate( const void* p )
 		{
 			assert( p > m_memmgr.get_base() && "Invalid pointer value" );
-			deallocate( ptr_t( m_memmgr, p ) );
+			deallocate( ptr_type( m_memmgr, p ) );
 		}
 
 		bool empty()
@@ -242,10 +233,18 @@ namespace memory_mgr
 		{
 			return m_memmgr.get_base();
 		}
+
+	private:
+		size_type* size_cast( ptr_type p ) const
+		{
+			return static_cast< size_type* >( p.get_ptr(m_memmgr) );
+		}
+
+		memmgr_type m_memmgr;
 	};
 
 	template< class MemMgr >
-	typename const size_tracking<MemMgr>::ptr_t size_tracking<MemMgr>::null_ptr( size_tracking<MemMgr>::memmgr_t::null_ptr );
+	typename const size_tracking<MemMgr>::ptr_type size_tracking<MemMgr>::null_ptr( size_tracking<MemMgr>::memmgr_type::null_ptr );
 }
 
 

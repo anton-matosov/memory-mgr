@@ -12,7 +12,7 @@ namespace memory_mgr
 	namespace detail
 	{
 		template< typename T, typename MemMgr >
-		typename const MemMgr::ptr_t& get_ptr( const simple_ptr< T, MemMgr >& ptr )
+		typename const MemMgr::ptr_type& get_ptr( const simple_ptr< T, MemMgr >& ptr )
 		{
 			return ptr.m_ptr;
 		}
@@ -34,39 +34,39 @@ namespace memory_mgr
 	class simple_ptr
 	{
 		template< typename T, typename MemMgr >
-		friend typename const MemMgr::ptr_t& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
+		friend typename const MemMgr::ptr_type& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
 	public:
-		typedef MemMgr mgr_t;
+		typedef MemMgr				mgr_type;
 		
-		typedef T					value_t;
-		typedef value_t*			pointer_t;
-		typedef const value_t*		const_pointer_t;
+		typedef T					value_type;
+		typedef value_type*			pointer_type;
+		typedef const value_type*	const_pointer_type;
 
-		typedef value_t&			reference_t;
-		typedef const value_t&		const_reference_t;
+		typedef value_type&			reference_type;
+		typedef const value_type&	const_reference_type;
 
-		typedef simple_ptr< value_t, mgr_t > self_type;
+		typedef simple_ptr< value_type, mgr_type > self_type;
 
 		typedef ptrdiff_t difference_type;
-		//friend class simple_ptr< value_t, mgr_t >;
+		//friend class simple_ptr< value_type, mgr_type >;
 
 		//Default constructor
 		simple_ptr()
-			:m_ptr( mgr_t::null_ptr )
+			:m_ptr( mgr_type::null_ptr )
 		{
 
 		}
 
 		//Constructor from common pointer
-		explicit simple_ptr( const value_t* ptr )
-			:m_ptr( mgr_t::instance(), ptr )
+		explicit simple_ptr( const value_type* ptr )
+			:m_ptr( mgr_type::instance(), ptr )
 		{
 
 		}
 
 		//Polymorph copy constructor
 		template < typename U >
-		simple_ptr( const simple_ptr< U, mgr_t >& ptr )
+		simple_ptr( const simple_ptr< U, mgr_type >& ptr )
 			:m_ptr( detail::get_ptr( ptr ) )
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
@@ -84,32 +84,32 @@ namespace memory_mgr
 		
 
 		//Access operators
-		pointer_t operator->()
+		pointer_type operator->()
 		{
 			return get_poiner();
 		}
 
-		const_pointer_t operator->() const
+		const_pointer_type operator->() const
 		{
 			return get_poiner();
 		}
 
-		reference_t operator*()
+		reference_type operator*()
 		{
 			return *get_poiner();
 		}
 
-		const_reference_t operator*() const
+		const_reference_type operator*() const
 		{
 			return *get_poiner();
 		}
 
-		pointer_t operator&()
+		pointer_type operator&()
 		{
 			return get_poiner();
 		}
 
-		const_pointer_t operator&() const
+		const_pointer_type operator&() const
 		{
 			return get_poiner();
 		}
@@ -143,7 +143,7 @@ namespace memory_mgr
 
 		self_type& operator--()
 		{			
-			m_ptr = ptr_t( mgr_t::instance(), get_poiner() - 1 );
+			m_ptr = ptr_type( mgr_type::instance(), get_poiner() - 1 );
 			return *this;
 		}
 
@@ -162,7 +162,7 @@ namespace memory_mgr
 // 		self_type& operator=(  const int val )
 // 		{
 // 			assert( val == 0 );
-// 			m_ptr = mgr_t::null_ptr;
+// 			m_ptr = mgr_type::null_ptr;
 // 			return *this;
 // 		}
 // 
@@ -222,33 +222,33 @@ namespace memory_mgr
 		
 
 	private:
-		typedef typename mgr_t::ptr_t ptr_t;
-		typedef typename ptr_t::size_type size_type;
-		ptr_t m_ptr;
+		typedef typename mgr_type::ptr_type ptr_type;
+		typedef typename ptr_type::offset_type offset_type;
+		ptr_type m_ptr;
 
-		inline pointer_t unconst_poiner( const_pointer_t ptr )
+		inline pointer_type unconst_poiner( const_pointer_type ptr )
 		{
-			return const_cast<pointer_t>( ptr );
+			return const_cast<pointer_type>( ptr );
 		}
 
-		inline pointer_t get_poiner()
+		inline pointer_type get_poiner()
 		{
 			return unconst_poiner( do_get_poiner() );
 		}
 
-		inline const_pointer_t get_poiner() const
+		inline const_pointer_type get_poiner() const
 		{
 			return do_get_poiner();
 		}
 
-		inline size_type get_offset() const
+		inline offset_type get_offset() const
 		{
-			return m_ptr.get_off( mgr_t::instance() );
+			return m_ptr.get_off( mgr_type::instance() );
 		}
 
-		inline const_pointer_t do_get_poiner() const
+		inline const_pointer_type do_get_poiner() const
 		{
-			return static_cast<const_pointer_t>( m_ptr.get_ptr( mgr_t::instance() ) );
+			return static_cast<const_pointer_type>( m_ptr.get_ptr( mgr_type::instance() ) );
 		}
 	};
 
@@ -256,7 +256,7 @@ namespace memory_mgr
 	{
 // 
 // 		template< typename T, typename MemMgr >
-// 		const typename MemMgr::ptr_t& get_ptr( const simple_ptr< T, MemMgr >& ptr )
+// 		const typename MemMgr::ptr_type& get_ptr( const simple_ptr< T, MemMgr >& ptr )
 // 		{
 // 			return ptr.m_ptr;
 // 		}

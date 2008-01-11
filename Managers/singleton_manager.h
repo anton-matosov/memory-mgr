@@ -33,9 +33,9 @@ namespace memory_mgr
 // 	template< class MgrT >
 // 	class singleton_ptr_t: public detail::off_ptr_t< MgrT >
 // 	{		
-// 		typedef MgrT mgr_t;
+// 		typedef MgrT mgr_type;
 // 	public:			
-// 		typedef typename detail::off_ptr_t< mgr_t >	base_t;
+// 		typedef typename detail::off_ptr_t< mgr_type >	base_t;
 // 		typedef typename base_t::size_type			size_type;
 // 
 // 		singleton_ptr_t( const base_t& ptr )
@@ -48,22 +48,22 @@ namespace memory_mgr
 // 		{}
 // 
 // 		//Construct pointer from memory address
-// 		singleton_ptr_t( const mgr_t& mgr, const void* ptr )			
+// 		singleton_ptr_t( const mgr_type& mgr, const void* ptr )			
 // 			:base_t( mgr, ptr )
 // 		{}
 // 
 // 		void* get_ptr()
 // 		{
-// 			return base_t::get_ptr( mgr_t::instance() );
+// 			return base_t::get_ptr( mgr_type::instance() );
 // 		}
 // 
 // 		const void* get_ptr() const
 // 		{
-// 			return base_t::get_ptr( mgr_t::instance() );
+// 			return base_t::get_ptr( mgr_type::instance() );
 // 		}
 // 
 // 		//Call this method to get real memory address
-// 		const void* get_ptr( const mgr_t& mgr ) const
+// 		const void* get_ptr( const mgr_type& mgr ) const
 // 		{
 // 			return base_t::get_ptr( mgr );
 // 		}
@@ -79,21 +79,20 @@ namespace memory_mgr
 	class  singleton_manager : public singleton< typename Mgr::self_type, Mgr, SyncObj, ThreadingModel >
 	{
 	public:
-		typedef Mgr									mgr_t;
-		typedef typename mgr_t::block_ptr_type		block_ptr_type;		
-		typedef typename mgr_t::size_type			size_type;
+		typedef Mgr									mgr_type;
+		typedef typename mgr_type::block_ptr_type	block_ptr_type;		
+		typedef typename mgr_type::size_type		size_type;
 		typedef typename Mgr::self_type				self_type;
-		typedef typename mgr_t::ptr_t				ptr_t;
-		//typedef singleton_ptr_t<self_type>				ptr_t;
+		typedef typename mgr_type::ptr_type			ptr_type;
 	
 		enum
 		{
-			chunk_size = mgr_t::chunk_size,
-			memory_size =  mgr_t::memory_size,
-			num_chunks =  mgr_t::num_chunks
+			chunk_size = mgr_type::chunk_size,
+			memory_size =  mgr_type::memory_size,
+			num_chunks =  mgr_type::num_chunks
 		};
 
-		static const ptr_t null_ptr;
+		static const ptr_type null_ptr;
 	private:
 		singleton_manager();
 		~singleton_manager();
@@ -102,7 +101,7 @@ namespace memory_mgr
 	};
 
 	template< class MemMgr, class SyncObj, template <class> class ThreadingModel >
-	typename const singleton_manager<MemMgr, SyncObj, ThreadingModel>::ptr_t singleton_manager<MemMgr, SyncObj, ThreadingModel>::null_ptr( singleton_manager<MemMgr, SyncObj, ThreadingModel>::mgr_t::null_ptr );
+	typename const singleton_manager<MemMgr, SyncObj, ThreadingModel>::ptr_type singleton_manager<MemMgr, SyncObj, ThreadingModel>::null_ptr( singleton_manager<MemMgr, SyncObj, ThreadingModel>::mgr_type::null_ptr );
 }
 
 #endif// MGR_SINGLETON_MANAGER_HEADER

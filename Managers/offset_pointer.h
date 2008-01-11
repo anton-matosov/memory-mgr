@@ -27,23 +27,27 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "detail/pointer_traits.h"
+
 namespace memory_mgr
 {
 	//Offset pointer class
 	template< class Mgr >
 	class offset_pointer
-	{
-		typedef Mgr mgr_t;
-
-		const char* do_get_ptr( const mgr_t& mgr ) const
-		{
-			return detail::shift( mgr.get_base(), m_offset );
-		}
-		typename mgr_t::size_type m_offset;
+	{		
 	public:
-		typedef typename mgr_t::size_type size_type;
+		typedef Mgr									mgr_type;
+		typedef typename mgr_type::size_type		offset_type;
+		typedef typename offset_pointer<mgr_type>	self_type;
+
+		//Constructs null pointer
+		explicit offset_pointer( detail::null_type )
+			:m_offset( ~offset_type(0) )
+		{}
+
+
 		//Construct pointer from offset
-		explicit offset_pointer( const size_type offset )
+		offset_pointer( const mgr_type& /*mgr*/, const offset_type offset )
 			:m_offset( offset )
 		{}
 
@@ -52,7 +56,7 @@ namespace memory_mgr
 		{}
 
 		//Construct pointer from memory address
-		offset_pointer( const mgr_t& mgr, const void* ptr )			
+		offset_pointer( const mgr_type& mgr, const void* ptr )			
 			:m_offset( detail::diff( ptr, mgr.get_base() ) )
 		{}
 
@@ -63,29 +67,36 @@ namespace memory_mgr
 		}
 
 		//Call this method to get offset
-		const size_type get_off( const mgr_t& /*mgr*/ ) const
+		const offset_type get_off( const mgr_type& /*mgr*/ ) const
 		{
 			return m_offset;
 		}
 
 		//Call this method to get real memory address
-		void* get_ptr( const mgr_t& mgr )
+		void* get_ptr( const mgr_type& mgr )
 		{
 			return detail::unconst_char( do_get_ptr( mgr ) );
 		}
 
 		//Call this method to get real memory address
-		const void* get_ptr( const mgr_t& mgr ) const
+		const void* get_ptr( const mgr_type& mgr ) const
 		{
 			return do_get_ptr( mgr );
 		}
 
 		bool is_null() const
 		{
-			return m_offset != mgr_t::null_ptr.m_offset;
+			return m_offset != mgr_type::null_ptr.m_offset;
 		}	
-	};
 
+	private:
+		offset_type m_offset;
+
+		const char* do_get_ptr( const mgr_type& mgr ) const
+		{
+			return detail::shift( mgr.get_base(), m_offset );
+		}
+	};
 }
 
 

@@ -33,14 +33,21 @@ namespace memory_mgr
 	//Standard pointer class
 	template< class Mgr >
 	class std_pointer
-	{
-		typedef Mgr mgr_t;
+	{		
 		void* m_pointer;
 	public:
-		typedef typename mgr_t::size_type size_type;
+		typedef Mgr								mgr_type;
+		typedef typename mgr_type::size_type	offset_type;
+		typedef typename std_pointer<mgr_type>	self_type;
+
+		//Constructs null pointer
+		explicit std_pointer( detail::null_type )
+			:m_pointer( 0 )
+		{}
+
 		//Construct pointer from offset
-		explicit std_pointer( const mgr_t& mgr, const size_type offset )
-			:m_pointer( unconst_void( shift( mgr.get_base(), offset ) ) )
+		std_pointer( const mgr_type& mgr, const offset_type offset )
+			:m_pointer( detail::unconst_void( detail::shift( mgr.get_base(), offset ) ) )
 		{}
 
 		std_pointer( const std_pointer& ptr )
@@ -48,40 +55,42 @@ namespace memory_mgr
 		{}
 
 		//Construct pointer from memory address
-		std_pointer( const mgr_t&, const void* ptr )			
-			:m_pointer( unconst_void( ptr ) )
+		std_pointer( const mgr_type&, const void* ptr )			
+			:m_pointer( detail::unconst_void( ptr ) )
 		{}
 
 		std_pointer& operator=( const std_pointer& ptr )				
 		{
-			m_pointer = unconst_void( ptr.m_pointer );
+			m_pointer = detail::unconst_void( ptr.m_pointer );
 			return *this;
 		}
 
 		//Call this method to get offset
-		const size_type get_off( const mgr_t& mgr ) const
+		const offset_type get_off( const mgr_type& mgr ) const
 		{
 			return detail::diff( m_pointer, mgr.get_base() );
 		}
 
 		//Call this method to get real memory address
-		void* get_ptr( const mgr_t& )
+		void* get_ptr( const mgr_type& )
 		{
 			return m_pointer;
 		}
 
 		//Call this method to get real memory address
-		const void* get_ptr( const mgr_t& ) const
+		const void* get_ptr( const mgr_type& ) const
 		{
 			return m_pointer;
 		}
 
 		bool is_null() const
 		{
-			return m_pointer != mgr_t::null_ptr.m_pointer;
-		}				
-	};
+			return m_pointer != mgr_type::null_ptr.m_pointer;
+		}
 
+		
+	};
+	
 }
 
 
