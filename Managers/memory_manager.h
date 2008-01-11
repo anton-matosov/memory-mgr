@@ -30,159 +30,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/bit_manager.h"
 #include "detail/critical_section.h"
 #include "detail/locks.h"
+#include "detail/ptr_helpers.h"
+#include "offset_pointer.h"
 
-namespace managers
+namespace memory_mgr
 {
-	namespace detail
-	{
-		static inline char* char_cast( void* p )
-		{
-			return static_cast< char* >( p );
-		}
-
-		static inline const char* char_cast( const void* p )
-		{
-			return static_cast< const char* >( p );
-		}
-
-		static inline char* unconst_char( const char* p )
-		{
-			return const_cast< char* >( p );
-		}
-
-		static inline void* unconst_void( const void* p )
-		{
-			return const_cast< void* >( p );
-		}
-
-		static inline ptrdiff_t diff( const void* p1, const void* p2 )
-		{
-			return char_cast(p1) - char_cast(p2);
-		}
-
-		static inline char* shift( void* p, size_t offset )
-		{
-			return char_cast(p) + offset;
-		}
-
- 		static inline const char* shift( const void* p, const size_t offset )
- 		{
- 			return char_cast(p) + offset;
- 		}
-
-		//Offset pointer class
-		template< class Mgr >
-		class off_ptr_t
-		{
-			typedef Mgr mgr_t;
-
-			const char* do_get_ptr( const mgr_t& mgr ) const
-			{
-				return detail::shift( mgr.get_base(), m_offset );
-			}
-			typename mgr_t::size_type m_offset;
-		public:
-			typedef typename mgr_t::size_type size_type;
-			//Construct pointer from offset
-			explicit off_ptr_t( const size_type offset )
-				:m_offset( offset )
-			{}
-
-			off_ptr_t( const off_ptr_t& ptr )
-				:m_offset( ptr.m_offset )
-			{}
-
-			//Construct pointer from memory address
-			off_ptr_t( const mgr_t& mgr, const void* ptr )			
-				:m_offset( detail::diff( ptr, mgr.get_base() ) )
-			{}
-
-			off_ptr_t& operator=( const off_ptr_t& ptr )				
-			{
-				m_offset = ptr.m_offset;
-				return *this;
-			}
-
-			//Call this method to get offset
-			const size_type get_off( const mgr_t& /*mgr*/ ) const
-			{
-				return m_offset;
-			}
-
-			//Call this method to get real memory address
-			void* get_ptr( const mgr_t& mgr )
-			{
-				return detail::unconst_char( do_get_ptr( mgr ) );
-			}
-
-			//Call this method to get real memory address
-			const void* get_ptr( const mgr_t& mgr ) const
-			{
-				return do_get_ptr( mgr );
-			}
-
-			bool is_null() const
-			{
-				return m_offset != mgr_t::null_ptr.m_offset;
-			}	
-		};
-
-		/*
-		//Standard pointer class
-		template< class Mgr >
-		class std_pointer
-		{
-			typedef Mgr mgr_t;
-			void* m_pointer;
-		public:
-			typedef typename mgr_t::size_type size_type;
-			//Construct pointer from offset
- 			explicit std_pointer( const mgr_t& mgr, const size_type offset )
- 				:m_pointer( unconst_void( shift( mgr.get_base(), offset ) ) )
- 			{}
-
-			std_pointer( const std_pointer& ptr )
-				:m_pointer( ptr.m_pointer )
-			{}
-
-			//Construct pointer from memory address
-			std_pointer( const mgr_t&, const void* ptr )			
-				:m_pointer( unconst_void( ptr ) )
-			{}
-
-			std_pointer& operator=( const std_pointer& ptr )				
-			{
-				m_pointer = unconst_void( ptr.m_pointer );
-				return *this;
-			}
-
-			//Call this method to get offset
-			const size_type get_off( const mgr_t& mgr ) const
-			{
-				return detail::diff( m_pointer, mgr.get_base() );
-			}
-
-			//Call this method to get real memory address
-			void* get_ptr( const mgr_t& )
-			{
-				return m_pointer;
-			}
-
-			//Call this method to get real memory address
-			const void* get_ptr( const mgr_t& ) const
-			{
-				return m_pointer;
-			}
-
-			bool is_null() const
-			{
-				return m_pointer != mgr_t::null_ptr.m_pointer;
-			}				
-		};
-		*/
-		
-	}
-
 	//Memory manager
 	//Encapsulates work with memory
 	//Template parameters:
@@ -194,7 +46,7 @@ namespace managers
 		class BlockType, 
 		size_t MemorySize,
 		size_t ChunkSize, 
-		template <class> class PtrT = detail::off_ptr_t,
+		template <class> class PtrT = offset_pointer,
 		class SyncObj = detail::sync::critical_section >
 	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
 	{

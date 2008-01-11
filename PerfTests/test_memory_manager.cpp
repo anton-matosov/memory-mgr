@@ -30,18 +30,18 @@ typedef unsigned char chunk_t;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
-typedef managers::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
+typedef memory_mgr::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
 template memmgr_t;
-template class managers::size_tracking< memmgr_t >;
+template class memory_mgr::size_tracking< memmgr_t >;
 
 typedef memmgr_t::ptr_t ptr_t;
 
 
-class TestClass: public managers::managed_base< managers::def_heap_mgr >
+class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
 {
 	int m_i;
 public:
-	typedef managers::managed_base< managers::def_heap_mgr > base_t;
+	typedef memory_mgr::managed_base< memory_mgr::def_heap_mgr > base_t;
 	typedef base_t::mem_mgr mem_mgr;
 
 	TestClass()

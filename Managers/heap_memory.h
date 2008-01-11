@@ -32,7 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/scoped_ptr.h"
 
 
-namespace managers
+namespace memory_mgr
 {
 
 	template< class MemMgr >	
@@ -42,7 +42,7 @@ namespace managers
 		
 				
 		scoped_ptr<char, ::detail::array_deleter> m_memory;
-		scoped_ptr<memmgr_t> m_mgr;
+		memmgr_t m_mgr;
 	public:	
 		enum
 		{
@@ -60,7 +60,7 @@ namespace managers
 
 		heap_memory()
 			:m_memory( new char[memory_size] ),
-			m_mgr( new memmgr_t( &*m_memory ) )
+			m_mgr( &*m_memory )
 		{}
 
 		~heap_memory()
@@ -68,19 +68,19 @@ namespace managers
 
  		operator memmgr_t&()
  		{
- 			return *m_mgr;
+ 			return m_mgr;
  		}
 
 		operator const memmgr_t&() const
 		{
-			return *m_mgr;
+			return m_mgr;
 		}
 
 		//Call this method to allocate memory block
 		//size - block size in bytes
  		ptr_t allocate( size_type size )
  		{
- 			return m_mgr->allocate( size );
+ 			return m_mgr.allocate( size );
  		}
  
 		//Call this method to deallocate memory block
@@ -88,7 +88,7 @@ namespace managers
 		//size - block size in bytes
 		void deallocate( const ptr_t ptr, size_type size )
  		{
- 			m_mgr->deallocate( ptr, size );
+ 			m_mgr.deallocate( ptr, size );
  		}
 
 		//Call this method to deallocate memory block
@@ -96,23 +96,23 @@ namespace managers
 		//size - block size in bytes
 		void deallocate( const void* p, size_type size )
 		{
-			m_mgr->deallocate( p, size );
+			m_mgr.deallocate( p, size );
 		}
   
   		//Returns base address
   		const char* get_base() const
   		{
-  			return m_mgr->get_base();
+  			return m_mgr.get_base();
   		}
 
 		bool empty()
 		{
-			return m_mgr->empty();
+			return m_mgr.empty();
 		}
 
 		bool free()
 		{
-			return m_mgr->free();
+			return m_mgr.free();
 		}
 	};
 

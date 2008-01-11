@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "static_bitset.h"
 
-namespace managers
+namespace memory_mgr
 {
 	namespace detail
 	{

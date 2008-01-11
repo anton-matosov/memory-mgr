@@ -20,28 +20,54 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEST_CLASS_UNIT_HEADER
-#define MGR_TEST_CLASS_UNIT_HEADER
+#ifndef MGR_PTR_HELPERS_HEADER
+#define MGR_PTR_HELPERS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include "managed_base.h"
-#include "heap_memory.h"
-
-class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
+namespace memory_mgr
 {
-	int m_i;
-public:
-	typedef memory_mgr::managed_base< memory_mgr::def_heap_mgr > base_t;
-	typedef base_t::mem_mgr mem_mgr;
+	namespace detail
+	{
+		static inline char* char_cast( void* p )
+		{
+			return static_cast< char* >( p );
+		}
 
-	TestClass();
-	~TestClass();
+		static inline const char* char_cast( const void* p )
+		{
+			return static_cast< const char* >( p );
+		}
 
-	void set( int i );
-	int get();
-};
+		static inline char* unconst_char( const char* p )
+		{
+			return const_cast< char* >( p );
+		}
 
-#endif //MGR_TEST_CLASS_UNIT_HEADER
+		static inline void* unconst_void( const void* p )
+		{
+			return const_cast< void* >( p );
+		}
+
+		static inline ptrdiff_t diff( const void* p1, const void* p2 )
+		{
+			return char_cast(p1) - char_cast(p2);
+		}
+
+		static inline char* shift( void* p, size_t offset )
+		{
+			return char_cast(p) + offset;
+		}
+
+		static inline const char* shift( const void* p, const size_t offset )
+		{
+			return char_cast(p) + offset;
+		}
+
+	}// namespace detail
+
+}// namespace memory_mgr
+
+#endif //MGR_PTR_HELPERS_HEADER

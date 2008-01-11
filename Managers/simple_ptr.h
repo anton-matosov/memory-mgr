@@ -3,7 +3,7 @@
 #include "detail/type_manip.h"
 #include "detail/static_assert.h"
 
-namespace managers
+namespace memory_mgr
 {
 	//Forward declaration
  	template< typename T, typename MemMgr > 
@@ -75,8 +75,14 @@ namespace managers
 
 		
 		//Copy operator
-		self_type& operator=( const simple_ptr& ptr )		{			m_ptr = ptr.m_ptr;			return *this;		}
-		
+		self_type& operator=( const simple_ptr& ptr )
+		{
+			m_ptr = ptr.m_ptr;
+			return *this;
+		}
+
+		
+
 		//Access operators
 		pointer_t operator->()
 		{
@@ -106,7 +112,8 @@ namespace managers
 		const_pointer_t operator&() const
 		{
 			return get_poiner();
-		}
+		}
+
 		operator T* ()
 		{
 			return get_poiner();
@@ -198,7 +205,8 @@ namespace managers
 
 		
 		
-				//Call this function to construct object using default constructor	
+				//Call this function to construct object using default constructor	
+
 		//template < typename T, typename mem_mgr >
 		//friend void construct( simple_ptr<T, mem_mgr>& arr_ptr );
 		
@@ -207,7 +215,8 @@ namespace managers
 				friend void construct( simple_ptr<T, sh_mem_mgr>& arr_ptr, const wchar_t* name, parT par );
 		
 				//Call this function to destruct object
-				template < typename T, typename sh_mem_mgr >
+				template < typename T, typename sh_mem_mgr >
+
 				friend void destruct( simple_ptr<T, sh_mem_mgr>& ptr );
 				*/
 		

@@ -34,7 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "helpers.h"
 #include "type_manip.h"
 
-namespace managers
+namespace memory_mgr
 {
 	enum arrayType{ StaticArray, DynamicArray, CustomArray };
 	namespace detail

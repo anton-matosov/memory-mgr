@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "../config/config.h"
 
-namespace managers
+namespace memory_mgr
 {
 	namespace detail
 	{
@@ -53,7 +53,7 @@ namespace managers
 
 	}//detail
 
-}//managers
+}//memory_mgr
 
 
 #endif// MGR_CRITICAL_SECTION_HEADER

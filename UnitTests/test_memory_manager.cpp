@@ -31,9 +31,9 @@ typedef unsigned char chunk_t;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
-typedef managers::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
+typedef memory_mgr::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
 template memmgr_t;
-template class managers::size_tracking< memmgr_t >;
+template class memory_mgr::size_tracking< memmgr_t >;
 
 typedef memmgr_t::ptr_t ptr_t;
 
@@ -65,7 +65,7 @@ bool test_size_tracking()
 {
 	SUBTEST_START( L"size_tracking" );
 	std::vector<chunk_t> memory( memory_size );
-	managers::size_tracking< memmgr_t > track_mgr( &*memory.begin() );
+	memory_mgr::size_tracking< memmgr_t > track_mgr( &*memory.begin() );
 
 	const memmgr_t::size_type obj_size = 4;
 	ptr_t p1 = track_mgr.allocate( obj_size );
@@ -87,7 +87,7 @@ bool test_out_of_memory()
 {
 	SUBTEST_START( L"out of memory case" );
 	std::vector<chunk_t> memory( memory_size );
-	managers::size_tracking< memmgr_t > mgr( &*memory.begin() );
+	memory_mgr::size_tracking< memmgr_t > mgr( &*memory.begin() );
 
 	try
 	{
@@ -124,11 +124,12 @@ bool test_managed_base()
 
 bool test_memory_manager()
 {
- 	TEST_START( L"memory managers" );
+ 	TEST_START( L"memory memory_mgr" );
 
 	TEST_END( test_alloc_dealloc() &&
 	test_size_tracking() &&
 	test_out_of_memory() &&
 	test_managed_base()
 	);
+
 }

@@ -164,11 +164,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\offset_pointer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\simple_ptr.h"
 				>
 			</File>
 			<File
 				RelativePath=".\singleton_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\std_pointer.h"
 				>
 			</File>
 		</Filter>
@@ -193,6 +201,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\pseudo_sync.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\ptr_helpers.h"
 				>
 			</File>
 			<File

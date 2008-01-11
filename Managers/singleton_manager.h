@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "detail/singleton.h"
-namespace managers
+namespace memory_mgr
 {
 // 	template< class MgrT >
 // 	class singleton_ptr_t: public detail::off_ptr_t< MgrT >

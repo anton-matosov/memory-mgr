@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "locks.h"
 #include "critical_section.h"
 
-namespace managers
+namespace memory_mgr
 {
 	template 
 	<

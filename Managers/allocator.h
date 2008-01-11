@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "simple_ptr.h"
-namespace managers
+namespace memory_mgr
 {
 
 	template< class T,	class MemMgr >
@@ -63,7 +63,7 @@ namespace managers
 		template<class Other>
 		struct rebind
 		{	// convert an allocator<_Ty> to an allocator <_Other>
-			typedef typename managers::allocator< Other, memmgr_t > other;
+			typedef typename memory_mgr::allocator< Other, memmgr_t > other;
 		};
 
 		// return address of mutable _Val
@@ -115,7 +115,7 @@ namespace managers
 		void construct(pointer ptr, const_reference val)
 		{	
 			::new (&*ptr) T(val);
-			//managers::construct( ptr );
+			//memory_mgr::construct( ptr );
 		}
 
 		// destroy object at _Ptr

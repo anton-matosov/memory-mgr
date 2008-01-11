@@ -27,7 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif 
 
-namespace managers
+namespace memory_mgr
 {
 	namespace detail 
 	{
@@ -101,7 +101,7 @@ namespace managers
 
 	}//detail
 
-}//managers
+}//memory_mgr
 
 
 #endif// MGR_HELPERS_HEADER

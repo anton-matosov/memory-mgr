@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_WINDOWS_PLATFORM
 #include <windows.h>
 
-namespace managers
+namespace memory_mgr
 {
 	namespace osapi
 	{

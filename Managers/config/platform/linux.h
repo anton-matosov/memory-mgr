@@ -27,7 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <pthread.h>
 
-namespace managers
+namespace memory_mgr
 {
 	namespace osapi
 	{
