@@ -252,18 +252,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
-			Name="containers"
-			>
-			<File
-				RelativePath=".\containers\map.h"
-				>
-			</File>
-			<File
-				RelativePath=".\containers\tree.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

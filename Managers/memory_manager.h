@@ -83,13 +83,8 @@ namespace memory_mgr
 		//Call this method to allocate memory block
 		//size - block size in bytes
 		ptr_type allocate( size_type size )
-		{
-			size_type chunk_ind = do_allocate( size );
-			if( chunk_ind == bitmgr_type::npos )
-			{
-				throw std::bad_alloc();
-			}
-			return ptr_type( *this, calc_offset( chunk_ind ) );
+		{			
+			return do_allocate( size, throw_bad_alloc );
 		}
 
 
@@ -97,7 +92,7 @@ namespace memory_mgr
 		//size - block size in bytes
 		ptr_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
-			return ptr_type( *this, calc_offset( do_allocate( size ) ) );
+			return do_allocate( size, do_nothing );
 		}
 
 		//Call this method to deallocate memory block
@@ -156,14 +151,28 @@ namespace memory_mgr
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
 
+		static inline void throw_bad_alloc()
+		{
+			throw std::bad_alloc();
+		}
+
+		static inline void do_nothing()
+		{}
 
 		//Call this method to allocate memory block
 		//size - block size in bytes
-		//returns chunk index
-		inline size_type do_allocate( size_type size )
+		//returns poiner
+		template< class OnNoMemory >
+		inline ptr_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{			
 			lock l(*this);
-			return m_bitmgr.allocate( chunks_required( size ) );
+			size_type chunk_ind = m_bitmgr.allocate( chunks_required( size ) );
+			if( chunk_ind == bitmgr_type::npos )
+			{
+				OnNoMemoryOp();
+				return null_ptr;
+			}
+			return ptr_type( *this, calc_offset( chunk_ind ) );
 		}
 	};
 

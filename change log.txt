@@ -2,7 +2,7 @@ In dev:
  - namespace managers was renamed to memory_mgr
  - pointer classes were moved to separate files
  - pointers and cast helper function were moved to ptr_helpers.h file
- - RTTI was disabled for VS2008 projects
+ - RTTI was disabled for VS projects
  - added VS2005 projects
  - singleton updated to have to separate parameters for instantiation type
    and for return type

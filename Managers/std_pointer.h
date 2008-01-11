@@ -86,9 +86,7 @@ namespace memory_mgr
 		bool is_null() const
 		{
 			return m_pointer != mgr_type::null_ptr.m_pointer;
-		}
-
-		
+		}		
 	};
 	
 }
