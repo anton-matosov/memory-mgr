@@ -71,19 +71,25 @@ namespace memory_mgr
 			size_type allocate( size_type bits_count )
 			{
 				size_type pos = m_bitset.find_n( bits_count, m_last_block );
+				//if found set bits
 				if( pos != npos )
 				{
+					//cache block index
 					m_last_block = block_index(pos);
 					m_bitset.reset( pos, bits_count );
 				}
 				else
 				{
+					//If cache is used
 					if (m_last_block != 0)
 					{
+						//Invalidate cache
 						m_last_block = 0;
+						//And try one more time
 						return allocate( bits_count );
 					}					
 				}
+				//return bit index
 				return pos;
 			}
 
@@ -91,6 +97,7 @@ namespace memory_mgr
 			{
 				assert( ( m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
 				m_bitset.set( pos, bits_count );
+				//cache block index
 				m_last_block = block_index(pos);
 			}
 
@@ -110,7 +117,10 @@ namespace memory_mgr
 			}
 
 		private:
+			//Bitset
 			bitset_t m_bitset;
+
+			//Block cache
 			size_type m_last_block;
 
 			static inline size_type block_index(size_type pos) 

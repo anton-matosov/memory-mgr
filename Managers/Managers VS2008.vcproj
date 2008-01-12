@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\cmp_helper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\critical_section.h"
 				>
 			</File>

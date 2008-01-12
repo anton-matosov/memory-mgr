@@ -59,7 +59,7 @@ namespace memory_mgr
 
 		static void* operator new( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
 		{
-			//TODO:implement this method
+			//TODO:implement correct logic in this method
 			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
 		}
 
@@ -80,7 +80,7 @@ namespace memory_mgr
 
 		static void operator delete( void* /*p*/, const object_name& /*name*/ )
 		{
-			//TODO:implement this method
+			//TODO:implement correct logic in this method
 			//mem_mgr::instance().deallocate( p, size );
 		}
 	};

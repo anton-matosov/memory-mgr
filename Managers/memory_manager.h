@@ -71,7 +71,7 @@ namespace memory_mgr
 		typedef SyncObj												sync_object_type;
 
 		typedef PtrT<self_type> ptr_type;
-		static const ptr_type null_ptr;
+		//static const ptr_type null_ptr;
 		
 
 		explicit memory_manager( void* mem_base )
@@ -89,6 +89,7 @@ namespace memory_mgr
 
 
 		//Call this method to allocate memory block
+		//Newer throws
 		//size - block size in bytes
 		ptr_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
@@ -96,12 +97,12 @@ namespace memory_mgr
 		}
 
 		//Call this method to deallocate memory block
-		//off - offset returned by allocate method
+		//ptr - pointer returned by allocate method
 		//size - block size in bytes
- 		void deallocate( const ptr_type off, size_type size )
+ 		void deallocate( const ptr_type ptr, size_type size )
  		{
 			lock l(*this);
- 			m_bitmgr.deallocate( chunk_index( off.get_off( *this ) ), chunks_required( size ) );
+ 			m_bitmgr.deallocate( chunk_index( ptr.get_off( *this ) ), chunks_required( size ) );
  		}
 
 		//Call this method to deallocate memory block
@@ -170,14 +171,11 @@ namespace memory_mgr
 			if( chunk_ind == bitmgr_type::npos )
 			{
 				OnNoMemoryOp();
-				return null_ptr;
+				return pointer_traits<ptr_type>::null_ptr;
 			}
 			return ptr_type( *this, calc_offset( chunk_ind ) );
 		}
 	};
-
-	template < class BlockType, size_t MemorySize, size_t ChunkSize, template <class> class PtrT, class SyncObj >
-	typename const memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::ptr_type memory_manager< BlockType, MemorySize, ChunkSize, PtrT, SyncObj >::null_ptr( pointer_traits< PtrT<memory_manager> >::null_ptr );
 
 	//Size tracking decorator for memory manager
 	template< class MemMgr >
@@ -195,8 +193,6 @@ namespace memory_mgr
 		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
 		typedef typename memmgr_type::size_type			size_type;
 		typedef typename memmgr_type::ptr_type			ptr_type;
-
-		static const ptr_type null_ptr;
 
 		explicit size_tracking( void* mem_base )
 			:m_memmgr( mem_base )
@@ -252,8 +248,6 @@ namespace memory_mgr
 		memmgr_type m_memmgr;
 	};
 
-	template< class MemMgr >
-	typename const size_tracking<MemMgr>::ptr_type size_tracking<MemMgr>::null_ptr( size_tracking<MemMgr>::memmgr_type::null_ptr );
 }
 
 

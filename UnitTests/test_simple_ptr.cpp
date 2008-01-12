@@ -26,22 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "simple_ptr.h"
 #include "TestClass.h"
 
-#include "allocator.h"
-
-template class memory_mgr::allocator<int, memory_mgr::def_heap_mgr>;
-
-#include <vector>
-#include <list>
-//#include <map>
-
-//#include "containers/map.h"
-
-typedef memory_mgr::allocator<int, memory_mgr::def_heap_mgr>::rebind<float>::other::pointer fptr;
-//typedef stlp_std::map<int, int> sgi_map;
-//template sgi_map;
-//template std::map<int, int, std::less<int>, memory_mgr::allocator<std::pair<const int, int>, memory_mgr::def_heap_mgr> >;
-//std::list<int, memory_mgr::allocator<int, memory_mgr::def_heap_mgr> > g_list;
-
 class DerivedTestClass : public TestClass
 {	
 };
@@ -55,6 +39,8 @@ typedef memory_mgr::simple_ptr< TestClass, pointers_memory_mgr > base_class_ptr;
 typedef memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
 
 template builtin_ptr;
+template base_class_ptr;
+template derived_class_ptr;
 
 bool test_construction()
 {
@@ -69,7 +55,7 @@ bool test_construction()
 bool test_simple_ptr()
 {
 
-	TEST_START( L"memory memory_mgr" );
+	TEST_START( L"simple_ptr" );
 
 	//sgi_map map;
 	//map[1]++;

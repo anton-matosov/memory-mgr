@@ -27,12 +27,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 typedef unsigned char block_type;
 
 static const size_t bits_count = 32;
-typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::StaticArray> static_bitset;
+typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::StaticArray> bitset_type;
 
 bool test_static_bitset()
 {
 	TEST_START( L"static_bitset" );
-	static_bitset bitset;
+	bitset_type bitset;
 
 	TEST_METHOD_PRINT( L"size()" );
 	TEST_CHECH( bitset.size() == bits_count );
@@ -56,7 +56,7 @@ bool test_static_bitset()
 	TEST_CHECH(  bitset.test(6,5) == true );
 
 	TEST_METHOD_PRINT( L"find_first()" );
-	static_bitset::size_type pos = bitset.find_first();
+	bitset_type::size_type pos = bitset.find_first();
 	std::cout << bitset << '\n';
 	TEST_CHECH(  pos == 0 );
 
@@ -92,6 +92,10 @@ bool test_static_bitset()
 	std::cout << bitset << '\n';
 	TEST_CHECH(  bitset.test( pos, 5 ) == false );
 
+	TEST_METHOD_PRINT( L"set(0,all_bits)" );
+	bitset.set( 0, bitset_type::num_bits );
+	std::cout << bitset << '\n';
+	TEST_CHECH(  bitset.test(0, bitset_type::num_bits ) == true );
 
 	return true;
 }

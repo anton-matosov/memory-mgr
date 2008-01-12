@@ -27,12 +27,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "detail/pointer_traits.h"
+#include "detail/cmp_helper.h"
+
 namespace memory_mgr
 {
+	
 
 	//Standard pointer class
 	template< class Mgr >
-	class std_pointer
+	class std_pointer : public detail::cmp_helper< std_pointer< Mgr > >
 	{		
 		void* m_pointer;
 	public:
@@ -83,10 +87,20 @@ namespace memory_mgr
 			return m_pointer;
 		}
 
-		bool is_null() const
+		bool operator==( const self_type& rhs ) const
 		{
-			return m_pointer != mgr_type::null_ptr.m_pointer;
-		}		
+			return m_pointer == rhs.m_pointer;
+		}
+
+		bool operator<( const self_type& rhs ) const
+		{
+			return m_pointer < rhs.m_pointer;
+		}
+
+		bool operator>( const self_type& rhs ) const
+		{
+			return m_pointer > rhs.m_pointer;
+		}
 	};
 	
 }

@@ -31,8 +31,9 @@ class test_case
 {
 	void print_line();
 
-	std::wstring m_name;
-	wchar_t m_fill_char;
+	std::wstring	m_name;
+	wchar_t			m_fill_char;
+	bool			m_failed;
 public:
 	test_case( const std::wstring& name, wchar_t fill_char = L'=' );
 

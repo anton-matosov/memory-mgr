@@ -52,7 +52,7 @@ namespace memory_mgr
 
 		//Default constructor
 		simple_ptr()
-			:m_ptr( mgr_type::null_ptr )
+			:m_ptr( pointer_traits<ptr_type>::null_ptr )
 		{
 
 		}
@@ -124,7 +124,7 @@ namespace memory_mgr
 			return get_poiner();
 		}
 
-		bool is_null() const { return m_ptr.is_null(); }
+		bool is_null() const { return m_ptr == pointer_traits<ptr_type>::null_ptr; }
 		bool is_not_null() const { return !is_null(); }
 		bool operator!() const { return  is_null(); }
 

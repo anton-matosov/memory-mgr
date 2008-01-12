@@ -335,7 +335,10 @@ namespace memory_mgr
 		{ return static_cast<block_type>( block_type(1) << bit_index(pos) ); }
 		
 		static inline block_type bit_mask(size_type pos, size_type count) 
-		{ return block_type( ((block_type(1) << count ) - 1) << bit_index(pos) ); }
+		{ 
+			count = (count % bits_per_block) < count ? -1 : count;
+			return block_type( ((block_type(1) << count ) - 1) << bit_index(pos) ); 
+		}
 
 		static inline block_type higher_bit_mask(size_type pos) 
 		{ return block_type( ~block_type(0) << bit_index(pos) ); }
@@ -432,7 +435,7 @@ namespace memory_mgr
 			assert(pos < num_bits);
 			count = (count != npos ? count : num_bits - pos); 
 
-			assert( (pos + count) < num_bits );
+			assert( (pos + count) <= num_bits );
 
 			size_type block_ind = block_index(pos);
 			const size_type block_end	= block_index(pos + count);
@@ -459,10 +462,10 @@ namespace memory_mgr
 		char zero = '0';
 		char space = ' ';
 
-		typedef static_bitset<BlockType, BitsCount, Type> bit_mgr_t;
-		typedef typename bit_mgr_t::size_type bitsetsize_type;
+		typedef static_bitset<BlockType, BitsCount, Type> bitset_type;
+		typedef typename bitset_type::size_type size_type;
 
-		for (bitsetsize_type i = b.size() - 1; ( i != bit_mgr_t::npos ) && ostr; --i) 
+		for (size_type i = bitset_type::num_bits - 1; ( i != bitset_type::npos ) && ostr; --i) 
 		{
 			ostr << (b.test(i)? one : zero);
 			if ( (i % 8) == 0 )

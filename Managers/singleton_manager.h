@@ -92,16 +92,12 @@ namespace memory_mgr
 			num_chunks =  mgr_type::num_chunks
 		};
 
-		static const ptr_type null_ptr;
 	private:
 		singleton_manager();
 		~singleton_manager();
 		singleton_manager(const singleton_manager&);
 		singleton_manager& operator=(const singleton_manager&);
 	};
-
-	template< class MemMgr, class SyncObj, template <class> class ThreadingModel >
-	typename const singleton_manager<MemMgr, SyncObj, ThreadingModel>::ptr_type singleton_manager<MemMgr, SyncObj, ThreadingModel>::null_ptr( singleton_manager<MemMgr, SyncObj, ThreadingModel>::mgr_type::null_ptr );
 }
 
 #endif// MGR_SINGLETON_MANAGER_HEADER

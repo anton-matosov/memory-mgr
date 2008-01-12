@@ -56,8 +56,6 @@ namespace memory_mgr
 		typedef typename memmgr_t::self_type			self_type;
 		typedef typename memmgr_t::ptr_type				ptr_type;
 
-		static const ptr_type null_ptr;
-
 		heap_memory()
 			:m_memory( new char[memory_size] ),
 			m_mgr( &*m_memory )
@@ -82,9 +80,17 @@ namespace memory_mgr
  		{
  			return m_mgr.allocate( size );
  		}
+
+		//Call this method to allocate memory block
+		//Newer throws
+		//size - block size in bytes
+		ptr_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+		{			
+			return m_mgr.allocate( size, nothrow );
+		}
  
 		//Call this method to deallocate memory block
-		//off - offset returned by allocate method
+		//ptr - pointer returned by allocate method
 		//size - block size in bytes
 		void deallocate( const ptr_type ptr, size_type size )
  		{
@@ -115,9 +121,6 @@ namespace memory_mgr
 			return m_mgr.free();
 		}
 	};
-
-	template< class MemMgr >
-	typename const heap_memory<MemMgr>::ptr_type heap_memory<MemMgr>::null_ptr( heap_memory<MemMgr>::memmgr_t::null_ptr );
 
 	typedef singleton_manager< heap_memory< memory_manager<size_t, 1024 * 1024, 4, std_pointer> > > def_heap_mgr;
 }

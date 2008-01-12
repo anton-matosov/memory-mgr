@@ -28,12 +28,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "detail/pointer_traits.h"
+#include "detail/cmp_helper.h"
 
 namespace memory_mgr
-{
+{	
 	//Offset pointer class
 	template< class Mgr >
-	class offset_pointer
+	class offset_pointer : public detail::cmp_helper< offset_pointer< Mgr > >
 	{		
 	public:
 		typedef Mgr									mgr_type;
@@ -58,7 +59,7 @@ namespace memory_mgr
 		//Construct pointer from memory address
 		offset_pointer( const mgr_type& mgr, const void* ptr )			
 			:m_offset( detail::diff( ptr, mgr.get_base() ) )
-		{}
+		{ assert( ptr > mgr.get_base() && "Invalid pointer value" ); }
 
 		offset_pointer& operator=( const offset_pointer& ptr )				
 		{
@@ -84,11 +85,20 @@ namespace memory_mgr
 			return do_get_ptr( mgr );
 		}
 
-		bool is_null() const
+		bool operator==( const self_type& rhs ) const
 		{
-			return m_offset != mgr_type::null_ptr.m_offset;
-		}	
+			return m_offset == rhs.m_offset;
+		}
 
+		bool operator<( const self_type& rhs ) const
+		{
+			return m_offset < rhs.m_offset;
+		}
+
+		bool operator>( const self_type& rhs ) const
+		{
+			return m_offset > rhs.m_offset;
+		}
 	private:
 		offset_type m_offset;
 
@@ -97,6 +107,8 @@ namespace memory_mgr
 			return detail::shift( mgr.get_base(), m_offset );
 		}
 	};
+
+	
 }
 
 

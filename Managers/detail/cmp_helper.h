@@ -20,42 +20,44 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include "StdAfx.h"
-#include "test_case.h"
+#ifndef MGR_CMP_HELPER_HEADER
+#define MGR_CMP_HELPER_HEADER
 
-static const size_t fill_count = 50;
-static const wchar_t endl = L'\n';
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
 
-test_case::test_case( const std::wstring& name, wchar_t fill_char/*= L'='*/ )
-:m_name( name ),
-m_fill_char( fill_char ),
-m_failed( false )
+namespace memory_mgr
 {
-	print_line();
-	std::wcout << L"Testing '" << m_name << L"'..." << endl;
-}
-
-test_case::~test_case()
-{
-	if (!m_failed)
+	namespace detail
 	{
-		std::wcout << L"Test succeeded." << endl;
-	}
-	print_line();
-}
+		template< class ClassToHelp >
+		class cmp_helper
+		{
+			typedef ClassToHelp op_type;
+			inline const op_type& get_lhs() const
+			{
+				return static_cast<const op_type&>( *this );
+			}
+		public:
+			bool operator!=( const op_type& rhs ) const
+			{
+				return !( get_lhs() == rhs);
+			}
 
-void test_case::print_line()
-{
-	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, m_fill_char );
-	std::wcout << endl;
-}
+			bool operator<=( const op_type& rhs ) const
+			{
+				return rhs > get_lhs();
+			}
 
-void test_case::failed( const std::wstring& description )
-{
-	m_failed = true;
-	std::wcout << L">>>" << m_name << L" test failed!!!" << endl;
-	if( !description.empty() )
-	{
-		std::wcout << description << endl;
-	}
-}
+			bool operator>=( const op_type& rhs ) const
+			{
+				return rhs < get_lhs();
+			}
+		};
+	}//namespace detail
+
+}//namespace memory_mgr
+
+
+#endif// MGR_CMP_HELPER_HEADER

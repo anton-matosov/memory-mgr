@@ -26,15 +26,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "heap_memory.h"
 #include "managed_base.h"
 
-typedef unsigned char chunk_t;
+typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
-typedef memory_mgr::memory_manager<chunk_t, memory_size, chunk_size > memmgr_t;
-template memmgr_t;
-template class memory_mgr::size_tracking< memmgr_t >;
+typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+template memmgr_type;
+template class memory_mgr::size_tracking< memmgr_type >;
 
-typedef memmgr_t::ptr_type ptr_t;
+typedef memmgr_type::ptr_type ptr_type;
 
 
 class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
