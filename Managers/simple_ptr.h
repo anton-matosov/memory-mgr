@@ -2,6 +2,7 @@
 
 #include "detail/type_manip.h"
 #include "detail/static_assert.h"
+#include "detail/cmp_helper.h"
 
 namespace memory_mgr
 {
@@ -31,7 +32,7 @@ namespace memory_mgr
 	//T - is a class pointer to which is owned by class
 	//MemMgr - is a singletoned manager which will be used for memory allocations/deallocations
 	template < typename T, typename MemMgr > 
-	class simple_ptr
+	class simple_ptr : public detail::cmp_helper< simple_ptr< T, MemMgr > >
 	{
 		template< typename T, typename MemMgr >
 		friend typename const MemMgr::ptr_type& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
@@ -53,16 +54,12 @@ namespace memory_mgr
 		//Default constructor
 		simple_ptr()
 			:m_ptr( pointer_traits<ptr_type>::null_ptr )
-		{
-
-		}
+		{}
 
 		//Constructor from common pointer
 		explicit simple_ptr( const value_type* ptr )
 			:m_ptr( mgr_type::instance(), ptr )
-		{
-
-		}
+		{}
 
 		//Polymorph copy constructor
 		template < typename U >
@@ -80,8 +77,6 @@ namespace memory_mgr
 			m_ptr = ptr.m_ptr;
 			return *this;
 		}
-
-		
 
 		//Access operators
 		pointer_type operator->()
@@ -156,7 +151,7 @@ namespace memory_mgr
 		bool operator==(  const self_type& ptr ) const
 		{
 			
-			return get_offset() == ptr.get_offset();
+			return m_ptr == ptr.m_ptr;
 		}
 
 // 		self_type& operator=(  const int val )
@@ -178,32 +173,15 @@ namespace memory_mgr
 // 			return is_null();
 // 		}
 
-		bool operator!=(  const self_type& ptr ) const
-		{			
-			return get_offset() != ptr.get_offset();
-		}
-
 		bool operator<(  const self_type& ptr ) const
 		{			
-			return get_offset() < ptr.get_offset();
-		}
-
-		bool operator<=(  const self_type& ptr ) const
-		{			
-			return get_offset() <= ptr.get_offset();
+			return m_ptr < ptr.m_ptr;
 		}
 
 		bool operator>(  const self_type& ptr ) const
 		{			
-			return get_offset() > ptr.get_offset();
-		}
-
-		bool operator>=(  const self_type& ptr ) const
-		{			
-			return get_offset() >= ptr.get_offset();
-		}
-
-		
+			return m_ptr > ptr.m_ptr;
+		}		
 		
 				//Call this function to construct object using default constructor	
 

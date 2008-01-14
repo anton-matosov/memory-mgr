@@ -235,6 +235,10 @@
 				RelativePath=".\detail\type_manip.h"
 				>
 			</File>
+			<File
+				RelativePath=".\detail\types.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="config"

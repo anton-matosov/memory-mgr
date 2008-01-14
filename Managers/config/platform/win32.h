@@ -29,6 +29,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #define MGR_WINDOWS_PLATFORM
 #include <windows.h>
+#include <string>
+
+#include "detail/types.h"
 
 namespace memory_mgr
 {
@@ -54,6 +57,26 @@ namespace memory_mgr
 		static inline void leave_critical_section( critical_section* cs )
 		{
 			return LeaveCriticalSection( cs );
+		}
+
+		inline HANDLE create_file_mapping( const std::wstring& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, HANDLE hFile = INVALID_HANDLE_VALUE )
+		{
+			return CreateFileMappingW( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
+		}
+
+		inline HANDLE open_file_mapping( ulong access, std::wstring& name )
+		{
+			return OpenFileMappingW( access, false, name.c_str() );
+		}
+
+		inline void* map_view_of_file_ex(HANDLE handle, ulong file_access, ulong highoffset = 0, ulong lowoffset = 0, std::size_t numbytes = 0, void *base_addr = 0 )
+		{  
+			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
+		}
+
+		inline int unmap_view_of_file(void* address)
+		{ 
+			return UnmapViewOfFile(address);
 		}
 	}
 }

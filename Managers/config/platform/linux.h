@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_LINUX_PLATFORM
 
 #include <pthread.h>
+#include "detail/types.h"
 
 namespace memory_mgr
 {
