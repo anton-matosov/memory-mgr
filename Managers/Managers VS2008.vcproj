@@ -168,6 +168,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\simple_array.h"
+				>
+			</File>
+			<File
 				RelativePath=".\simple_ptr.h"
 				>
 			</File>
