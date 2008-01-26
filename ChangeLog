@@ -32,11 +32,6 @@ In dev:
    prints those results
  - test_case class was fixed. for case test is failed in won't show 
    'Test succeeded.' message.
- - Added type definitions for standard types.h
- - Added support for Windows mmf
- - Re-implemented simple_ptr comparison operators using memory_manager::ptr_type operators and cmp_helpers
- - Added simple_array class
- - Added license agreement to simple_ptr.h file
  
  
 
