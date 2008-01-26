@@ -24,9 +24,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "heap_memory.h"
 #include "simple_ptr.h"
-#include "TestClass.h"
+#include "test_class.h"
 
-class DerivedTestClass : public TestClass
+class DerivedTestClass : public test_class
 {	
 };
 
@@ -35,7 +35,7 @@ typedef int builtin_type;
 
 typedef memory_mgr::def_heap_mgr pointers_memory_mgr;
 typedef memory_mgr::simple_ptr< builtin_type, pointers_memory_mgr > builtin_ptr;
-typedef memory_mgr::simple_ptr< TestClass, pointers_memory_mgr > base_class_ptr;
+typedef memory_mgr::simple_ptr< test_class, pointers_memory_mgr > base_class_ptr;
 typedef memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
 
 template builtin_ptr;

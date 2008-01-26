@@ -37,18 +37,18 @@ template class memory_mgr::size_tracking< memmgr_type >;
 typedef memmgr_type::ptr_type ptr_type;
 
 
-class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
+class test_class: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
 {
 	int m_i;
 public:
 	typedef memory_mgr::managed_base< memory_mgr::def_heap_mgr > base_t;
 	typedef base_t::mem_mgr mem_mgr;
 
-	TestClass()
+	test_class()
 		:m_i(0)
 	{}
 	
-	~TestClass()
+	~test_class()
 	{
 		m_i = 0;
 	}

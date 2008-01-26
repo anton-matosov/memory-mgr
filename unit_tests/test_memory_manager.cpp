@@ -25,7 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "memory_manager.h"
 #include "heap_memory.h"
-#include "TestClass.h"
+#include "test_class.h"
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;
@@ -137,10 +137,10 @@ bool test_out_of_memory()
 bool test_managed_base()
 {
 	SUBTEST_START( L"managed_base" );
-	TestClass* t1 = new TestClass();
-	TestClass* t2 = new TestClass();
-	TestClass* t3 = new TestClass();
-	TestClass* t4 = new TestClass();
+	test_class* t1 = new test_class();
+	test_class* t2 = new test_class();
+	test_class* t3 = new test_class();
+	test_class* t4 = new test_class();
 
 	t1->set( 101 );
 	t2->set( 102 );
@@ -152,7 +152,7 @@ bool test_managed_base()
 	delete t1;
 	delete t3;
 
-	SUBTEST_END( TestClass::mem_mgr::instance().free() );
+	SUBTEST_END( test_class::mem_mgr::instance().free() );
 }
 
 bool test_memory_manager()

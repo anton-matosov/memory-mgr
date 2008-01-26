@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="UnitTests"
+	Name="unit_tests"
 	ProjectGUID="{EEB49558-1E82-4916-80A6-605FEEA30324}"
 	RootNamespace="UnitTests"
 	Keyword="Win32Proj"
@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_class.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_memory_manager.cpp"
 				>
 			</File>
@@ -203,11 +207,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestClass.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\UnitTests.cpp"
+				RelativePath=".\unit_tests.cpp"
 				>
 			</File>
 		</Filter>
@@ -225,7 +225,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestClass.h"
+				RelativePath=".\test_class.h"
 				>
 			</File>
 		</Filter>

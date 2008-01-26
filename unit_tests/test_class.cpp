@@ -21,24 +21,24 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "TestClass.h"
+#include "test_class.h"
 
-TestClass::TestClass() :m_i(0)
+test_class::test_class() :m_i(0)
 {
 
 }
 
-TestClass::~TestClass()
+test_class::~test_class()
 {
 	m_i = 0;
 }
 
-void TestClass::set( int i )
+void test_class::set( int i )
 {
 	m_i = i;
 }
 
-int TestClass::get()
+int test_class::get()
 {
 	return m_i;
 }

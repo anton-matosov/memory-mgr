@@ -59,7 +59,7 @@ namespace memory_mgr
 		//Construct pointer from memory address
 		offset_pointer( const mgr_type& mgr, const void* ptr )			
 			:m_offset( detail::diff( ptr, mgr.get_base() ) )
-		{ assert( ptr > mgr.get_base() && "Invalid pointer value" ); }
+		{ assert( ptr >= mgr.get_base() && "Invalid pointer value" ); }
 
 		offset_pointer& operator=( const offset_pointer& ptr )				
 		{

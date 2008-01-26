@@ -30,15 +30,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "managed_base.h"
 #include "heap_memory.h"
 
-class TestClass: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
+class test_class: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
 {
 	int m_i;
 public:
 	typedef memory_mgr::managed_base< memory_mgr::def_heap_mgr > base_t;
 	typedef base_t::mem_mgr mem_mgr;
 
-	TestClass();
-	~TestClass();
+	test_class();
+	~test_class();
 
 	void set( int i );
 	int get();
