@@ -42,7 +42,7 @@ namespace memory_mgr
 	public:
 		typedef Mgr								mgr_type;
 		typedef typename mgr_type::size_type	offset_type;
-		typedef typename std_pointer<mgr_type>	self_type;
+		typedef std_pointer<mgr_type>	self_type;
 
 		//Constructs null pointer
 		explicit std_pointer( detail::null_type )

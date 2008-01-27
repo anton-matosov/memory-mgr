@@ -40,7 +40,7 @@ namespace memory_mgr
 	namespace detail
 	{
 		template< typename T, typename MemMgr >
-		typename const MemMgr::ptr_type& get_ptr( const simple_ptr< T, MemMgr >& ptr )
+		const typename MemMgr::ptr_type& get_ptr( const simple_ptr< T, MemMgr >& ptr )
 		{
 			return ptr.m_ptr;
 		}
@@ -62,7 +62,7 @@ namespace memory_mgr
 	class simple_ptr : public detail::cmp_helper< simple_ptr< T, MemMgr > >
 	{
 		template< typename T, typename MemMgr >
-		friend typename const MemMgr::ptr_type& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
+		friend  const typename MemMgr::ptr_type& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
 	public:
 		typedef MemMgr				mgr_type;
 		

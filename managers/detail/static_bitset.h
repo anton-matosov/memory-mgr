@@ -88,16 +88,34 @@ namespace memory_mgr
 			}
 		};
 
+		template< class BlockType, class ExtraBits >
+		struct do_zero_unused_bits		
+		{
+			void operator()( BlockType& highest_block )
+			{
+				typedef BlockType block_type;
+				enum {highest_bits_mask = ~(~block_type(0) << ExtraBits::value ) };
+				highest_block &= highest_bits_mask;
+			}
+		};
+
+ 		template< class BlockType >
+		struct do_zero_unused_bits< BlockType, ::memory_mgr::type_manip::int2type<0> > 
+ 		{
+			void operator()( BlockType& )
+			{}
+		};
+
 		//Type traits for all array types
 		template< class BlockType, int BitsCount >
 		struct ArrayTraits
 		{
-			typedef BlockType				block_type;
-			typedef block_type&				block_ref_type;
-			typedef const block_type&		const_block_ref_type;
+			typedef BlockType		block_type;
+			typedef block_type&		block_ref_type;
+			typedef const block_type&	const_block_ref_type;
 
-			typedef block_type*				block_ptr_type;
-			typedef const block_type*		const_block_ptr_type;
+			typedef block_type*		block_ptr_type;
+			typedef const block_type*	const_block_ptr_type;
 
 			enum {			
 				bits_per_block = std::numeric_limits<block_type>::digits,
@@ -115,20 +133,52 @@ namespace memory_mgr
 		//Array specializations for static array
 		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, StaticArray> : public ArrayTraits<BlockType, BitsCount>
-		{			
+		{		
+			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef typename array_traits::block_type		block_type;
+			typedef typename array_traits::block_ref_type		block_ref_type;
+			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
+
+			typedef typename array_traits::block_ptr_type		block_ptr_type;
+			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
+				
+			enum {			
+				bits_per_block	=	array_traits::bits_per_block,
+				num_bits	=	array_traits::num_bits,
+				num_blocks	=	array_traits::num_blocks,
+				max_bits	=	array_traits::max_bits,
+				memory_usage	=	array_traits::memory_usage
+			};
+			
 			block_type m_bits[num_blocks];
 		};
 
 		//Array specializations for dynamic array
 		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, DynamicArray> : public ArrayTraits<BlockType, BitsCount>
-		{			
+		{		
+			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef typename array_traits::block_type		block_type;
+			typedef typename array_traits::block_ref_type		block_ref_type;
+			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
+
+			typedef typename array_traits::block_ptr_type		block_ptr_type;
+			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
+				
+			enum {			
+				bits_per_block	=	array_traits::bits_per_block,
+				num_bits	=	array_traits::num_bits,
+				num_blocks	=	array_traits::num_blocks,
+				max_bits	=	array_traits::max_bits,
+				memory_usage	=	array_traits::memory_usage
+			};
+			
 			Array()
 				:m_bits( 0 )
-			{ m_bits = new block_type[num_blocks]; }
+			{ this->m_bits = new block_type[num_blocks]; }
 
 			~Array()
-			{ delete[] m_bits; }
+			{ delete[] this->m_bits; }
 
 			block_type* m_bits;
 		};
@@ -137,12 +187,29 @@ namespace memory_mgr
 		template< class BlockType, size_t BitsCount >
 		struct Array< BlockType, BitsCount, CustomArray> : public ArrayTraits<BlockType, BitsCount>
 		{		
+			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef typename array_traits::block_type		block_type;
+			typedef typename array_traits::block_ref_type		block_ref_type;
+			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
+
+			typedef typename array_traits::block_ptr_type		block_ptr_type;
+			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
+			
+			enum {			
+				bits_per_block	=	array_traits::bits_per_block,
+				num_bits	=	array_traits::num_bits,
+				num_blocks	=	array_traits::num_blocks,
+				max_bits	=	array_traits::max_bits,
+				memory_usage	=	array_traits::memory_usage
+			};
+			
 			Array( block_ptr_type arr_ptr )
 				:m_bits( arr_ptr )
 			{}
 
 			block_type* m_bits;		
 		};
+
 	}
 
 	template< class BlockType, size_t BitsCount, arrayType StaticArr = StaticArray >
@@ -152,16 +219,16 @@ namespace memory_mgr
 		static_bitset& operator=( const static_bitset& );
 	public:	
 		typedef static_bitset	self_type;		
-		typedef self_type&		self_ref_type;
+		typedef self_type&	self_ref_type;
 
-		typedef Array< BlockType, BitsCount, StaticArr >	base_type;
+		typedef detail::Array< BlockType, BitsCount, StaticArr >	base_type;
 
-		typedef typename base_type::block_type				block_type;
+		typedef typename base_type::block_type			block_type;
 		
-		typedef typename base_type::block_ref_type			block_ref_type;
+		typedef typename base_type::block_ref_type		block_ref_type;
 		typedef typename base_type::const_block_ref_type	const_block_ref_type;
 		
-		typedef typename base_type::block_ptr_type			block_ptr_type;
+		typedef typename base_type::block_ptr_type		block_ptr_type;
 		typedef typename base_type::const_block_ptr_type	const_block_ptr_type;
 
 		typedef size_t		size_type;
@@ -169,11 +236,19 @@ namespace memory_mgr
 
 		const static size_type npos = ~size_type(0);
 	
+		enum {			
+			bits_per_block	=	base_type::bits_per_block,
+			num_bits	=	base_type::num_bits,
+			num_blocks	=	base_type::num_blocks,
+			max_bits	=	base_type::max_bits,
+			memory_usage	=	base_type::memory_usage
+		};
+		
 		//Default constructor
 		//Resets all bits
 		static_bitset()
 		{ 
-			STATIC_ASSERT( BitsCount != 0, Bitset_cant_be_empty );
+			STATIC_ASSERT( num_bits != 0, Bitset_cant_be_empty );
 			reset(); 
 		}
 
@@ -221,7 +296,7 @@ namespace memory_mgr
 		
 		self_ref_type set()
 		{
-			std::fill(m_bits, m_bits + num_blocks, ~block_type(0));
+			std::fill(this->m_bits, this->m_bits + num_blocks, ~block_type(0));
 			zero_unused_bits();
 			return *this;
 		}
@@ -230,7 +305,7 @@ namespace memory_mgr
 		{
 			assert(pos < num_bits);
 
-			m_bits[block_index(pos)] |= bit_mask(pos);
+			this->m_bits[block_index(pos)] |= bit_mask(pos);
 			return *this;
 		}
 
@@ -243,7 +318,7 @@ namespace memory_mgr
 		self_ref_type reset(size_type pos)
 		{
 			assert(pos < num_bits);
-			m_bits[block_index(pos)] &= ~bit_mask(pos);
+			this->m_bits[block_index(pos)] &= ~bit_mask(pos);
 			return *this;
 		}
 
@@ -254,21 +329,21 @@ namespace memory_mgr
 
 		self_ref_type reset()
 		{
-			std::fill(m_bits, m_bits + num_blocks, block_type(0));
+			std::fill(this->m_bits, this->m_bits + num_blocks, block_type(0));
 			return *this;
 		}
 
 		self_ref_type flip(size_type pos)
 		{
 			assert(pos < num_bits);
-			m_bits[block_index(pos)] ^= bit_mask(pos);
+			this->m_bits[block_index(pos)] ^= bit_mask(pos);
 			return *this;
 		}
 
 		self_ref_type flip()
 		{
 			for (size_type i = 0; i < num_blocks; ++i)
-				m_bits[i] = ~m_bits[i];
+				this->m_bits[i] = ~this->m_bits[i];
 			zero_unused_bits();
 			return *this;
 		}
@@ -350,13 +425,13 @@ namespace memory_mgr
 		{ return block_index( bits_count ); }
 
 		bool unchecked_test(size_type pos) const
-		{ return (m_bits[block_index(pos)] & bit_mask(pos)) != 0; }
+		{ return (this->m_bits[block_index(pos)] & bit_mask(pos)) != 0; }
 		
 
 		size_type find_first_block( size_type from ) const
 		{
 			// skip null blocks
-			while (from < num_blocks && m_bits[from] == 0)
+			while (from < num_blocks && this->m_bits[from] == 0)
 			{
 				++from;
 			}
@@ -372,7 +447,7 @@ namespace memory_mgr
 				return npos; // not found
 			}
 
-			return detail::helpers::lowest_bit(m_bits[first_block]);
+			return detail::helpers::lowest_bit(this->m_bits[first_block]);
 		}
 
 		size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
@@ -381,7 +456,7 @@ namespace memory_mgr
 			{
 				return npos;
 			}
-			const block_type fore = m_bits[blk_ind] & ( higher_bit_mask(bit_ind) );
+			const block_type fore = this->m_bits[blk_ind] & ( higher_bit_mask(bit_ind) );
 
 			return fore ? detail::helpers::lowest_bit(fore):
 				do_find_from( ++blk_ind );
@@ -390,19 +465,11 @@ namespace memory_mgr
 		bool contains_bits( size_type block, size_type first, size_type count ) const
 		{
 			const block_type mask = bit_mask( first, count );
-			return (m_bits[block] &  mask) == mask;
+			return (this->m_bits[block] &  mask) == mask;
 		}
 
-		template< class C >
-		void do_zero_unused_bits()
-		{
-			enum { highest_bits_mask = ~(~block_type(0) << C::value) };
-			highest_block() &= highest_bits_mask;
-		}
 
-		template<>
-		void do_zero_unused_bits< type_manip::int2type<0> >() 
-		{}
+
 
 		// If size() is not a multiple of bits_per_block
 		// then not all the bits in the last block are used.
@@ -412,21 +479,21 @@ namespace memory_mgr
 		void zero_unused_bits()
 		{
 			// if != 0 this is the number of bits used in the last block
-			do_zero_unused_bits< type_manip::int2type< detail::extra_bits<num_bits, bits_per_block>::result > >();
+			detail::do_zero_unused_bits< block_type, type_manip::int2type< detail::extra_bits<num_bits, bits_per_block>::result > >()( highest_block() );
 		}		
 
 		// gives a reference to the highest block
 		//
 		block_ref_type highest_block()
 		{
-			return m_bits[num_blocks - 1];
+			return this->m_bits[num_blocks - 1];
 		}
 
 		// gives a const-reference to the highest block
 		//
 		const_block_ref_type highest_block() const
 		{
-			return m_bits[num_blocks - 1];
+			return this->m_bits[num_blocks - 1];
 		}
 
 		template< class set_op >
@@ -445,7 +512,7 @@ namespace memory_mgr
 			size_type bits_fill_count = count;
 			do
 			{
-				set_op::update(m_bits[block_ind++], bit_mask(pos, bits_fill_count) );
+				set_op::update(this->m_bits[block_ind++], bit_mask(pos, bits_fill_count) );
 				pos = 0;
 				bits_fill_count = (block_ind != block_end) ? bits_per_block : last_index;
 			}
@@ -455,8 +522,8 @@ namespace memory_mgr
 		};
 	};
 
-	template< class BlockType, int BitsCount, arrayType Type >
-	std::ostream& operator<<( std::ostream& ostr, const static_bitset<BlockType, BitsCount, Type>& b )
+	template <typename Ch, typename Tr, class BlockType, size_t BitsCount, arrayType Type >
+	std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const static_bitset<BlockType, BitsCount, Type>& b )
 	{
 		char one = '1';
 		char zero = '0';
@@ -477,5 +544,6 @@ namespace memory_mgr
 		return ostr;
 	}
 }
+
 
 #endif// MGR_STATIC_BITSET_HEADER

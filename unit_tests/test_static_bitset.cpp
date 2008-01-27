@@ -29,8 +29,9 @@ typedef unsigned char block_type;
 static const size_t bits_count = 32;
 typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::StaticArray> bitset_type;
 
+
 bool test_static_bitset()
-{
+{	
 	TEST_START( L"static_bitset" );
 	bitset_type bitset;
 

@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_type_manip.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\unit_tests.cpp"
 				>
 			</File>

@@ -38,9 +38,10 @@ typedef memory_mgr::simple_ptr< builtin_type, pointers_memory_mgr > builtin_ptr;
 typedef memory_mgr::simple_ptr< test_class, pointers_memory_mgr > base_class_ptr;
 typedef memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
 
-template builtin_ptr;
-template base_class_ptr;
-template derived_class_ptr;
+template class memory_mgr::simple_ptr< builtin_type, pointers_memory_mgr >;
+template class memory_mgr::simple_ptr< test_class, pointers_memory_mgr >;
+template class memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr >;
+
 
 bool test_construction()
 {

@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <deque>
 #include <string>
 
+bool test_type_manip();
 bool test_static_bitset();
 bool test_bit_manager();
 bool test_memory_manager();
@@ -60,17 +61,22 @@ public:
 	}
 };
 
-#define RUN_TEST( TestMgr, TestFunc ) TestMgr.add_result( TestFunc(), L#TestFunc )
+#define RUN_TEST( TestMgr, TestFunc ) TestMgr.add_result( TestFunc(), L"TestFunc" )
+
+
 
 int wmain(int /*argc*/, wchar_t* /*argv*/[])
 {
 	tests_manager TestsMgr;
-
+	
+	
+	
+	RUN_TEST( TestsMgr, test_type_manip );
 	RUN_TEST( TestsMgr, test_static_bitset );
 	RUN_TEST( TestsMgr, test_bit_manager );
 	RUN_TEST( TestsMgr, test_memory_manager );
 	RUN_TEST( TestsMgr, test_simple_ptr );
 
 	TestsMgr.print_results();
-	return _getch();
+	return std::cin.get();
 }

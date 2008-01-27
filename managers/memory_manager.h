@@ -58,21 +58,23 @@ namespace memory_mgr
 			num_chunks = memory_size / chunk_size			
 		};
 
-	private:
+		
+	private:		
+		typedef typename detail::sync::object_level_lockable<SyncObj>::lock lock;
+		
 		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
 		bitmgr_type m_bitmgr;
 
 		char* m_membase;
 		
 	public:
-		typedef typename bitmgr_type::block_ptr_type					block_ptr_type;		
+		typedef typename bitmgr_type::block_ptr_type					block_ptr_type;
 		typedef typename bitmgr_type::size_type						size_type;
 		typedef memory_manager										self_type;
 		typedef SyncObj												sync_object_type;
 
-		typedef PtrT<self_type> ptr_type;
-		//static const ptr_type null_ptr;
 		
+		typedef PtrT<self_type> ptr_type;		
 
 		explicit memory_manager( void* mem_base )
 			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )

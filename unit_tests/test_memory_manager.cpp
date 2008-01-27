@@ -32,7 +32,7 @@ static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-template memmgr_type;
+template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size >;
 template class memory_mgr::size_tracking< memmgr_type >;
 
 typedef memmgr_type::ptr_type ptr_type;

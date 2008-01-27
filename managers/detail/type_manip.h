@@ -68,20 +68,21 @@ namespace memory_mgr
 		// T and U are types
 		// Result evaluates to T if flag is true, and to U otherwise.
 		////////////////////////////////////////////////////////////////////////////////
+		namespace detail
+		{
+			template<bool, typename T, typename U>
+			struct select_impl 
+			{ typedef T result; };
+
+			template<typename T, typename U>
+			struct select_impl<false, T, U>
+			{ typedef U result; };		
+		}
+
 		template <bool flag, typename T, typename U>
 		struct select
 		{
-		private:
-			template<bool>
-			struct in 
-			{ typedef T result; };
-
-			template<>
-			struct in<false>
-			{ typedef U result; };
-
-		public:
-			typedef typename in<flag>::result result;
+			typedef typename detail::select_impl<flag, T, U>::result result;
 		};
 
 
@@ -93,20 +94,21 @@ namespace memory_mgr
 		// T and U are types
 		// Result evaluates to true if U == T (types equal)
 		////////////////////////////////////////////////////////////////////////////////
+		namespace detail
+		{
+			template<typename T, typename U>
+			struct is_same_type_impl 
+			{ enum { value = false }; };
+
+			template<typename U>
+			struct is_same_type_impl<U, U>
+			{ enum { value = true }; };
+		}
+
 		template <typename T, typename U>
 		struct is_same_type
 		{
-		private:
-			template<typename>
-			struct in 
-			{ enum { value = false }; };
-
-			template<>
-			struct in<T>
-			{ enum { value = true };  };
-
-		public:
-			enum { value = in<U>::value };
+			enum { value = detail::is_same_type_impl<T, U>::value };
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +211,7 @@ namespace memory_mgr
 		{
 			enum { value = (conversion<const volatile D*, const volatile B*>::exists &&
 				!conversion<const volatile B*, const volatile void*>::same_type &&
-				!conversion<const volatile B*, const volatile U*>::same_type) };
+				!conversion<const volatile B*, const volatile D*>::same_type) };
 		};
 
 

@@ -21,6 +21,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
+#include <iterator>
 #include "test_case.h"
 
 static const size_t fill_count = 50;
@@ -59,3 +60,4 @@ void test_case::failed( const std::wstring& description )
 		std::wcout << description << endl;
 	}
 }
+

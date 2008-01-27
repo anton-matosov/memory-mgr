@@ -41,6 +41,7 @@ namespace memory_mgr
 	>
 	class  singleton : private ThreadingModel< SyncObj >
 	{
+		typedef typename ThreadingModel<SyncObj>::lock lock;
 	public:
 		static T& instance()
 		{
@@ -93,7 +94,7 @@ namespace memory_mgr
 		class SyncObj,
 		template <class> class ThreadingModel
 	>
-	typename InstT* singleton<T, InstT, SyncObj, ThreadingModel>::m_instance = NULL;
+	InstT* singleton<T, InstT, SyncObj, ThreadingModel>::m_instance = NULL;
 
 }
 

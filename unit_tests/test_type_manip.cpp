@@ -20,22 +20,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_CONFIG_HEADER
-#define MGR_CONFIG_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "stdafx.h"
+#include <detail/type_manip.h>
 
-#if defined(linux) || defined(__linux) || defined(__linux__)
-// linux:
-#  define MGR_PLATFORM_CONFIG "../config/platform/linux.h"
-#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#	define MGR_PLATFORM_CONFIG "../config/platform/win32.h"
-#else 
-#	error "Unsupported platform. In future all the platforms will be supported."
-#endif
+bool test_type_manip()
+{
+	memory_mgr::type_manip::int2type<1>::value;
+	typedef memory_mgr::type_manip::select<false, int, float>::result float_type;
+	float_type fvar = float_type();
+	fvar;
 
-#include MGR_PLATFORM_CONFIG
+	typedef memory_mgr::type_manip::select<true, int, float>::result int_type;
+	int_type ivar = int_type();
+	ivar;
 
-#endif// MGR_CONFIG_HEADER
+	bool isame = memory_mgr::type_manip::is_same_type< int, int_type >::value;
+	bool fsame = memory_mgr::type_manip::is_same_type< float, float_type >::value;
+
+	bool not_same = !memory_mgr::type_manip::is_same_type< int_type, float_type >::value;
+
+	return true;						 
+}

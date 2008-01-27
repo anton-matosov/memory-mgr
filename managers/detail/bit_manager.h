@@ -34,7 +34,7 @@ namespace memory_mgr
 	namespace detail
 	{
 		enum bitMgrMemCtrl{ mcAuto = StaticArray, mcNone = CustomArray };
-		template< class BlockType, int BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
+		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
 			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;			
@@ -95,20 +95,20 @@ namespace memory_mgr
 
 			void deallocate( size_type pos, size_type bits_count )
 			{
-				assert( ( m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
-				m_bitset.set( pos, bits_count );
+				assert( ( this->m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
+				this->m_bitset.set( pos, bits_count );
 				//cache block index
-				m_last_block = block_index(pos);
+				this->m_last_block = block_index(pos);
 			}
 
 			std::ostream& print( std::ostream& ostr ) const
 			{
-				return ostr << m_bitset;
+				return ostr << this->m_bitset;
 			}
 
 			bool empty()
 			{
-				return m_bitset.empty();
+				return this->m_bitset.empty();
 			}
 
 			bool free()
@@ -129,7 +129,7 @@ namespace memory_mgr
 			}
 		};
 
-		template< class BlockType, int BitsCount, bitMgrMemCtrl memoryCtrl >
+		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
 		std::ostream& operator<<( std::ostream& ostr, const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
 		{
 			return b.print( ostr );

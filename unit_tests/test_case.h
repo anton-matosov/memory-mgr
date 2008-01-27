@@ -60,4 +60,7 @@ public:
 #define TEST_PRINT( msg ) std::wcout << (msg) << L"\n";
 #define TEST_METHOD_PRINT( method_name ) std::wcout << L"Testing " << (method_name) << L" method...\n";
 
-#endif MGR_TEST_CASE_HEADER
+#endif// MGR_TEST_CASE_HEADER
+
+
+
