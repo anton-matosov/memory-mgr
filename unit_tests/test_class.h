@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "managed_base.h"
-#include "heap_memory.h"
+#include "heap_segment.h"
 
 class test_class: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
 {

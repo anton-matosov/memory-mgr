@@ -24,7 +24,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <vector>
 #include "test_case.h"
 #include "memory_manager.h"
-#include "heap_memory.h"
+#include "size_tracking.h"
+#include "heap_segment.h"
 #include "test_class.h"
 
 typedef unsigned char chunk_type;

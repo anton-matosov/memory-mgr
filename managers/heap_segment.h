@@ -20,25 +20,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include "StdAfx.h"
-#include "test_class.h"
+#ifndef MGR_HEAP_SEGMENT_HEADER
+#define MGR_HEAP_SEGMENT_HEADER
 
-test_class::test_class() :m_i(0)
-{
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
 
+#include "memory_manager.h"
+#include "singleton_manager.h"
+#include "std_pointer.h"
+#include "memory_segment.h"
+#include "detail/scoped_ptr.h"
+
+
+namespace memory_mgr
+{	
+	template< class MemMgr >	
+	class heap_segment 
+		: public memory_segment< vector_as_allocator, MemMgr >
+	{};
+
+	typedef singleton_manager< heap_segment< memory_manager<size_t, 1024 * 1024, 4, std_pointer> > > def_heap_mgr;
 }
 
-test_class::~test_class()
-{
-	m_i = 0;
-}
-
-void test_class::set( int i )
-{
-	m_i = i;
-}
-
-int test_class::get()
-{
-	return m_i;
-}
+#endif// MGR_HEAP_SEGMENT_HEADER

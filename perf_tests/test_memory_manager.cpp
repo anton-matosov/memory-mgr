@@ -23,7 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <vector>
 #include "memory_manager.h"
-#include "heap_memory.h"
+#include "heap_segment.h"
+#include "size_tracking.h"
 #include "managed_base.h"
 
 typedef unsigned char chunk_type;

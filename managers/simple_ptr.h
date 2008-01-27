@@ -39,20 +39,12 @@ namespace memory_mgr
 
 	namespace detail
 	{
-		template< typename T, typename MemMgr >
-		const typename MemMgr::ptr_type& get_ptr( const simple_ptr< T, MemMgr >& ptr )
-		{
-			return ptr.m_ptr;
-		}
-
-
 		template < class BaseT, class DerivedT >
 		const BaseT* poly_cast( const DerivedT* p = NULL )
 		{
 			//Polimorph test
 			return p;
 		}
-
 	}
 
 	//This class is a basic class for all smart pointers of this library
@@ -61,8 +53,6 @@ namespace memory_mgr
 	template < typename T, typename MemMgr > 
 	class simple_ptr : public detail::cmp_helper< simple_ptr< T, MemMgr > >
 	{
-		template< typename T, typename MemMgr >
-		friend  const typename MemMgr::ptr_type& detail::get_ptr( const simple_ptr< T, MemMgr >& ptr );
 	public:
 		typedef MemMgr				mgr_type;
 		
@@ -91,7 +81,7 @@ namespace memory_mgr
 		//Polymorph copy constructor
 		template < typename U >
 		simple_ptr( const simple_ptr< U, mgr_type >& ptr )
-			:m_ptr( detail::get_ptr( ptr ) )
+			:m_ptr( get_ptr( ptr ) )
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 		}
@@ -226,6 +216,11 @@ namespace memory_mgr
 				*/
 		
 
+		template< typename T2 >
+		friend const typename MemMgr::ptr_type& get_ptr( const simple_ptr< T2, MemMgr >& ptr )
+		{
+			return ptr.m_ptr;
+		}
 	private:
 		typedef typename mgr_type::ptr_type ptr_type;
 		typedef typename ptr_type::offset_type offset_type;

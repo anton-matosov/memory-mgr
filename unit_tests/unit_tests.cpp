@@ -61,22 +61,17 @@ public:
 	}
 };
 
-#define RUN_TEST( TestMgr, TestFunc ) TestMgr.add_result( TestFunc(), L"TestFunc" )
-
-
-
-int wmain(int /*argc*/, wchar_t* /*argv*/[])
+int main(int /*argc*/, char* /*argv*/[])
 {
-	tests_manager TestsMgr;
+	tests_manager TestMgr;
+		
+	TestMgr.add_result( test_type_manip(), 	L"test_type_manip" );
+	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );
+	TestMgr.add_result( test_bit_manager(), 	L"test_bit_manager" );
+	TestMgr.add_result( test_memory_manager(), L"test_memory_manager" );
+	TestMgr.add_result( test_simple_ptr(), 	L"test_simple_ptr" );
+	TestMgr.add_result( test_type_manip(), 	L"test_type_manip" );
 	
-	
-	
-	RUN_TEST( TestsMgr, test_type_manip );
-	RUN_TEST( TestsMgr, test_static_bitset );
-	RUN_TEST( TestsMgr, test_bit_manager );
-	RUN_TEST( TestsMgr, test_memory_manager );
-	RUN_TEST( TestsMgr, test_simple_ptr );
-
-	TestsMgr.print_results();
+	TestMgr.print_results();
 	return std::cin.get();
 }
