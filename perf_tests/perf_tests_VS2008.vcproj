@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="PerfTests"
+	Name="perf_tests"
 	ProjectGUID="{58975002-C388-401F-B159-301B5DF09350}"
 	RootNamespace="PerfTests"
 	Keyword="Win32Proj"
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\PerfTests.cpp"
+				RelativePath=".\perf_tests.cpp"
 				>
 			</File>
 			<File
