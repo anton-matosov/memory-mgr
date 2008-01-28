@@ -27,11 +27,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "detail/ptr_helpers.h"
 #include "detail/bit_manager.h"
 #include "detail/critical_section.h"
 #include "detail/locks.h"
-#include "detail/ptr_helpers.h"
-#include "offset_pointer.h"
+#include "detail/offset_traits.h"
 
 namespace memory_mgr
 {
@@ -45,8 +45,8 @@ namespace memory_mgr
 	<
 		class BlockType, 
 		size_t MemorySize,
-		size_t ChunkSize, 
-		template <class> class PtrT = offset_pointer,
+ 		size_t ChunkSize,
+		class OffsetType = size_t,
 		class SyncObj = detail::sync::critical_section >
 	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
 	{
@@ -68,13 +68,12 @@ namespace memory_mgr
 		char* m_membase;
 		
 	public:
-		typedef typename bitmgr_type::block_ptr_type					block_ptr_type;
-		typedef typename bitmgr_type::size_type						size_type;
-		typedef memory_manager										self_type;
-		typedef SyncObj												sync_object_type;
-
+		typedef typename bitmgr_type::block_ptr_type		block_ptr_type;
+		typedef typename bitmgr_type::size_type				size_type;
+		typedef memory_manager								self_type;
+		typedef SyncObj										sync_object_type;
+		typedef OffsetType									offset_type;
 		
-		typedef PtrT<self_type> ptr_type;		
 
 		explicit memory_manager( void* mem_base )
 			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )
@@ -84,7 +83,7 @@ namespace memory_mgr
 		
 		//Call this method to allocate memory block
 		//size - block size in bytes
-		ptr_type allocate( size_type size )
+		offset_type allocate( size_type size )
 		{			
 			return do_allocate( size, throw_bad_alloc );
 		}
@@ -93,7 +92,7 @@ namespace memory_mgr
 		//Call this method to allocate memory block
 		//Newer throws
 		//size - block size in bytes
-		ptr_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
+		offset_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
 			return do_allocate( size, do_nothing );
 		}
@@ -101,23 +100,14 @@ namespace memory_mgr
 		//Call this method to deallocate memory block
 		//ptr - pointer returned by allocate method
 		//size - block size in bytes
- 		void deallocate( const ptr_type ptr, size_type size )
+ 		void deallocate( const offset_type offset, size_type size )
  		{
 			lock l(*this);
- 			m_bitmgr.deallocate( chunk_index( ptr.get_off( *this ) ), chunks_required( size ) );
+ 			m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
  		}
 
-		//Call this method to deallocate memory block
-		//p - pointer calculated as mgr_base + offset, returned by allocate method
-		//size - block size in bytes
-		void deallocate( const void* p, size_type size )
-		{
-			assert( p >= m_membase && "Invalid pointer value" );
-			deallocate( ptr_type( *this, p ), size );
-		}
-
 		//Returns base address
-		const char* get_base() const
+		char* get_base() const
 		{
 			return m_membase;
 		}
@@ -166,16 +156,16 @@ namespace memory_mgr
 		//size - block size in bytes
 		//returns poiner
 		template< class OnNoMemory >
-		inline ptr_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
+		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{			
 			lock l(*this);
 			size_type chunk_ind = m_bitmgr.allocate( chunks_required( size ) );
 			if( chunk_ind == bitmgr_type::npos )
 			{
 				OnNoMemoryOp();
-				return pointer_traits<ptr_type>::null_ptr;
+				return offset_traits<offset_type>::invlid_offset;
 			}
-			return ptr_type( *this, calc_offset( chunk_ind ) );
+			return calc_offset( chunk_ind );
 		}
 	};	
 }

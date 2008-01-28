@@ -20,44 +20,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MEMORY_SEGMENT_HEADER
-#define MGR_MEMORY_SEGMENT_HEADER
+#ifndef MGR_OFFSET_TRAITS_HEADER
+#define MGR_OFFSET_TRAITS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include <vector>
-
 namespace memory_mgr
 {	
-	//Links memory_manager and memory segment
-	//SegmentAllocator - must support SegmentAllocatorConcept
-	//MemMgr - must support MemoryManagerConcept
-	template< class SegmentAllocator, class MemMgr >	
-	class memory_segment : private SegmentAllocator, public MemMgr
+	//Offset traits class
+	template<class OffsetType>
+	struct offset_traits
 	{
-		typedef MemMgr				memmgr_type;
-		typedef	SegmentAllocator	memory;
+		typedef OffsetType			offset_type;
 
-	public:
-		enum
-		{
-			chunk_size	= memmgr_type::chunk_size,
-			memory_size = memmgr_type::memory_size,
-			num_chunks	= memmgr_type::num_chunks
-		};
-		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
-		typedef typename memmgr_type::size_type			size_type;
-
-		typedef memmgr_type								self_type;
-		typedef typename memmgr_type::offset_type		offset_type;
-
-		memory_segment()
-			:memory( memmgr_type::memory_size ),
-			memmgr_type( memory::segment_base() )
-		{}
-
+		static const offset_type	invlid_offset;
 	};
+
+	//Specialized value for size_t offset
+	const offset_traits<size_t>::offset_type offset_traits<size_t>::invlid_offset = static_cast< size_t >(-1);
 }
-#endif// MGR_MEMORY_SEGMENT_HEADER
+
+
+#endif// MGR_OFFSET_TRAITS_HEADER

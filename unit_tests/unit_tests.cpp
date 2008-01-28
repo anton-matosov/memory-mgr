@@ -29,6 +29,9 @@ bool test_type_manip();
 bool test_static_bitset();
 bool test_bit_manager();
 bool test_memory_manager();
+bool test_size_tracking();
+bool test_managed_base();
+bool test_pointer_convert();
 bool test_simple_ptr();
 
 class tests_manager
@@ -65,13 +68,19 @@ int main(int /*argc*/, char* /*argv*/[])
 {
 	tests_manager TestMgr;
 		
-	TestMgr.add_result( test_type_manip(), 	L"test_type_manip" );
+	TestMgr.add_result( test_type_manip(), 		L"test_type_manip" );
 	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );
 	TestMgr.add_result( test_bit_manager(), 	L"test_bit_manager" );
-	TestMgr.add_result( test_memory_manager(), L"test_memory_manager" );
-	TestMgr.add_result( test_simple_ptr(), 	L"test_simple_ptr" );
-	TestMgr.add_result( test_type_manip(), 	L"test_type_manip" );
+	TestMgr.add_result( test_memory_manager(),	L"test_memory_manager" );
+	TestMgr.add_result( test_pointer_convert(),	L"test_pointer_convert" );
+	TestMgr.add_result( test_size_tracking(),	L"test_size_tracking" );
+	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
+	TestMgr.add_result( test_simple_ptr(),		L"test_simple_ptr" );
 	
+
+	
+		
+
 	TestMgr.print_results();
 	return std::cin.get();
 }

@@ -53,9 +53,27 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 //	SUBTEST_END( pointers_memory_mgr::instance().free() );
 //}
 //
+
+#include "size_tracking.h"
+
+template
+<
+	class BlockType, 
+	size_t MemorySize,
+	size_t ChunkSize, 
+	template <class> class PtrT,
+	class SyncObj 
+>
+void* operator new( size_t size, memory_mgr::memory_manager<BlockType,
+MemorySize, ChunkSize, PtrT, SyncObj>& mgr )
+{
+	return mgr.allocate( size ).get_ptr( mgr );
+}
+
+
 bool test_simple_ptr()
 {
-
+	int* pi = new(memory_mgr::def_heap_mgr::instance()) int;
 	TEST_START( L"simple_ptr" );
 
 	return true;

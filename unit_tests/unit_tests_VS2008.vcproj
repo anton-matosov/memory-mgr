@@ -209,11 +209,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_managed_base.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_memory_manager.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\test_memory_segment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_pointer_convert.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_simple_ptr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_size_tracking.cpp"
 				>
 			</File>
 			<File

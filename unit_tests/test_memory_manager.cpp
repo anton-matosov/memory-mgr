@@ -24,7 +24,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <vector>
 #include "test_case.h"
 #include "memory_manager.h"
-#include "size_tracking.h"
 #include "heap_segment.h"
 #include "test_class.h"
 
@@ -33,13 +32,10 @@ static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+
 template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size >;
-template class memory_mgr::size_tracking< memmgr_type >;
 
-typedef memmgr_type::ptr_type ptr_type;
-
-
-
+typedef memmgr_type::offset_type offset_type;
 
 bool test_alloc_dealloc()
 {
@@ -47,11 +43,11 @@ bool test_alloc_dealloc()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 	const memmgr_type::size_type obj_size = 4;
-	ptr_type p1 = mgr.allocate( obj_size );
-	ptr_type p2 = mgr.allocate( obj_size );
-	ptr_type p3 = mgr.allocate( obj_size );
-	ptr_type p4 = mgr.allocate( obj_size );
-	ptr_type p5 = mgr.allocate( obj_size );
+	offset_type p1 = mgr.allocate( obj_size );
+	offset_type p2 = mgr.allocate( obj_size );
+	offset_type p3 = mgr.allocate( obj_size );
+	offset_type p4 = mgr.allocate( obj_size );
+	offset_type p5 = mgr.allocate( obj_size );
 
 	mgr.deallocate( p3, obj_size );
 	mgr.deallocate( p5, obj_size );
@@ -62,47 +58,25 @@ bool test_alloc_dealloc()
 	SUBTEST_END( mgr.free() );
 }
 
-bool test_size_tracking()
-{
-	SUBTEST_START( L"size_tracking" );
-	std::vector<chunk_type> memory( memory_size );
-	memory_mgr::size_tracking< memmgr_type > track_mgr( &*memory.begin() );
-
-	const memmgr_type::size_type obj_size = 4;
-	ptr_type p1 = track_mgr.allocate( obj_size );
-	ptr_type p2 = track_mgr.allocate( obj_size );
-	ptr_type p3 = track_mgr.allocate( obj_size );
-	ptr_type p4 = track_mgr.allocate( obj_size );
-	ptr_type p5 = track_mgr.allocate( obj_size );
-
-	track_mgr.deallocate( p3 );
-	track_mgr.deallocate( p5 );
-	track_mgr.deallocate( p1 );
-	track_mgr.deallocate( p2 );
-	track_mgr.deallocate( p4 );
-
-	SUBTEST_END( track_mgr.free() );
-}
-
 bool test_out_of_memory_nothrow()
 {
 	SUBTEST_START( L"out of memory case (nothrow version)" );
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
-	ptr_type null_ptr = memory_mgr::pointer_traits<ptr_type>::null_ptr;
+	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invlid_offset;
 	try
 	{
 		TEST_PRINT( "Allocating memory block bigger than avaliable memory" );
-		ptr_type p_inval1 = mgr.allocate( memory_size + 1, std::nothrow_t() );
+		offset_type p_inval1 = mgr.allocate( memory_size + 1, std::nothrow_t() );
 		TEST_CHECH( p_inval1 == null_ptr );
 
 		TEST_PRINT( "Allocating all memory" );
-		ptr_type p_valid = mgr.allocate( memory_size, std::nothrow_t() );
+		offset_type p_valid = mgr.allocate( memory_size, std::nothrow_t() );
 		TEST_CHECH( p_valid != null_ptr );
 
 		TEST_PRINT( "Allocating one more byte" );
-		ptr_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
+		offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
 		TEST_CHECH( p_inval2 == null_ptr );
 
 		SUBTEST_END( p_valid != null_ptr
@@ -120,7 +94,7 @@ bool test_out_of_memory()
 {
 	SUBTEST_START( L"out of memory case" );
 	std::vector<chunk_type> memory( memory_size );
-	memory_mgr::size_tracking< memmgr_type > mgr( &*memory.begin() );
+	memmgr_type mgr( &*memory.begin() );
 
 	try
 	{
@@ -135,36 +109,15 @@ bool test_out_of_memory()
 }
 
 
-bool test_managed_base()
-{
-	SUBTEST_START( L"managed_base" );
-	test_class* t1 = new test_class();
-	test_class* t2 = new test_class();
-	test_class* t3 = new test_class();
-	test_class* t4 = new test_class();
 
-	t1->set( 101 );
-	t2->set( 102 );
-	t3->set( 103 );
-	t4->set( 104 );
-
-	delete t2;
-	delete t4;
-	delete t1;
-	delete t3;
-
-	SUBTEST_END( test_class::mem_mgr::instance().free() );
-}
 
 bool test_memory_manager()
 {
  	TEST_START( L"memory managers" );
 
 	TEST_END( test_alloc_dealloc() &&
-	test_size_tracking() &&
-	test_out_of_memory() &&
-	 test_out_of_memory_nothrow() &&
-	test_managed_base()
+			test_out_of_memory() &&
+			test_out_of_memory_nothrow()
 	);
 
 }

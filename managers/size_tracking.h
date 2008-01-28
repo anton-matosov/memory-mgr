@@ -31,6 +31,7 @@ namespace memory_mgr
 {
 
 	//Size tracking decorator for memory manager
+	//MemMgr - must support PointerConvertConcept
 	template< class MemMgr >
 	class size_tracking
 	{
@@ -38,43 +39,62 @@ namespace memory_mgr
 	public:
 		enum
 		{
-			chunk_size = memmgr_type::chunk_size,
-			memory_size =  memmgr_type::memory_size,
-			num_chunks =  memmgr_type::num_chunks
+			chunk_size	= memmgr_type::chunk_size,
+			memory_size = memmgr_type::memory_size,
+			num_chunks	= memmgr_type::num_chunks
 		};
 
 		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
 		typedef typename memmgr_type::size_type			size_type;
-		typedef typename memmgr_type::ptr_type			ptr_type;
+		typedef typename memmgr_type::offset_type		offset_type;
 
 		explicit size_tracking( void* mem_base )
 			:m_memmgr( mem_base )
 		{}
 
-		ptr_type allocate( size_type size )
-		{
-			//allocate additional memory for size storing
-			size += sizeof( size_type );
-			ptr_type ptr = m_memmgr.allocate( size );
-			size_type* psize = size_cast( ptr );
-			*psize = size;
-			return ptr_type( m_memmgr, ++psize );
+		//Call this method to allocate memory block
+		//size - block size in bytes
+		void* allocate( size_type size )
+		{			
+			return do_allocate( size ) );
 		}
 
-		void deallocate( ptr_type ptr )
+		//Call this method to allocate memory block
+		//Newer throws
+		//size - block size in bytes
+		void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+		{			
+			return do_allocate( size, nothrow ) );
+		}
+
+		//Call this method to deallocate memory block
+		//p - pointer calculated as mgr_mem_base + offset, returned by allocate method
+		//size - block size in bytes
+		void deallocate( const void* p )
 		{
-			size_type *ps = size_cast( ptr );
+			assert( p >= m_mgr.get_base() && (p < ( m_mgr.get_base() + memmgr_type::memory_size ) )
+				&& "Invalid pointer value" );
+
+			size_type *ps = size_cast( p );
 			--ps;
 			m_memmgr.deallocate( ps, *ps );
 		}
 
+
+		
+
+// 		void deallocate( ptr_type ptr )
+// 		{
+// 			
+// 		}
+
 		//Call this method to deallocate memory block
 		//p - pointer calculated as mgr_base + offset, returned by allocate method
-		void deallocate( const void* p )
-		{
-			assert( p > m_memmgr.get_base() && "Invalid pointer value" );
-			deallocate( ptr_type( m_memmgr, p ) );
-		}
+// 		void deallocate( const void* p )
+// 		{
+// 			assert( p > m_memmgr.get_base() && "Invalid pointer value" );
+// 			deallocate( ptr_type( m_memmgr, p ) );
+// 		}
 
 		bool empty()
 		{
@@ -93,9 +113,19 @@ namespace memory_mgr
 		}
 
 	private:
-		size_type* size_cast( ptr_type p ) const
+		void* do_allocate( size_type size )
 		{
-			return static_cast< size_type* >( p.get_ptr(m_memmgr) );
+			//allocate additional memory for size storing
+			size += sizeof( size_type );
+			void* ptr = m_memmgr.allocate( size );
+			size_type* psize = size_cast( ptr );
+			*psize = size;
+			return ptr_type( m_memmgr, ++psize );
+		}
+
+		size_type* size_cast( void* p ) const
+		{
+			return static_cast< size_type* >( p );
 		}
 
 		memmgr_type m_memmgr;

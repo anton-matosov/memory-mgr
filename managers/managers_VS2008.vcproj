@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\offset_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\pointer_traits.h"
 				>
 			</File>

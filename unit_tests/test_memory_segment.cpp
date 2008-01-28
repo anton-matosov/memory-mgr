@@ -20,42 +20,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_HEAP_SEGMENT_HEADER
-#define MGR_HEAP_SEGMENT_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
+#include "StdAfx.h"
+#include <vector>
+#include "test_case.h"
 #include "memory_manager.h"
-#include "singleton_manager.h"
-#include "std_pointer.h"
-#include "memory_segment.h"
-#include "detail/scoped_ptr.h"
+#include "size_tracking.h"
+#include "heap_segment.h"
+#include "test_class.h"
 
 
-namespace memory_mgr
-{	
-	//Adapter for std::vector to SegmentAllocatorConcept 
-	struct vector_as_allocator : private std::vector<ubyte>
-	{
-		//Default constructor, allocates mem_size bytes
-		vector_as_allocator( const size_t mem_size )
-			:std::vector<ubyte>( mem_size )
-		{}
 
-		//Returns addres of allocated segment
-		void* segment_base()
-		{ return &front(); }
-	};
 
-	//MemMgr - must support MemoryManagerConcept
-	template< class MemMgr >	
-	class heap_segment 
-		: public memory_segment< vector_as_allocator, MemMgr >
-	{};
 
-	typedef singleton_manager< heap_segment< memory_manager<size_t, 1024 * 1024, 4> > > def_heap_mgr;
-}
 
-#endif// MGR_HEAP_SEGMENT_HEADER
