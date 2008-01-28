@@ -25,7 +25,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "memory_manager.h"
 #include "heap_segment.h"
-#include "test_class.h"
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;

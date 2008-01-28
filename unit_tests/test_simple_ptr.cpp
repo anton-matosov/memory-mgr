@@ -61,19 +61,20 @@ template
 	class BlockType, 
 	size_t MemorySize,
 	size_t ChunkSize, 
-	template <class> class PtrT,
-	class SyncObj 
+	class OffsetType,
+	class SyncObj,
+	template <class,size_t,size_t,class,class> class MgrType
 >
-void* operator new( size_t size, memory_mgr::memory_manager<BlockType,
-MemorySize, ChunkSize, PtrT, SyncObj>& mgr )
+void* operator new( size_t size, memory_mgr::pointer_convert< MgrType<BlockType,
+MemorySize, ChunkSize, OffsetType, SyncObj> >& mgr )
 {
-	return mgr.allocate( size ).get_ptr( mgr );
+	return mgr.allocate( size );
 }
 
 
 bool test_simple_ptr()
 {
-	int* pi = new(memory_mgr::def_heap_mgr::instance()) int;
+	int* pi = new(def_heap_mgr::instance()) int;
 	TEST_START( L"simple_ptr" );
 
 	return true;

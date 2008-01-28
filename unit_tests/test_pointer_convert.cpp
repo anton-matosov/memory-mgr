@@ -40,12 +40,24 @@ template class memory_mgr::pointer_convert<memmgr_type>;
 bool test_pointer_convert()
 {
 	TEST_START( L"pointer_convert" );
-	SUBTEST_START( L"allocation/deallocation" );
 	std::vector<chunk_type> memory( memory_size );
-	memmgr_type mgr( &*memory.begin() );
-	
+	pconv_type mgr( &*memory.begin() );
+	const memmgr_type::size_type obj_size = 4;
+	void* p1 = mgr.allocate( obj_size );
+	void* p2 = mgr.allocate( obj_size );
+	void* p3 = mgr.allocate( obj_size );
+	void* p4 = mgr.allocate( obj_size );
+	void* p5 = mgr.allocate( obj_size );
 
-	TEST_END( true );
+
+	mgr.deallocate( p2, obj_size );
+	mgr.deallocate( p3, obj_size );
+	mgr.deallocate( p1, obj_size );
+	mgr.deallocate( p4, obj_size );
+	mgr.deallocate( p5, obj_size );
+
+
+	TEST_END( mgr.empty() );
 }
 
 

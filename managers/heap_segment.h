@@ -54,8 +54,6 @@ namespace memory_mgr
 	class heap_segment 
 		: public memory_segment< vector_as_allocator, MemMgr >
 	{};
-
-	typedef singleton_manager< heap_segment< memory_manager<size_t, 1024 * 1024, 4> > > def_heap_mgr;
 }
 
 #endif// MGR_HEAP_SEGMENT_HEADER

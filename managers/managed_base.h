@@ -43,6 +43,7 @@ namespace memory_mgr
 		}
 	};
 
+	//MemMgr - must support PointerConvertConcept, SingletonManagerConcept
 	template< class MemMgr >
 	class managed_base
 	{
@@ -54,18 +55,20 @@ namespace memory_mgr
 	public:	
 		static void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
-			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
+			return mem_mgr::instance().allocate( size );			
 		}
 
 		static void* operator new( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
 		{
 			//TODO:implement correct logic in this method
-			return mem_mgr::instance().allocate( size ).get_ptr( mem_mgr::instance() );			
+			//mem_mgr::instance().allocate( size, name );
+			STATIC_ASSERT( false, named_objects_not_supported );
+			return 0;
 		}
 
 		static void* operator new( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
-			return mem_mgr::instance().allocate( size, nothrow ).get_ptr( mem_mgr::instance() );			
+			return mem_mgr::instance().allocate( size, nothrow );			
 		}
 
 		static void* operator new(  size_t, void* p ) /*throw()*/

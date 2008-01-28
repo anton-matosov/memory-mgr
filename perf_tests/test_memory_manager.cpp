@@ -32,65 +32,9 @@ static const size_t chunk_size = 4;
 static const size_t memory_size = 256;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-template memmgr_type;
-template class memory_mgr::size_tracking< memmgr_type >;
 
-typedef memmgr_type::ptr_type ptr_type;
-
-
-class test_class: public memory_mgr::managed_base< memory_mgr::def_heap_mgr >
-{
-	int m_i;
-public:
-	typedef memory_mgr::managed_base< memory_mgr::def_heap_mgr > base_t;
-	typedef base_t::mem_mgr mem_mgr;
-
-	test_class()
-		:m_i(0)
-	{}
-	
-	~test_class()
-	{
-		m_i = 0;
-	}
-
-	void set( int i )
-	{
-		m_i = i;
-	}
-
-	int get()
-	{
-		return m_i;
-	}
-};
-
-bool test_alloc_dealloc()
-{
-
-	return true;
-}
-
-bool test_size_tracking()
-{
-	return true;
-}
-
-bool test_out_of_memory()
-{
-	return true;
-}
-
-bool test_managed_base()
-{
-	return true;
-}
 
 bool test_memory_manager()
 {
- 	return test_alloc_dealloc() &&
-	test_size_tracking() &&
-	test_out_of_memory() &&
-	test_managed_base()
-	;
+ 	return false;
 }
