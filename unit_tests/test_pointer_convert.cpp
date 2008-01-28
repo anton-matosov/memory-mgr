@@ -57,7 +57,7 @@ bool test_pointer_convert()
 	mgr.deallocate( p5, obj_size );
 
 
-	TEST_END( mgr.empty() );
+	TEST_END( mgr.free() );
 }
 
 

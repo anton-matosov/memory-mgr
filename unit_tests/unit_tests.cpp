@@ -77,10 +77,6 @@ int main(int /*argc*/, char* /*argv*/[])
 	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
 	TestMgr.add_result( test_simple_ptr(),		L"test_simple_ptr" );
 	
-
-	
-		
-
 	TestMgr.print_results();
 	return std::cin.get();
 }

@@ -37,9 +37,17 @@ namespace memory_mgr
 
 		static const offset_type	invlid_offset;
 	};
-
+	
 	//Specialized value for size_t offset
-	const offset_traits<size_t>::offset_type offset_traits<size_t>::invlid_offset = static_cast< size_t >(-1);
+	template<>
+	struct offset_traits<size_t>
+	{
+		typedef size_t			offset_type;
+
+		static const offset_type	invlid_offset = static_cast< offset_type >(-1);
+	};
+
+	
 }
 
 

@@ -77,7 +77,7 @@ namespace memory_mgr
  		{
 			assert( p >= m_mgr.get_base() && (p < ( m_mgr.get_base() + memmgr_type::memory_size ) )
 				&& "Invalid pointer value" );
-			m_mgr.deallocate( detail::diff( m_mgr.get_base(), p ), size );
+			m_mgr.deallocate( detail::diff( p, m_mgr.get_base() ), size );
  		}
 
 		bool empty()
