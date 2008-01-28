@@ -79,6 +79,22 @@ namespace memory_mgr
 				&& "Invalid pointer value" );
 			m_mgr.deallocate( detail::diff( m_mgr.get_base(), p ), size );
  		}
+
+		bool empty()
+		{
+			return m_mgr.empty();
+		}
+
+		bool free()
+		{
+			return m_mgr.free();
+		}
+
+		//Returns base address
+		const char* get_base() const
+		{
+			return m_mgr.get_base();
+		}
 	};
 }
 #endif// MGR_POINTER_CONVERT_HEADER

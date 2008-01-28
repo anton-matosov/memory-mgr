@@ -83,7 +83,7 @@ namespace memory_mgr
 		typedef typename mgr_type::block_ptr_type	block_ptr_type;		
 		typedef typename mgr_type::size_type		size_type;
 		typedef typename Mgr::self_type				self_type;
-		typedef typename mgr_type::ptr_type			ptr_type;
+		typedef typename mgr_type::offset_type		offset_type;
 	
 		enum
 		{

@@ -24,16 +24,25 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <vector>
 #include "test_case.h"
 #include "memory_manager.h"
+#include "pointer_convert.h"
 #include "size_tracking.h"
 
+typedef unsigned char chunk_type;
+static const size_t chunk_size = 4;
+static const size_t memory_size = 256;
+
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-template class memory_mgr::size_tracking< memmgr_type >;
+typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
+typedef memory_mgr::size_tracking< pconv_type > sz_track_mgr;
+template class memory_mgr::size_tracking< pconv_type >;
+
+typedef void* ptr_type;
 
 bool test_size_tracking()
 {
 	TEST_START( L"size_tracking" );
 	std::vector<chunk_type> memory( memory_size );
-	memory_mgr::size_tracking< memmgr_type > track_mgr( &*memory.begin() );
+	sz_track_mgr track_mgr( &*memory.begin() );
 
 	const memmgr_type::size_type obj_size = 4;
 	ptr_type p1 = track_mgr.allocate( obj_size );

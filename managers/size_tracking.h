@@ -56,23 +56,25 @@ namespace memory_mgr
 		//size - block size in bytes
 		void* allocate( size_type size )
 		{			
-			return do_allocate( size ) );
+			update_size( size );
+			return store_size( m_memmgr.allocate( size ), size );
 		}
 
 		//Call this method to allocate memory block
 		//Newer throws
 		//size - block size in bytes
 		void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
-		{			
-			return do_allocate( size, nothrow ) );
+		{
+			update_size( size );
+			return store_size( m_memmgr.allocate( size, nothrow ), size );
 		}
 
 		//Call this method to deallocate memory block
 		//p - pointer calculated as mgr_mem_base + offset, returned by allocate method
 		//size - block size in bytes
-		void deallocate( const void* p )
+		void deallocate( void* p )
 		{
-			assert( p >= m_mgr.get_base() && (p < ( m_mgr.get_base() + memmgr_type::memory_size ) )
+			assert( p >= m_memmgr.get_base() && (p < ( m_memmgr.get_base() + memmgr_type::memory_size ) )
 				&& "Invalid pointer value" );
 
 			size_type *ps = size_cast( p );
@@ -80,21 +82,6 @@ namespace memory_mgr
 			m_memmgr.deallocate( ps, *ps );
 		}
 
-
-		
-
-// 		void deallocate( ptr_type ptr )
-// 		{
-// 			
-// 		}
-
-		//Call this method to deallocate memory block
-		//p - pointer calculated as mgr_base + offset, returned by allocate method
-// 		void deallocate( const void* p )
-// 		{
-// 			assert( p > m_memmgr.get_base() && "Invalid pointer value" );
-// 			deallocate( ptr_type( m_memmgr, p ) );
-// 		}
 
 		bool empty()
 		{
@@ -113,14 +100,19 @@ namespace memory_mgr
 		}
 
 	private:
-		void* do_allocate( size_type size )
+		
+		void update_size( size_type size )
 		{
-			//allocate additional memory for size storing
+			//Additional memory for size storing
 			size += sizeof( size_type );
-			void* ptr = m_memmgr.allocate( size );
+		}
+
+		void* store_size( void* ptr, size_type size )
+		{
+			//Store size
 			size_type* psize = size_cast( ptr );
 			*psize = size;
-			return ptr_type( m_memmgr, ++psize );
+			return ++psize;
 		}
 
 		size_type* size_cast( void* p ) const
