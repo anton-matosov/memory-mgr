@@ -103,8 +103,8 @@ namespace memory_mgr
 		template< class MemMgr >
 		class size_tracking_impl/*< pointer_convert< MemMgr > > */: public size_tracking_impl_base< MemMgr >
 		{
-			typedef MemMgr								memmgr_type;
-			typedef size_tracking_impl_base< MemMgr >	impl_base_type;
+			typedef MemMgr								mgr_type;
+			typedef size_tracking_impl_base< mgr_type >	impl_base_type;
 			
 		protected:
 			explicit size_tracking_impl( void* mem_base )
@@ -128,7 +128,7 @@ namespace memory_mgr
 			void* allocate( size_type size )
 			{			
 				update_size( size );
-				return store_size( m_memmgr.allocate( size ), size );
+				return store_size( this->m_memmgr.allocate( size ), size );
 			}
 
 			//Call this method to allocate memory block
@@ -137,7 +137,7 @@ namespace memory_mgr
 			void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
 				update_size( size );
-				return store_size( m_memmgr.allocate( size, nothrow ), size );
+				return store_size( this->m_memmgr.allocate( size, nothrow ), size );
 			}
 
 			//Call this method to deallocate memory block
@@ -145,12 +145,12 @@ namespace memory_mgr
 			//size - block size in bytes
 			void deallocate( void* p )
 			{
-				assert( p >= m_memmgr.get_base() && (p < ( m_memmgr.get_base() + memmgr_type::memory_size ) )
+				assert( p >=this->m_memmgr.get_base() && (p < ( this->m_memmgr.get_base() + manager_traits<mgr_type>::memory_size ) )
 					&& "Invalid pointer value" );
 
-				size_type *ps = size_cast( p );
+				size_type *ps = this->size_cast( p );
 				--ps;
-				m_memmgr.deallocate( ps, *ps );
+				this->m_memmgr.deallocate( ps, *ps );
 			}
 		};
 	}
