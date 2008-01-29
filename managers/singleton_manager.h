@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "detail/singleton.h"
+#include "manager_traits.h"
+
 namespace memory_mgr
 {
 // 	template< class MgrT >
@@ -69,6 +71,21 @@ namespace memory_mgr
 // 		}
 // 	};
 	
+	template
+	< 
+		class Mgr, 
+		class SyncObj,
+		template <class> class ThreadingModel
+	>
+	class  singleton_manager;
+
+	template 
+	<
+		class Mgr,
+		class SyncObj, 
+		template <class> class ThreadingModel
+	>
+	struct manager_traits< singleton_manager< Mgr, SyncObj, ThreadingModel > >;
 
 	template 
 	<
@@ -76,27 +93,38 @@ namespace memory_mgr
 		class SyncObj = detail::sync::critical_section, 
 		template <class> class ThreadingModel = detail::sync::class_level_lockable
 	>
-	class  singleton_manager : public singleton< typename Mgr::self_type, Mgr, SyncObj, ThreadingModel >
+	class  singleton_manager : public singleton< typename manager_traits<Mgr>::manager_type, Mgr, SyncObj, ThreadingModel >
 	{
 	public:
-		typedef Mgr									mgr_type;
-		typedef typename mgr_type::block_ptr_type	block_ptr_type;		
-		typedef typename mgr_type::size_type		size_type;
-		typedef typename Mgr::self_type				self_type;
-		typedef typename mgr_type::offset_type		offset_type;
-	
-		enum
-		{
-			chunk_size = mgr_type::chunk_size,
-			memory_size =  mgr_type::memory_size,
-			num_chunks =  mgr_type::num_chunks
-		};
+// 		typedef Mgr									mgr_type;
+// 		typedef typename mgr_type::block_ptr_type	block_ptr_type;		
+// 		typedef typename mgr_type::size_type		size_type;
+// 		typedef typename Mgr::self_type				self_type;
+// 		typedef typename mgr_type::offset_type		offset_type;
+// 	
+// 		enum
+// 		{
+// 			chunk_size = mgr_type::chunk_size,
+// 			memory_size =  mgr_type::memory_size,
+// 			num_chunks =  mgr_type::num_chunks
+// 		};
 
 	private:
 		singleton_manager();
 		~singleton_manager();
 		singleton_manager(const singleton_manager&);
 		singleton_manager& operator=(const singleton_manager&);
+	};
+
+	template 
+	<
+		class Mgr,
+		class SyncObj, 
+		template <class> class ThreadingModel
+	>
+	struct manager_traits< singleton_manager< Mgr, SyncObj, ThreadingModel > > 
+		: public manager_traits< typename manager_traits<Mgr>::manager_type >
+	{
 	};
 }
 

@@ -23,8 +23,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include "test_case.h"
 #include "heap_segment.h"
-#include "simple_ptr.h"
+#include "offset_pointer.h"
 #include "test_class.h"
+#include "size_tracking.h"
+#include "offset_pointer.h"
 
 //class DerivedTestClass : public test_class
 //{	
@@ -54,7 +56,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 //}
 //
 
-#include "size_tracking.h"
+template class memory_mgr::offset_pointer<int, def_heap_mgr>;
 
 template
 <
@@ -72,10 +74,10 @@ MemorySize, ChunkSize, OffsetType, SyncObj> >& mgr )
 }
 
 
-bool test_simple_ptr()
+bool test_offset_pointer()
 {
-	int* pi = new(def_heap_mgr::instance()) int;
-	TEST_START( L"simple_ptr" );
+	int* pi = new( def_heap_mgr::instance() ) int;
+	TEST_START( L"offset_pointer" );
 
 	return true;
 	

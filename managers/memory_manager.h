@@ -78,7 +78,7 @@ namespace memory_mgr
 		explicit memory_manager( void* mem_base )
 			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )
 		{
-			m_membase = detail::shift( mem_base, bitmgr_type::memory_usage );
+			m_membase = detail::char_cast( detail::shift( mem_base, bitmgr_type::memory_usage ) );
 		}
 		
 		//Call this method to allocate memory block
@@ -163,7 +163,7 @@ namespace memory_mgr
 			if( chunk_ind == bitmgr_type::npos )
 			{
 				OnNoMemoryOp();
-				return offset_traits<offset_type>::invlid_offset;
+				return offset_traits<offset_type>::invalid_offset;
 			}
 			return calc_offset( chunk_ind );
 		}

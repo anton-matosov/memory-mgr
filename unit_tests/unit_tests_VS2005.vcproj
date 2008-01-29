@@ -211,15 +211,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_managed_base.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_memory_manager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\test_simple_ptr.cpp"
+				RelativePath=".\test_memory_segment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_offset_pointer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_pointer_convert.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_size_tracking.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\test_static_bitset.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_type_manip.cpp"
 				>
 			</File>
 			<File

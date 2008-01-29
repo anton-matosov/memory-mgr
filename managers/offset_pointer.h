@@ -27,63 +27,131 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "detail/pointer_traits.h"
+#include "detail/offset_traits.h"
 #include "detail/cmp_helper.h"
+#include "pointer_convert.h"
+#include "manager_traits.h"
 
 namespace memory_mgr
 {	
 	//Offset pointer class
-	template< class Mgr >
-	class offset_pointer : public detail::cmp_helper< offset_pointer< Mgr > >
+	template< class T, class Mgr >
+	class offset_pointer : public detail::cmp_helper< offset_pointer< T, Mgr > >
 	{		
 	public:
-		typedef Mgr									mgr_type;
-		typedef typename mgr_type::size_type		offset_type;
-		typedef offset_pointer<mgr_type>	self_type;
+		typedef offset_pointer							self_type;		
+		typedef Mgr										mgr_type;
+		typedef manager_traits<mgr_type>				manager_traits;
+		typedef typename manager_traits::offset_type	offset_type;
+
+		typedef T					value_type;
+		typedef value_type*			pointer_type;
+		typedef const value_type*	const_pointer_type;
+
+		typedef value_type&			reference_type;
+		typedef const value_type&	const_reference_type;
+
+		typedef ptrdiff_t			difference_type;
 
 		//Constructs null pointer
-		explicit offset_pointer( detail::null_type )
-			:m_offset( ~offset_type(0) )
+		offset_pointer()
+			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{}
 
 
 		//Construct pointer from offset
-		offset_pointer( const mgr_type& /*mgr*/, const offset_type offset )
+		offset_pointer( const offset_type offset )
 			:m_offset( offset )
 		{}
 
+		//Copy constructor
 		offset_pointer( const offset_pointer& ptr )
 			:m_offset( ptr.m_offset )
 		{}
 
-		//Construct pointer from memory address
-		offset_pointer( const mgr_type& mgr, const void* ptr )			
-			:m_offset( detail::diff( ptr, mgr.get_base() ) )
-		{ assert( ptr >= mgr.get_base() && "Invalid pointer value" ); }
+		//Polymorph copy constructor
+		template < typename U >
+		offset_pointer( const offset_pointer< U, mgr_type >& ptr )
+			:m_offset( get_offset( ptr ) )
+		{
+			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
+		}
+// 
+// 		//Construct pointer from memory address
+// 		offset_pointer( const mgr_type& mgr, const void* ptr )			
+// 			:m_offset( detail::diff( ptr, mgr.get_base() ) )
+// 		{ assert( ptr >= mgr.get_base() && "Invalid pointer value" ); }
 
+		const_pointer_type operator->() const
+		{
+			return get_poiner();
+		}
+
+		reference_type operator*()
+		{
+			return *get_poiner();
+		}
+
+		const_reference_type operator*() const
+		{
+			return *get_poiner();
+		}
+
+		pointer_type operator&()
+		{
+			return get_poiner();
+		}
+
+		const_pointer_type operator&() const
+		{
+			return get_poiner();
+		}
+
+		operator T* ()
+		{
+			return get_poiner();
+		}
+
+		operator const T*() const
+		{
+			return get_poiner();
+		}
+
+		bool is_null() const { return m_offset == offset_traits<offset_type>::invalid_offset; }
+		bool is_not_null() const { return !is_null(); }
+		bool operator!() const { return  is_null(); }
+
+		//It is risky to add such an operator
+		//operator bool() const { return  !m_ptr.is_null(); }
+
+		// 		self_type operator+( const size_t count ) const
+		// 		{			
+		// 			return self_type( get_poiner() + count );
+		// 		}
+		// 
+		// 		self_type operator-( const size_t count ) const
+		// 		{			
+		// 			return self_type( get_poiner() - count );
+		// 		}
+
+		self_type& operator--()
+		{			
+			do_set_pointer( get_poiner() - 1 );			
+			return *this;
+		}
+
+		difference_type operator-( const self_type& ptr ) const
+		{			
+			return get_poiner() - ptr.get_poiner();
+		}
+		
+		//////////////////////////////////////////////////////////////////////////
 		offset_pointer& operator=( const offset_pointer& ptr )				
 		{
 			m_offset = ptr.m_offset;
 			return *this;
 		}
 
-		//Call this method to get offset
-		const offset_type get_off( const mgr_type& /*mgr*/ ) const
-		{
-			return m_offset;
-		}
-
-		//Call this method to get real memory address
-		void* get_ptr( const mgr_type& mgr )
-		{
-			return detail::unconst_char( do_get_ptr( mgr ) );
-		}
-
-		//Call this method to get real memory address
-		const void* get_ptr( const mgr_type& mgr ) const
-		{
-			return do_get_ptr( mgr );
-		}
 
 		bool operator==( const self_type& rhs ) const
 		{
@@ -102,9 +170,38 @@ namespace memory_mgr
 	private:
 		offset_type m_offset;
 
-		const char* do_get_ptr( const mgr_type& mgr ) const
+		typedef pointer_convert<typename manager_traits::manager_type> converter;
+
+		inline pointer_type unconst_poiner( const_pointer_type ptr )
 		{
-			return detail::shift( mgr.get_base(), m_offset );
+			return const_cast<pointer_type>( ptr );
+		}
+
+		inline pointer_type get_poiner()
+		{
+			return unconst_poiner( do_get_poiner() );
+		}
+
+		inline const_pointer_type get_poiner() const
+		{
+			return do_get_poiner();
+		}
+
+		inline const_pointer_type do_get_poiner() const
+		{
+			return static_cast<const_pointer_type>( converter::offset_to_pointer( m_offset, mgr_type::instance() ) );
+		}
+
+		inline void do_set_pointer( const_pointer_type ptr )
+		{
+			m_offset = converter::pointer_to_offset( ptr, mgr_type::instance() );
+		}
+
+		//Call this method to get offset
+		template<class U>
+		friend const offset_type get_offset( const offset_pointer<U, mgr_type>& ptr )
+		{
+			return ptr.m_offset;
 		}
 	};
 

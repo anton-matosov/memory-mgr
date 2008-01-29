@@ -63,7 +63,7 @@ bool test_out_of_memory_nothrow()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
-	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invlid_offset;
+	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
 	try
 	{
 		TEST_PRINT( "Allocating memory block bigger than avaliable memory" );

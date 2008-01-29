@@ -160,7 +160,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\heap_memory.h"
+				RelativePath=".\heap_segment.h"
 				>
 			</File>
 			<File
@@ -168,7 +168,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\manager_category.h"
+				>
+			</File>
+			<File
+				RelativePath=".\manager_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\memory_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\memory_segment.h"
+				>
+			</File>
+			<File
+				RelativePath=".\offset_pointer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pointer_convert.h"
 				>
 			</File>
 			<File
@@ -179,6 +199,10 @@
 				RelativePath=".\singleton_manager.h"
 				>
 			</File>
+			<File
+				RelativePath=".\size_tracking.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="detail"
@@ -186,6 +210,10 @@
 			>
 			<File
 				RelativePath=".\detail\bit_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\cmp_helper.h"
 				>
 			</File>
 			<File
@@ -201,7 +229,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\offset_traits.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\pointer_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\pseudo_sync.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\ptr_helpers.h"
 				>
 			</File>
 			<File
@@ -222,6 +262,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\type_manip.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\types.h"
 				>
 			</File>
 		</Filter>

@@ -28,9 +28,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <vector>
+#include "manager_traits.h"
 
 namespace memory_mgr
 {	
+	
+
 	//Links memory_manager and memory segment
 	//SegmentAllocator - must support SegmentAllocatorConcept
 	//MemMgr - must support MemoryManagerConcept
@@ -41,23 +44,30 @@ namespace memory_mgr
 		typedef	SegmentAllocator	memory;
 
 	public:
-		enum
-		{
-			chunk_size	= memmgr_type::chunk_size,
-			memory_size = memmgr_type::memory_size,
-			num_chunks	= memmgr_type::num_chunks
-		};
-		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
-		typedef typename memmgr_type::size_type			size_type;
-
-		typedef memmgr_type								self_type;
-		typedef typename memmgr_type::offset_type		offset_type;
+// 		enum
+// 		{
+// 			chunk_size	= memmgr_type::chunk_size,
+// 			memory_size = memmgr_type::memory_size,
+// 			num_chunks	= memmgr_type::num_chunks
+// 		};
+// 		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
+// 		typedef typename memmgr_type::size_type			size_type;
+// 
+// 		typedef memmgr_type								self_type;
+// 		typedef typename memmgr_type::offset_type		offset_type;
 
 		memory_segment()
-			:memory( memmgr_type::memory_size ),
+			:memory( manager_traits<memmgr_type>::memory_size ),
 			memmgr_type( memory::segment_base() )
 		{}
 
 	};
+
+	template< class SegmentAllocator, class MemMgr >
+	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
+		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+	{
+	};
+
 }
 #endif// MGR_MEMORY_SEGMENT_HEADER

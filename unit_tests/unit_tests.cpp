@@ -32,7 +32,7 @@ bool test_memory_manager();
 bool test_size_tracking();
 bool test_managed_base();
 bool test_pointer_convert();
-bool test_simple_ptr();
+bool test_offset_pointer();
 
 class tests_manager
 {
@@ -75,7 +75,7 @@ int main(int /*argc*/, char* /*argv*/[])
 	TestMgr.add_result( test_pointer_convert(),	L"test_pointer_convert" );
 	TestMgr.add_result( test_size_tracking(),	L"test_size_tracking" );
 	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
-	TestMgr.add_result( test_simple_ptr(),		L"test_simple_ptr" );
+	TestMgr.add_result( test_offset_pointer(),	L"test_offset_pointer" );
 	
 	TestMgr.print_results();
 	return std::cin.get();

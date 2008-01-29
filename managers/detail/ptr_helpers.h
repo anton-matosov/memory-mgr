@@ -56,12 +56,12 @@ namespace memory_mgr
 			return char_cast(p1) - char_cast(p2);
 		}
 
-		static inline char* shift( void* p, size_t offset )
+		static inline void* shift( void* p, size_t offset )
 		{
 			return char_cast(p) + offset;
 		}
 
-		static inline const char* shift( const void* p, const size_t offset )
+		static inline const void* shift( const void* p, const size_t offset )
 		{
 			return char_cast(p) + offset;
 		}

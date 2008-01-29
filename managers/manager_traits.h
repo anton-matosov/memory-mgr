@@ -20,35 +20,32 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_OFFSET_TRAITS_HEADER
-#define MGR_OFFSET_TRAITS_HEADER
+#ifndef MGR_MANAGER_TRAITS_HEADER
+#define MGR_MANAGER_TRAITS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
 namespace memory_mgr
-{	
-	//Offset traits class
-	template<class OffsetType>
-	struct offset_traits
+{
+	template<class MemMgr>
+	struct manager_traits
 	{
-		typedef OffsetType			offset_type;
+		typedef MemMgr									manager_type;
+		typedef typename manager_type::block_ptr_type	block_ptr_type;		
+		typedef typename manager_type::size_type		size_type;
+		typedef typename manager_type::sync_object_type	sync_object_type;
 
-		static const offset_type	invalid_offset;
+		typedef typename manager_type::offset_type		offset_type;
+
+		enum
+		{
+			chunk_size	= manager_type::chunk_size,
+			memory_size = manager_type::memory_size,
+			num_chunks	= manager_type::num_chunks
+		};
 	};
-	
-	//Specialized value for size_t offset
-	template<>
-	struct offset_traits<size_t>
-	{
-		typedef size_t			offset_type;
-
-		static const offset_type	invalid_offset = static_cast< offset_type >(-1);
-	};
-
-	
 }
 
-
-#endif// MGR_OFFSET_TRAITS_HEADER
+#endif //MGR_MANAGER_TRAITS_HEADER

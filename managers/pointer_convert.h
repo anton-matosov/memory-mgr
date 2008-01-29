@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <vector>
+#include "manager_traits.h"
 
 namespace memory_mgr
 {	
@@ -36,20 +37,20 @@ namespace memory_mgr
 	template< class MemMgr >	
 	class pointer_convert 
 	{
-		typedef MemMgr				memmgr_type;
-		memmgr_type m_mgr;
+		typedef MemMgr				mgr_type;
+		mgr_type m_mgr;
 	public:
-		enum
-		{
-			chunk_size	= memmgr_type::chunk_size,
-			memory_size = memmgr_type::memory_size,
-			num_chunks	= memmgr_type::num_chunks
-		};
-		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
-		typedef typename memmgr_type::size_type			size_type;
-
-		typedef memmgr_type								self_type;
-		typedef typename memmgr_type::offset_type		offset_type;
+// 		enum
+// 		{
+// 			chunk_size	= memmgr_type::chunk_size,
+// 			memory_size = memmgr_type::memory_size,
+// 			num_chunks	= memmgr_type::num_chunks
+// 		};
+// 		typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
+ 		typedef typename manager_traits<mgr_type>::size_type			size_type;
+// 
+// 		typedef memmgr_type								self_type;
+ 		typedef typename manager_traits<mgr_type>::offset_type		offset_type;
 
 		pointer_convert( void* base_address )
 			:m_mgr( base_address)
@@ -59,7 +60,7 @@ namespace memory_mgr
 		//size - block size in bytes
 		void* allocate( size_type size )
 		{			
-			return detail::shift( m_mgr.get_base(), m_mgr.allocate( size ) );
+			return offset_to_pointer( m_mgr.allocate( size ), m_mgr );
 		}
 
 		//Call this method to allocate memory block
@@ -67,7 +68,7 @@ namespace memory_mgr
 		//size - block size in bytes
 		void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 		{			
-			return detail::shift( m_mgr.get_base(), m_mgr.allocate( size, nothrow ) );
+			return offset_to_pointer( m_mgr.allocate( size, nothrow ), m_mgr );
 		}
 
 		//Call this method to deallocate memory block
@@ -75,9 +76,7 @@ namespace memory_mgr
 		//size - block size in bytes
  		void deallocate( const void* p, size_type size )
  		{
-			assert( p >= m_mgr.get_base() && (p < ( m_mgr.get_base() + memmgr_type::memory_size ) )
-				&& "Invalid pointer value" );
-			m_mgr.deallocate( detail::diff( p, m_mgr.get_base() ), size );
+			m_mgr.deallocate( pointer_to_offset( p, m_mgr ), size );
  		}
 
 		bool empty()
@@ -95,6 +94,25 @@ namespace memory_mgr
 		{
 			return m_mgr.get_base();
 		}
+
+		static inline void* offset_to_pointer( offset_type offset, mgr_type& mgr )
+		{
+			return detail::unconst_void( detail::shift( mgr.get_base(), offset ) );
+		}
+
+		static inline offset_type pointer_to_offset( const void* ptr, mgr_type& mgr )
+		{
+			assert( ptr >= mgr.get_base() && (ptr < ( mgr.get_base() + manager_traits<mgr_type>::memory_size ) )
+				&& "Invalid pointer value" );
+			return detail::diff( ptr, mgr.get_base() );
+		}
+	};
+
+	template< class MemMgr >
+	struct manager_traits< pointer_convert< MemMgr > > 
+		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+	{
+		typedef pointer_convert< MemMgr >	manager_type;
 	};
 }
 #endif// MGR_POINTER_CONVERT_HEADER

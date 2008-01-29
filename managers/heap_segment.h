@@ -27,11 +27,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "detail/scoped_ptr.h"
 #include "memory_manager.h"
 #include "singleton_manager.h"
-#include "std_pointer.h"
 #include "memory_segment.h"
-#include "detail/scoped_ptr.h"
+#include "manager_traits.h"
 
 
 namespace memory_mgr
@@ -54,6 +54,12 @@ namespace memory_mgr
 	class heap_segment 
 		: public memory_segment< vector_as_allocator, MemMgr >
 	{};
+
+	template< class MemMgr >
+	struct manager_traits< heap_segment< MemMgr > > 
+		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+	{
+	};
 }
 
 #endif// MGR_HEAP_SEGMENT_HEADER
