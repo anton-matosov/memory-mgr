@@ -10,7 +10,7 @@
       <keyword>C++</keyword>
       <keyword>Code</keyword>
     </keywords>
-    <versioncontrol>kdevsubversion</versioncontrol>
+    <versioncontrol/>
     <ignoreparts/>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
@@ -22,9 +22,9 @@
       <useconfiguration>debug</useconfiguration>
     </general>
     <run>
-      <mainprogram>src/memory_mgr</mainprogram>
+      <mainprogram>unit_tests/unit_tests</mainprogram>
       <terminal>true</terminal>
-      <directoryradio>executable</directoryradio>
+      <directoryradio>build</directoryradio>
       <customdirectory>/</customdirectory>
       <programargs/>
       <autocompile>true</autocompile>

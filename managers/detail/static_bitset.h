@@ -522,16 +522,17 @@ namespace memory_mgr
 		};
 	};
 
-	template <typename Ch, typename Tr, class BlockType, size_t BitsCount, arrayType Type >
+	template <class Ch, class Tr, class BlockType, size_t BitsCount, arrayType Type >
 	std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const static_bitset<BlockType, BitsCount, Type>& b )
 	{
-		char one = '1';
-		char zero = '0';
-		char space = ' ';
+		typedef Ch char_type;
+		char_type one = '1';
+		char_type zero = '0';
+		char_type space = ' ';
 
 		typedef static_bitset<BlockType, BitsCount, Type> bitset_type;
 		typedef typename bitset_type::size_type size_type;
-
+		
 		for (size_type i = bitset_type::num_bits - 1; ( i != bitset_type::npos ) && ostr; --i) 
 		{
 			ostr << (b.test(i)? one : zero);

@@ -101,7 +101,8 @@ namespace memory_mgr
 				this->m_last_block = block_index(pos);
 			}
 
-			std::ostream& print( std::ostream& ostr ) const
+			template <class Ch, class Tr>
+			std::basic_ostream<Ch, Tr>& print( std::basic_ostream<Ch, Tr>& ostr ) const
 			{
 				return ostr << this->m_bitset;
 			}
@@ -129,8 +130,8 @@ namespace memory_mgr
 			}
 		};
 
-		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
-		std::ostream& operator<<( std::ostream& ostr, const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
+		template< class Ch, class Tr, class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
+		std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
 		{
 			return b.print( ostr );
 		}
