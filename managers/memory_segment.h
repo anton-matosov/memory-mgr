@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <vector>
 #include "manager_traits.h"
 #include "manager_category.h"
+#include "segment_traits.h"
 
 namespace memory_mgr
 {	
@@ -56,6 +57,12 @@ namespace memory_mgr
 	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
 		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
 	{
+	};
+
+	template< class SegmentAllocator, class MemMgr >
+	struct segment_traits< memory_segment< SegmentAllocator, MemMgr > > 
+	{
+		typedef typename SegmentAllocator::memory_type	memory_type;
 	};
 
 }

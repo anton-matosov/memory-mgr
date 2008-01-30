@@ -73,12 +73,11 @@ MemorySize, ChunkSize, OffsetType, SyncObj> >& mgr )
 	return mgr.allocate( size );
 }
 
-
 bool test_offset_pointer()
 {
 	int* pi = new( def_heap_mgr::instance() ) int;
 	TEST_START( L"offset_pointer" );
-
+	
 	memory_mgr::manager_traits<def_heap_mgr>::manager_category tag;
 
 	return true;

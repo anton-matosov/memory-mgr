@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {
 
-	template< class SegmentAllocator >
+	template< class MemMgr >
 	struct segment_traits
 	{
 
