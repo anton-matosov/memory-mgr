@@ -1,22 +1,19 @@
-In dev:
+Version 0.8.0 (svn rev. 64):
  - change log file was added
  - allocator class added
  - added caching to bit_manager
  - fixed assert check error in memory_manager
  - namespace managers was renamed to memory_mgr
- - pointer classes were moved to separate files
  - pointers and cast helper function were moved to ptr_helpers.h file
  - RTTI was disabled for VS projects
  - added VS2008 projects
  - singleton updated to have to separate parameters for instantiation type
    and for return type
- - implemented std_pointer class for heap_memory
  - implemented pointer traits class
  - type definitions were standardized: 
    suffix "_type" will be used in all typedefs
  - memory_manager allocate methods were re-implemented to use 
-   null_ptr as null pointer instead of npos
- - removed unnecessary methods in simple_ptr
+   invalid_offset as invalid result value instead of npos
  - added unit test for "no throw" memory_manager allocate operator 
  - fixed static_bitset::bit_mask(pos, count) method for case 
    when count is grater then 64 bits (int bits number)
@@ -24,16 +21,24 @@ In dev:
  - added cmp_helper class which implements != operator using ==,
    <= using >, and >= using <
  - added logic implementation comments 
- - removed null_ptr from memory_manager class, it can be retrieved from 
-   pointer_traits
- - std_pointer and offset_pointer comparison operators were implemented
-   using cmp_helper class
+ - removed null_ptr from memory_manager class, it not used anymore
  - implemented unit tests manager which collects results of testing and
    prints those results
  - test_case class was fixed. for case test is failed in won't show 
    'Test succeeded.' message.
- 
- 
+ - got rid from pointers classes in memory_manager, for now it works only 
+   with offsets
+ - added kdevelop automake g++ project
+ - code made compatible with g++
+ - split unit tests to separate files for each class
+ - moved work with pointers from memory_manager to pointer_convert class
+ - updated unit tests to fit new architecture
+ - generalized static_bitset adn bit_manager output operators
+ - fixed output in test_bit_manager and test_static_bitset
+ - implemented offset_pointer which can be used as pointer for shared memory
+ - implemented manager_traits - traits class for memory managers
+ - categorized memory managers and memory segments
+   
 
 Version 0.6.3 beta (svn rev. 25)
  - license agreement was added
