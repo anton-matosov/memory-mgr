@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\segment_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\simple_ptr.h"
 				>
 			</File>
