@@ -33,7 +33,7 @@ namespace memory_mgr
 	template< class MemMgr >
 	struct segment_traits
 	{
-
+		typedef unknown_memory_tag	memory_type;
 	};
 
 }

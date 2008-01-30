@@ -34,7 +34,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	
+	template<class SegmentAllocator>
+	struct segment_alloc_traits
+	{
+		typedef unknown_memory_tag	memory_type;
+	};
 
 	//Links memory_manager and memory segment
 	//SegmentAllocator - must support SegmentAllocatorConcept
@@ -62,7 +66,7 @@ namespace memory_mgr
 	template< class SegmentAllocator, class MemMgr >
 	struct segment_traits< memory_segment< SegmentAllocator, MemMgr > > 
 	{
-		typedef typename SegmentAllocator::memory_type	memory_type;
+		typedef typename segment_alloc_traits<SegmentAllocator>::memory_type	memory_type;
 	};
 
 }

@@ -78,7 +78,9 @@ bool test_offset_pointer()
 	int* pi = new( def_heap_mgr::instance() ) int;
 	TEST_START( L"offset_pointer" );
 	
-	memory_mgr::manager_traits<def_heap_mgr>::manager_category tag;
+	memory_mgr::manager_traits<def_heap_mgr>::manager_category mgr_tag;
+	struct ss : memory_mgr::segment_traits<def_heap_mgr>::memory_type 
+	{} mem_tag;
 
 	return true;
 	

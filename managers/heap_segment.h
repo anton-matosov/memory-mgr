@@ -32,7 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "singleton_manager.h"
 #include "memory_segment.h"
 #include "manager_traits.h"
-
+#include "segment_traits.h"
 
 namespace memory_mgr
 {	
@@ -59,6 +59,12 @@ namespace memory_mgr
 	struct manager_traits< heap_segment< MemMgr > > 
 		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
 	{
+	};
+
+	template<>
+	struct segment_alloc_traits<vector_as_allocator>
+	{
+		typedef heap_memory_tag	memory_type;
 	};
 }
 
