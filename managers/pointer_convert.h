@@ -29,6 +29,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <vector>
 #include "manager_traits.h"
+#include "manager_category.h"
+
 
 namespace memory_mgr
 {	
@@ -113,6 +115,10 @@ namespace memory_mgr
 		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
 	{
 		typedef pointer_convert< MemMgr >	manager_type;
+		struct manager_category 
+			: public virtual manager_traits<MemMgr>::manager_category,
+			public virtual pointer_convertion_tag
+		{};
 	};
 }
 #endif// MGR_POINTER_CONVERT_HEADER

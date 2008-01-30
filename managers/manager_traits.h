@@ -32,12 +32,14 @@ namespace memory_mgr
 	template<class MemMgr>
 	struct manager_traits
 	{
-		typedef MemMgr									manager_type;
-		typedef typename manager_type::block_ptr_type	block_ptr_type;		
-		typedef typename manager_type::size_type		size_type;
-		typedef typename manager_type::sync_object_type	sync_object_type;
+		typedef MemMgr										manager_type;
+		typedef typename manager_type::manager_category		manager_category;
 
-		typedef typename manager_type::offset_type		offset_type;
+		typedef typename manager_type::block_ptr_type		block_ptr_type;		
+		typedef typename manager_type::size_type			size_type;
+		typedef typename manager_type::sync_object_type		sync_object_type;
+
+		typedef typename manager_type::offset_type			offset_type;
 
 		enum
 		{

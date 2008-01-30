@@ -160,6 +160,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\manager_category.h"
+				>
+			</File>
+			<File
+				RelativePath=".\manager_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\memory_manager.h"
 				>
 			</File>
@@ -176,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\segment_traits.h"
+				>
+			</File>
+			<File
 				RelativePath=".\simple_ptr.h"
 				>
 			</File>
@@ -185,10 +197,6 @@
 			</File>
 			<File
 				RelativePath=".\size_tracking.h"
-				>
-			</File>
-			<File
-				RelativePath=".\std_pointer.h"
 				>
 			</File>
 		</Filter>

@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/critical_section.h"
 #include "detail/locks.h"
 #include "detail/offset_traits.h"
+#include "manager_category.h"
 
 namespace memory_mgr
 {
@@ -47,7 +48,8 @@ namespace memory_mgr
 		size_t MemorySize,
  		size_t ChunkSize,
 		class OffsetType = size_t,
-		class SyncObj = detail::sync::critical_section >
+		class SyncObj = detail::sync::critical_section
+	>
 	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
 	{
 	public:
@@ -57,7 +59,6 @@ namespace memory_mgr
 			memory_size = MemorySize,
 			num_chunks = memory_size / chunk_size			
 		};
-
 		
 	private:		
 		typedef typename detail::sync::object_level_lockable<SyncObj>::lock lock;
@@ -68,9 +69,12 @@ namespace memory_mgr
 		char* m_membase;
 		
 	public:
+		typedef memory_manager								self_type;
+		typedef memory_manager_tag							manager_category;
+
 		typedef typename bitmgr_type::block_ptr_type		block_ptr_type;
 		typedef typename bitmgr_type::size_type				size_type;
-		typedef memory_manager								self_type;
+		
 		typedef SyncObj										sync_object_type;
 		typedef OffsetType									offset_type;
 		

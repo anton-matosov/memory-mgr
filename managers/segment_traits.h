@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MANAGER_CATEGORY_HEADER
-#define MGR_MANAGER_CATEGORY_HEADER
+#ifndef MGR_SEGMENT_TRAITS_HEADER
+#define MGR_SEGMENT_TRAITS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -29,18 +29,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	//Tags to categorize memory managers capabilities
-	struct memory_manager_tag{};
-	struct singleton_manager_tag{};
-	struct size_tracking_tag{};
-	struct pointer_convertion_tag{};
-	struct named_objects_manager_tag{};
 
-	//Tags to categorize memory types
-	struct unknown_memory_tag{};
-	struct heap_memory_tag{};
-	struct shared_memory_tag{};
+	template< class SegmentAllocator >
+	struct segment_traits
+	{
+
+	};
+
 }
 
-
-#endif //MGR_MANAGER_CATEGORY_HEADER
+#endif // MGR_SEGMENT_TRAITS_HEADER

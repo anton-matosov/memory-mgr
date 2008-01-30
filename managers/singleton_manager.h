@@ -29,48 +29,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "detail/singleton.h"
 #include "manager_traits.h"
+#include "manager_category.h"
 
 namespace memory_mgr
-{
-// 	template< class MgrT >
-// 	class singleton_ptr_t: public detail::off_ptr_t< MgrT >
-// 	{		
-// 		typedef MgrT mgr_type;
-// 	public:			
-// 		typedef typename detail::off_ptr_t< mgr_type >	base_t;
-// 		typedef typename base_t::size_type			size_type;
-// 
-// 		singleton_ptr_t( const base_t& ptr )
-// 			:base_t( ptr.get_off() )
-// 		{}
-// 
-// 		//Construct pointer from offset
-// 		explicit singleton_ptr_t( const size_type offset )
-// 			:base_t( offset )
-// 		{}
-// 
-// 		//Construct pointer from memory address
-// 		singleton_ptr_t( const mgr_type& mgr, const void* ptr )			
-// 			:base_t( mgr, ptr )
-// 		{}
-// 
-// 		void* get_ptr()
-// 		{
-// 			return base_t::get_ptr( mgr_type::instance() );
-// 		}
-// 
-// 		const void* get_ptr() const
-// 		{
-// 			return base_t::get_ptr( mgr_type::instance() );
-// 		}
-// 
-// 		//Call this method to get real memory address
-// 		const void* get_ptr( const mgr_type& mgr ) const
-// 		{
-// 			return base_t::get_ptr( mgr );
-// 		}
-// 	};
-	
+{	
 	template
 	< 
 		class Mgr, 
@@ -95,20 +57,6 @@ namespace memory_mgr
 	>
 	class  singleton_manager : public singleton< typename manager_traits<Mgr>::manager_type, Mgr, SyncObj, ThreadingModel >
 	{
-	public:
-// 		typedef Mgr									mgr_type;
-// 		typedef typename mgr_type::block_ptr_type	block_ptr_type;		
-// 		typedef typename mgr_type::size_type		size_type;
-// 		typedef typename Mgr::self_type				self_type;
-// 		typedef typename mgr_type::offset_type		offset_type;
-// 	
-// 		enum
-// 		{
-// 			chunk_size = mgr_type::chunk_size,
-// 			memory_size =  mgr_type::memory_size,
-// 			num_chunks =  mgr_type::num_chunks
-// 		};
-
 	private:
 		singleton_manager();
 		~singleton_manager();
@@ -118,13 +66,17 @@ namespace memory_mgr
 
 	template 
 	<
-		class Mgr,
+		class MemMgr,
 		class SyncObj, 
 		template <class> class ThreadingModel
 	>
-	struct manager_traits< singleton_manager< Mgr, SyncObj, ThreadingModel > > 
-		: public manager_traits< typename manager_traits<Mgr>::manager_type >
+	struct manager_traits< singleton_manager< MemMgr, SyncObj, ThreadingModel > > 
+		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
 	{
+		struct manager_category 
+			: public virtual manager_traits<MemMgr>::manager_category,
+			public virtual singleton_manager_tag
+		{};
 	};
 }
 

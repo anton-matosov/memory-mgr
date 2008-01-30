@@ -27,6 +27,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "manager_traits.h"
+#include "manager_category.h"
+
 namespace memory_mgr
 {
 	namespace detail
@@ -35,17 +38,8 @@ namespace memory_mgr
 		class size_tracking_impl_base
 		{
 			typedef MemMgr									mgr_type;
-		public:
-// 			enum
-// 			{
-// 				chunk_size	= memmgr_type::chunk_size,
-// 				memory_size = memmgr_type::memory_size,
-// 				num_chunks	= memmgr_type::num_chunks
-// 			};
-
-// 			typedef typename memmgr_type::block_ptr_type	block_ptr_type;		
+		public:	
  			typedef typename manager_traits<mgr_type>::size_type			size_type;
-// 			typedef typename memmgr_type::offset_type		offset_type;
 
 			bool empty()
 			{
@@ -90,16 +84,6 @@ namespace memory_mgr
 			mgr_type m_memmgr;
 		};
 
-// 		template< class MemMgr >
-// 		class size_tracking_impl
-// 		{
-// 		protected:
-// 			explicit size_tracking_impl( void* mem_base )
-// 			{
-// 				STATIC_ASSERT( false, size_tracking_for_offset_mgr_not_implemented );
-// 			}
-// 		};
-
 		template< class MemMgr >
 		class size_tracking_impl/*< pointer_convert< MemMgr > > */: public size_tracking_impl_base< MemMgr >
 		{
@@ -112,16 +96,7 @@ namespace memory_mgr
 			{}
 
 		public:
-// 			enum
-// 			{
-// 				chunk_size	= impl_base_type::chunk_size,
-// 				memory_size = impl_base_type::memory_size,
-// 				num_chunks	= impl_base_type::num_chunks
-// 			};
-// 
-// 			typedef typename impl_base_type::block_ptr_type		block_ptr_type;		
  			typedef typename impl_base_type::size_type			size_type;
-// 			typedef typename impl_base_type::offset_type		offset_type;
 
 			//Call this method to allocate memory block
 			//size - block size in bytes
@@ -164,20 +139,19 @@ namespace memory_mgr
 		typedef detail::size_tracking_impl< MemMgr >	impl_type;
 
 	public:
-// 		enum
-// 		{
-// 			chunk_size	= impl_type::chunk_size,
-// 			memory_size = impl_type::memory_size,
-// 			num_chunks	= impl_type::num_chunks
-// 		};
-// 
-// 		typedef typename impl_type::block_ptr_type	block_ptr_type;		
-// 		typedef typename impl_type::size_type		size_type;
-// 		typedef typename impl_type::offset_type		offset_type;
-
 		explicit size_tracking( void* mem_base )
 			:impl_type( mem_base )
 		{}
+	};
+
+	template<class MemMgr>
+	struct manager_traits< size_tracking< MemMgr > > 
+		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+	{
+		struct manager_category 
+			: public virtual manager_traits<MemMgr>::manager_category,
+			public virtual size_tracking_tag
+		{};
 	};
 }
 

@@ -221,11 +221,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_pointer_convert.cpp"
+				RelativePath=".\test_offset_pointer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\test_simple_ptr.cpp"
+				RelativePath=".\test_pointer_convert.cpp"
 				>
 			</File>
 			<File
