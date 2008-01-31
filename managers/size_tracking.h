@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "manager_traits.h"
 #include "manager_category.h"
+#include "pointer_convert.h"
 
 namespace memory_mgr
 {
@@ -84,19 +85,26 @@ namespace memory_mgr
 			mgr_type m_memmgr;
 		};
 
+		//base class for templates specializations
+		template<class MemMgr, class pointer_conv_flag >
+		class size_tracking_impl;
+
 		template< class MemMgr >
-		class size_tracking_impl/*< pointer_convert< MemMgr > > */: public size_tracking_impl_base< MemMgr >
+		class size_tracking_impl<
+			MemMgr,
+			typename is_category_supported<MemMgr, pointer_convertion_tag>::yes_type >
+			: public size_tracking_impl_base< MemMgr >
 		{
 			typedef MemMgr								mgr_type;
 			typedef size_tracking_impl_base< mgr_type >	impl_base_type;
-			
+
 		protected:
 			explicit size_tracking_impl( void* mem_base )
 				:impl_base_type( mem_base )
 			{}
 
 		public:
- 			typedef typename impl_base_type::size_type			size_type;
+			typedef typename impl_base_type::size_type			size_type;
 
 			//Call this method to allocate memory block
 			//size - block size in bytes
@@ -128,15 +136,75 @@ namespace memory_mgr
 				this->m_memmgr.deallocate( ps, *ps );
 			}
 		};
+
+		template< class MemMgr >
+		class size_tracking_impl<
+			MemMgr,
+			typename is_category_supported<MemMgr, pointer_convertion_tag>::no_type >
+			: public size_tracking_impl< 
+				pointer_convert< MemMgr >,
+				typename is_category_supported<pointer_convert< MemMgr >, pointer_convertion_tag>::yes_type
+			>
+		{
+			typedef pointer_convert< MemMgr >				mgr_type;
+			typedef size_tracking_impl< 
+				mgr_type,
+				typename is_category_supported<mgr_type, pointer_convertion_tag>::yes_type
+			>	impl_base_type;
+
+			typedef pointer_convert< mgr_type > pconvert;
+		protected:
+			explicit size_tracking_impl( void* mem_base )
+				:impl_base_type( mem_base )
+			{}
+		public:
+			typedef typename impl_base_type::size_type				size_type;
+			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
+
+			//Call this method to allocate memory block
+			//size - block size in bytes
+			offset_type allocate( size_type size )
+			{					
+				return pconvert::pointer_to_offset( impl_base_type::allocate( size ), this->m_memmgr );
+			}
+
+			//Call this method to allocate memory block
+			//Newer throws
+			//size - block size in bytes
+			offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			{			
+				return pconvert::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_memmgr );
+			}
+
+			//Call this method to deallocate memory block
+			//ptr - pointer returned by allocate method
+			//size - block size in bytes
+			void deallocate( const offset_type offset )
+			{
+				impl_base_type::deallocate( pconvert::offset_to_pointer( offset, this->m_memmgr ) );
+			}
+		};
+
+
+		
 	}
 
 	//Size tracking decorator for memory manager
 	//MemMgr - must support PointerConvertConcept
 	template< class MemMgr >
-	class size_tracking : public detail::size_tracking_impl< MemMgr >
+	class size_tracking 
+		: public detail::size_tracking_impl
+		< 
+			MemMgr, 
+			typename is_category_supported<MemMgr, pointer_convertion_tag>::result 
+		>
 	{
 		typedef MemMgr									memmgr_type;
-		typedef detail::size_tracking_impl< MemMgr >	impl_type;
+		typedef detail::size_tracking_impl
+		< 
+			MemMgr, 
+			typename is_category_supported<MemMgr, pointer_convertion_tag>::result 
+		>	impl_type;
 
 	public:
 		explicit size_tracking( void* mem_base )

@@ -33,18 +33,22 @@ static const size_t memory_size = 256;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
-typedef memory_mgr::size_tracking< pconv_type > sz_track_mgr;
+
+typedef memory_mgr::size_tracking< pconv_type > sz_pconv_track_mgr;
+typedef memory_mgr::size_tracking< memmgr_type > sz_track_mgr;
+
+template class memory_mgr::size_tracking< memmgr_type >;
 template class memory_mgr::size_tracking< pconv_type >;
 
-typedef void* ptr_type;
-
-bool test_size_tracking()
+template<class MgrType, class ptr_type>
+bool test_size_tracking_impl( const wchar_t* name )
 {
-	TEST_START( L"size_tracking" );
+	typedef MgrType mgr_type;
+	SUBTEST_START( name );
 	std::vector<chunk_type> memory( memory_size );
-	sz_track_mgr track_mgr( &*memory.begin() );
+	mgr_type track_mgr( &*memory.begin() );
 
-	const memmgr_type::size_type obj_size = 4;
+	const memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
 	ptr_type p1 = track_mgr.allocate( obj_size );
 	ptr_type p2 = track_mgr.allocate( obj_size );
 	ptr_type p3 = track_mgr.allocate( obj_size );
@@ -57,6 +61,19 @@ bool test_size_tracking()
 	track_mgr.deallocate( p2 );
 	track_mgr.deallocate( p4 );
 
-	TEST_END( track_mgr.free() );
+	SUBTEST_END( track_mgr.free() );
+}
+	
+bool test_size_tracking()
+{
+	TEST_START( L"size_tracking" );
+
+	TEST_END( (test_size_tracking_impl
+		<sz_pconv_track_mgr, void*>( L"with pointer_convert" ))
+		&& (test_size_tracking_impl
+		<sz_track_mgr, 
+		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"simple manager" )
+		)
+		);
 }
 

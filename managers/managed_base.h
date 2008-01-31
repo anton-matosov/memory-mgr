@@ -87,6 +87,7 @@ namespace memory_mgr
 		{
 			//TODO:implement correct logic in this method
 			//mem_mgr::instance().deallocate( p, size );
+			STATIC_ASSERT( false, named_objects_not_supported );
 		}
 	};
 	

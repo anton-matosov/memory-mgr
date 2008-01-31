@@ -27,6 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "manager_traits.h"
+
 namespace memory_mgr
 {
 	//Tags to categorize memory managers capabilities
@@ -40,6 +42,25 @@ namespace memory_mgr
 	struct unknown_memory_tag{};
 	struct heap_memory_tag{};
 	struct shared_memory_tag{};
+
+	template< class MemMgr, class Category >
+	struct is_category_supported
+	{
+		struct yes_type{};
+		struct no_type{};
+
+		enum {value = type_manip::super_subclass
+			< 
+			Category,
+			typename manager_traits<MemMgr>::manager_category			 
+			>::value};
+
+		typedef typename type_manip::select< 
+			value, 
+			yes_type,
+			no_type
+		>::result result;
+	};
 }
 
 
