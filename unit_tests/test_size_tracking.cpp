@@ -48,7 +48,7 @@ bool test_size_tracking_impl( const wchar_t* name )
 	std::vector<chunk_type> memory( memory_size );
 	mgr_type track_mgr( &*memory.begin() );
 
-	const memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
+	const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
 	ptr_type p1 = track_mgr.allocate( obj_size );
 	ptr_type p2 = track_mgr.allocate( obj_size );
 	ptr_type p3 = track_mgr.allocate( obj_size );
