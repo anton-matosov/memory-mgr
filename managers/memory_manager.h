@@ -87,6 +87,7 @@ namespace memory_mgr
 		
 		//Call this method to allocate memory block
 		//size - block size in bytes
+		//Returns: offset in bytes from memory base address.
 		offset_type allocate( size_type size )
 		{			
 			return do_allocate( size, throw_bad_alloc );
@@ -96,13 +97,14 @@ namespace memory_mgr
 		//Call this method to allocate memory block
 		//Newer throws
 		//size - block size in bytes
+		//Returns: offset in bytes from memory base address.
 		offset_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
 			return do_allocate( size, do_nothing );
 		}
 
 		//Call this method to deallocate memory block
-		//ptr - pointer returned by allocate method
+		//offset - offset returned by allocate method
 		//size - block size in bytes
  		void deallocate( const offset_type offset, size_type size )
  		{
@@ -158,7 +160,7 @@ namespace memory_mgr
 
 		//Call this method to allocate memory block
 		//size - block size in bytes
-		//returns poiner
+		//Returns: offset in bytes from memory base address.
 		template< class OnNoMemory >
 		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{			

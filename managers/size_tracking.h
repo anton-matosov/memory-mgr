@@ -163,6 +163,7 @@ namespace memory_mgr
 
 			//Call this method to allocate memory block
 			//size - block size in bytes
+			//Returns: offset in bytes from memory base address.
 			offset_type allocate( size_type size )
 			{					
 				return pconvert::pointer_to_offset( impl_base_type::allocate( size ), this->m_memmgr );
@@ -171,13 +172,14 @@ namespace memory_mgr
 			//Call this method to allocate memory block
 			//Newer throws
 			//size - block size in bytes
+			//Returns: offset in bytes from memory base address.
 			offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{			
 				return pconvert::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_memmgr );
 			}
 
 			//Call this method to deallocate memory block
-			//ptr - pointer returned by allocate method
+			//offset - offset returned by allocate method
 			//size - block size in bytes
 			void deallocate( const offset_type offset )
 			{

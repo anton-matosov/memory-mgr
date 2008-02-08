@@ -28,35 +28,34 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "size_tracking.h"
 #include "offset_pointer.h"
 
-//class DerivedTestClass : public test_class
-//{	
-//};
-//
-//typedef int builtin_type;
-//
-//
-//typedef memory_mgr::def_heap_mgr pointers_memory_mgr;
-//typedef memory_mgr::simple_ptr< builtin_type, pointers_memory_mgr > builtin_ptr;
-//typedef memory_mgr::simple_ptr< test_class, pointers_memory_mgr > base_class_ptr;
-//typedef memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
-//
-//template class memory_mgr::simple_ptr< builtin_type, pointers_memory_mgr >;
-////template class memory_mgr::simple_ptr< test_class, pointers_memory_mgr >;
-//template class memory_mgr::simple_ptr< DerivedTestClass, pointers_memory_mgr >;
-//
-//
-//bool test_construction()
-//{
-//	SUBTEST_START( L"construction/destruction" );	
-//	using memory_mgr::object_name;
-//	derived_class_ptr derived_ptr( new(object_name(L"Derived")) DerivedTestClass() );
-//	base_class_ptr base_ptr( derived_ptr );
-//
-//	SUBTEST_END( pointers_memory_mgr::instance().free() );
-//}
-//
+class DerivedTestClass : public test_class
+{	
+};
 
-template class memory_mgr::offset_pointer<int, def_heap_mgr>;
+typedef int builtin_type;
+
+typedef def_heap_mgr pointers_memory_mgr;
+typedef memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr > builtin_ptr;
+typedef memory_mgr::offset_pointer< test_class, pointers_memory_mgr > base_class_ptr;
+typedef memory_mgr::offset_pointer< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
+
+template class memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr >;
+//template class memory_mgr::offset_pointer< test_class, pointers_memory_mgr >;
+//template class memory_mgr::offset_pointer< DerivedTestClass, pointers_memory_mgr >;
+
+
+bool test_construction()
+{
+	SUBTEST_START( L"construction/destruction" );	
+	using memory_mgr::object_name;
+	derived_class_ptr derived_ptr( new(object_name(L"Derived")) DerivedTestClass() );
+	base_class_ptr base_ptr( derived_ptr );
+
+	SUBTEST_END( pointers_memory_mgr::instance().free() );
+}
+
+
+
 
 template
 <
@@ -82,13 +81,12 @@ bool test_offset_pointer()
 	struct ss : memory_mgr::segment_traits<def_heap_mgr>::memory_type 
 	{} mem_tag;
 
-	return true;
+	//return true;
 	
-//	TEST_END( test_construction()/*
+	TEST_END( test_construction()/*
 //		 &&
 //				test_size_tracking() &&
 //				test_out_of_memory() &&
 //				test_managed_base()*/
-//		
-//		);
+		);
 }

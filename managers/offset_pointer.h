@@ -53,6 +53,7 @@ namespace memory_mgr
 
 		typedef ptrdiff_t			difference_type;
 
+		//Default constructor
 		//Constructs null pointer
 		offset_pointer()
 			:m_offset( offset_traits<offset_type>::invalid_offset )
