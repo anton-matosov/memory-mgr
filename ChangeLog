@@ -1,6 +1,5 @@
-In dev
- - implement size_tracking for standard memory_manager
-
+In dev 
+ - implemented size_tracking for standard memory_manager
 
 Version 0.8.0 (svn rev. 64):
  - change log file was added
