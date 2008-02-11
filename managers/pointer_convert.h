@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <vector>
+#include "detail/ptr_helpers.h"
 #include "manager_traits.h"
 #include "manager_category.h"
 
@@ -62,7 +63,7 @@ namespace memory_mgr
 		//size - block size in bytes
 		void* allocate( size_type size )
 		{			
-			return offset_to_pointer( m_mgr.allocate( size ), m_mgr );
+			return detail::offset_to_pointer( m_mgr.allocate( size ), m_mgr );
 		}
 
 		//Call this method to allocate memory block
@@ -70,7 +71,7 @@ namespace memory_mgr
 		//size - block size in bytes
 		void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 		{			
-			return offset_to_pointer( m_mgr.allocate( size, nothrow ), m_mgr );
+			return detail::offset_to_pointer( m_mgr.allocate( size, nothrow ), m_mgr );
 		}
 
 		//Call this method to deallocate memory block
@@ -97,24 +98,14 @@ namespace memory_mgr
 			return m_mgr.get_base();
 		}
 
-		static inline void* offset_to_pointer( offset_type offset, mgr_type& mgr )
-		{
-			return detail::unconst_void( detail::shift( mgr.get_base(), offset ) );
-		}
-
-		static inline offset_type pointer_to_offset( const void* ptr, mgr_type& mgr )
-		{
-			assert( ptr >= mgr.get_base() && (ptr < ( mgr.get_base() + manager_traits<mgr_type>::memory_size ) )
-				&& "Invalid pointer value" );
-			return detail::diff( ptr, mgr.get_base() );
-		}
+		
 	};
 
 	template< class MemMgr >
 	struct manager_traits< pointer_convert< MemMgr > > 
-		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+		: public manager_traits< MemMgr >
 	{
-		typedef pointer_convert< MemMgr >	manager_type;
+		//typedef pointer_convert< MemMgr >	manager_type;
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,
 			public virtual pointer_convertion_tag

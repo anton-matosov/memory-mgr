@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "size_tracking.h"
 #include "offset_pointer.h"
 
+#include "new.h"
+
 class DerivedTestClass : public test_class
 {	
 };
@@ -47,41 +49,34 @@ template class memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr >;
 bool test_construction()
 {
 	SUBTEST_START( L"construction/destruction" );	
-	using memory_mgr::object_name;
-	derived_class_ptr derived_ptr( new(object_name(L"Derived")) DerivedTestClass() );
+	//using memory_mgr::object_name;
+	derived_class_ptr derived_ptr( new/*(object_name(L"Derived"))*/ DerivedTestClass() );
 	base_class_ptr base_ptr( derived_ptr );
 
 	SUBTEST_END( pointers_memory_mgr::instance().free() );
 }
 
 
-
-
-template
-<
-	class BlockType, 
-	size_t MemorySize,
-	size_t ChunkSize, 
-	class OffsetType,
-	class SyncObj,
-	template <class,size_t,size_t,class,class> class MgrType
->
-void* operator new( size_t size, memory_mgr::pointer_convert< MgrType<BlockType,
-MemorySize, ChunkSize, OffsetType, SyncObj> >& mgr )
-{
-	return mgr.allocate( size );
-}
+typedef memory_mgr::singleton_manager
+< 
+	memory_mgr::heap_segment
+	<
+		memory_mgr::size_tracking
+		< 
+			memory_mgr::pointer_convert
+			< 
+				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+			> 
+		>
+	>
+> sz_heap_mgr;
 
 bool test_offset_pointer()
 {
-	int* pi = new( def_heap_mgr::instance() ) int;
-	TEST_START( L"offset_pointer" );
-	
-	memory_mgr::manager_traits<def_heap_mgr>::manager_category mgr_tag;
-	struct ss : memory_mgr::segment_traits<def_heap_mgr>::memory_type 
-	{} mem_tag;
+	int* pi = ::new( mem_mgr(sz_heap_mgr::instance()) ) int;
+	pi;
 
-	//return true;
+	TEST_START( L"offset_pointer" );
 	
 	TEST_END( test_construction()/*
 //		 &&

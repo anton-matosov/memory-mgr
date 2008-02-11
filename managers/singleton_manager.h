@@ -55,7 +55,7 @@ namespace memory_mgr
 		class SyncObj = detail::sync::critical_section, 
 		template <class> class ThreadingModel = detail::sync::class_level_lockable
 	>
-	class  singleton_manager : public singleton< typename manager_traits<Mgr>::manager_type, Mgr, SyncObj, ThreadingModel >
+	class  singleton_manager : public singleton< /*typename manager_traits<*/Mgr/*>::manager_type*/, Mgr, SyncObj, ThreadingModel >
 	{
 	private:
 		singleton_manager();
@@ -71,7 +71,7 @@ namespace memory_mgr
 		template <class> class ThreadingModel
 	>
 	struct manager_traits< singleton_manager< MemMgr, SyncObj, ThreadingModel > > 
-		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+		: public manager_traits< MemMgr >
 	{
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,

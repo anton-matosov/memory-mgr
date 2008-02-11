@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\new.h"
+				>
+			</File>
+			<File
 				RelativePath=".\offset_pointer.h"
 				>
 			</File>

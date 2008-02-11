@@ -34,52 +34,56 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	template <class T>
-	class mutable_random_access_iterator_archetype
-	{
-	public:
-		typedef mutable_random_access_iterator_archetype self;
-	public:
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef T value_type;
-		typedef T& reference;
-		typedef T* pointer;
-		typedef std::ptrdiff_t difference_type;
-		mutable_random_access_iterator_archetype() { }
-		self& operator=(const self&) { return *this;  }
-		bool operator==(const self&) const { return true; }
-		bool operator!=(const self&) const { return true; }
-		reference operator*() const { return static_object<T>::get(); }
-		self& operator++() { return *this; }
-		self operator++(int) { return *this; }
-		self& operator--() { return *this; }
-		self operator--(int) { return *this; }
-		reference operator[](difference_type) const
-		{ return static_object<T>::get(); }
-		self& operator+=(difference_type) { return *this; }
-		self& operator-=(difference_type) { return *this; }
-		difference_type operator-(const self&) const
-		{ return difference_type(); }
-		self operator+(difference_type) const { return *this; }
-		self operator-(difference_type) const { return *this; }
-		bool operator<(const self&) const { return true; }
-		bool operator<=(const self&) const { return true; }
-		bool operator>(const self&) const { return true; }
-		bool operator>=(const self&) const { return true; }
-	};
-	template <class T>
-	mutable_random_access_iterator_archetype<T> 
-		operator+
-		(typename mutable_random_access_iterator_archetype<T>::difference_type, 
-		const mutable_random_access_iterator_archetype<T>& x) 
-	{ return x; }
+// 	template <class T>
+// 	class mutable_random_access_iterator_archetype
+// 	{
+// 	public:
+// 		typedef mutable_random_access_iterator_archetype self;
+// 	public:
+// 		typedef std::random_access_iterator_tag iterator_category;
+// 		typedef T value_type;
+// 		typedef T& reference;
+// 		typedef T* pointer;
+// 		typedef std::ptrdiff_t difference_type;
+// 		mutable_random_access_iterator_archetype() { }
+// 		self& operator=(const self&) { return *this;  }
+// 		bool operator==(const self&) const { return true; }
+// 		bool operator!=(const self&) const { return true; }
+// 		reference operator*() const { return static_object<T>::get(); }
+// 		self& operator++() { return *this; }
+// 		self operator++(int) { return *this; }
+// 		self& operator--() { return *this; }
+// 		self operator--(int) { return *this; }
+// 		reference operator[](difference_type) const
+// 		{ return static_object<T>::get(); }
+// 		self& operator+=(difference_type) { return *this; }
+// 		self& operator-=(difference_type) { return *this; }
+// 		difference_type operator-(const self&) const
+// 		{ return difference_type(); }
+// 		self operator+(difference_type) const { return *this; }
+// 		self operator-(difference_type) const { return *this; }
+// 		bool operator<(const self&) const { return true; }
+// 		bool operator<=(const self&) const { return true; }
+// 		bool operator>(const self&) const { return true; }
+// 		bool operator>=(const self&) const { return true; }
+// 	};
+// 	template <class T>
+// 	mutable_random_access_iterator_archetype<T> 
+// 		operator+
+// 		(typename mutable_random_access_iterator_archetype<T>::difference_type, 
+// 		const mutable_random_access_iterator_archetype<T>& x) 
+// 	{ return x; }
 
 	//Offset pointer class
 	template< class T, class Mgr >
 	class offset_pointer : public detail::cmp_helper< offset_pointer< T, Mgr > >
 	{		
 	public:
-		typedef offset_pointer							self_type;		
+		typedef offset_pointer							self_type;
+		typedef self_type&								self_type_ref;
+		typedef const self_type							const_self_type;
+		typedef const_self_type&						const_self_type_ref;
+
 		typedef Mgr										mgr_type;
 		typedef manager_traits<mgr_type>				manager_traits;
 		typedef typename manager_traits::offset_type	offset_type;
@@ -109,6 +113,13 @@ namespace memory_mgr
 		offset_pointer( const offset_pointer& ptr )
 			:m_offset( ptr.m_offset )
 		{}
+
+		//Pointer constructor
+		offset_pointer( const_pointer_type p )
+			:m_offset( offset_traits<offset_type>::invalid_offset )
+		{
+			do_set_pointer(p);
+		}
 
 		//Polymorph copy constructor
 		template < typename U >
@@ -230,19 +241,29 @@ namespace memory_mgr
 
 		inline const_pointer_type do_get_poiner() const
 		{
-			return static_cast<const_pointer_type>( converter::offset_to_pointer( m_offset, mgr_type::instance() ) );
+			return static_cast<const_pointer_type>( detail::offset_to_pointer( m_offset, mgr_type::instance() ) );
 		}
 
 		inline void do_set_pointer( const_pointer_type ptr )
 		{
-			m_offset = converter::pointer_to_offset( ptr, mgr_type::instance() );
+			m_offset = detail::pointer_to_offset( ptr, mgr_type::instance() );
 		}
 
+	//friends:
 		//Call this method to get offset
-		template<class U>
-		friend const offset_type get_offset( const offset_pointer<U, mgr_type>& ptr )
+		friend static inline const offset_type get_offset( const_self_type_ref ptr )
 		{
 			return ptr.m_offset;
+		}
+
+		friend static inline pointer_type get_poiner( self_type_ref ptr )
+		{
+			return ptr.get_poiner();
+		}
+
+		friend static inline const_pointer_type get_poiner( const_self_type_ref ptr )
+		{
+			return ptr.get_poiner();
 		}
 	};
 

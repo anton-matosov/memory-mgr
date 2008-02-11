@@ -27,6 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <assert.h>
+
 namespace memory_mgr
 {
 	namespace detail
@@ -66,6 +68,19 @@ namespace memory_mgr
 			return char_cast(p) + offset;
 		}
 
+		template<class MemMgr>
+		static inline void* offset_to_pointer( typename MemMgr::offset_type offset, MemMgr& mgr )
+		{
+			return unconst_void( detail::shift( mgr.get_base(), offset ) );
+		}
+
+		template<class MemMgr>
+		static inline typename MemMgr::offset_type pointer_to_offset( const void* ptr, MemMgr& mgr )
+		{
+			assert( ptr >= mgr.get_base() && (ptr < ( mgr.get_base() + manager_traits<MemMgr>::memory_size ) )
+				&& "Invalid pointer value" );
+			return diff( ptr, mgr.get_base() );
+		}
 	}// namespace detail
 
 }// namespace memory_mgr

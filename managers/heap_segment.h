@@ -57,7 +57,7 @@ namespace memory_mgr
 
 	template< class MemMgr >
 	struct manager_traits< heap_segment< MemMgr > > 
-		: public manager_traits< typename manager_traits<MemMgr>::manager_type >
+		: public manager_traits< MemMgr >
 	{
 	};
 
