@@ -394,8 +394,10 @@ namespace memory_mgr
 			return blk_index * bits_per_block + do_find_next( bit_index(pos), blk_index );
 		}
 		
+		//Return true if all bits are set to 0
 		bool empty()
 		{
+			//Is there at least one block with bit set to 1
 			return find_first_block(0) >= num_blocks;
 		}
 
@@ -428,6 +430,7 @@ namespace memory_mgr
 		{ return (this->m_bits[block_index(pos)] & bit_mask(pos)) != 0; }
 		
 
+		//Find first block with at list one bit set to 1
 		size_type find_first_block( size_type from ) const
 		{
 			// skip null blocks

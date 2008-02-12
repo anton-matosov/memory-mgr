@@ -40,7 +40,7 @@ namespace memory_mgr
 
 	namespace detail
 	{
-		template < class BaseT, class DerivedT >
+		template < class BaSseT, class DerivedT >
 		const BaseT* poly_cast( const DerivedT* p = NULL )
 		{
 			//Polimorph test
@@ -99,42 +99,42 @@ namespace memory_mgr
 		//Access operators
 		pointer_type operator->()
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		const_pointer_type operator->() const
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		reference_type operator*()
 		{
-			return *get_poiner();
+			return *get_pointer();
 		}
 
 		const_reference_type operator*() const
 		{
-			return *get_poiner();
+			return *get_pointer();
 		}
 
 		pointer_type operator&()
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		const_pointer_type operator&() const
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		operator T* ()
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		operator const T*() const
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		bool is_null() const { return m_ptr == pointer_traits<ptr_type>::null_ptr; }
@@ -146,24 +146,24 @@ namespace memory_mgr
 		
 // 		self_type operator+( const size_t count ) const
 // 		{			
-// 			return self_type( get_poiner() + count );
+// 			return self_type( get_pointer() + count );
 // 		}
 // 
 // 		self_type operator-( const size_t count ) const
 // 		{			
-// 			return self_type( get_poiner() - count );
+// 			return self_type( get_pointer() - count );
 // 		}
 
 		self_type& operator--()
 		{			
-			m_ptr = ptr_type( mgr_type::instance(), get_poiner() - 1 );
+			m_ptr = ptr_type( mgr_type::instance(), get_pointer() - 1 );
 			return *this;
 		}
 
 
 		difference_type operator-( const self_type& ptr ) const
 		{			
-			return get_poiner() - ptr.get_poiner();
+			return get_pointer() - ptr.get_pointer();
 		}
 		//////////////////////////////////////////////////////////////////////////
 		bool operator==(  const self_type& ptr ) const
@@ -227,19 +227,19 @@ namespace memory_mgr
 		typedef typename ptr_type::offset_type offset_type;
 		ptr_type m_ptr;
 
-		inline pointer_type unconst_poiner( const_pointer_type ptr )
+		inline pointer_type unconst_pointer( const_pointer_type ptr )
 		{
 			return const_cast<pointer_type>( ptr );
 		}
 
-		inline pointer_type get_poiner()
+		inline pointer_type get_pointer()
 		{
-			return unconst_poiner( do_get_poiner() );
+			return unconst_pointer( do_get_pointer() );
 		}
 
-		inline const_pointer_type get_poiner() const
+		inline const_pointer_type get_pointer() const
 		{
-			return do_get_poiner();
+			return do_get_pointer();
 		}
 
 		inline offset_type get_offset() const
@@ -247,7 +247,7 @@ namespace memory_mgr
 			return m_ptr.get_off( mgr_type::instance() );
 		}
 
-		inline const_pointer_type do_get_poiner() const
+		inline const_pointer_type do_get_pointer() const
 		{
 			return static_cast<const_pointer_type>( m_ptr.get_ptr( mgr_type::instance() ) );
 		}

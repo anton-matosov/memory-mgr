@@ -107,6 +107,7 @@ namespace memory_mgr
 				return ostr << this->m_bitset;
 			}
 
+			//Return true if there is no more free bits to allocate
 			bool empty()
 			{
 				return this->m_bitset.empty();
@@ -114,7 +115,7 @@ namespace memory_mgr
 
 			bool free()
 			{
-				return !empty();
+				return this->m_bitset.test( 0, num_bits );
 			}
 
 		private:

@@ -31,7 +31,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "new.h"
 
 class DerivedTestClass : public test_class
-{	
+{
+	int i_;
+public:
+	DerivedTestClass( int i = 0 )
+		:i_(i)
+	{}
 };
 
 typedef int builtin_type;
@@ -48,10 +53,53 @@ template class memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr >;
 
 bool test_construction()
 {
-	SUBTEST_START( L"construction/destruction" );	
+	SUBTEST_START( L"construction/destruction" );
+	
+	derived_class_ptr derived_ptr( new DerivedTestClass() );
+	derived_class_ptr derived_ptr2( new DerivedTestClass(1) );
+	base_class_ptr base_ptr( derived_ptr );
+	base_class_ptr base_ptr2;
+
+	TEST_CHECH( derived_ptr != derived_ptr2 );
+
+	base_ptr2 = base_ptr;
+	TEST_CHECH( base_ptr2 == base_ptr );
+
+	base_class_ptr base_ptr3;
+
+	base_ptr3 = base_ptr2;
+	TEST_CHECH( base_ptr2 == base_ptr3 );
+
+	base_class_ptr base_ptr4;
+
+	base_ptr4 = derived_ptr2;
+	TEST_CHECH( base_ptr4 == derived_ptr2 );
+
+	SUBTEST_END( true/*pointers_memory_mgr::instance().free()*/ );
+}
+
+bool test_dereferencing()
+{
+	SUBTEST_START( L"dereferencing" );	
+	derived_class_ptr derived_ptr( new DerivedTestClass[5] );
+	base_class_ptr base_ptr( derived_ptr );
+
+	base_class_ptr ptr1 = 1 + base_ptr;
+	base_class_ptr ptr2 = base_ptr + 1;
+
+
+	SUBTEST_END( pointers_memory_mgr::instance().free() );
+}
+
+bool test_operators()
+{
+	SUBTEST_START( L"operators" );	
 	//using memory_mgr::object_name;
 	derived_class_ptr derived_ptr( new/*(object_name(L"Derived"))*/ DerivedTestClass() );
 	base_class_ptr base_ptr( derived_ptr );
+
+	base_class_ptr ptr1 = 1 + base_ptr;
+	base_class_ptr ptr2 = base_ptr + 1;
 
 	SUBTEST_END( pointers_memory_mgr::instance().free() );
 }
@@ -78,10 +126,9 @@ bool test_offset_pointer()
 
 	TEST_START( L"offset_pointer" );
 	
-	TEST_END( test_construction()/*
-//		 &&
-//				test_size_tracking() &&
-//				test_out_of_memory() &&
-//				test_managed_base()*/
+	TEST_END( test_construction()
+		&&		test_dereferencing() 
+		&&		test_operators() 
+//		&&		test_managed_base()*/
 		);
 }

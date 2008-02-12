@@ -1,4 +1,7 @@
+ - implement new[]/delete[] for managed_base
+ 
  - implement shared memory segment allocator
+ - finish implementation of offset_pointer
  
  - implement offset_pointer unit tests 
  - complete implementation of unit tests for type manipulation library

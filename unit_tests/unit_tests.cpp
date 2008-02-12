@@ -60,7 +60,10 @@ public:
 
 	~tests_manager()
 	{
-		print_results();
+		if( !m_test_results.empty() )
+		{
+			print_results();
+		}
 	}
 };
 

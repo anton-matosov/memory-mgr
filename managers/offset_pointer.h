@@ -46,26 +46,26 @@ namespace memory_mgr
 // 		typedef T* pointer;
 // 		typedef std::ptrdiff_t difference_type;
 // 		mutable_random_access_iterator_archetype() { }
-// 		self& operator=(const self&) { return *this;  }
-// 		bool operator==(const self&) const { return true; }
-// 		bool operator!=(const self&) const { return true; }
-// 		reference operator*() const { return static_object<T>::get(); }
-// 		self& operator++() { return *this; }
-// 		self operator++(int) { return *this; }
-// 		self& operator--() { return *this; }
-// 		self operator--(int) { return *this; }
-// 		reference operator[](difference_type) const
+// 	--	self& operator=(const self&) { return *this;  }
+// 	--	bool operator==(const self&) const { return true; }
+// 	--	bool operator!=(const self&) const { return true; }
+// 	--	reference operator*() const { return static_object<T>::get(); }
+// 	--	self& operator++() { return *this; }
+// 	--	self operator++(int) { return *this; }
+// 	--	self& operator--() { return *this; }
+// 	--	self operator--(int) { return *this; }
+// 	--	reference operator[](difference_type) const
 // 		{ return static_object<T>::get(); }
-// 		self& operator+=(difference_type) { return *this; }
-// 		self& operator-=(difference_type) { return *this; }
+// 	--	self& operator+=(difference_type) { return *this; }
+// 	--	self& operator-=(difference_type) { return *this; }
 // 		difference_type operator-(const self&) const
 // 		{ return difference_type(); }
-// 		self operator+(difference_type) const { return *this; }
-// 		self operator-(difference_type) const { return *this; }
-// 		bool operator<(const self&) const { return true; }
-// 		bool operator<=(const self&) const { return true; }
-// 		bool operator>(const self&) const { return true; }
-// 		bool operator>=(const self&) const { return true; }
+// 	--	self operator+(difference_type) const { return *this; }
+// 	--	self operator-(difference_type) const { return *this; }
+// 	--	bool operator<(const self&) const { return true; }
+// 	--	bool operator<=(const self&) const { return true; }
+// 	--	bool operator>(const self&) const { return true; }
+// 	--	bool operator>=(const self&) const { return true; }
 // 	};
 // 	template <class T>
 // 	mutable_random_access_iterator_archetype<T> 
@@ -80,9 +80,9 @@ namespace memory_mgr
 	{		
 	public:
 		typedef offset_pointer							self_type;
-		typedef self_type&								self_type_ref;
+		typedef self_type&								self_ref_type;
 		typedef const self_type							const_self_type;
-		typedef const_self_type&						const_self_type_ref;
+		typedef const_self_type&						const_self_ref_type;
 
 		typedef Mgr										mgr_type;
 		typedef manager_traits<mgr_type>				manager_traits;
@@ -95,14 +95,13 @@ namespace memory_mgr
 		typedef value_type&			reference_type;
 		typedef const value_type&	const_reference_type;
 
-		typedef ptrdiff_t			difference_type;
+		typedef std::ptrdiff_t		difference_type;
 
 		//Default constructor
 		//Constructs null pointer
 		offset_pointer()
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{}
-
 
 		//Construct pointer from offset
 		offset_pointer( const offset_type offset )
@@ -128,83 +127,116 @@ namespace memory_mgr
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 		}
-// 
-// 		//Construct pointer from memory address
-// 		offset_pointer( const mgr_type& mgr, const void* ptr )			
-// 			:m_offset( detail::diff( ptr, mgr.get_base() ) )
-// 		{ assert( ptr >= mgr.get_base() && "Invalid pointer value" ); }
+
+		//Polymorph copy operator
+		template < typename U >
+		offset_pointer& operator=( const offset_pointer< U, mgr_type >& ptr )			
+		{
+			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
+			m_offset = get_offset( ptr );			
+			return *this;
+		}
 
 		const_pointer_type operator->() const
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		reference_type operator*()
 		{
-			return *get_poiner();
+			return *get_pointer();
 		}
 
 		const_reference_type operator*() const
 		{
-			return *get_poiner();
+			return *get_pointer();
 		}
 
 		pointer_type operator&()
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
 		const_pointer_type operator&() const
 		{
-			return get_poiner();
+			return get_pointer();
 		}
 
-		operator T* ()
+		reference_type operator[](difference_type n)
 		{
-			return get_poiner();
+			return *(get_pointer() + n);
 		}
 
-		operator const T*() const
+		const_reference_type operator[](difference_type n) const
 		{
-			return get_poiner();
+			return *(get_pointer() + n);
 		}
+
+// 		operator T* ()
+// 		{
+// 			return get_pointer();
+// 		}
+// 
+// 		operator const T*() const
+// 		{
+// 			return get_pointer();
+// 		}
 
 		bool is_null() const { return m_offset == offset_traits<offset_type>::invalid_offset; }
 		bool is_not_null() const { return !is_null(); }
 		bool operator!() const { return  is_null(); }
 
-		//It is risky to add such an operator
-		//operator bool() const { return  !m_ptr.is_null(); }
+		self_ref_type operator++()
+		{
+			return *this += 1;
+		}
 
-		// 		self_type operator+( const size_t count ) const
-		// 		{			
-		// 			return self_type( get_poiner() + count );
-		// 		}
-		// 
-		// 		self_type operator-( const size_t count ) const
-		// 		{			
-		// 			return self_type( get_poiner() - count );
-		// 		}
+		self_type operator++(int)
+		{
+			offset_type offset = m_offset;
+			++*this;
+			return self_type( offset );
+		}
 
-		self_type& operator--()
+		self_ref_type operator--()
 		{			
-			do_set_pointer( get_poiner() - 1 );			
+			return *this -= 1;
+		}
+
+ 		self_type operator--(int)
+ 		{
+ 			offset_type offset = m_offset;
+ 			--*this;
+ 			return self_type( offset );
+ 		}
+
+		self_ref_type operator+=(difference_type n)
+		{
+			do_set_pointer( get_pointer() + n );
 			return *this;
+		}
+
+		self_ref_type operator-=(difference_type n)
+		{
+			do_set_pointer( get_pointer() - n );
+			return *this;
+		}
+
+		self_type operator+(difference_type n)
+		{
+			return self_type( get_pointer() + n );
+		}
+
+		self_type operator-(difference_type n)
+		{
+			return self_type( get_pointer() - n );
 		}
 
 		difference_type operator-( const self_type& ptr ) const
-		{			
-			return get_poiner() - ptr.get_poiner();
+		{
+			return get_pointer() - ptr.get_pointer();
 		}
 		
-		//////////////////////////////////////////////////////////////////////////
-		offset_pointer& operator=( const offset_pointer& ptr )				
-		{
-			m_offset = ptr.m_offset;
-			return *this;
-		}
-
-
 		bool operator==( const self_type& rhs ) const
 		{
 			return m_offset == rhs.m_offset;
@@ -224,22 +256,22 @@ namespace memory_mgr
 
 		typedef pointer_convert<typename manager_traits::manager_type> converter;
 
-		inline pointer_type unconst_poiner( const_pointer_type ptr )
+		inline pointer_type unconst_pointer( const_pointer_type ptr )
 		{
 			return const_cast<pointer_type>( ptr );
 		}
 
-		inline pointer_type get_poiner()
+		inline pointer_type get_pointer()
 		{
-			return unconst_poiner( do_get_poiner() );
+			return unconst_pointer( do_get_pointer() );
 		}
 
-		inline const_pointer_type get_poiner() const
+		inline const_pointer_type get_pointer() const
 		{
-			return do_get_poiner();
+			return do_get_pointer();
 		}
 
-		inline const_pointer_type do_get_poiner() const
+		inline const_pointer_type do_get_pointer() const
 		{
 			return static_cast<const_pointer_type>( detail::offset_to_pointer( m_offset, mgr_type::instance() ) );
 		}
@@ -251,22 +283,29 @@ namespace memory_mgr
 
 	//friends:
 		//Call this method to get offset
-		friend static inline const offset_type get_offset( const_self_type_ref ptr )
+		friend static inline const offset_type get_offset( const_self_ref_type ptr )
 		{
 			return ptr.m_offset;
 		}
 
-		friend static inline pointer_type get_poiner( self_type_ref ptr )
+		friend static inline pointer_type get_pointer( self_ref_type ptr )
 		{
-			return ptr.get_poiner();
+			return ptr.get_pointer();
 		}
 
-		friend static inline const_pointer_type get_poiner( const_self_type_ref ptr )
+		friend static inline const_pointer_type get_pointer( const_self_ref_type ptr )
 		{
-			return ptr.get_poiner();
+			return ptr.get_pointer();
 		}
+
+		
 	};
 
+	template< class T, class Mgr >
+	static inline offset_pointer<T, Mgr> operator+( typename offset_pointer<T, Mgr>::difference_type n, const offset_pointer<T, Mgr>& ptr )
+	{
+		return offset_pointer<T, Mgr>( get_pointer(ptr) + n );
+	}
 	
 }
 
