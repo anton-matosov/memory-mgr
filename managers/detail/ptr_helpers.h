@@ -81,6 +81,11 @@ namespace memory_mgr
 				&& "Invalid pointer value" );
 			return diff( ptr, mgr.get_base() );
 		}
+
+		static inline size_t* size_cast( void* p )
+		{
+			return static_cast< size_t* >( p );
+		}
 	}// namespace detail
 
 }// namespace memory_mgr

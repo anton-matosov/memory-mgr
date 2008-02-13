@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_MANAGED_BASE_HEADER
 
 #include "detail/static_assert.h"
+#include "detail/ptr_helpers.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -31,6 +32,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	namespace detail
+	{
+		static inline size_t calc_full_size( void* p, size_t size )
+		{
+			size = *size_cast(p) * size;
+			return size + sizeof( size_t );
+		}
+	}
 	class object_name
 	{	
 		const wchar_t* m_name;
@@ -83,7 +92,42 @@ namespace memory_mgr
 			mem_mgr::instance().deallocate( p, size );
 		}
 
-		static void operator delete( void* /*p*/, const object_name& /*name*/ )
+		static void operator delete( void* /*p*/, size_t size, const object_name& /*name*/ )
+		{
+			//TODO:implement correct logic in this method
+			//mem_mgr::instance().deallocate( p, size );
+			STATIC_ASSERT( false, named_objects_not_supported );
+		}
+
+		static void* operator new[]( size_t size )/*throw( std::bad_alloc )*/
+		{
+			return mem_mgr::instance().allocate( size );			
+		}
+
+		static void* operator new[]( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
+		{
+			//TODO:implement correct logic in this method
+			//mem_mgr::instance().allocate( size, name );
+			STATIC_ASSERT( false, named_objects_not_supported );
+			return 0;
+		}
+
+		static void* operator new[]( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
+		{
+			return mem_mgr::instance().allocate( size, nothrow );			
+		}
+
+		static void* operator new[](  size_t, void* p ) /*throw()*/
+		{
+			return p;
+		}
+
+		static void operator delete[]( void* p, size_t size )
+		{
+			mem_mgr::instance().deallocate( p, detail::calc_full_size( p, size) );
+		}
+
+		static void operator delete[]( void* /*p*/, size_t size, const object_name& /*name*/ )
 		{
 			//TODO:implement correct logic in this method
 			//mem_mgr::instance().deallocate( p, size );

@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "manager_traits.h"
 #include "manager_category.h"
 #include "pointer_convert.h"
+#include "detail/ptr_helpers.h"
 
 namespace memory_mgr
 {
@@ -72,15 +73,12 @@ namespace memory_mgr
 			void* store_size( void* ptr, size_type size )
 			{
 				//Store size
-				size_type* psize = size_cast( ptr );
+				size_type* psize = detail::size_cast( ptr );
 				*psize = size;
 				return ++psize;
 			}
 
-			size_type* size_cast( void* p ) const
-			{
-				return static_cast< size_type* >( p );
-			}
+			
 
 			mgr_type m_memmgr;
 		};
@@ -131,7 +129,7 @@ namespace memory_mgr
 				assert( p >=this->m_memmgr.get_base() && (p < ( this->m_memmgr.get_base() + manager_traits<mgr_type>::memory_size ) )
 					&& "Invalid pointer value" );
 
-				size_type *ps = this->size_cast( p );
+				size_type *ps = detail::size_cast( p );
 				--ps;
 				this->m_memmgr.deallocate( ps, *ps );
 			}
