@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include <detail/type_manip.h>
+#include "test_class.h"
 
 bool test_type_manip()
 {
@@ -39,6 +40,14 @@ bool test_type_manip()
 	bool fsame = memory_mgr::type_manip::is_same_type< float, float_type >::value;
 
 	bool not_same = !memory_mgr::type_manip::is_same_type< int_type, float_type >::value;
+
+
+	bool isclass = memory_mgr::type_manip::is_class< test_class >::value;
+	struct CC{};
+	bool isclass2 = memory_mgr::type_manip::is_class< CC >::value;
+	bool isclass3 = memory_mgr::type_manip::is_class< int >::value;
+	union UU{};
+	bool isclass4 = memory_mgr::type_manip::is_class< UU >::value;
 
 	return true;						 
 }

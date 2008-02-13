@@ -33,6 +33,9 @@ namespace memory_mgr
 {
 	namespace type_manip
 	{
+		struct yes_type{};
+		struct no_type{};
+
 		////////////////////////////////////////////////////////////////////////////////
 		// class template int2type
 		// Converts each integral constant into a unique type, used for functions overriding
@@ -161,6 +164,19 @@ namespace memory_mgr
 			enum { exists = sizeof(test(MakeT())) == sizeof(detail::small) };
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// Is type T a class
+		//////////////////////////////////////////////////////////////////////////
+		template <class T>
+		class is_class
+		{
+			template<class U> static detail::big test(...);
+			template<class U> static detail::small test(void(U::*)(void));			
+		public:       
+			enum { value = sizeof(test<T>(0)) == sizeof(detail::small) };
+		};
+		
+
 		////////////////////////////////////////////////////////////////////////////////
 		// class template conversion
 		// Figures out the conversion relationships between two types
@@ -186,11 +202,11 @@ namespace memory_mgr
 
 		////////////////////////////////////////////////////////////////////////////////
 		// class template super_subclass
-		// Invocation: super_subclass<B, D>::value where B and D are types. 
+		// Invocation: super_subclass<B(ase), D(erived)>::value where B and D are types. 
 		// Returns true if B is a public base of D, or if B and D are aliases of the 
 		// same type.
 		//
-		// Caveat: might not work if T and U are in a private inheritance hierarchy.
+		// Caveat: might not work if B and D are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
 		template <class B, class D>
 		struct super_subclass
@@ -204,7 +220,7 @@ namespace memory_mgr
 		// Invocation: super_subclass_strict<B, D>::value where B and D are types. 
 		// Returns true if B is a public base of D.
 		//
-		// Caveat: might not work if T and U are in a private inheritance hierarchy.
+		// Caveat: might not work if B and D are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
 		template<class B,class D>
 		struct super_subclass_strict

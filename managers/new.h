@@ -73,16 +73,42 @@ namespace memory_mgr
 				return mgr.deallocate( p );
 			}
 
+			template<class T, bool IsClass = type_manip::is_class< T >::value >
+			struct DeleteHelper{};
+			
+			template<class T>
+			struct DeleteHelper<T, true>
+			{
+				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
+				{
+					size_t* count = size_cast(p) - 1;
+					return std::make_pair( count, *count );
+				}
+			};
+
+			template<class T>
+			struct DeleteHelper<T, false>
+			{
+				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
+				{
+					size_t* count = size_cast(p) - 1;
+					return std::make_pair( p, *count / sizeof T);
+				}
+			};
+			
+
 			template<class T>
 			static inline void delete_arr_impl( T* p, mgr_type& mgr )
 			{				
-				size_t* count = size_cast(p) - 1;
-				for( size_t i = 0; i < *count; ++i )
+				std::pair<void*, size_t> ptr_n_count = 
+					DeleteHelper<T>::get_ptr_and_count(p);
+
+				for( size_t i = 0; i < ptr_n_count.second; ++i )
 				{
 					p[i].~T();
 				}
 				//count - points to real memory address
-				return mgr.deallocate( count );
+				return mgr.deallocate( ptr_n_count.first );
 			}
 		};
 	

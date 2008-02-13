@@ -4,6 +4,7 @@ In dev
  - implementation of offset_pointer finished
 	* all manager_types are supported
 	* destruction works correctly
+ - operator new[]/do_delete_arr works with non class types correctly now
 	
 Version 0.8.0 (svn rev. 64):
  - change log file was added

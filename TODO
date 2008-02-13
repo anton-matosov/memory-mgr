@@ -1,4 +1,4 @@
- - operator new[]/do_delete_arr should work with built in types correctly
+ 
  - implement shared memory segment allocator
 
  - implement offset_pointer unit tests 
