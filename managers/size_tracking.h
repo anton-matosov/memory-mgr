@@ -123,13 +123,13 @@ namespace memory_mgr
 
 			//Call this method to deallocate memory block
 			//p - pointer calculated as mgr_mem_base + offset, returned by allocate method
-			//size - block size in bytes
-			void deallocate( void* p )
+			//size - this value is ignored
+			void deallocate( void* ptr, size_type = 0)
 			{
-				assert( p >=this->m_memmgr.get_base() && (p < ( this->m_memmgr.get_base() + manager_traits<mgr_type>::memory_size ) )
-					&& "Invalid pointer value" );
+				assert( ptr >= this->m_memmgr.get_base() && "Invalid pointer value");
+				assert( ptr < ( this->m_memmgr.get_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
 
-				size_type *ps = detail::size_cast( p );
+				size_type *ps = detail::size_cast( ptr );
 				--ps;
 				this->m_memmgr.deallocate( ps, *ps );
 			}

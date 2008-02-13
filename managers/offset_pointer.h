@@ -79,7 +79,7 @@ namespace memory_mgr
 	class offset_pointer : public detail::cmp_helper< offset_pointer< T, Mgr > >
 	{		
 	public:
-		typedef offset_pointer							self_type;
+		typedef offset_pointer							self_type;		
 		typedef self_type&								self_ref_type;
 		typedef const self_type							const_self_type;
 		typedef const_self_type&						const_self_ref_type;
@@ -222,12 +222,12 @@ namespace memory_mgr
 			return *this;
 		}
 
-		self_type operator+(difference_type n)
+		self_type operator+(difference_type n) const
 		{
 			return self_type( get_pointer() + n );
 		}
 
-		self_type operator-(difference_type n)
+		self_type operator-(difference_type n) const
 		{
 			return self_type( get_pointer() - n );
 		}
@@ -305,6 +305,17 @@ namespace memory_mgr
 		return offset_pointer<T, Mgr>( get_pointer(ptr) + n );
 	}
 	
+	template<class T, class Mgr>
+	void do_delete( offset_pointer<T, Mgr>& ptr )
+	{
+		return ::do_delete( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+	}
+
+	template<class T, class Mgr>
+	void do_delete_arr( offset_pointer<T, Mgr>& ptr )
+	{
+		return ::do_delete_arr( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+	}
 }
 
 

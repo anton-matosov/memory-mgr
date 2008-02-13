@@ -30,25 +30,54 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "new.h"
 
-class DerivedTestClass : public test_class
+
+
+typedef int builtin_type;
+
+
+
+typedef memory_mgr::singleton_manager
+< 
+	memory_mgr::heap_segment
+	<
+		memory_mgr::size_tracking
+		< 
+			memory_mgr::pointer_convert
+			< 
+				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+			> 
+		>
+	>
+> sz_heap_mgr;
+
+typedef sz_heap_mgr ptr_mem_mgr;
+
+class BaseTestClass : public memory_mgr::managed_base<ptr_mem_mgr>
 {
 	int i_;
 public:
-	DerivedTestClass( int i = 0 )
+	BaseTestClass( int i = 0 )
 		:i_(i)
 	{}
 };
 
-typedef int builtin_type;
+class DerivedTestClass : public BaseTestClass
+{
+	int i2_;
+public:
+	DerivedTestClass( int i = 0 )
+		:BaseTestClass(i),
+		i2_(i + 1)
+	{}
+};
 
-typedef def_heap_mgr pointers_memory_mgr;
-typedef memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr > builtin_ptr;
-typedef memory_mgr::offset_pointer< test_class, pointers_memory_mgr > base_class_ptr;
-typedef memory_mgr::offset_pointer< DerivedTestClass, pointers_memory_mgr > derived_class_ptr;
+typedef memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr > builtin_ptr;
+typedef memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr > base_class_ptr;
+typedef memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr > derived_class_ptr;
 
-template class memory_mgr::offset_pointer< builtin_type, pointers_memory_mgr >;
-//template class memory_mgr::offset_pointer< test_class, pointers_memory_mgr >;
-//template class memory_mgr::offset_pointer< DerivedTestClass, pointers_memory_mgr >;
+template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
+//template class memory_mgr::offset_pointer< test_class, ptr_mem_mgr >;
+//template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
 
 
 bool test_construction()
@@ -57,6 +86,8 @@ bool test_construction()
 	
 	derived_class_ptr derived_ptr( new DerivedTestClass() );
 	derived_class_ptr derived_ptr2( new DerivedTestClass(1) );
+	builtin_ptr ptr1( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type() );
+
 	base_class_ptr base_ptr( derived_ptr );
 	base_class_ptr base_ptr2;
 
@@ -75,7 +106,11 @@ bool test_construction()
 	base_ptr4 = derived_ptr2;
 	TEST_CHECH( base_ptr4 == derived_ptr2 );
 
-	SUBTEST_END( true/*pointers_memory_mgr::instance().free()*/ );
+ 	do_delete( base_ptr );// points to derived_ptr
+	do_delete( base_ptr4 );// points to derived_ptr2
+
+	do_delete( ptr1 );
+	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
 
 bool test_dereferencing()
@@ -87,42 +122,34 @@ bool test_dereferencing()
 	base_class_ptr ptr1 = 1 + base_ptr;
 	base_class_ptr ptr2 = base_ptr + 1;
 
-
-	SUBTEST_END( pointers_memory_mgr::instance().free() );
+	do_delete_arr( base_ptr );// points to derived_ptr
+	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
 
 bool test_operators()
 {
 	SUBTEST_START( L"operators" );	
 	//using memory_mgr::object_name;
-	derived_class_ptr derived_ptr( new/*(object_name(L"Derived"))*/ DerivedTestClass() );
-	base_class_ptr base_ptr( derived_ptr );
+	builtin_ptr ptr( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type[5] );
 
-	base_class_ptr ptr1 = 1 + base_ptr;
-	base_class_ptr ptr2 = base_ptr + 1;
+	builtin_ptr ptr1 = 1 + ptr;
+	builtin_ptr ptr2 = ptr + 2;
+	builtin_ptr ptr3 = ptr[3];
+	builtin_ptr ptr4 = ptr;//0
+	//++++++++ptr4;
+	++ptr4;//1
+	++ptr4;//2
+	++ptr4;//3
+	++ptr4;//4
 
-	SUBTEST_END( pointers_memory_mgr::instance().free() );
+	do_delete_arr( ptr );// points to derived_ptr
+	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
-
-
-typedef memory_mgr::singleton_manager
-< 
-	memory_mgr::heap_segment
-	<
-		memory_mgr::size_tracking
-		< 
-			memory_mgr::pointer_convert
-			< 
-				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-			> 
-		>
-	>
-> sz_heap_mgr;
 
 bool test_offset_pointer()
 {
 	int* pi = ::new( mem_mgr(sz_heap_mgr::instance()) ) int;
-	pi;
+	do_delete( pi, mem_mgr(sz_heap_mgr::instance() ) );
 
 	TEST_START( L"offset_pointer" );
 	

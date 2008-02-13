@@ -1,6 +1,10 @@
 In dev 
  - implemented size_tracking for standard memory_manager
-
+ - implemented new[]/delete[] operators for managed_base
+ - implementation of offset_pointer finished
+	* all manager_types are supported
+	* destruction works correctly
+	
 Version 0.8.0 (svn rev. 64):
  - change log file was added
  - allocator class added

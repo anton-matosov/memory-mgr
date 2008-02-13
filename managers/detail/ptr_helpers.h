@@ -70,16 +70,16 @@ namespace memory_mgr
 		}
 
 		template<class MemMgr>
-		static inline void* offset_to_pointer( typename MemMgr::offset_type offset, MemMgr& mgr )
+		static inline void* offset_to_pointer( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
 		{
 			return unconst_void( detail::shift( mgr.get_base(), offset ) );
 		}
 
 		template<class MemMgr>
-		static inline typename MemMgr::offset_type pointer_to_offset( const void* ptr, MemMgr& mgr )
+		static inline typename manager_traits<MemMgr>::offset_type pointer_to_offset( const void* ptr, MemMgr& mgr )
 		{
-			assert( ptr >= mgr.get_base() && (ptr < ( mgr.get_base() + manager_traits<MemMgr>::memory_size ) )
-				&& "Invalid pointer value" );
+			assert( ptr >= mgr.get_base() && "Invalid pointer value");
+			assert(ptr < ( mgr.get_base() + manager_traits<MemMgr>::memory_size ) && "Invalid pointer value" );
 			return diff( ptr, mgr.get_base() );
 		}
 
