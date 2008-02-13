@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/cmp_helper.h"
 #include "pointer_convert.h"
 #include "manager_traits.h"
+#include "new.h"
 
 namespace memory_mgr
 {	

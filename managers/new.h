@@ -151,12 +151,12 @@ void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemM
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
 
-template<class MemMgr>
-void do_delete( memory_mgr::managed_base<MemMgr>* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
-{
-	//typedef MemMgr mgr_type;
-	delete p;
-}
+// template<class MemMgr>
+// void do_delete( memory_mgr::managed_base<MemMgr>* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+// {
+// 	//typedef MemMgr mgr_type;
+// 	delete p;
+// }
 
 template<class T, class MemMgr>
 void do_delete( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
