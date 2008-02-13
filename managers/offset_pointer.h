@@ -283,22 +283,20 @@ namespace memory_mgr
 
 	//friends:
 		//Call this method to get offset
-		friend static inline const offset_type get_offset( const_self_ref_type ptr )
+		friend inline const offset_type get_offset( const_self_ref_type ptr )
 		{
 			return ptr.m_offset;
 		}
 
-		friend static inline pointer_type get_pointer( self_ref_type ptr )
+		friend inline pointer_type get_pointer( self_ref_type ptr )
 		{
 			return ptr.get_pointer();
 		}
 
-		friend static inline const_pointer_type get_pointer( const_self_ref_type ptr )
+		friend inline const_pointer_type get_pointer( const_self_ref_type ptr )
 		{
 			return ptr.get_pointer();
-		}
-
-		
+		}		
 	};
 
 	template< class T, class Mgr >

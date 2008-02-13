@@ -90,8 +90,8 @@ template<class MemMgr>
 void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	return memory_mgr::detail::new_helpers<mgr_type, memory_mgr::is_category_supported<mgr_type, memory_mgr::size_tracking_tag>::result,
-		memory_mgr::is_category_supported<mgr_type, memory_mgr::pointer_convertion_tag>::result>::new_impl( size, mgr.m_mgr );
+	return memory_mgr::detail::new_helpers<mgr_type, typename memory_mgr::is_category_supported<mgr_type, typename memory_mgr::size_tracking_tag>::result,
+		typename memory_mgr::is_category_supported<mgr_type, typename memory_mgr::pointer_convertion_tag>::result>::new_impl( size, mgr.m_mgr );
 }
 
 #endif //MGR_NEW_HEADER

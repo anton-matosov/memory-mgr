@@ -79,7 +79,7 @@ namespace memory_mgr
 		//size - block size in bytes
  		void deallocate( const void* p, size_type size )
  		{
-			m_mgr.deallocate( pointer_to_offset( p, m_mgr ), size );
+			m_mgr.deallocate( detail::pointer_to_offset( p, m_mgr ), size );
  		}
 
 		bool empty()

@@ -36,11 +36,16 @@ namespace memory_mgr
 	{
 		static inline size_t calc_full_size( void* p, size_t size )
 		{
+#ifdef _MSC_VER
 			size = *size_cast(p) * size;
 			return size + sizeof( size_t );
+#else
+			return size;
+#endif
 		}
 	}
 	class object_name
+			
 	{	
 		const wchar_t* m_name;
 	public:
@@ -100,7 +105,7 @@ namespace memory_mgr
 		}
 
 		static void* operator new[]( size_t size )/*throw( std::bad_alloc )*/
-		{
+		{			
 			return mem_mgr::instance().allocate( size );			
 		}
 
@@ -114,6 +119,7 @@ namespace memory_mgr
 
 		static void* operator new[]( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
+			
 			return mem_mgr::instance().allocate( size, nothrow );			
 		}
 

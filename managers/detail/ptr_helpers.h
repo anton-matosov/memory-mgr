@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <assert.h>
+#include "manager_traits.h"
 
 namespace memory_mgr
 {
