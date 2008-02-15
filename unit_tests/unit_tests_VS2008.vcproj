@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_shared_segment.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_size_tracking.cpp"
 				>
 			</File>

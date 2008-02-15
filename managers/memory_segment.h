@@ -55,13 +55,6 @@ namespace memory_mgr
 			:memory( manager_traits<memmgr_type>::memory_size ),
 			memmgr_type( memory::segment_base() )
 		{}
-
-		//Constructor with additional parameter for segment allocator
-		template<class T>
-		memory_segment( T v )
-			:memory( manager_traits<memmgr_type>::memory_size, v ),
-			memmgr_type( memory::segment_base() )
-		{}
 	};
 
 	//Memory segment manager_traits

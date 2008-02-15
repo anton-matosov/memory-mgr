@@ -27,7 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "detail/config.h"
+#include "config/config.h"
 #include "memory_segment.h"
 #include "manager_traits.h"
 #include "segment_traits.h"
@@ -35,9 +35,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {	
 	//Adapter for std::vector to SegmentAllocatorConcept 
+	template<class SegNameOp>
 	struct shared_allocator
 	{
 		//Default constructor, allocates mem_size bytes
+		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
 			//:std::vector<ubyte>( mem_size )
 		{}
@@ -49,14 +51,21 @@ namespace memory_mgr
 		typedef shared_memory_tag	memory_type;
 	};
 
+	struct WinNameReturner
+	{
+		static inline const wchar_t* GetName()
+		{ return L"seg_name"; }
+	};
+	
 	//MemMgr - must support MemoryManagerConcept
-	template< class MemMgr >	
+	template< class MemMgr, class SegNameOp = WinNameReturner >	
 	class shared_segment 
-		: public memory_segment< shared_allocator, MemMgr >
-	{};
+		: public memory_segment< shared_allocator<SegNameOp>, MemMgr >
+	{
+	};
 
-	template< class MemMgr >
-	struct manager_traits< shared_segment< MemMgr > > 
+	template< class MemMgr, class SegNameOp >
+	struct manager_traits< shared_segment< MemMgr, SegNameOp > > 
 		: public manager_traits< MemMgr >
 	{
 	};

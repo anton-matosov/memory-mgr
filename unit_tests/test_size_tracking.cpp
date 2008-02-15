@@ -72,7 +72,7 @@ bool test_size_tracking()
 		<sz_pconv_track_mgr, void*>( L"with pointer_convert" ))
 		&& (test_size_tracking_impl
 		<sz_track_mgr, 
-		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"simple manager" )
+		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"w/o pointer_convert" )
 		)
 		);
 }

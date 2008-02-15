@@ -33,6 +33,7 @@ bool test_size_tracking();
 bool test_managed_base();
 bool test_pointer_convert();
 bool test_offset_pointer();
+bool test_shared_segment();
 
 class tests_manager
 {
@@ -79,7 +80,8 @@ int main(int /*argc*/, char* /*argv*/[])
 	TestMgr.add_result( test_size_tracking(),	L"test_size_tracking" );
 	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
 	TestMgr.add_result( test_offset_pointer(),	L"test_offset_pointer" );
-	
+	TestMgr.add_result( test_shared_segment(),	L"test_shared_segment" );
+
 	TestMgr.print_results();
 	return std::cin.get();
 }
