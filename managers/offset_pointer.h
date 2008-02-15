@@ -35,46 +35,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-// 	template <class T>
-// 	class mutable_random_access_iterator_archetype
-// 	{
-// 	public:
-// 		typedef mutable_random_access_iterator_archetype self;
-// 	public:
-// 		typedef std::random_access_iterator_tag iterator_category;
-// 		typedef T value_type;
-// 		typedef T& reference;
-// 		typedef T* pointer;
-// 		typedef std::ptrdiff_t difference_type;
-// 		mutable_random_access_iterator_archetype() { }
-// 	--	self& operator=(const self&) { return *this;  }
-// 	--	bool operator==(const self&) const { return true; }
-// 	--	bool operator!=(const self&) const { return true; }
-// 	--	reference operator*() const { return static_object<T>::get(); }
-// 	--	self& operator++() { return *this; }
-// 	--	self operator++(int) { return *this; }
-// 	--	self& operator--() { return *this; }
-// 	--	self operator--(int) { return *this; }
-// 	--	reference operator[](difference_type) const
-// 		{ return static_object<T>::get(); }
-// 	--	self& operator+=(difference_type) { return *this; }
-// 	--	self& operator-=(difference_type) { return *this; }
-// 		difference_type operator-(const self&) const
-// 		{ return difference_type(); }
-// 	--	self operator+(difference_type) const { return *this; }
-// 	--	self operator-(difference_type) const { return *this; }
-// 	--	bool operator<(const self&) const { return true; }
-// 	--	bool operator<=(const self&) const { return true; }
-// 	--	bool operator>(const self&) const { return true; }
-// 	--	bool operator>=(const self&) const { return true; }
-// 	};
-// 	template <class T>
-// 	mutable_random_access_iterator_archetype<T> 
-// 		operator+
-// 		(typename mutable_random_access_iterator_archetype<T>::difference_type, 
-// 		const mutable_random_access_iterator_archetype<T>& x) 
-// 	{ return x; }
-
 	//Offset pointer class
 	template< class T, class Mgr >
 	class offset_pointer : public detail::cmp_helper< offset_pointer< T, Mgr > >
@@ -105,7 +65,7 @@ namespace memory_mgr
 		{}
 
 		//Construct pointer from offset
-		offset_pointer( const offset_type offset )
+		explicit offset_pointer( const offset_type offset )
 			:m_offset( offset )
 		{}
 

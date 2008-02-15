@@ -47,12 +47,12 @@ namespace memory_mgr
 
 			bool operator<=( const op_type& rhs ) const
 			{
-				return rhs > get_lhs();
+				return !(get_lhs() > rhs);
 			}
 
 			bool operator>=( const op_type& rhs ) const
 			{
-				return rhs < get_lhs();
+				return !(get_lhs() < rhs);
 			}
 		};
 	}//namespace detail

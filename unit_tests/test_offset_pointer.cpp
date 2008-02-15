@@ -134,16 +134,54 @@ bool test_operators()
 
 	builtin_ptr ptr1 = 1 + ptr;
 	builtin_ptr ptr2 = ptr + 2;
-	builtin_ptr ptr3 = ptr[3];
+	builtin_ptr ptr3 = &ptr[3];
 	builtin_ptr ptr4 = ptr;//0
-	//++++++++ptr4;
 	++ptr4;//1
-	++ptr4;//2
-	++ptr4;//3
-	++ptr4;//4
+	TEST_CHECH( ptr1 == ptr4 );
+	ptr4++;//2
+	TEST_CHECH( ptr2 == ptr4 );
+	ptr4 += 1;//3
+	TEST_CHECH( ptr3 == ptr4 );
+	ptr4 = ptr4 + 1;//4
+	TEST_CHECH( ptr3 + 1 == ptr4 );
+	--ptr4;//3
+	TEST_CHECH( ptr3 == ptr4 );
+	ptr4--;//2
+	TEST_CHECH( ptr2 == ptr4 );
+	ptr4 -= 1;//1
+	TEST_CHECH( ptr1 == ptr4 );
+	ptr4 = ptr4 - 1;//0
+	TEST_CHECH( ptr == ptr4 );
+
+	TEST_CHECH( ptr1 != ptr2 );
+	TEST_CHECH( ptr2 != ptr3 );
+	TEST_CHECH( ptr3 != ptr4 );
+	TEST_CHECH( ptr1 != ptr4 );
+	TEST_CHECH( ptr2 != ptr4 );
+
+	TEST_CHECH( ptr1 < ptr2 );
+	TEST_CHECH( ptr3 > ptr2 );
+	TEST_CHECH( ptr3 >= ptr3 );
+	TEST_CHECH( ptr3 >= ptr2 );
+	TEST_CHECH( ptr1 <= ptr2 );
+	TEST_CHECH( ptr <= ptr4 );
+
+	TEST_CHECH( (ptr1 - ptr) == 1 );
+	TEST_CHECH( (ptr2 - ptr1) == 1 );
+	TEST_CHECH( (ptr3 - ptr2) == 1 );
+	TEST_CHECH( (ptr3 - ptr1) == 2 );
+	TEST_CHECH( (ptr3 - ptr) == 3 );
+	TEST_CHECH( (ptr2 - ptr3) == -1 );
+	TEST_CHECH( (ptr1 - ptr3) == -2 );
+	TEST_CHECH( (ptr - ptr3) == -3 );
+
+	TEST_CHECH( (ptr3 - ptr2) == (ptr2 - ptr1) );
+	TEST_CHECH( (ptr3 - ptr1) > (ptr2 - ptr1) );
+	TEST_CHECH( (ptr1 - ptr) == (ptr3 - ptr2) );
 
 	do_delete_arr( ptr );// points to derived_ptr
 	SUBTEST_END( ptr_mem_mgr::instance().free() );
+
 }
 
 bool test_offset_pointer()
