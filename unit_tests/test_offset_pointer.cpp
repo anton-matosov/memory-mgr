@@ -90,27 +90,36 @@ bool test_construction()
 {
 	SUBTEST_START( L"construction/destruction" );
 	
+	TEST_PRINT( L"Creating DerivedTestClass()" );
 	derived_class_ptr derived_ptr( new DerivedTestClass() );
+	
+	TEST_PRINT( L"Creating DerivedTestClass(1)" );
 	derived_class_ptr derived_ptr2( new DerivedTestClass(1) );
+	
+	TEST_PRINT( L"Creating builtin_type()" );
 	builtin_ptr ptr1( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type() );
 
+	TEST_PRINT( L"Constructing base_ptr from derived_ptr" );
 	base_class_ptr base_ptr( derived_ptr );
 	base_class_ptr base_ptr2;
 
-	TEST_CHECH( derived_ptr != derived_ptr2 );
+	TEST_CHECH_MSG( derived_ptr != derived_ptr2, L"Pointers are the same" );
 
+	TEST_OPERATOR_PRINT( L"=, base_ptr2 = base_ptr" );
 	base_ptr2 = base_ptr;
 	TEST_CHECH( base_ptr2 == base_ptr );
 
 	base_class_ptr base_ptr3;
 
+	TEST_OPERATOR_PRINT( L"=, base_ptr3 = base_ptr2" );
 	base_ptr3 = base_ptr2;
 	TEST_CHECH( base_ptr2 == base_ptr3 );
 
 	base_class_ptr base_ptr4;
 
+	TEST_OPERATOR_PRINT( L"=, base_ptr4 = base_ptr2" );
 	base_ptr4 = derived_ptr2;
-	TEST_CHECH( base_ptr4 == derived_ptr2 );
+	TEST_CHECH( base_ptr4 == derived_ptr2  );
 
  	do_delete( base_ptr );// points to derived_ptr
 	do_delete( base_ptr4 );// points to derived_ptr2
@@ -154,54 +163,128 @@ bool test_dereferencing()
 bool test_operators()
 {
 	SUBTEST_START( L"operators" );	
-	//using memory_mgr::object_name;
 	builtin_ptr ptr( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type[5] );
 
+
+	TEST_OPERATOR_PRINT( L"+, non method" );
 	builtin_ptr ptr1 = 1 + ptr;
+	TEST_OPERATOR_PRINT( L"+, method" );
 	builtin_ptr ptr2 = ptr + 2;
+	TEST_OPERATOR_PRINT( L"[]" );
 	builtin_ptr ptr3 = &ptr[3];
 	builtin_ptr ptr4 = ptr;//0
+
+	TEST_OPERATOR_PRINT( L"!=, ptr1 != ptr2" );
+	TEST_CHECH( ptr1 != ptr2 );
+	TEST_OPERATOR_PRINT( L"!=, ptr2 != ptr3" );
+	TEST_CHECH( ptr2 != ptr3 );
+	TEST_OPERATOR_PRINT( L"!=, ptr3 != ptr4" );
+	TEST_CHECH( ptr3 != ptr4 );
+	TEST_OPERATOR_PRINT( L"!=, ptr1 != ptr4" );
+	TEST_CHECH( ptr1 != ptr4 );
+	TEST_OPERATOR_PRINT( L"!=, ptr2 != ptr4" );
+	TEST_CHECH( ptr2 != ptr4 );
+
+	TEST_OPERATOR_PRINT( L"<, ptr1 < ptr2" );
+	TEST_CHECH( ptr1 < ptr2 );
+	TEST_OPERATOR_PRINT( L">, ptr3 > ptr2" );
+	TEST_CHECH( ptr3 > ptr2 );
+	TEST_OPERATOR_PRINT( L">=, ptr3 >= ptr3" );
+	TEST_CHECH( ptr3 >= ptr3 );
+	TEST_OPERATOR_PRINT( L">=, ptr3 >= ptr2" );
+	TEST_CHECH( ptr3 >= ptr2 );
+	TEST_OPERATOR_PRINT( L"<=, ptr1 <= ptr2" );
+	TEST_CHECH( ptr1 <= ptr2 );
+	TEST_OPERATOR_PRINT( L"<=, ptr <= ptr4" );
+	TEST_CHECH( ptr <= ptr4 );
+
+	TEST_OPERATOR_PRINT( L"++, ptr4" );
 	++ptr4;//1
 	TEST_CHECH( ptr1 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"++, postfix, ptr4" );
 	ptr4++;//2
 	TEST_CHECH( ptr2 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"+=, ptr4 += 1" );
 	ptr4 += 1;//3
 	TEST_CHECH( ptr3 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"+, method, ptr4 + 1" );
 	ptr4 = ptr4 + 1;//4
 	TEST_CHECH( ptr3 + 1 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"--, ptr4" );
 	--ptr4;//3
 	TEST_CHECH( ptr3 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"--, postfix, ptr4" );
 	ptr4--;//2
 	TEST_CHECH( ptr2 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"-=, ptr4 -= 1" );
 	ptr4 -= 1;//1
 	TEST_CHECH( ptr1 == ptr4 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr4 - 1" );
 	ptr4 = ptr4 - 1;//0
 	TEST_CHECH( ptr == ptr4 );
 
-	TEST_CHECH( ptr1 != ptr2 );
-	TEST_CHECH( ptr2 != ptr3 );
-	TEST_CHECH( ptr3 != ptr4 );
-	TEST_CHECH( ptr1 != ptr4 );
-	TEST_CHECH( ptr2 != ptr4 );
+ 	TEST_OPERATOR_PRINT( L"!=, ptr1 != ptr2" );
+ 	TEST_CHECH( ptr1 != ptr2 );
+ 	TEST_OPERATOR_PRINT( L"!=, ptr2 != ptr3" );
+ 	TEST_CHECH( ptr2 != ptr3 );
+ 	TEST_OPERATOR_PRINT( L"!=, ptr3 != ptr4" );
+ 	TEST_CHECH( ptr3 != ptr4 );
+ 	TEST_OPERATOR_PRINT( L"!=, ptr1 != ptr4" );
+ 	TEST_CHECH( ptr1 != ptr4 );
+ 	TEST_OPERATOR_PRINT( L"!=, ptr2 != ptr4" );
+ 	TEST_CHECH( ptr2 != ptr4 );
+ 
+ 	TEST_OPERATOR_PRINT( L"<, ptr1 < ptr2" );
+ 	TEST_CHECH( ptr1 < ptr2 );
+ 	TEST_OPERATOR_PRINT( L">, ptr3 > ptr2" );
+ 	TEST_CHECH( ptr3 > ptr2 );
+ 	TEST_OPERATOR_PRINT( L">=, ptr3 >= ptr3" );
+ 	TEST_CHECH( ptr3 >= ptr3 );
+ 	TEST_OPERATOR_PRINT( L">=, ptr3 >= ptr2" );
+ 	TEST_CHECH( ptr3 >= ptr2 );
+ 	TEST_OPERATOR_PRINT( L"<=, ptr1 <= ptr2" );
+ 	TEST_CHECH( ptr1 <= ptr2 );
+ 	TEST_OPERATOR_PRINT( L"<=, ptr <= ptr4" );
+ 	TEST_CHECH( ptr <= ptr4 );
 
-	TEST_CHECH( ptr1 < ptr2 );
-	TEST_CHECH( ptr3 > ptr2 );
-	TEST_CHECH( ptr3 >= ptr3 );
-	TEST_CHECH( ptr3 >= ptr2 );
-	TEST_CHECH( ptr1 <= ptr2 );
-	TEST_CHECH( ptr <= ptr4 );
-
+	TEST_OPERATOR_PRINT( L"-, ptr1 - ptr" );
 	TEST_CHECH( (ptr1 - ptr) == 1 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr2 - ptr1" );
 	TEST_CHECH( (ptr2 - ptr1) == 1 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr3 - ptr2" );
 	TEST_CHECH( (ptr3 - ptr2) == 1 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr3 - ptr1" );
 	TEST_CHECH( (ptr3 - ptr1) == 2 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr3 - ptr" );
 	TEST_CHECH( (ptr3 - ptr) == 3 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr2 - ptr3" );
 	TEST_CHECH( (ptr2 - ptr3) == -1 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr1 - ptr3" );
 	TEST_CHECH( (ptr1 - ptr3) == -2 );
+
+	TEST_OPERATOR_PRINT( L"-, ptr - ptr3" );
 	TEST_CHECH( (ptr - ptr3) == -3 );
 
+	TEST_OPERATOR_PRINT( L"-, (ptr3 - ptr2) == (ptr2 - ptr1)" );
 	TEST_CHECH( (ptr3 - ptr2) == (ptr2 - ptr1) );
+
+	TEST_OPERATOR_PRINT( L"-, (ptr3 - ptr1) > (ptr2 - ptr1)" );
 	TEST_CHECH( (ptr3 - ptr1) > (ptr2 - ptr1) );
+
+	TEST_OPERATOR_PRINT( L"-, (ptr1 - ptr) == (ptr3 - ptr2)" );
 	TEST_CHECH( (ptr1 - ptr) == (ptr3 - ptr2) );
 
 	do_delete_arr( ptr );// points to derived_ptr
