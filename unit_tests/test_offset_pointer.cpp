@@ -59,6 +59,12 @@ public:
 	BaseTestClass( int i = 0 )
 		:i_(i)
 	{}
+
+	virtual ~BaseTestClass()
+	{}
+
+	int Get() const { return i_; }
+	void Set( int i ){ i_ = i; }
 };
 
 class DerivedTestClass : public BaseTestClass
@@ -76,8 +82,8 @@ typedef memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr > base_class_ptr;
 typedef memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr > derived_class_ptr;
 
 template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
-//template class memory_mgr::offset_pointer< test_class, ptr_mem_mgr >;
-//template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
 
 
 bool test_construction()
@@ -116,13 +122,32 @@ bool test_construction()
 bool test_dereferencing()
 {
 	SUBTEST_START( L"dereferencing" );	
-	derived_class_ptr derived_ptr( new DerivedTestClass[5] );
-	base_class_ptr base_ptr( derived_ptr );
+	derived_class_ptr dptr( new DerivedTestClass() );
+	base_class_ptr ptr = dptr;
+	const base_class_ptr cptr = dptr;
 
-	base_class_ptr ptr1 = 1 + base_ptr;
-	base_class_ptr ptr2 = base_ptr + 1;
+	const int TetsVal = 1;
+	const int TetsVal2 = 2;
+	
+	TEST_OPERATOR_PRINT( L"->" );
+	ptr->Set( TetsVal );
+	TEST_CHECH( cptr->Get() == TetsVal );
+		
+	TEST_OPERATOR_PRINT( L"*" );
+	(*dptr).Set( TetsVal2 );
+	TEST_CHECH( (*cptr).Get() == TetsVal2 );
 
-	do_delete_arr( base_ptr );// points to derived_ptr
+	TEST_OPERATOR_PRINT( L"&" );
+	(&ptr)->Set( TetsVal );
+	TEST_CHECH( (&cptr)->Get() == TetsVal );
+
+	TEST_OPERATOR_PRINT( L"[]" );
+	dptr[0].Set( TetsVal2 );
+	TEST_CHECH( cptr[0].Get() == TetsVal2 );
+
+	
+
+	do_delete( ptr );// points to derived_ptr
 	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
 

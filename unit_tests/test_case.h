@@ -59,6 +59,7 @@ public:
 #define TEST_CHECH_MSG( expr, msg ) if (!(expr)){__Test__Case__Entry__.failed(msg); return false;} else {std::wcout << L"Succeeded\n";}
 #define TEST_PRINT( msg ) std::wcout << (msg) << L"\n";
 #define TEST_METHOD_PRINT( method_name ) std::wcout << L"Testing " << (method_name) << L" method...\n";
+#define TEST_OPERATOR_PRINT( operator_name ) std::wcout << L"Testing operator" << (operator_name) << L"\n";
 
 #endif// MGR_TEST_CASE_HEADER
 

@@ -98,6 +98,11 @@ namespace memory_mgr
 			return *this;
 		}
 
+		pointer_type operator->()
+		{
+			return get_pointer();
+		}
+
 		const_pointer_type operator->() const
 		{
 			return get_pointer();
