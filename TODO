@@ -1,7 +1,7 @@
  
  - implement shared memory segment allocator
 
- - implement offset_pointer unit tests 
+
  - complete implementation of unit tests for type manipulation library
  - remove simple_ptr
  - implement real pointer traits for T* and offset_pointer
