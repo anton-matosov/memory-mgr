@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "detail/offset_traits.h"
 #include "detail/cmp_helper.h"
+#include "detail/static_assert.h"
 #include "pointer_convert.h"
 #include "manager_traits.h"
 #include "new.h"

@@ -27,17 +27,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <vector>
 #include "manager_traits.h"
 #include "manager_category.h"
 #include "segment_traits.h"
 
 namespace memory_mgr
 {	
+	//Default segment allocator traits
 	template<class SegmentAllocator>
 	struct segment_alloc_traits
 	{
-		typedef unknown_memory_tag	memory_type;
+		typedef typename SegmentAllocator::memory_type	memory_type;
 	};
 
 	//Links memory_manager and memory segment
@@ -50,19 +50,28 @@ namespace memory_mgr
 		typedef	SegmentAllocator	memory;
 
 	public:
+		//Default constructor
 		memory_segment()
 			:memory( manager_traits<memmgr_type>::memory_size ),
 			memmgr_type( memory::segment_base() )
 		{}
 
+		//Constructor with additional parameter for segment allocator
+		template<class T>
+		memory_segment( T v )
+			:memory( manager_traits<memmgr_type>::memory_size, v ),
+			memmgr_type( memory::segment_base() )
+		{}
 	};
 
+	//Memory segment manager_traits
 	template< class SegmentAllocator, class MemMgr >
 	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
 	};
 
+	//Default segment traits
 	template< class SegmentAllocator, class MemMgr >
 	struct segment_traits< memory_segment< SegmentAllocator, MemMgr > > 
 	{

@@ -27,10 +27,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "detail/scoped_ptr.h"
-#include "memory_manager.h"
-#include "singleton_manager.h"
+#include <vector>
+#include "detail/types.h"
 #include "memory_segment.h"
+#include "manager_category.h"
 #include "manager_traits.h"
 #include "segment_traits.h"
 
@@ -47,6 +47,8 @@ namespace memory_mgr
 		//Returns addres of allocated segment
 		void* segment_base()
 		{ return &front(); }
+
+		typedef heap_memory_tag	memory_type;
 	};
 
 	//MemMgr - must support MemoryManagerConcept
@@ -59,12 +61,6 @@ namespace memory_mgr
 	struct manager_traits< heap_segment< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
-	};
-
-	template<>
-	struct segment_alloc_traits<vector_as_allocator>
-	{
-		typedef heap_memory_tag	memory_type;
 	};
 }
 

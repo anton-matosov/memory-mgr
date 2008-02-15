@@ -20,42 +20,46 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEST_CLASS_UNIT_HEADER
-#define MGR_TEST_CLASS_UNIT_HEADER
+#ifndef MGR_SHARED_SEGMENT_HEADER
+#define MGR_SHARED_SEGMENT_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include "managed_base.h"
-#include "memory_manager.h"
-#include "heap_segment.h"
-#include "singleton_manager.h"
-#include "pointer_convert.h"
+#include "detail/config.h"
+#include "memory_segment.h"
+#include "manager_traits.h"
+#include "segment_traits.h"
 
-typedef memory_mgr::singleton_manager
-< 
-	memory_mgr::heap_segment
-	< 
-		memory_mgr::pointer_convert
-		< 
-			memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-		> 
-	>
-> def_heap_mgr;
+namespace memory_mgr
+{	
+	//Adapter for std::vector to SegmentAllocatorConcept 
+	struct shared_allocator
+	{
+		//Default constructor, allocates mem_size bytes
+		shared_allocator( const size_t mem_size )
+			//:std::vector<ubyte>( mem_size )
+		{}
 
-class test_class: public memory_mgr::managed_base< def_heap_mgr >
-{
-	int m_i,m_i1,m_i2,m_i3,m_i4;
-public:
-	typedef memory_mgr::managed_base< def_heap_mgr > base_t;
-	typedef base_t::mem_mgr mem_mgr;
+		//Returns addres of allocated segment
+		void* segment_base()
+		{ return 0; }
 
-	test_class();
-	~test_class();
+		typedef shared_memory_tag	memory_type;
+	};
 
-	void set( int i );
-	int get();
-};
+	//MemMgr - must support MemoryManagerConcept
+	template< class MemMgr >	
+	class shared_segment 
+		: public memory_segment< shared_allocator, MemMgr >
+	{};
 
-#endif //MGR_TEST_CLASS_UNIT_HEADER
+	template< class MemMgr >
+	struct manager_traits< shared_segment< MemMgr > > 
+		: public manager_traits< MemMgr >
+	{
+	};
+}
+
+#endif// MGR_SHARED_SEGMENT_HEADER

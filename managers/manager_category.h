@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "manager_traits.h"
+#include "detail/type_manip.h"
 
 namespace memory_mgr
 {

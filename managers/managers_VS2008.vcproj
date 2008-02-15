@@ -192,7 +192,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\simple_ptr.h"
+				RelativePath=".\shared_segment.h"
 				>
 			</File>
 			<File
