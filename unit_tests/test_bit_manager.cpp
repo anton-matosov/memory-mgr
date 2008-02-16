@@ -37,30 +37,30 @@ bool test_bit_manager()
 	TEST_METHOD_PRINT( L"allocate(0)" );
 	ptr_type p0 = bitmgr.allocate(0);
 	std::wcout << bitmgr << L'\n';
-	TEST_CHECH(  p0 == bit_manager::npos );
+	TEST_CHECK(  p0 == bit_manager::npos );
 
 	TEST_METHOD_PRINT( L"allocate(1)" );
 	ptr_type p1 = bitmgr.allocate(1);
 	std::wcout << bitmgr << L'\n';
-	TEST_CHECH(  p1 == 0 );
+	TEST_CHECK(  p1 == 0 );
 
 	TEST_METHOD_PRINT( L"allocate(18)" );
 	ptr_type p2 = bitmgr.allocate(18);
 	std::wcout << bitmgr << L'\n';
-	TEST_CHECH(  p2 == 1 );
+	TEST_CHECK(  p2 == 1 );
 
 	TEST_METHOD_PRINT( L"deallocate(p2, 18)" );
 	bitmgr.deallocate(p2, 18);
 	std::wcout << bitmgr << L'\n';
 	p2 = bitmgr.allocate(1);
-	TEST_CHECH(  p2 == 1 );
+	TEST_CHECK(  p2 == 1 );
 	bitmgr.deallocate(p2, 1);
 	
 	TEST_METHOD_PRINT( L"deallocate(p1, 1)" );
 	bitmgr.deallocate(p1, 1);
 	std::wcout << bitmgr << L'\n';
 	p1 = bitmgr.allocate(1);
-	TEST_CHECH(  p1 == 0 );
+	TEST_CHECK(  p1 == 0 );
 	bitmgr.deallocate(p1, 1);
 
 

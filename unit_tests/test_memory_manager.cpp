@@ -68,15 +68,15 @@ bool test_out_of_memory_nothrow()
 	{
 		TEST_PRINT( "Allocating memory block bigger than avaliable memory" );
 		offset_type p_inval1 = mgr.allocate( memory_size + 1, std::nothrow_t() );
-		TEST_CHECH( p_inval1 == null_ptr );
+		TEST_CHECK( p_inval1 == null_ptr );
 
 		TEST_PRINT( "Allocating all memory" );
 		offset_type p_valid = mgr.allocate( memory_size, std::nothrow_t() );
-		TEST_CHECH( p_valid != null_ptr );
+		TEST_CHECK( p_valid != null_ptr );
 
 		TEST_PRINT( "Allocating one more byte" );
 		offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
-		TEST_CHECH( p_inval2 == null_ptr );
+		TEST_CHECK( p_inval2 == null_ptr );
 
 		SUBTEST_END( p_valid != null_ptr
 			&& p_inval1 == null_ptr
