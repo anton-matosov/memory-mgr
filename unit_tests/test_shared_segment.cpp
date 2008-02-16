@@ -40,19 +40,31 @@ bool test_shared_segment()
 {
 	TEST_START( L"shared_segment" );
 	shared_mgr_type mgr;
+	offset_type p1, p2, p3, p4, p5;
+	const memmgr_type::size_type obj_size = 4;
+	{
+		shared_mgr_type mgr2;
 
- 	const memmgr_type::size_type obj_size = 4;
- 	offset_type p1 = mgr.allocate( obj_size );
- 	offset_type p2 = mgr.allocate( obj_size );
- 	offset_type p3 = mgr.allocate( obj_size );
- 	offset_type p4 = mgr.allocate( obj_size );
- 	offset_type p5 = mgr.allocate( obj_size );
- 
- 	mgr.deallocate( p3, obj_size );
- 	mgr.deallocate( p5, obj_size );
+ 		
+ 		p1 = mgr2.allocate( obj_size );
+ 		p2 = mgr2.allocate( obj_size );
+
+		shared_mgr_type mgr3;
+ 		p3 = mgr3.allocate( obj_size );
+ 		p4 = mgr3.allocate( obj_size );
+ 		p5 = mgr3.allocate( obj_size );
+
+		mgr.deallocate( p5, obj_size );
+	}
+
+	mgr.deallocate( p3, obj_size );
+	mgr.deallocate( p2, obj_size );
+	mgr.deallocate( p4, obj_size );
+
+ 	
  	mgr.deallocate( p1, obj_size );
- 	mgr.deallocate( p2, obj_size );
- 	mgr.deallocate( p4, obj_size );
+
+ 	
 
 	TEST_END( mgr.free() );
 }

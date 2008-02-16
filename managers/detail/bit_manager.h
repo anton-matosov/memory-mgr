@@ -37,30 +37,42 @@ namespace memory_mgr
 		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
-			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;			
+			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;
+			enum {not_initialized = 0,
+				initialized};
 		public:
 			typedef typename bitset_t::block_type			block_type;
 			typedef typename bitset_t::block_ptr_type		block_ptr_type;
 			typedef typename bitset_t::size_type			size_type;
 
 			enum {
-				memory_usage = bitset_t::memory_usage,
+				aux_data_size = sizeof( char ),
+				memory_usage = bitset_t::memory_usage + aux_data_size,
 				num_bits = BitsCount
 			};
 
 			const static size_type npos = bitset_t::npos;
 
 			bit_manager()
-				:m_last_block( 0 )
+				:m_last_block( 0 ),
+				m_is_init(0)
 			{
 				m_bitset.set();				
 			}
 
+			//Memory must be zeroed before bit_manager creation
+			//It will initialize its state only if first byte is null
+			//Bitset will be placed starting from second byte
 			bit_manager( block_ptr_type ptr )
-				:m_bitset( ptr ),
+				:m_is_init( detail::char_cast( ptr ) ),
+				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
 				 m_last_block( 0 )
 			{
-				m_bitset.set();
+				if( *m_is_init == not_initialized )
+				{
+					m_bitset.set();
+					*m_is_init = initialized;
+				}
 			}
 
 			size_type requires_bytes()
@@ -120,7 +132,8 @@ namespace memory_mgr
 
 		private:
 			//Bitset
-			bitset_t m_bitset;
+			char*		m_is_init;
+			bitset_t	m_bitset;
 
 			//Block cache
 			size_type m_last_block;
@@ -128,6 +141,11 @@ namespace memory_mgr
 			static inline size_type block_index(size_type pos) 
 			{
 				return detail::block_index<bitset_t::bits_per_block>(pos);
+			}
+
+			block_ptr_type block_ptr_cast( void* ptr )
+			{
+				return static_cast<block_ptr_type>( ptr );
 			}
 		};
 

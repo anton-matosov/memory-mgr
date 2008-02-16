@@ -98,7 +98,7 @@ namespace memory_mgr
 
 	struct WinNameReturner
 	{
-		static inline const wchar_t* GetName()
+		static inline const wchar_t* GetName( const size_t/* id */= 0)
 		{ return L"seg_name"; }
 	};
 	

@@ -249,14 +249,15 @@ namespace memory_mgr
 		static_bitset()
 		{ 
 			STATIC_ASSERT( num_bits != 0, Bitset_cant_be_empty );
-			reset(); 
 		}
 
 		//Constructor used only by custom arrays to initialize
 		//array's pointer
 		explicit static_bitset( block_ptr_type bits_ptr )
 			:base_type(bits_ptr)
-		{ reset(); }
+		{
+			STATIC_ASSERT( num_bits != 0, Bitset_cant_be_empty );
+		}
 
 		~static_bitset()
 		{}
