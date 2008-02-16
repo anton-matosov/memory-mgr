@@ -27,6 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <stdexcept>
 #include "config/config.h"
 #include "memory_segment.h"
 #include "manager_traits.h"
@@ -34,24 +35,62 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
+	namespace detail
+	{
+		template<class StringT>
+		static inline void add_leading_slash( StringT& str )
+		{
+			if(str[0] != '/'){
+				str.insert( str.begin(), '/');
+			}
+		}
+
+		class shared_allocator_base
+		{
+		public:
+			shared_allocator_base()
+				:m_mapping(0),
+				m_base(0)
+			{
+
+			}
+			//Returns address of allocated segment
+			void* segment_base()
+			{ return m_base; }
+
+			typedef shared_memory_tag	memory_type;
+
+		protected:
+			osapi::mapping_handle_t m_mapping;
+			void*  m_base;
+		};
+	}
+
+	
+
 #ifdef MGR_WINDOWS_PLATFORM
 	//Windows shared memory allocator to SegmentAllocatorConcept 
 	template<class SegNameOp>
-	class shared_allocator
+	class shared_allocator: public detail::shared_allocator_base
 	{
 	public:
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
-			:m_mapping( osapi::create_file_mapping( SegNameOp::GetName(), 0,
-			PAGE_READWRITE, mem_size ) ),
-			m_base( osapi::map_view_of_file_ex( m_mapping, FILE_MAP_ALL_ACCESS,
-			mem_size) ) 
 		{
-			if( !m_mapping || !m_base )
+			m_mapping = osapi::create_file_mapping( SegNameOp::GetName(), 0,
+				PAGE_READWRITE, mem_size );
+			if( !m_mapping )
 			{
-				throw std::runtime_error( "shared segmet creation failed" );
+				throw std::runtime_error( "file mapping creation failed" );
 			}
+
+			m_base = osapi::map_view_of_file_ex( m_mapping, FILE_MAP_ALL_ACCESS,
+				mem_size);
+			if( !m_base )
+			{
+				throw std::runtime_error( "memory mapping failed" );
+			}			
 		}
 		
 		~shared_allocator()
@@ -66,40 +105,73 @@ namespace memory_mgr
 				osapi::close_handle(m_mapping);
 			}
 		}
-
-		//Returns addres of allocated segment
-		void* segment_base()
-		{ return m_base; }
-
-		typedef shared_memory_tag	memory_type;
-
-	private:
-		HANDLE m_mapping;
-		void*  m_base;
 	};
 
-#elif MGR_LINUX_PLATFORM
+#elif defined( MGR_LINUX_PLATFORM )
+	
 	//Posix shared memory allocator to SegmentAllocatorConcept 
 	template<class SegNameOp>
-	struct shared_allocator
+	class shared_allocator: public detail::shared_allocator_base
 	{
+		typedef detail::shared_allocator_base base_type;
+		std::string m_name;
+		const size_t m_size;
+	public:			
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
-		shared_allocator( const size_t mem_size )			
-		{}
+		shared_allocator( const size_t mem_size )
+			:m_size( mem_size ),
+			m_name( SegNameOp::GetName() )
+		{
+			detail::add_leading_slash( m_name );
+			int oflag = 0;
+			
+			//read-write mode
+			oflag |= O_RDWR;
 
-		//Returns addres of allocated segment
-		void* segment_base()
-		{ return 0; }
+			//Create new or open existent
+			oflag |= O_CREAT;
 
-		typedef shared_memory_tag	memory_type;
+			m_mapping = shm_open(m_name.c_str(), oflag, S_IRWXO | S_IRWXG | S_IRWXU);
+			if( base_type::m_mapping == -1 )
+			{
+				throw std::runtime_error( "file mapping creation failed" );
+			}
+
+			if( ftruncate( base_type::m_mapping, m_size ) != 0 )
+			{
+				throw std::runtime_error( "failed to resize file mapping" );
+			}
+
+			m_base = mmap(0, mem_size, PROT_READ | PROT_WRITE, MAP_SHARED, base_type::m_mapping, 0 );
+
+			if( m_base == MAP_FAILED )
+			{
+				throw std::runtime_error( "memory mapping failed" );
+			}
+		}
+
+		~shared_allocator()
+		{		
+			if( m_base != MAP_FAILED )
+			{
+				munmap( m_base, m_size );
+			}			 
+			
+			if( base_type::m_mapping != -1 )
+			{
+				shm_unlink( m_name.c_str() );
+				osapi::close_handle( m_mapping );
+			}
+
+		}
 	};
 #endif
 
 	struct WinNameReturner
 	{
-		static inline const wchar_t* GetName( const size_t/* id */= 0)
-		{ return L"seg_name"; }
+		static inline const char* GetName( const size_t/* id */= 0)
+		{ return "seg_name"; }
 	};
 	
 	//MemMgr - must support MemoryManagerConcept

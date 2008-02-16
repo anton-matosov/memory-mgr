@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "static_bitset.h"
+#include "detail/ptr_helpers.h"
 
 namespace memory_mgr
 {

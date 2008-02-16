@@ -92,7 +92,7 @@ namespace memory_mgr
 				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
 				{
 					size_t* count = size_cast(p) - 1;
-					return std::make_pair( p, *count / sizeof T);
+					return std::make_pair( p, *count / sizeof( T ) );
 				}
 			};
 			

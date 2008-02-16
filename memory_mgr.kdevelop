@@ -29,6 +29,9 @@
       <programargs/>
       <autocompile>true</autocompile>
       <envvars/>
+      <runarguments>
+        <unit_tests></unit_tests>
+      </runarguments>
     </run>
     <configurations>
       <optimized>

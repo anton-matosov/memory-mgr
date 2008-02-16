@@ -26,6 +26,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_LINUX_PLATFORM
 
 #include <pthread.h>
+
+#  include <fcntl.h>		//O_CREAT, O_*... 
+#  include <sys/mman.h>	//shm_xxx
+#  include <unistd.h>		//ftruncate, close
+#  include <sys/stat.h>	//mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
+
 #include "detail/types.h"
 
 namespace memory_mgr
@@ -33,6 +39,9 @@ namespace memory_mgr
 	namespace osapi
 	{
 		typedef pthread_mutex_t critical_section;
+
+		typedef int				file_handle_t;
+		typedef file_handle_t	mapping_handle_t;
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
@@ -57,6 +66,11 @@ namespace memory_mgr
 		static inline void leave_critical_section( critical_section* cs )
 		{
 			pthread_mutex_unlock( cs );
+		}
+
+		inline int close_handle(file_handle_t handle)
+		{
+			return ::close(handle);
 		}
 	}
 }

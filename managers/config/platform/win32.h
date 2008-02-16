@@ -39,6 +39,9 @@ namespace memory_mgr
 	{
 		typedef CRITICAL_SECTION critical_section;
 
+		typedef void*			file_handle_t;
+		typedef file_handle_t	mapping_handle_t;
+
 		static inline void initialize_critical_section( critical_section* cs )
 		{
 			return InitializeCriticalSection( cs );
@@ -59,17 +62,17 @@ namespace memory_mgr
 			return LeaveCriticalSection( cs );
 		}
 
-		inline HANDLE create_file_mapping( const std::wstring& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, HANDLE hFile = INVALID_HANDLE_VALUE )
+		inline file_handle_t create_file_mapping( const std::string& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
 		{
-			return CreateFileMappingW( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
+			return CreateFileMappingA( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
 		}
 
-		inline HANDLE open_file_mapping( ulong access, std::wstring& name )
+		inline file_handle_t open_file_mapping( ulong access, std::string& name )
 		{
-			return OpenFileMappingW( access, false, name.c_str() );
+			return OpenFileMappingA( access, false, name.c_str() );
 		}
 
-		inline void* map_view_of_file_ex(HANDLE handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
+		inline void* map_view_of_file_ex(file_handle_t handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
 		{  
 			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
 		}
@@ -79,7 +82,7 @@ namespace memory_mgr
 			return UnmapViewOfFile(address);
 		}
 
-		inline int close_handle(HANDLE handle)
+		inline int close_handle(file_handle_t handle)
 		{
 			return CloseHandle(handle);
 		}

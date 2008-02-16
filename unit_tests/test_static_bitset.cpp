@@ -34,6 +34,7 @@ bool test_static_bitset()
 {	
 	TEST_START( L"static_bitset" );
 	bitset_type bitset;
+	bitset.reset();
 
 	TEST_METHOD_PRINT( L"size()" );
 	TEST_CHECK( bitset.size() == bits_count );

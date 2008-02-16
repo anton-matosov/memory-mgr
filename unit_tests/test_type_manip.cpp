@@ -25,6 +25,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <detail/type_manip.h>
 #include "test_class.h"
 
+struct Struct{};
+union Union{};
+
 bool test_type_manip()
 {
 	memory_mgr::type_manip::int2type<1>::value;
@@ -43,11 +46,11 @@ bool test_type_manip()
 
 
 	bool isclass = memory_mgr::type_manip::is_class< test_class >::value;
-	struct CC{};
-	bool isclass2 = memory_mgr::type_manip::is_class< CC >::value;
+	
+	bool isclass2 = memory_mgr::type_manip::is_class< Struct >::value;
 	bool isclass3 = memory_mgr::type_manip::is_class< int >::value;
-	union UU{};
-	bool isclass4 = memory_mgr::type_manip::is_class< UU >::value;
+	
+	bool isclass4 = memory_mgr::type_manip::is_class< Union >::value;
 
 	return true;						 
 }

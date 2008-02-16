@@ -90,7 +90,6 @@ bool test_shared_segment()
 	
 	TEST_PRINT( L"Deallocating p5 using first manager" );
 	mgr.deallocate( p5, obj_size );
-
  	
 	TEST_END( mgr.free() );
 }
