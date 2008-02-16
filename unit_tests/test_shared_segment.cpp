@@ -33,28 +33,26 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 
 template class memory_mgr::shared_segment< memmgr_type >;
 
-typedef memory_mgr::shared_segment< memmgr_type > segmmgr_type;
+typedef memory_mgr::shared_segment< memmgr_type > shared_mgr_type;
 typedef memmgr_type::offset_type offset_type;
 
 bool test_shared_segment()
 {
 	TEST_START( L"shared_segment" );
-//	segmmgr_type mgr;
+	shared_mgr_type mgr;
 
-// 	const memmgr_type::size_type obj_size = 4;
-// 	offset_type p1 = mgr.allocate( obj_size );
-// 	offset_type p2 = mgr.allocate( obj_size );
-// 	offset_type p3 = mgr.allocate( obj_size );
-// 	offset_type p4 = mgr.allocate( obj_size );
-// 	offset_type p5 = mgr.allocate( obj_size );
-// 
-// 	mgr.deallocate( p3, obj_size );
-// 	mgr.deallocate( p5, obj_size );
-// 	mgr.deallocate( p1, obj_size );
-// 	mgr.deallocate( p2, obj_size );
-// 	mgr.deallocate( p4, obj_size );
+ 	const memmgr_type::size_type obj_size = 4;
+ 	offset_type p1 = mgr.allocate( obj_size );
+ 	offset_type p2 = mgr.allocate( obj_size );
+ 	offset_type p3 = mgr.allocate( obj_size );
+ 	offset_type p4 = mgr.allocate( obj_size );
+ 	offset_type p5 = mgr.allocate( obj_size );
+ 
+ 	mgr.deallocate( p3, obj_size );
+ 	mgr.deallocate( p5, obj_size );
+ 	mgr.deallocate( p1, obj_size );
+ 	mgr.deallocate( p2, obj_size );
+ 	mgr.deallocate( p4, obj_size );
 
-//	TEST_END( mgr.free() );
-	TEST_PRINT( L"Not implemented" );
-	return false;
+	TEST_END( mgr.free() );
 }

@@ -69,14 +69,19 @@ namespace memory_mgr
 			return OpenFileMappingW( access, false, name.c_str() );
 		}
 
-		inline void* map_view_of_file_ex(HANDLE handle, ulong file_access, ulong highoffset = 0, ulong lowoffset = 0, std::size_t numbytes = 0, void *base_addr = 0 )
+		inline void* map_view_of_file_ex(HANDLE handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
 		{  
 			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
 		}
 
 		inline int unmap_view_of_file(void* address)
-		{ 
+		{
 			return UnmapViewOfFile(address);
+		}
+
+		inline int close_handle(HANDLE handle)
+		{
+			return CloseHandle(handle);
 		}
 	}
 }
