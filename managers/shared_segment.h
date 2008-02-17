@@ -78,7 +78,9 @@ namespace memory_mgr
 		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
 		{
-			m_mapping = osapi::create_file_mapping( SegNameOp::GetName(), 0,
+			std::string name = "Global\\";
+			name += SegNameOp::get_name();
+			m_mapping = osapi::create_file_mapping( name, 0,
 				PAGE_READWRITE, mem_size );
 			if( !m_mapping )
 			{
@@ -121,7 +123,7 @@ namespace memory_mgr
 		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
 			:m_size( mem_size ),
-			m_name( SegNameOp::GetName() )
+			m_name( SegNameOp::get_name() )
 		{
 			detail::add_leading_slash( m_name );
 			int oflag = 0;
@@ -168,14 +170,25 @@ namespace memory_mgr
 	};
 #endif
 
-	struct WinNameReturner
+	struct name_returner
 	{
-		static inline const char* GetName( const size_t/* id */= 0)
+		static inline const char* get_name( const size_t/* id */= 0)
 		{ return "seg_name"; }
 	};
+
+#define MGR_SEGMENT_NAME( var_name ) var_name##_name_returner
+
+#define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
+	struct MGR_SEGMENT_NAME(var_name)\
+	{\
+		static inline const char* get_name( const size_t/* id */= 0)\
+		{ return "memory_mgr-"segment_name; }\
+	};
+
+MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 	
 	//MemMgr - must support MemoryManagerConcept
-	template< class MemMgr, class SegNameOp = WinNameReturner >	
+	template< class MemMgr, class SegNameOp = MGR_SEGMENT_NAME( default ) >	
 	class shared_segment 
 		: public memory_segment< shared_allocator<SegNameOp>, MemMgr >
 	{

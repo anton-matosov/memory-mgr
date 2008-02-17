@@ -33,7 +33,9 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 
 template class memory_mgr::shared_segment< memmgr_type >;
 
-typedef memory_mgr::shared_segment< memmgr_type > shared_mgr_type;
+MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
+
+typedef memory_mgr::shared_segment< memmgr_type, MGR_SEGMENT_NAME(test_segment) > shared_mgr_type;
 typedef memmgr_type::offset_type offset_type;
 
 bool test_shared_segment()

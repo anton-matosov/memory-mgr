@@ -26,26 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "config/config.h"
 #include <time.h>
 
-/*
-int clock_getres(clockid_t clk_id, struct timespec *res);
-int clock_gettime(clockid_t clk_id, struct timespec *tp);
-int clock_settime(clockid_t clk_id, const struct timespec *tp);
-
-CLOCK_REALTIME 
-System-wide realtime clock. Setting this clock requires appropriate privileges. 
-CLOCK_MONOTONIC 
-Clock that cannot be set and represents monotonic time since some unspecified starting point. 
-CLOCK_PROCESS_CPUTIME_ID 
-High-resolution per-process timer from the CPU. 
-CLOCK_THREAD_CPUTIME_ID 
-Thread-specific CPU-time clock
-
-struct timespec {
-time_t   tv_sec;        // seconds 
-long     tv_nsec;       // nanoseconds 
-};
-*/
-
 #ifdef MGR_LINUX_PLATFORM
 
 namespace memory_mgr
