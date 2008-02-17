@@ -114,7 +114,7 @@ class test_class2
 
 MGR_DECLARE_TEST( mgr.allocate( chunk_size ), alloc_test );
 MGR_DECLARE_TEST( new( mem_mgr(mgr) ) int, mgr_new_int_test );
-MGR_DECLARE_TEST( HeapAlloc( GetProcessHeap(), 0, chunk_size), heap_test );
+MGR_DECLARE_TEST( malloc( chunk_size), heap_test );
 MGR_DECLARE_TEST( new int, heap_new_int_test );
 
 bool test_memory_manager()
