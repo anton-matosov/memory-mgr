@@ -109,8 +109,9 @@ void run_test( const int count )
 
 
 	def_heap_mgr::destruct();
-	std::wcout << count << L" allocations time = " << timer.elapsed_ms() << L"\n";
-	std::wcout << L"One allocation time = " << timer.elapsed_ms() / count << L"\n";
+	std::wcout << L"Resolution = " << std::fixed << timer.resolution_ms() << L"\n";
+	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
+	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
 }
 
 void run_heap_test( const int count )
@@ -125,8 +126,8 @@ void run_heap_test( const int count )
 		new test_class2;
 	}
 	timer.stop();
-	std::wcout << count << L" allocations time = " << timer.elapsed_ms() << L"\n";
-	std::wcout << L"One allocation time = " << timer.elapsed_ms() / count << L"\n";
+	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
+	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
 }
 
 bool test_memory_manager()

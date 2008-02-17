@@ -106,7 +106,7 @@ namespace memory_mgr
 				m_is_running = false;
 				if ( !is_null(m_start) )
 				{
-					timespec end_time = {0};
+					timespec end_time = {0, 0};
 					clock_gettime(timer_id, &end_time );
 					m_elapced += end_time - m_start;
 				}
@@ -122,24 +122,50 @@ namespace memory_mgr
 
 
 			// Returns timer resolution in seconds
-			const double resolution();
+			const long double resolution()
+			{
+				timespec resol = {0};
+				clock_getres(timer_id, &resol );
+				return resol.tv_sec + 
+					static_cast<long double>(resol.tv_nsec)/1000000000.0L;
+			}
+
 			// Returns timer resolution in milliseconds
-			const double resolution_ms();
+			const long double resolution_ms()
+			{
+				timespec resol = {0};
+				clock_getres(timer_id, &resol );
+				return resol.tv_sec * 1000 + 
+						static_cast<long double>(resol.tv_nsec)/1000000.0;
+			}
+
 			// Returns timer resolution in microseconds
-			const double resolution_mcs();
+			const long double resolution_mcs()
+			{
+				timespec resol = {0};
+				clock_getres(timer_id, &resol );
+				return resol.tv_sec * 1000000 + 
+					static_cast<long double>(resol.tv_nsec)/1000.0;
+			}
 
 			// Returns elapsed time in seconds
-			const double elapsed();
+			const long double elapsed();
 			// Returns elapsed time in milliseconds 
-			const double elapsed_ms()
+			const long double elapsed_ms()
 			{
 				posix_perf_timer result(*this);
 				result.stop();
-				return static_cast<double>(result.m_elapced.tv_sec)/1000.0 + 
-					static_cast<double>(result.m_elapced.tv_nsec) * 1000000.0;
+				return result.m_elapced.tv_sec * 1000 + 
+					static_cast<long double>(result.m_elapced.tv_nsec)/1000000.0;
 			}
 			// Returns elapsed time in microseconds
-			const double elapsed_mcs();
+			const long double elapsed_mcs()
+			{
+				posix_perf_timer result(*this);
+				result.stop();
+				return result.m_elapced.tv_sec * 1000000 + 
+					static_cast<long double>(result.m_elapced.tv_nsec)/1000.0;
+			}
 
 			// Override for thread safe operation
 			virtual void lock() const 
@@ -157,6 +183,7 @@ namespace memory_mgr
 				src.lock();
 				lock();
 				m_start = src.m_start; 
+				m_elapced = src.m_elapced; 
 				unlock();
 				src.unlock();
 			}

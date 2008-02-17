@@ -19,7 +19,7 @@
   <kdevautoproject>
     <general>
       <activetarget>src/memory_mgr</activetarget>
-      <useconfiguration>debug</useconfiguration>
+      <useconfiguration>optimized</useconfiguration>
     </general>
     <run>
       <mainprogram>perf_tests/perf_tests</mainprogram>
@@ -30,8 +30,8 @@
       <autocompile>true</autocompile>
       <envvars/>
       <runarguments>
-        <unit_tests></unit_tests>
-        <perf_tests></perf_tests>
+        <unit_tests/>
+        <perf_tests/>
       </runarguments>
     </run>
     <configurations>
@@ -40,7 +40,17 @@
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
-        <cxxflags>-O2 -g0</cxxflags>
+        <cxxflags>-O3 -g0 -fomit-frame-pointer </cxxflags>
+        <envvars/>
+        <configargs></configargs>
+        <topsourcedir></topsourcedir>
+        <cppflags></cppflags>
+        <ldflags></ldflags>
+        <ccompilerbinary></ccompilerbinary>
+        <cxxcompilerbinary></cxxcompilerbinary>
+        <f77compilerbinary></f77compilerbinary>
+        <cflags></cflags>
+        <f77flags></f77flags>
       </optimized>
       <debug>
         <configargs>--enable-debug=full</configargs>
