@@ -115,12 +115,12 @@ namespace memory_mgr
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
-		// Helper types small and big - guarantee that sizeof(small) < sizeof(big)
+		// Helper types small_type and big_type - guarantee that sizeof(small_type) < sizeof(big_type)
 		////////////////////////////////////////////////////////////////////////////////
 		namespace detail
 		{
-			typedef char small;
-			class big { char dummy[2]; };
+			typedef char small_type;
+			class big_type { char dummy[2]; };
 
 			template<typename T>
 			struct is_void
@@ -156,12 +156,12 @@ namespace memory_mgr
 				>
 				::result U1;
 
-			static detail::big   test(...);
-			static detail::small test(U1);
+			static detail::big_type   test(...);
+			static detail::small_type test(U1);
 			static T1 MakeT();
 
 		public:       
-			enum { exists = sizeof(test(MakeT())) == sizeof(detail::small) };
+			enum { exists = sizeof(test(MakeT())) == sizeof(detail::small_type) };
 		};
 
 		//////////////////////////////////////////////////////////////////////////
@@ -170,10 +170,10 @@ namespace memory_mgr
 		template <class T>
 		class is_class
 		{
-			template<class U> static detail::big test(...);
-			template<class U> static detail::small test(void(U::*)(void));			
+			template<class U> static detail::big_type test(...);
+			template<class U> static detail::small_type test(void(U::*)(void));			
 		public:       
-			enum { value = sizeof(test<T>(0)) == sizeof(detail::small) };
+			enum { value = sizeof(test<T>(0)) == sizeof(detail::small_type) };
 		};
 		
 

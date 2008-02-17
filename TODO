@@ -1,3 +1,3 @@
- - implement shared memory segment allocator
+ - move Posix functions to linux.h
  - complete implementation of unit tests for type manipulation library
  - implement real pointer traits for T* and offset_pointer

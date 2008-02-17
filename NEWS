@@ -4,3 +4,4 @@
 - implemented new/do_delete and new[]/do_delete_arr operators
   to allocate any data type variables
 - implemented is_class type_manip
+- implemented shared memory segment allocator

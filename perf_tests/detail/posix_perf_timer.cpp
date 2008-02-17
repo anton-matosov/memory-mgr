@@ -19,22 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
+#ifdef MGR_LINUX_PLATFORM
 
-#include <iostream>
-#include <algorithm>
-#include <string>
+#include "posix_perf_timer.h"
 
-
-bool test_static_bitset();
-bool test_bit_manager();
-bool test_memory_manager();
-
-int main(int /*argc*/, char* /*argv*/[])
-{
-	test_static_bitset();
-	test_bit_manager();
-	test_memory_manager();	
-
-	return std::cin.get();
-}
-
+#endif//MGR_LINUX_PLATFORM

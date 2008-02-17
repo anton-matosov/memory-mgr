@@ -7,4 +7,4 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
-AC_OUTPUT(Makefile unit_tests/Makefile managers/Makefile managers/detail/Makefile managers/config/Makefile managers/config/platform/Makefile)
+AC_OUTPUT(Makefile unit_tests/Makefile managers/Makefile managers/detail/Makefile managers/config/Makefile managers/config/platform/Makefile perf_tests/Makefile perf_tests/detail/Makefile)

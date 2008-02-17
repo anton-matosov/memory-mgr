@@ -20,21 +20,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <iostream>
-#include <algorithm>
-#include <string>
+#ifndef MGR_PERF_TIMER_HEADER
+#define MGR_PERF_TIMER_HEADER
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
 
-bool test_static_bitset();
-bool test_bit_manager();
-bool test_memory_manager();
+#include "config/config.h"
 
-int main(int /*argc*/, char* /*argv*/[])
-{
-	test_static_bitset();
-	test_bit_manager();
-	test_memory_manager();	
-
-	return std::cin.get();
+#ifdef MGR_WINDOWS_PLATFORM
+#	include "detail/win_perf_timer.h"
+namespace memory_mgr
+{	
+	typedef detail::win_perf_timer perf_timer;
 }
+#elif defined( MGR_LINUX_PLATFORM )
+#	include "detail/posix_perf_timer.h"
+namespace memory_mgr
+{
+	typedef detail::posix_perf_timer perf_timer;
+}
+#endif //MGR_WINDOWS_PLATFORM
 
+#endif//MGR_PERF_TIMER_HEADER
