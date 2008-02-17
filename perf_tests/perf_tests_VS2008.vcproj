@@ -187,7 +187,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_bit_manager.cpp"
+				RelativePath=".\test_managed_base.cpp"
 				>
 			</File>
 			<File
@@ -195,7 +195,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_static_bitset.cpp"
+				RelativePath=".\test_offset_pointer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_pointer_convert.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_size_tracking.cpp"
 				>
 			</File>
 		</Filter>
@@ -208,6 +216,14 @@
 			</File>
 			<File
 				RelativePath=".\detail\posix_perf_timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test.h"
 				>
 			</File>
 			<File

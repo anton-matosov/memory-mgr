@@ -29,77 +29,79 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail 
+	namespace helpers 
 	{
-		namespace helpers 
+		namespace detail 
 		{
-			namespace detail 
+			template <typename T>
+			int integer_log2_impl(T x, int n) 
 			{
-				template <typename T>
-				int integer_log2_impl(T x, int n) 
+				int result = 0;
+				while (x != 1) 
 				{
-					int result = 0;
-					while (x != 1) 
-					{
-						const T t = static_cast< const T >( x >> n );
-						if (t) {
-							result += n;
-							x = t;
-						}
-						n /= 2;
+					const T t = static_cast< const T >( x >> n );
+					if (t) {
+						result += n;
+						x = t;
 					}
-					return result;
+					n /= 2;
 				}
+				return result;
+			}
 
-				// helper to find the maximum power of two
-				// less than p (more involved than necessary,
-				// to avoid PTS)
-				//
-				template <int p, int n>
-				struct max_pow2_less 
-				{
-					enum { c = 2*n < p };
-					enum { value = c ? (max_pow2_less< c*p, 2*c*n>::value) : n};
-				};
-
-				template <>
-				struct max_pow2_less<0, 0> 
-				{
-					enum { value = 0};
-				};
-
-
-			} //helpers detail
-
-			// ---------
-			// integer_log2
-			// ---------------
+			// helper to find the maximum power of two
+			// less than p (more involved than necessary,
+			// to avoid PTS)
 			//
-			template <typename T>
-			int integer_log2(T x) 
+			template <int p, int n>
+			struct max_pow2_less 
 			{
-				assert(x > 0); // PRE
+				enum { c = 2*n < p };
+				enum { value = c ? (max_pow2_less< c*p, 2*c*n>::value) : n};
+			};
 
-				const int n = detail::max_pow2_less<std::numeric_limits<T>::digits, 4>::value;
-
-				return detail::integer_log2_impl(x, n);
-
-			}
-
-			template <typename T>
-			int lowest_bit(T x) 
+			template <>
+			struct max_pow2_less<0, 0> 
 			{
-				assert(x >= 1); // PRE
+				enum { value = 0};
+			};
 
-				// clear all bits on except the rightmost one,
-				// then calculate the logarithm base 2
-				return integer_log2<T>( x - ( x & (x-1) ) );
 
-			}
+		} //helpers detail
 
-		}//helpers
+		// ---------
+		// integer_log2
+		// ---------------
+		//
+		template <typename T>
+		int integer_log2(T x) 
+		{
+			assert(x > 0); // PRE
 
-	}//detail
+			const int n = detail::max_pow2_less<std::numeric_limits<T>::digits, 4>::value;
+
+			return detail::integer_log2_impl(x, n);
+
+		}
+
+		template <typename T>
+		int lowest_bit(T x) 
+		{
+			assert(x >= 1); // PRE
+
+			// clear all bits on except the rightmost one,
+			// then calculate the logarithm base 2
+			return integer_log2<T>( x - ( x & (x-1) ) );
+
+		}
+
+		static inline void throw_bad_alloc()
+		{ throw std::bad_alloc(); }
+
+		static inline void do_nothing()
+		{}
+
+	}//helpers
 
 }//memory_mgr
 

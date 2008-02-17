@@ -90,7 +90,7 @@ namespace memory_mgr
 		//Returns: offset in bytes from memory base address.
 		offset_type allocate( size_type size )
 		{			
-			return do_allocate( size, throw_bad_alloc );
+			return do_allocate( size, helpers::throw_bad_alloc );
 		}
 
 
@@ -100,7 +100,7 @@ namespace memory_mgr
 		//Returns: offset in bytes from memory base address.
 		offset_type allocate( size_type size, const std::nothrow_t& )/*throw()*/
 		{			
-			return do_allocate( size, do_nothing );
+			return do_allocate( size, helpers::do_nothing );
 		}
 
 		//Call this method to deallocate memory block
@@ -150,13 +150,7 @@ namespace memory_mgr
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
 
-		static inline void throw_bad_alloc()
-		{
-			throw std::bad_alloc();
-		}
-
-		static inline void do_nothing()
-		{}
+		
 
 		//Call this method to allocate memory block
 		//size - block size in bytes

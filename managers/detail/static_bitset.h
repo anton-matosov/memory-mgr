@@ -451,7 +451,7 @@ namespace memory_mgr
 				return npos; // not found
 			}
 
-			return detail::helpers::lowest_bit(this->m_bits[first_block]);
+			return helpers::lowest_bit(this->m_bits[first_block]);
 		}
 
 		size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
@@ -462,7 +462,7 @@ namespace memory_mgr
 			}
 			const block_type fore = this->m_bits[blk_ind] & ( higher_bit_mask(bit_ind) );
 
-			return fore ? detail::helpers::lowest_bit(fore):
+			return fore ? helpers::lowest_bit(fore):
 				do_find_from( ++blk_ind );
 		}
 

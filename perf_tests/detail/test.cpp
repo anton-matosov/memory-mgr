@@ -20,15 +20,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
+#include "test.h"
 
-#include "detail/static_bitset.h"
-
-typedef unsigned char block_type;
-
-static const size_t bits_count = 32;
-typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::StaticArray> static_bitset;
-
-bool test_static_bitset()
-{
-	return true;
-}
+perf_test_manager __test_manager__;

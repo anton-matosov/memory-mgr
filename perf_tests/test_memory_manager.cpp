@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "heap_segment.h"
 #include "new.h"
 #include "size_tracking.h"
+#include "detail/test.h"
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4
@@ -90,66 +91,46 @@ class test_class2
 	int m_i;
 };
 
-void run_test( const int count )
-{	
-	memory_mgr::perf_timer timer;
-	int i = count;
-	segmmgr_type mgr;
-	def_heap_mgr::instance();
-	
-	timer.start();
-	while( --i )
-	{
-		//HeapAlloc( GetProcessHeap(), 0, chunk_size );
-		//mgr.allocate( chunk_size );
-		new test_class;
-	}
-	timer.stop();
-	def_heap_mgr::destruct();
+// template<class MemMgr>
+// void run_test( const int count )
+// {	
+// 	memory_mgr::perf_timer timer;
+// 	int i = count;
+// 	MemMgr mgr;
+// 	
+// 	timer.start();
+// 	while( --i )
+// 	{
+// 		mgr.allocate( chunk_size );		
+// 	}
+// 	timer.stop();
+// 
+// 	std::wcout << L"Resolution = " << std::fixed << timer.resolution_ms() << L"\n";
+// 	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
+// 	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
+// 	return timer.elapsed_ms();
+// }
 
 
-	def_heap_mgr::destruct();
-	std::wcout << L"Resolution = " << std::fixed << timer.resolution_ms() << L"\n";
-	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
-	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
-}
-
-void run_heap_test( const int count )
-{
-	memory_mgr::perf_timer timer;
-	int i = count;
-	segmmgr_type mgr;
-	timer.start();	
-	while( --i )
-	{
-		//HeapAlloc( GetProcessHeap(), 0, chunk_size );
-		new test_class2;
-	}
-	timer.stop();
-	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
-	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
-}
+MGR_DECLARE_TEST( mgr.allocate( chunk_size ), alloc_test );
+MGR_DECLARE_TEST( new( mem_mgr(mgr) ) int, mgr_new_int_test );
+MGR_DECLARE_TEST( HeapAlloc( GetProcessHeap(), 0, chunk_size), heap_test );
+MGR_DECLARE_TEST( new int, heap_new_int_test );
 
 bool test_memory_manager()
 {	
 	const int count = 500000;
-	
+	memory_mgr::perf_timer timer;
+
 	std::wcout << L"Items count: " << count << L"\n";
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<segmmgr_type>::memory_size << L"\n";
 	std::wcout << L"Required memory: " << count * chunk_size << L"\n";
+	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
+
+	MGR_RUN_TEST( alloc_test, segmmgr_type, count, 5 );
+	MGR_RUN_TEST( mgr_new_int_test, segmmgr_type, count, 5 );
+	MGR_RUN_TEST( heap_test, segmmgr_type, count, 5 );
+	MGR_RUN_TEST( heap_new_int_test, segmmgr_type, count, 5 );
 	
-	run_test( count );
-	run_test( count );
-	run_test( count );
-	run_test( count );
-	run_test( count );
-
-	std::wcout << L"\nHeap tests\n";
-	run_heap_test( count );
-	run_heap_test( count );
-	run_heap_test( count );
-	run_heap_test( count );
-	run_heap_test( count );
-
  	return false;
 }
