@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "perf_timer.h"
 #include "memory_manager.h"
 #include "heap_segment.h"
+#include "shared_segment.h"
 #include "new.h"
 #include "size_tracking.h"
 #include "detail/test.h"
@@ -35,10 +36,27 @@ static const size_t memory_size = 32 * 1024 * 1024;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-template class memory_mgr::memory_segment< memory_mgr::vector_as_allocator, memmgr_type >;
-
-//typedef memory_mgr::memory_segment< memory_mgr::vector_as_allocator, memmgr_type > segmmgr_type;
 typedef memmgr_type::offset_type offset_type;
+
+typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
+
+typedef memory_mgr::shared_segment< memmgr_type > shared_mgr;
+
+typedef memory_mgr::heap_segment
+<
+	memory_mgr::size_tracking
+	< 
+		memmgr_type
+	>
+> heap_sz_mgr;
+
+typedef memory_mgr::heap_segment
+<
+	memory_mgr::pointer_convert
+	< 
+		memmgr_type
+	>
+> heap_pt_mgr;
 
 typedef memory_mgr::heap_segment
 <
@@ -46,10 +64,21 @@ typedef memory_mgr::heap_segment
 	< 
 		memory_mgr::pointer_convert
 		< 
-			memory_mgr::memory_manager<size_t, memory_size, chunk_size> 
+			memmgr_type
 		> 
 	>
-> segmmgr_type;
+> heap_sz_pt_mgr;
+
+typedef memory_mgr::shared_segment
+<
+	memory_mgr::size_tracking
+	< 
+		memory_mgr::pointer_convert
+		< 
+			memmgr_type
+		> 
+	>
+> shared_sz_pt_mgr;
 
 #include "shared_segment.h"
 #include "managed_base.h"
@@ -64,24 +93,13 @@ typedef memory_mgr::singleton_manager
 		< 
 			memory_mgr::pointer_convert
 			< 
-				memory_mgr::memory_manager<size_t, memory_size, chunk_size> 
+				memmgr_type
 			> 
 		>
 	>
-> def_heap_mgr;
+> sing_shared_sz_pt_mgr;
 
-// typedef memory_mgr::singleton_manager
-// < 
-// 	memory_mgr::heap_segment
-// 	< 
-// 		memory_mgr::pointer_convert
-// 		< 
-// 			memory_mgr::memory_manager<size_t, memory_size, chunk_size> 
-// 		> 
-// 	>
-// > def_heap_mgr;
-
-class test_class: public memory_mgr::managed_base< def_heap_mgr >
+class test_class: public memory_mgr::managed_base< sing_shared_sz_pt_mgr >
 {
 	int m_i;
 };
@@ -91,46 +109,36 @@ class test_class2
 	int m_i;
 };
 
-// template<class MemMgr>
-// void run_test( const int count )
-// {	
-// 	memory_mgr::perf_timer timer;
-// 	int i = count;
-// 	MemMgr mgr;
-// 	
-// 	timer.start();
-// 	while( --i )
-// 	{
-// 		mgr.allocate( chunk_size );		
-// 	}
-// 	timer.stop();
-// 
-// 	std::wcout << L"Resolution = " << std::fixed << timer.resolution_ms() << L"\n";
-// 	std::wcout << count << L" allocations time = " << std::fixed << timer.elapsed_ms() << L"\n";
-// 	std::wcout << L"One allocation time = " << std::fixed << timer.elapsed_ms() / count << L"\n";
-// 	return timer.elapsed_ms();
-// }
 
-
-MGR_DECLARE_TEST( mgr.allocate( chunk_size ), alloc_test );
+MGR_DECLARE_TEST( mgr.allocate( chunk_size ), mgr_alloc_test );
 MGR_DECLARE_TEST( new( mem_mgr(mgr) ) int, mgr_new_int_test );
 MGR_DECLARE_TEST( malloc( chunk_size), heap_test );
 MGR_DECLARE_TEST( new int, heap_new_int_test );
 
+
+#define MEMORY_MANAGER_PERF_TESTS( MgrType, op_retpeat, test_repeat)\
+{\
+	MGR_RUN_TEST( mgr_alloc_test, MgrType, op_retpeat, test_repeat );\
+	MGR_RUN_TEST( mgr_new_int_test, MgrType, op_retpeat, test_repeat );\
+	MGR_RUN_TEST( heap_test, MgrType, op_retpeat, test_repeat );\
+	MGR_RUN_TEST( heap_new_int_test, MgrType, op_retpeat, test_repeat );\
+}\
+
 bool test_memory_manager()
 {	
-	const int count = 500000;
+	const int op_retpeat = 500000;
+	const int test_repeat = 10;
+
 	memory_mgr::perf_timer timer;
 
-	std::wcout << L"Items count: " << count << L"\n";
-	std::wcout << L"Memory size: " << memory_mgr::manager_traits<segmmgr_type>::memory_size << L"\n";
-	std::wcout << L"Required memory: " << count * chunk_size << L"\n";
+	std::wcout << L"Items count: " << op_retpeat << L"\n";
+	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
+	std::wcout << L"Required memory: " << op_retpeat * chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
 
-	MGR_RUN_TEST( alloc_test, segmmgr_type, count, 5 );
-	MGR_RUN_TEST( mgr_new_int_test, segmmgr_type, count, 5 );
-	MGR_RUN_TEST( heap_test, segmmgr_type, count, 5 );
-	MGR_RUN_TEST( heap_new_int_test, segmmgr_type, count, 5 );
+	MEMORY_MANAGER_PERF_TESTS( heap_sz_pt_mgr, op_retpeat, test_repeat );
+	MEMORY_MANAGER_PERF_TESTS( shared_sz_pt_mgr, op_retpeat, test_repeat );
 	
  	return false;
 }
+
