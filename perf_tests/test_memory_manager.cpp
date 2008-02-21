@@ -27,6 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "shared_segment.h"
 #include "new.h"
 #include "size_tracking.h"
+#include "managed_base.h"
+#include "singleton_manager.h"
 #include "detail/test.h"
 
 typedef unsigned char chunk_type;
@@ -42,6 +44,7 @@ typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
 
 typedef memory_mgr::shared_segment< memmgr_type > shared_mgr;
 
+//////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment
 <
 	memory_mgr::size_tracking
@@ -50,6 +53,7 @@ typedef memory_mgr::heap_segment
 	>
 > heap_sz_mgr;
 
+//////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment
 <
 	memory_mgr::pointer_convert
@@ -58,6 +62,7 @@ typedef memory_mgr::heap_segment
 	>
 > heap_pt_mgr;
 
+//////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment
 <
 	memory_mgr::size_tracking
@@ -69,6 +74,7 @@ typedef memory_mgr::heap_segment
 	>
 > heap_sz_pt_mgr;
 
+//////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::shared_segment
 <
 	memory_mgr::size_tracking
@@ -80,11 +86,22 @@ typedef memory_mgr::shared_segment
 	>
 > shared_sz_pt_mgr;
 
-#include "shared_segment.h"
-#include "managed_base.h"
-#include "singleton_manager.h"
+//////////////////////////////////////////////////////////////////////////
+typedef memory_mgr::singleton_manager
+< 
+	memory_mgr::heap_segment
+	< 
+		memory_mgr::size_tracking
+		< 
+			memory_mgr::pointer_convert
+			< 
+				memmgr_type
+			> 
+		>
+	>
+> sing_heap_sz_pt_mgr;
 
-
+//////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::singleton_manager
 < 
 	memory_mgr::shared_segment
@@ -116,7 +133,7 @@ class test_class2
 // MGR_DECLARE_TEST( new int, heap_new_int_test );
 
 template<class MemMgr>
-long double test_mem_mgr( const int count )
+long double test_alloc_mem_mgr( const int count )
 {
 	MemMgr mgr;
 
@@ -128,38 +145,140 @@ long double test_mem_mgr( const int count )
 }
 
 template<class MemMgr>
-long double test_singleton_mem_mgr( const int count )
+long double test_alloc_singleton_mem_mgr( const int count )
 {
 	MemMgr::instance();
 	TEST_START_LOOP( count );
-	MemMgr::instance().allocate();
+	MemMgr::instance().allocate( chunk_size );
 	TEST_END_LOOP( std::wcout );
 	MemMgr::destruct();
 	return TEST_ELAPCED_MCS;
 }
 
 
-long double test_std_heap( const int count )
+long double test_malloc( const int count )
 {
 	
 	TEST_START_LOOP( count );
-	
+	malloc(chunk_size);
 	TEST_END_LOOP( std::wcout );
 	
 	return TEST_ELAPCED_MCS;
 }
 
-// #define MEMORY_MANAGER_PERF_TESTS( MgrType, op_retpeat, test_repeat)\
-// {\
-// 	MGR_RUN_TEST( mgr_alloc_test, MgrType, op_retpeat, test_repeat );\
-// 	MGR_RUN_TEST( mgr_new_int_test, MgrType, op_retpeat, test_repeat );\
-// 	MGR_RUN_TEST( heap_test, MgrType, op_retpeat, test_repeat );\
-// 	MGR_RUN_TEST( heap_new_int_test, MgrType, op_retpeat, test_repeat );\
-// }\
+long double test_std_new_int( const int count )
+{
+
+	TEST_START_LOOP( count );
+	new int;
+	TEST_END_LOOP( std::wcout );
+
+	return TEST_ELAPCED_MCS;
+}
+
+
+template<class MemMgr>
+long double test_alloc_dealloc_mem_mgr( const int count )
+{
+	MemMgr mgr;
+
+	TEST_START_LOOP( count );
+	mgr.deallocate( mgr.allocate( chunk_size ), chunk_size );
+	TEST_END_LOOP( std::wcout );
+
+	return TEST_ELAPCED_MCS;
+}
+
+template<class MemMgr>
+long double test_alloc_dealloc_sz_mem_mgr( const int count )
+{
+	MemMgr mgr;
+
+	TEST_START_LOOP( count );
+	mgr.deallocate( mgr.allocate( chunk_size ) );
+	TEST_END_LOOP( std::wcout );
+
+	return TEST_ELAPCED_MCS;
+}
+
+template<class MemMgr>
+long double test_alloc_dealloc_singleton_mem_mgr( const int count )
+{
+	MemMgr::instance();
+	TEST_START_LOOP( count );
+	MemMgr::instance().deallocate( MemMgr::instance().allocate( chunk_size ), chunk_size );
+	TEST_END_LOOP( std::wcout );
+	MemMgr::destruct();
+	return TEST_ELAPCED_MCS;
+}
+
+template<class MemMgr>
+long double test_alloc_dealloc_singleton_sz_mem_mgr( const int count )
+{
+	MemMgr::instance();
+	TEST_START_LOOP( count );
+	MemMgr::instance().deallocate( MemMgr::instance().allocate( chunk_size ) );
+	TEST_END_LOOP( std::wcout );
+	MemMgr::destruct();
+	return TEST_ELAPCED_MCS;
+}
+
+long double test_malloc_free( const int count )
+{
+
+	TEST_START_LOOP( count );
+	free( malloc(chunk_size) );
+	TEST_END_LOOP( std::wcout );
+
+	return TEST_ELAPCED_MCS;
+}
+
+long double test_std_new_delete_int( const int count )
+{
+
+	TEST_START_LOOP( count );
+	delete new int;
+	TEST_END_LOOP( std::wcout );
+
+	return TEST_ELAPCED_MCS;
+}
+
+void run_all_tests( const int op_repeat, const int test_repeat )
+{
+	run_perf_test( "alloc heap mgr", test_alloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc shared mgr", test_alloc_mem_mgr<shared_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc heap sz mgr", test_alloc_mem_mgr<heap_sz_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc heap pt mgr", test_alloc_mem_mgr<heap_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc heap sz pt mgr", test_alloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc shared sz pt mgr", test_alloc_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc sing heap sz pt mgr", test_alloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc sing shared sz pt mgr", test_alloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc dealloc heap mgr", test_alloc_dealloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc dealloc shared mgr", test_alloc_dealloc_mem_mgr<shared_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc dealloc heap sz mgr", test_alloc_dealloc_sz_mem_mgr<heap_sz_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc dealloc heap pt mgr", test_alloc_dealloc_mem_mgr<heap_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc dealloc heap sz pt mgr", test_alloc_dealloc_sz_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc dealloc shared sz pt mgr", test_alloc_dealloc_sz_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "alloc dealloc sing heap sz pt mgr", test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc dealloc sing shared sz pt mgr", test_alloc_dealloc_singleton_sz_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+
+	run_perf_test( "std new delete int", test_std_new_delete_int, op_repeat, test_repeat );
+	run_perf_test( "malloc - free", test_malloc_free, op_repeat, test_repeat );
+
+	run_perf_test( "std new int", test_std_new_int, op_repeat, test_repeat );
+	run_perf_test( "malloc", test_malloc, op_repeat, test_repeat );
+}
 
 bool test_memory_manager()
 {	
-	const int op_repeat = 500000;
+	const int op_repeat = 50000;
 	const int test_repeat = 10;
 
 	memory_mgr::perf_timer timer;
@@ -169,9 +288,8 @@ bool test_memory_manager()
 	std::wcout << L"Required memory: " << op_repeat * chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
 	
-	run_perf_test( "heap sz pt mgr", test_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
-	run_perf_test( "shared sz pt mgr", test_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
-
+	run_all_tests( op_repeat, test_repeat );
+	
  	return false;
 }
 

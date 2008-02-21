@@ -22,4 +22,4 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "test.h"
 
-perf_test_manager __test_manager__;
+

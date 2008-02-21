@@ -40,6 +40,25 @@ template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
 { return lhs.second < rhs.second; }
 
+struct progress_bar
+{
+	size_t m_bar;
+	progress_bar( long double value, long double max_value, const size_t bar_length )
+	{
+		m_bar = (value/max_value) * bar_length;
+	}
+
+	
+};
+
+template<class Ch, class Tr>
+std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& stream, const progress_bar& bar )
+{
+	stream.width( bar.m_bar );	
+	return stream << std::basic_string<Ch, Tr>( bar.m_bar, '|' );
+}
+
+
 class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 {
 	typedef std::pair<long double, size_t> test_entry_type;
@@ -57,12 +76,12 @@ class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 	typedef std::pair<std::string, long double> cmp_test_entry_type;
 	typedef std::vector<cmp_test_entry_type> cmp_test_series;
 
-	std::wstring progress_bar( long double value, long double max_value, const size_t bar_length )
-	{
-		return std::wstring( (value/max_value) * bar_length, L'|' );
-	}
+	
+	
 
 	bool m_results_printed;
+
+	enum { graph_length = 100 };
 public:
 	void add_result( const std::string& test_name, long double test_time, size_t count )
 	{
@@ -96,8 +115,8 @@ public:
 				typedef cmp_test_series::const_iterator cmp_iter_type;		
 				for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
 				{
-					std::wcout.width( 40 );
-					std::wcout << std::left << progress_bar( cmp->second, max_val, 40 ) << " - " << cmp->first.c_str() << L"\n";
+					std::wcout << L"Test '" << cmp->first.c_str() << L"' time:" << cmp->second << L"\n";	
+					std::wcout << std::left << progress_bar( cmp->second, max_val, graph_length ) << L"\n";
 				} 
 			}
 		}		
@@ -131,10 +150,10 @@ public:
 #define TEST_ELAPCED_MCS timer__.elapsed_mcs();
 
 template<class TestOp>
-void run_perf_test( const std::string& test_name, TestOp test, const int op_repeat, const int test_repaet )
+void run_perf_test( const std::string& test_name, TestOp test, const int op_repeat, const int test_repeat )
 {
 	std::wcout << L"\n" << test_name.c_str() << L"\n";
-	int i = test_repaet;
+	int i = test_repeat;
 	while( i-- )
 	{
 		perf_test_manager::instance().add_result( test_name, test( op_repeat ), op_repeat );
