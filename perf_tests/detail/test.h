@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <map>
 #include <string>
 #include <algorithm>
+#include <limits>
 #include "detail/helpers.h"
 #include "detail/singleton.h"
 #include "../perf_timer.h"
@@ -40,12 +41,23 @@ template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
 { return lhs.second < rhs.second; }
 
+static inline bool is_null( long double val )
+{
+	const long double epsilon = 0.00001L;
+	return ( val - epsilon ) <= epsilon;
+}
+
 struct progress_bar
 {
 	size_t m_bar;
 	progress_bar( long double value, long double max_value, const size_t bar_length )
+		:m_bar( 0 )
 	{
-		m_bar = (value/max_value) * bar_length;
+		if( is_null( max_value ) )
+		{
+			throw std::runtime_error( "progress_bar: max value must be greater then null" );
+		}
+		m_bar = static_cast<size_t>( (value/max_value) * bar_length );
 	}
 
 	
@@ -81,7 +93,7 @@ class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 
 	bool m_results_printed;
 
-	enum { graph_length = 100 };
+	enum { graph_length = 79 };
 public:
 	void add_result( const std::string& test_name, long double test_time, size_t count )
 	{
