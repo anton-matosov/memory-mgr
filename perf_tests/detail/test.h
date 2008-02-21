@@ -33,13 +33,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <string>
 #include <algorithm>
 #include "detail/helpers.h"
+#include "detail/singleton.h"
 #include "../perf_timer.h"
 
 template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
 { return lhs.second < rhs.second; }
 
-class perf_test_manager
+class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 {
 	typedef std::pair<long double, size_t> test_entry_type;
 	typedef std::vector<test_entry_type> test_series;
@@ -70,36 +71,36 @@ public:
 
 	void print_results()
 	{
-		m_results_printed = true;
-		std::wcout << L"\nTesting results:\n";
-		typedef test_results_type::iterator res_iter_type;
-		cmp_test_series cmp_results;
-		for( res_iter_type res = m_test_results.begin(); res != m_test_results.end(); ++res )		
+		if( !m_test_results.empty() )
 		{
-			std::string test_name = res->first;
-			test_series& tests = res->second;
-			typedef test_series::const_iterator test_iter;
-			std::wcout << L"Test '" << test_name.c_str() << L"'\n";
-			std::sort( tests.begin(), tests.end() );
-			print_entry( *tests.begin() );
+			m_results_printed = true;
+			std::wcout << L"\nTesting results:\n";
+			typedef test_results_type::iterator res_iter_type;
+			cmp_test_series cmp_results;
+			for( res_iter_type res = m_test_results.begin(); res != m_test_results.end(); ++res )		
+			{
+				std::string test_name = res->first;
+				test_series& tests = res->second;
+				typedef test_series::const_iterator test_iter;
+				std::wcout << L"Test '" << test_name.c_str() << L"'\n";
+				std::sort( tests.begin(), tests.end() );
+				print_entry( *tests.begin() );
 
-			cmp_results.push_back( std::make_pair( test_name, tests.begin()->first / tests.begin()->second) );
-// 			for( test_iter it = tests.begin(); it != tests.end(); ++it )
-// 			{
-// 				print_entry( *it );
-// 			}
+				cmp_results.push_back( std::make_pair( test_name, tests.begin()->first / tests.begin()->second) );
+			}
 
-//			m_test_results.erase( m_test_results.begin() );
-		}
-
-		std::sort( cmp_results.begin(), cmp_results.end() );
-		const long double max_val = std::max_element( cmp_results.begin(), cmp_results.end(), &less_second<std::string, long double> )->second;
-		typedef cmp_test_series::const_iterator cmp_iter_type;		
-		for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
-		{
-			std::wcout.width( 40 );
-			std::wcout << std::left << progress_bar( cmp->second, max_val, 40 ) << " - " << cmp->first.c_str() << L"\n";
-		} 
+			if( !cmp_results.empty() )
+			{
+				std::sort( cmp_results.begin(), cmp_results.end() );
+				const long double max_val = std::max_element( cmp_results.begin(), cmp_results.end(), &less_second<std::string, long double> )->second;
+				typedef cmp_test_series::const_iterator cmp_iter_type;		
+				for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
+				{
+					std::wcout.width( 40 );
+					std::wcout << std::left << progress_bar( cmp->second, max_val, 40 ) << " - " << cmp->first.c_str() << L"\n";
+				} 
+			}
+		}		
 	}
 
 	perf_test_manager()
@@ -115,42 +116,31 @@ public:
 	}
 };
 
-#define MGR_TEST_IMPL( TEST_OPERATION, TEST_ID, BEFORE_LOOP, AFTER_LOOP )\
-template<class MemMgr>\
-long double run_test_##TEST_ID( const int count )\
-{\
-	memory_mgr::perf_timer timer;\
-	int i = count;\
-	BEFORE_LOOP;\
-	\
-	timer.start();\
-	while( --i )\
-	{\
-		TEST_OPERATION;\
-	}\
-	timer.stop();\
-	AFTER_LOOP;\
-	\
-	std::wcout << count << L"Full time: " << std::fixed << timer.elapsed_mcs() << L" mcs\n";\
-	std::wcout << L"Operation time = " << std::fixed << timer.elapsed_mcs() / count << L" mcs\n";\
-	return timer.elapsed_mcs();\
+#define  TEST_START_LOOP( repeate_count )\
+	memory_mgr::perf_timer timer__;\
+	int loop__ = repeate_count;\
+	int repeate_count__ = repeate_count;\
+	timer__.start();\
+	while( --loop__ ){
+
+#define  TEST_END_LOOP( out_stream )\
+	}timer__.stop();\
+	out_stream << count << L"Full time: " << std::fixed << timer__.elapsed_mcs() << L" mcs\n";\
+	out_stream << L"Operation time = " << std::fixed << timer__.elapsed_mcs() / repeate_count__ << L" mcs\n";\
+
+#define TEST_ELAPCED_MCS timer__.elapsed_mcs();
+
+template<class TestOp>
+void run_perf_test( const std::string& test_name, TestOp test, const int op_repeat, const int test_repaet )
+{
+	std::wcout << L"\n" << test_name.c_str() << L"\n";
+	int i = test_repaet;
+	while( i-- )
+	{
+		perf_test_manager::instance().add_result( test_name, test( op_repeat ), op_repeat );
+	}
 }
 
-#define MGR_DECLARE_TEST( TEST_OPERATION, TEST_ID )\
-	MGR_TEST_IMPL( TEST_OPERATION, TEST_ID,	MemMgr mgr, memory_mgr::helpers::do_nothing() )
-
-extern perf_test_manager __test_manager__;
-#define MGR_RUN_TEST( ID, MemMgr, op_repeat, test_repaet )\
-{\
-	const char* test_name = #ID" mgr: "#MemMgr;\
-	std::wcout << L"\n" << test_name << L"\n";\
-	int i = test_repaet;\
-	while( i--)\
-	{\
-	__test_manager__.add_result( test_name, run_test_##ID<MemMgr>( op_repeat ), op_repeat );\
-	}\
-}
-
-#define MGR_PRINT_RESULTS __test_manager__.print_results();
+#define MGR_PRINT_RESULTS perf_test_manager::instance().print_results();
 
 #endif

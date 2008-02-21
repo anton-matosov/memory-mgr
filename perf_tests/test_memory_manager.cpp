@@ -110,35 +110,68 @@ class test_class2
 };
 
 
-MGR_DECLARE_TEST( mgr.allocate( chunk_size ), mgr_alloc_test );
-MGR_DECLARE_TEST( new( mem_mgr(mgr) ) int, mgr_new_int_test );
-MGR_DECLARE_TEST( malloc( chunk_size), heap_test );
-MGR_DECLARE_TEST( new int, heap_new_int_test );
+// MGR_DECLARE_TEST( mgr.allocate( chunk_size ), mgr_alloc_test );
+// MGR_DECLARE_TEST( new( mem_mgr(mgr) ) int, mgr_new_int_test );
+// MGR_DECLARE_TEST( malloc( chunk_size), heap_test );
+// MGR_DECLARE_TEST( new int, heap_new_int_test );
+
+template<class MemMgr>
+long double test_mem_mgr( const int count )
+{
+	MemMgr mgr;
+
+	TEST_START_LOOP( count );
+	mgr.allocate( chunk_size );
+	TEST_END_LOOP( std::wcout );
+	
+	return TEST_ELAPCED_MCS;
+}
+
+template<class MemMgr>
+long double test_singleton_mem_mgr( const int count )
+{
+	MemMgr::instance();
+	TEST_START_LOOP( count );
+	MemMgr::instance().allocate();
+	TEST_END_LOOP( std::wcout );
+	MemMgr::destruct();
+	return TEST_ELAPCED_MCS;
+}
 
 
-#define MEMORY_MANAGER_PERF_TESTS( MgrType, op_retpeat, test_repeat)\
-{\
-	MGR_RUN_TEST( mgr_alloc_test, MgrType, op_retpeat, test_repeat );\
-	MGR_RUN_TEST( mgr_new_int_test, MgrType, op_retpeat, test_repeat );\
-	MGR_RUN_TEST( heap_test, MgrType, op_retpeat, test_repeat );\
-	MGR_RUN_TEST( heap_new_int_test, MgrType, op_retpeat, test_repeat );\
-}\
+long double test_std_heap( const int count )
+{
+	
+	TEST_START_LOOP( count );
+	
+	TEST_END_LOOP( std::wcout );
+	
+	return TEST_ELAPCED_MCS;
+}
+
+// #define MEMORY_MANAGER_PERF_TESTS( MgrType, op_retpeat, test_repeat)\
+// {\
+// 	MGR_RUN_TEST( mgr_alloc_test, MgrType, op_retpeat, test_repeat );\
+// 	MGR_RUN_TEST( mgr_new_int_test, MgrType, op_retpeat, test_repeat );\
+// 	MGR_RUN_TEST( heap_test, MgrType, op_retpeat, test_repeat );\
+// 	MGR_RUN_TEST( heap_new_int_test, MgrType, op_retpeat, test_repeat );\
+// }\
 
 bool test_memory_manager()
 {	
-	const int op_retpeat = 500000;
+	const int op_repeat = 500000;
 	const int test_repeat = 10;
 
 	memory_mgr::perf_timer timer;
 
-	std::wcout << L"Items count: " << op_retpeat << L"\n";
+	std::wcout << L"Items count: " << op_repeat << L"\n";
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
-	std::wcout << L"Required memory: " << op_retpeat * chunk_size << L"\n";
+	std::wcout << L"Required memory: " << op_repeat * chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
-
-	MEMORY_MANAGER_PERF_TESTS( heap_sz_pt_mgr, op_retpeat, test_repeat );
-	MEMORY_MANAGER_PERF_TESTS( shared_sz_pt_mgr, op_retpeat, test_repeat );
 	
+	run_perf_test( "heap sz pt mgr", test_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "shared sz pt mgr", test_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+
  	return false;
 }
 
