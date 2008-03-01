@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <stdexcept>
 #include "config/config.h"
+#include "detail/helpers.h"
 #include "memory_segment.h"
 #include "manager_traits.h"
 #include "segment_traits.h"
@@ -37,14 +38,6 @@ namespace memory_mgr
 {	
 	namespace detail
 	{
-		template<class StringT>
-		static inline void add_leading_slash( StringT& str )
-		{
-			if(str[0] != '/'){
-				str.insert( str.begin(), '/');
-			}
-		}
-
 		class shared_allocator_base
 		{
 		public:
@@ -125,7 +118,7 @@ namespace memory_mgr
 			:m_size( mem_size ),
 			m_name( SegNameOp::get_name() )
 		{
-			detail::add_leading_slash( m_name );
+			helpers::add_leading_slash( m_name );
 			int oflag = 0;
 			
 			//read-write mode

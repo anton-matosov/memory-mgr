@@ -101,6 +101,13 @@ namespace memory_mgr
 		static inline void do_nothing()
 		{}
 
+		template<class StringT>
+		static inline void add_leading_slash( StringT& str )
+		{
+			if(str[0] != '/'){
+				str.insert( str.begin(), '/');
+			}
+		}
 	}//helpers
 
 }//memory_mgr
