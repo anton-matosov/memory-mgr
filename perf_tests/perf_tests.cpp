@@ -33,7 +33,7 @@ bool test_offset_pointer( const int op_repeat, const int test_repeat );
 int main(int /*argc*/, char* /*argv*/[])
 {
 	const int op_repeat = 5000;
-	const int test_repeat = 3;
+	const int test_repeat = 10;
 
 	test_memory_manager( op_repeat, test_repeat );
 	test_managed_base( op_repeat, test_repeat );

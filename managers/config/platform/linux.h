@@ -46,6 +46,8 @@ namespace memory_mgr
 
 		typedef int				file_handle_t;
 		typedef file_handle_t	mapping_handle_t;
+		static const mapping_handle_t invalid_mapping_handle = -1;
+		static void* invalid_mapping_address = MAP_FAILED;
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
@@ -75,6 +77,34 @@ namespace memory_mgr
 		static inline int close_handle(file_handle_t handle)
 		{
 			return ::close(handle);
+		}
+
+		static inline mapping_handle_t create_file_mapping(const std::string& name,
+			int open_flag, mode_t access_mode)
+		{
+			return shm_open( name.c_str(), open_flag, access_mode );
+		}
+
+		static inline int resize_file_mapping(mapping_handle_t mapping,
+			size_t size)
+		{
+			return ftruncate( mapping, size );
+		}
+
+		static inline void* map_view_of_file(mapping_handle_t handle, int file_protect, std::size_t numbytes, int flags = MAP_SHARED, off_t offset = 0, void *base_addr = 0 )
+		{  
+			return mmap(base_addr, numbytes, file_protect, flags, handle, offset);
+		} 
+
+		static inline int unmap_view_of_file(void* address, size_t size)
+		{
+			return munmap( address, size );
+		}
+
+		static inline int close_file_mapping(const std::string& name, mapping_handle_t mapping)
+		{
+			shm_unlink( name.c_str() );
+			return osapi::close_handle( mapping );
 		}
 
 		static inline std::string get_executable_path()

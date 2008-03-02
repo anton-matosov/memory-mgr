@@ -33,9 +33,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <string>
 #include <algorithm>
 #include <limits>
+#include <iterator>
 #include "detail/helpers.h"
 #include "detail/singleton.h"
 #include "../perf_timer.h"
+#include "manager_traits.h"
 
 template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
@@ -137,7 +139,7 @@ void print_perf_test_header( const std::wstring& name,
 	std::wcout << L"Test repeat: " << test_repeat << L"\n";
 	std::wcout << L"Operation repeat: " << op_repeat << L"\n";
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
-	std::wcout << L"Required memory: " << op_repeat * chunk_size << L"\n";
+	std::wcout << L"Required memory: " << op_repeat * memory_mgr::manager_traits<memmgr_type>::chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
 	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, L'=' );
 

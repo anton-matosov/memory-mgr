@@ -42,6 +42,8 @@ namespace memory_mgr
 
 		typedef void*			file_handle_t;
 		typedef file_handle_t	mapping_handle_t;
+		static const mapping_handle_t invalid_mapping_handle = 0;
+		static const void* invalid_mapping_address = 0;
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
@@ -73,7 +75,7 @@ namespace memory_mgr
 			return OpenFileMappingA( access, false, name.c_str() );
 		}
 
-		static inline void* map_view_of_file_ex(file_handle_t handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
+		static inline void* map_view_of_file(mapping_handle_t handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
 		{  
 			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
 		}

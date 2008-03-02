@@ -1,3 +1,4 @@
- - move Posix functions to linux.h
+
  - complete implementation of unit tests for type manipulation library
  - implement real pointer traits for T* and offset_pointer
+ - reorganize implementation of shared_allocators

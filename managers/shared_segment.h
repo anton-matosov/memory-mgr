@@ -42,8 +42,8 @@ namespace memory_mgr
 		{
 		public:
 			shared_allocator_base()
-				:m_mapping(0),
-				m_base(0)
+				:m_mapping( osapi::invalid_mapping_handle ),
+				m_base( osapi::invalid_mapping_address )
 			{
 
 			}
@@ -75,14 +75,15 @@ namespace memory_mgr
 			name += SegNameOp::get_name();
 			m_mapping = osapi::create_file_mapping( name, 0,
 				PAGE_READWRITE, mem_size );
-			if( !m_mapping )
+
+			if( m_mapping == osapi::invalid_mapping_handle  )
 			{
 				throw std::runtime_error( "file mapping creation failed" );
 			}
 
-			m_base = osapi::map_view_of_file_ex( m_mapping, FILE_MAP_ALL_ACCESS,
+			m_base = osapi::map_view_of_file( m_mapping, FILE_MAP_ALL_ACCESS,
 				mem_size);
-			if( !m_base )
+			if( m_base != osapi::invalid_mapping_address)
 			{
 				throw std::runtime_error( "memory mapping failed" );
 			}			
@@ -90,12 +91,12 @@ namespace memory_mgr
 		
 		~shared_allocator()
 		{
-			if( m_base )
+			if( m_base != osapi::invalid_mapping_address)
 			{
 				osapi::unmap_view_of_file(m_base);
 			}
 
-			if( m_mapping )
+			if( m_mapping != osapi::invalid_mapping_handle )
 			{
 				osapi::close_handle(m_mapping);
 			}
@@ -119,28 +120,30 @@ namespace memory_mgr
 			m_name( SegNameOp::get_name() )
 		{
 			helpers::add_leading_slash( m_name );
-			int oflag = 0;
-			
-			//read-write mode
-			oflag |= O_RDWR;
+			int open_flag = O_RDWR //read-write mode
+				| O_CREAT;//Create new or open existent
 
-			//Create new or open existent
-			oflag |= O_CREAT;
+			mode_t access_mode = S_IRWXO //read, write, execute/search by others 
+				| S_IRWXG	//read, write, execute/search by group
+				| S_IRWXU;	//read, write, execute/search by owner
 
-			m_mapping = shm_open(m_name.c_str(), oflag, S_IRWXO | S_IRWXG | S_IRWXU);
-			if( base_type::m_mapping == -1 )
+			m_mapping = osapi::create_file_mapping(m_name, open_flag, access_mode);
+			if( base_type::m_mapping == osapi::invalid_mapping_handle )
 			{
 				throw std::runtime_error( "file mapping creation failed" );
 			}
 
-			if( ftruncate( base_type::m_mapping, m_size ) != 0 )
+			//Resize file mapping
+			if( osapi::resize_file_mapping( base_type::m_mapping, m_size ) != 0 )
 			{
 				throw std::runtime_error( "failed to resize file mapping" );
 			}
 
-			m_base = mmap(0, mem_size, PROT_READ | PROT_WRITE, MAP_SHARED, base_type::m_mapping, 0 );
+			//Map file to memory
+			m_base = osapi::map_view_of_file( base_type::m_mapping, 
+				PROT_READ | PROT_WRITE, mem_size );
 
-			if( m_base == MAP_FAILED )
+			if( m_base == osapi::invalid_mapping_address )
 			{
 				throw std::runtime_error( "memory mapping failed" );
 			}
@@ -148,15 +151,14 @@ namespace memory_mgr
 
 		~shared_allocator()
 		{		
-			if( m_base != MAP_FAILED )
+			if( m_base != osapi::invalid_mapping_address )
 			{
-				munmap( m_base, m_size );
+				osapi::unmap_view_of_file( m_base, m_size );
 			}			 
 			
-			if( base_type::m_mapping != -1 )
+			if( base_type::m_mapping != osapi::invalid_mapping_handle )
 			{
-				shm_unlink( m_name.c_str() );
-				osapi::close_handle( m_mapping );
+				osapi::close_file_mapping( m_name, m_mapping );
 			}
 
 		}
