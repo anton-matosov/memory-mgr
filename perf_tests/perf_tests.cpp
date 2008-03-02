@@ -26,15 +26,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "detail/test.h"
 
-bool test_memory_manager();
-bool test_pointer_convert();
-bool test_size_tracking();
+bool test_memory_manager( const int op_repeat, const int test_repeat );
+bool test_managed_base( const int op_repeat, const int test_repeat );
+bool test_offset_pointer( const int op_repeat, const int test_repeat );
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-	test_memory_manager();
-	test_pointer_convert();
-	test_size_tracking();	
+	const int op_repeat = 5000;
+	const int test_repeat = 3;
+
+	test_memory_manager( op_repeat, test_repeat );
+	test_managed_base( op_repeat, test_repeat );
+	test_offset_pointer( op_repeat, test_repeat );
 
 	MGR_PRINT_RESULTS;
 	return std::cin.get();

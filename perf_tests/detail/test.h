@@ -50,24 +50,16 @@ static inline bool is_null( long double val )
 struct progress_bar
 {
 	size_t m_bar;
-	progress_bar( long double value, long double max_value, const size_t bar_length )
-		:m_bar( 0 )
-	{
-		if( is_null( max_value ) )
-		{
-			throw std::runtime_error( "progress_bar: max value must be greater then null" );
-		}
-		m_bar = static_cast<size_t>( (value/max_value) * bar_length );
-	}
-
-	
+	long double m_percent;
+	progress_bar( long double value, long double max_value, const size_t bar_length );
 };
 
 template<class Ch, class Tr>
-std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& stream, const progress_bar& bar )
+static inline std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& stream, const progress_bar& bar )
 {
 	stream.width( bar.m_bar );	
-	return stream << std::basic_string<Ch, Tr>( bar.m_bar, '|' );
+	stream << std::basic_string<Ch, Tr>( bar.m_bar, '|' );
+	return stream << ' ' << static_cast<size_t>(bar.m_percent * 100) << '%';
 }
 
 
@@ -75,7 +67,8 @@ class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 {
 	typedef std::pair<long double, size_t> test_entry_type;
 	typedef std::vector<test_entry_type> test_series;
-	typedef std::map< std::string, test_series > test_results_type;
+	typedef std::map< std::string, test_series > test_named_results_type;
+	typedef std::map< std::string, test_named_results_type > test_results_type;
 
 	test_results_type m_test_results;
 	void print_entry( const test_entry_type& entry );
@@ -87,7 +80,8 @@ class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 
 	enum { graph_length = 79 };
 public:
-	void add_result( const std::string& test_name, long double test_time, size_t count );
+	void add_result( const std::string& category_name, const std::string& test_name,
+		long double test_time, size_t count );
 
 	void print_results();
 
@@ -104,22 +98,53 @@ public:
 
 #define  TEST_END_LOOP( out_stream )\
 	}timer__.stop();\
-	out_stream << count << L"Full time: " << std::fixed << timer__.elapsed_mcs() << L" mcs\n";\
-	out_stream << L"Operation time = " << std::fixed << timer__.elapsed_mcs() / repeate_count__ << L" mcs\n";\
+	out_stream << L"Full time: " << std::fixed << timer__.elapsed_mcs() << L" mcs";\
+	out_stream << L"\tRepeat count: " << count;\
+	out_stream << L"\tOperation time: " << std::fixed << timer__.elapsed_mcs() / repeate_count__ << L" mcs\n";\
 
 #define TEST_ELAPCED_MCS timer__.elapsed_mcs();
 
 template<class TestOp>
-void run_perf_test( const std::string& test_name, TestOp test, const int op_repeat, const int test_repeat )
+void run_perf_test( const std::string& category_name,
+				   const std::string& test_name, TestOp test,
+				   const int op_repeat, const int test_repeat )
 {
 	std::wcout << L"\n" << test_name.c_str() << L"\n";
 	int i = test_repeat;
 	while( i-- )
 	{
-		perf_test_manager::instance().add_result( test_name, test( op_repeat ), op_repeat );
+		perf_test_manager::instance().add_result( category_name, test_name, test( op_repeat ), op_repeat );
 	}
 }
 
+template<class MemMgr>
+void print_perf_test_header( const std::wstring& name,
+							const int op_repeat, const int test_repeat )
+{
+	typedef MemMgr memmgr_type;
+	memory_mgr::perf_timer timer;
+
+	const size_t fill_count = 60;
+	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, L'=' );
+	
+	std::wcout << L'\n';
+	size_t name_fill = ( fill_count - (name.length() + 4) )/2;
+	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), name_fill, L'-' );
+	std::wcout << L"  " << name << L"  ";
+	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), name_fill, L'-' );
+	std::wcout << L'\n';
+
+	std::wcout << L"Test repeat: " << test_repeat << L"\n";
+	std::wcout << L"Operation repeat: " << op_repeat << L"\n";
+	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
+	std::wcout << L"Required memory: " << op_repeat * chunk_size << L"\n";
+	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
+	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, L'=' );
+
+}
+
 #define MGR_PRINT_RESULTS perf_test_manager::instance().print_results();
+
+
 
 #endif
