@@ -241,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_temp_buffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_type_manip.cpp"
 				>
 			</File>

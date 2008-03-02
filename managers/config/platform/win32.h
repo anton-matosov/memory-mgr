@@ -30,8 +30,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_WINDOWS_PLATFORM
 #include <windows.h>
 #include <string>
-
+#include "detail/ptr_helpers.h"
 #include "detail/types.h"
+#include "detail/temp_buffer.h"
 
 namespace memory_mgr
 {
@@ -62,29 +63,45 @@ namespace memory_mgr
 			return LeaveCriticalSection( cs );
 		}
 
-		inline file_handle_t create_file_mapping( const std::string& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
+		static inline file_handle_t create_file_mapping( const std::string& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
 		{
 			return CreateFileMappingA( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
 		}
 
-		inline file_handle_t open_file_mapping( ulong access, std::string& name )
+		static inline file_handle_t open_file_mapping( ulong access, std::string& name )
 		{
 			return OpenFileMappingA( access, false, name.c_str() );
 		}
 
-		inline void* map_view_of_file_ex(file_handle_t handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
+		static inline void* map_view_of_file_ex(file_handle_t handle, ulong file_access, std::size_t numbytes, ulong highoffset = 0, ulong lowoffset = 0, void *base_addr = 0 )
 		{  
 			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
 		}
 
-		inline int unmap_view_of_file(void* address)
+		static inline int unmap_view_of_file(void* address)
 		{
 			return UnmapViewOfFile(address);
 		}
 
-		inline int close_handle(file_handle_t handle)
+		static inline int close_handle(file_handle_t handle)
 		{
 			return CloseHandle(handle);
+		}
+
+		static inline ulong get_last_error()
+		{			
+			return GetLastError();
+		}
+
+		static inline std::string get_executable_path()
+		{			
+			detail::char_buffer path( 512 );
+			while( GetModuleFileNameA( 0, path, path.count() ) == path.count() )
+			{
+				path.reallocate( path.count() * 2 );
+			}	
+
+			return path.get();
 		}
 	}
 }

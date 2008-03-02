@@ -263,7 +263,7 @@ void run_all_tests( const int op_repeat, const int test_repeat )
 	run_perf_test( "alloc dealloc heap sz mgr", test_alloc_dealloc_sz_mem_mgr<heap_sz_mgr>, op_repeat, test_repeat );
 	run_perf_test( "alloc dealloc heap pt mgr", test_alloc_dealloc_mem_mgr<heap_pt_mgr>, op_repeat, test_repeat );
 
-	run_perf_test( "alloc dealloc heap sz pt mgr", test_alloc_dealloc_sz_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+	run_perf_test( "alloc dealloc heap sz pt mgr", test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
 	run_perf_test( "alloc dealloc shared sz pt mgr", test_alloc_dealloc_sz_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
 
 	run_perf_test( "alloc dealloc sing heap sz pt mgr", test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
@@ -279,11 +279,12 @@ void run_all_tests( const int op_repeat, const int test_repeat )
 bool test_memory_manager()
 {	
 	const int op_repeat = 50000;
-	const int test_repeat = 10;
+	const int test_repeat = 1;
 
 	memory_mgr::perf_timer timer;
 
-	std::wcout << L"Items count: " << op_repeat << L"\n";
+	std::wcout << L"Test repeat: " << test_repeat << L"\n";
+	std::wcout << L"Operation repeat: " << op_repeat << L"\n";
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
 	std::wcout << L"Required memory: " << op_repeat * chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";

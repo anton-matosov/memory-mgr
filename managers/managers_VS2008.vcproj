@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\temp_buffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\type_manip.h"
 				>
 			</File>

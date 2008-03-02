@@ -27,11 +27,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <pthread.h>
 
-#  include <fcntl.h>		//O_CREAT, O_*... 
-#  include <sys/mman.h>	//shm_xxx
-#  include <unistd.h>		//ftruncate, close
-#  include <sys/stat.h>	//mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
+#include <fcntl.h>		//O_CREAT, O_*... 
+#include <sys/mman.h>	//shm_xxx
+#include <unistd.h>		//ftruncate, close
+#include <sys/stat.h>	//mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
 
+#include <sstream>
+#include <iostream>
+
+#include "detail/temp_buffer.h"
 #include "detail/types.h"
 
 namespace memory_mgr
@@ -68,9 +72,30 @@ namespace memory_mgr
 			pthread_mutex_unlock( cs );
 		}
 
-		inline int close_handle(file_handle_t handle)
+		static inline int close_handle(file_handle_t handle)
 		{
 			return ::close(handle);
+		}
+
+		static inline std::string get_executable_path()
+		{		
+			/*
+			Linux:
+			/proc/<pid>/exe
+
+			Solaris:
+			/proc/<pid>/object/a.out (filename only)
+			/proc/<pid>/path/a.out (complete pathname)
+
+			*BSD (and maybe Darwing too):
+			/proc/<pid>/file
+			*/
+
+			detail::char_buffer path( 512 );
+			std::stringstream link;
+			link << "/proc/" << getpid() << "/exe";
+			readlink( link.str().c_str(), path, path.count() );	
+			return path.get();
 		}
 	}
 }

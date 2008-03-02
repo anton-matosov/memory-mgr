@@ -38,4 +38,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include MGR_PLATFORM_CONFIG
 
+#include "detail/helpers.h"
+
+namespace memory_mgr
+{
+	namespace osapi
+	{
+		static inline std::string get_exe_dir()
+		{
+			return helpers::get_root_directory( get_executable_path() );
+		}
+	}
+}
+
 #endif// MGR_CONFIG_HEADER

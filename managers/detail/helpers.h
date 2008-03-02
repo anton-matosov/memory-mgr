@@ -102,11 +102,34 @@ namespace memory_mgr
 		{}
 
 		template<class StringT>
-		static inline void add_leading_slash( StringT& str )
+		static inline StringT& add_leading_slash( StringT& str )
 		{
-			if(str[0] != '/'){
+			if(str[0] != '/')
+			{
 				str.insert( str.begin(), '/');
 			}
+			return str;
+		}
+
+		template<class StringT>
+		static inline StringT& add_trailing_slash( StringT& str )
+		{
+			if( str.length() >= 1 )
+			{
+				const typename StringT::traits_type::char_type last = *(str.end() - 1);
+				if(last != '/' || last != '\\')
+				{
+					str.insert( str.end(), '/');
+				}
+			}
+			return str;
+		}
+
+		template<class StringT>
+		static inline StringT get_root_directory( const StringT& file_path )
+		{
+			size_t pos = file_path.find_last_of( "\\/" );
+			return file_path.substr( 0, (pos == -1 ? 0 : pos) );
 		}
 	}//helpers
 

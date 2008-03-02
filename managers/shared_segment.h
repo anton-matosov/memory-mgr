@@ -163,12 +163,6 @@ namespace memory_mgr
 	};
 #endif
 
-	struct name_returner
-	{
-		static inline const char* get_name( const size_t/* id */= 0)
-		{ return "seg_name"; }
-	};
-
 #define MGR_SEGMENT_NAME( var_name ) var_name##_name_returner
 
 #define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\

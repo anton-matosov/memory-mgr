@@ -49,6 +49,11 @@ namespace memory_mgr
 			return const_cast< char* >( p );
 		}
 
+		static inline wchar_t* unconst_wchar( const wchar_t* p )
+		{
+			return const_cast< wchar_t* >( p );
+		}
+
 		static inline void* unconst_void( const void* p )
 		{
 			return const_cast< void* >( p );

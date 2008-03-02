@@ -21,10 +21,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
-
+#include "config/config.h"
 #include <deque>
 #include <string>
 
+bool test_temp_buffer();
 bool test_type_manip();
 bool test_static_bitset();
 bool test_bit_manager();
@@ -72,6 +73,10 @@ int main(int /*argc*/, char* /*argv*/[])
 {
 	tests_manager TestMgr;
 		
+	std::wcout << L"Unit tests for memory_mgr library\n";
+	std::wcout << L"Exe path: " << memory_mgr::osapi::get_executable_path().c_str() << L"\n";
+	std::wcout << L"Exe dir: " << memory_mgr::osapi::get_exe_dir().c_str() << L"\n";
+	TestMgr.add_result( test_temp_buffer(), 	L"test_temp_buffer" );
 	TestMgr.add_result( test_type_manip(), 		L"test_type_manip" );
 	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );
 	TestMgr.add_result( test_bit_manager(), 	L"test_bit_manager" );
