@@ -43,7 +43,7 @@ namespace memory_mgr
 		typedef void*			file_handle_t;
 		typedef file_handle_t	mapping_handle_t;
 		static const mapping_handle_t invalid_mapping_handle = 0;
-		static const void* invalid_mapping_address = 0;
+		static void* invalid_mapping_address = 0;
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{

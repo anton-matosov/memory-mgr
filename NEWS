@@ -1,4 +1,5 @@
 
+- implementation of unit tests for type manipulation library finished
 - implementation and stabilization of size_tracking decorator is finished
 - new[]/delete[] operators were implemented for managed_base
 - implemented new/do_delete and new[]/do_delete_arr operators

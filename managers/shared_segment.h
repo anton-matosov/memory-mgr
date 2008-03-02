@@ -83,7 +83,7 @@ namespace memory_mgr
 
 			m_base = osapi::map_view_of_file( m_mapping, FILE_MAP_ALL_ACCESS,
 				mem_size);
-			if( m_base != osapi::invalid_mapping_address)
+			if( m_base == osapi::invalid_mapping_address)
 			{
 				throw std::runtime_error( "memory mapping failed" );
 			}			

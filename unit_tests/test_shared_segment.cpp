@@ -45,9 +45,6 @@ bool test_shared_segment()
 	shared_mgr_type mgr;
 	TEST_CHECK( mgr.free() );
 
-	void *ppp = MAP_FAILED;
-	ppp = 0;
-	ppp = MAP_FAILED;
 	offset_type p1, p2, p3, p4, p5;
 	offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
 	const memmgr_type::size_type obj_size = 4;

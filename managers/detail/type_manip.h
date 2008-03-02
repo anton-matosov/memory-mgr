@@ -137,31 +137,31 @@ namespace memory_mgr
 		//
 		// is one type convertable to another?
 		//
-		template <class T, class U>
+		template <class From, class To>
 		class is_convertible
 		{
 			struct void_replace{};
 
 			typedef typename select
 				<
-				detail::is_void<T>::result,
-				void_replace, T
+				detail::is_void<From>::result,
+				void_replace, From
 				>
-				::result T1;
+				::result From1;
 
 			typedef typename select
 				<
-				detail::is_void<U>::result,
-				void_replace, U
+				detail::is_void<To>::result,
+				void_replace, To
 				>
-				::result U1;
+				::result To1;
 
 			static detail::big_type   test(...);
-			static detail::small_type test(U1);
-			static T1 MakeT();
+			static detail::small_type test(To1);
+			static From1 MakeFrom();
 
 		public:       
-			enum { exists = sizeof(test(MakeT())) == sizeof(detail::small_type) };
+			enum { exists = sizeof(test(MakeFrom())) == sizeof(detail::small_type) };
 		};
 
 		//////////////////////////////////////////////////////////////////////////
@@ -180,35 +180,35 @@ namespace memory_mgr
 		////////////////////////////////////////////////////////////////////////////////
 		// class template conversion
 		// Figures out the conversion relationships between two types
-		// Invocations (T and U are types):
-		// a) conversion<T, U>::exists
-		// returns (at compile time) true if there is an implicit conversion from T
-		// to U (example: Derived to Base)
-		// b) conversion<T, U>::exists2Way
-		// returns (at compile time) true if there are both conversions from T
-		// to U and from U to T (example: int to char and back)
-		// c) conversion<T, U>::same_type
-		// returns (at compile time) true if T and U represent the same type
+		// Invocations (FromType and ToType are types):
+		// a) conversion<FromType, ToType>::exists
+		// returns (at compile time) true if there is an implicit conversion from FromType
+		// to ToType (example: Derived to Base)
+		// b) conversion<FromType, ToType>::exists2Way
+		// returns (at compile time) true if there are both conversions from FromType
+		// to ToType and from ToType to FromType (example: int to char and back)
+		// c) conversion<FromType, ToType>::same_type
+		// returns (at compile time) true if FromType and ToType represent the same type
 		//
-		// Caveat: might not work if T and U are in a private inheritance hierarchy.
+		// Caveat: might not work if FromType and ToType are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
-		template <class T, class U>
+		template <class FromType, class ToType>
 		struct conversion
 		{
-			enum { exists = (is_convertible<T,U>::exists) };
-			enum { exists2Way = (exists && is_convertible<U, T>::exists) };
-			enum { same_type = (is_same_type<T, U>::value) };
+			enum { exists = (is_convertible<FromType,ToType>::exists) };
+			enum { exists2Way = (exists && is_convertible<ToType, FromType>::exists) };
+			enum { same_type = (is_same_type<FromType, ToType>::value) };
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
 		// class template super_subclass
-		// Invocation: super_subclass<B(ase), D(erived)>::value where B and D are types. 
-		// Returns true if B is a public base of D, or if B and D are aliases of the 
+		// Invocation: super_subclass<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
+		// Returns true if B(ase) is a public base of D(erived), or if B(ase) and D(erived) are aliases of the 
 		// same type.
 		//
-		// Caveat: might not work if B and D are in a private inheritance hierarchy.
+		// Caveat: might not work if B(ase) and D are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
-		template <class B, class D>
+		template <class B/*Base*/, class D/*Derived*/>
 		struct super_subclass
 		{
 			enum { value = (conversion<const volatile D*, const volatile B*>::exists &&
@@ -217,12 +217,12 @@ namespace memory_mgr
 
 		////////////////////////////////////////////////////////////////////////////////
 		// class template super_subclass_strict
-		// Invocation: super_subclass_strict<B, D>::value where B and D are types. 
-		// Returns true if B is a public base of D.
+		// Invocation: super_subclass_strict<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
+		// Returns true if B(ase) is a public base of D(erived).
 		//
-		// Caveat: might not work if B and D are in a private inheritance hierarchy.
+		// Caveat: might not work if B(ase) and D(erived) are in a private inheritance hierarchy.
 		////////////////////////////////////////////////////////////////////////////////
-		template<class B,class D>
+		template <class B/*Base*/, class D/*Derived*/>
 		struct super_subclass_strict
 		{
 			enum { value = (conversion<const volatile D*, const volatile B*>::exists &&
