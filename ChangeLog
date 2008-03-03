@@ -1,4 +1,8 @@
 In dev (rev. 103)
+ - 
+ 
+  
+Version 1.0.0 (svn rev. 103, 03.03.2008):
  - implemented offset_pointer unit tests 
  - implemented size_tracking for offset and pointer managers
  - implemented new[]/delete[] operators for managed_base
@@ -55,7 +59,7 @@ In dev (rev. 103)
  - implemented temp_buffer class and unit tests for it
  - added get_executable_path and get_exe_dir OS independent functions
 
-	
+ 
 Version 0.8.0 (svn rev. 64):
  - change log file was added
  - allocator class added
