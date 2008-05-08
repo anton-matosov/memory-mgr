@@ -1,7 +1,7 @@
 /* 
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
-Copyright (c) 2007 Anton (shikin) Matosov
+Copyright (c) 2007-2008 Anton (shikin) Matosov
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
