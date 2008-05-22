@@ -128,8 +128,7 @@ namespace memory_mgr
 			return str;
 		}
 
-		template<class StringT>
-		static inline StringT get_root_directory( const StringT& file_path )
+		template<class StringT> static inline StringT get_parent_dir( const StringT& file_path )
 		{
 			size_t pos = file_path.find_last_of( "\\/" );
 			return file_path.substr( 0, (pos == -1 ? 0 : pos) );

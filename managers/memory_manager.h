@@ -86,9 +86,11 @@ namespace memory_mgr
 			m_membase = detail::char_cast( detail::shift( mem_base, bitmgr_type::memory_usage ) );
 		}
 		
-		//Call this method to allocate memory block
-		//size - block size in bytes
-		//Returns: offset in bytes from memory base address.
+		/**
+		   @brief Call this method to allocate memory block
+		   @param size  block size in bytes
+		   @return offset in bytes from memory base address.
+		*/
 		offset_type allocate( size_type size )
 		{			
 			return do_allocate( size, helpers::throw_bad_alloc );

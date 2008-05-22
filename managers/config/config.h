@@ -45,9 +45,13 @@ namespace memory_mgr
 {
 	namespace osapi
 	{
+		/**
+		 * @brief Call this function to get path to folder from which executable was launched
+		 * @return path to folder from which executable was launched
+		 */
 		static inline std::string get_exe_dir()
 		{
-			return helpers::get_root_directory( get_executable_path() );
+			return helpers::get_parent_dir( get_executable_path() );
 		}
 	}
 }

@@ -120,8 +120,10 @@ namespace memory_mgr
 			{
 				return ostr << this->m_bitset;
 			}
-
-			//Return true if there is no more free bits to allocate
+			
+			/**
+			   @brief Return true if there is no more free bits to allocate
+			*/
 			bool empty()
 			{
 				return this->m_bitset.empty();
