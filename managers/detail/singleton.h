@@ -76,7 +76,9 @@ namespace memory_mgr
 		// shield the constructor and destructor to prevent outside sources
 		// from creating or destroying a CSingleton instance.
 
-		//! Default constructor.
+		/**
+		   @brief Default constructor.
+		*/
 		singleton(){}
 		//! Destructor.
 		~singleton(){}
