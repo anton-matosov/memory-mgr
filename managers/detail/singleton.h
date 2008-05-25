@@ -33,6 +33,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief Policy based implementation of a Singleton design
+	   pattern  
+	   @tparam T reference to this type will be returned by instance() method
+	   @tparam InstT instance of this type will be created, and returned by instance method
+	   @tparam SyncObj	Synchronization object that will be used to
+						synchronize instance creation
+	   @tparam ThreadingModel synchronization model policy, one of class_level_locable or pseudo_lockable policies
+	*/
 	template 
 	<
 		class T,
@@ -42,8 +51,17 @@ namespace memory_mgr
 	>
 	class  singleton : private ThreadingModel< SyncObj >
 	{
+		/**
+		   @brief Scoped lock type
+		*/
 		typedef typename ThreadingModel<SyncObj>::lock lock;
 	public:
+		/**
+		   @brief Call this method to get instance of singleton class, creates
+		   a new instance of the class if one does not exist		   
+		   
+		   @return Reference to instance of singleton class                   
+		*/
 		static T& instance()
 		{
 			if ( !m_instance )
@@ -59,6 +77,10 @@ namespace memory_mgr
 		}
 
 
+		/**
+		   @brief Call this method to destroy singleton instance and
+		   free associated resources.                               
+		*/
 		static void destruct()
 		{
 			if ( m_instance )
@@ -73,19 +95,26 @@ namespace memory_mgr
 		}
 
 	protected:
-		// shield the constructor and destructor to prevent outside sources
-		// from creating or destroying a CSingleton instance.
-
 		/**
-		   @brief Default constructor.
+		   @brief Protected default constructor, to prevent outside sources
+		   from creating or destroying a singleton instance.
 		*/
 		singleton(){}
-		//! Destructor.
+
+		/**
+		   @brief Protected destructor, to prevent outside sources from
+		   creating or destroying a singleton instance.                
+		*/
 		~singleton(){}
 	private:			
+		/**
+		   @brief Pointer to singleton instance
+		*/
 		static InstT* m_instance;
-
 		
+		/**
+		   @brief Copy protection
+		*/
 		singleton & operator=(const singleton &);
 	};
 	//------------------------------------------------------

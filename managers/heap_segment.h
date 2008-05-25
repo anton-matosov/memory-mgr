@@ -37,19 +37,35 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	//Adapter for std::vector to SegmentAllocatorConcept 
+	/**
+	   @brief Adapter for std::vector to SegmentAllocatorConcept	                                                            
+	*/
 	struct vector_as_allocator
 	{
-		//Default constructor, allocates mem_size bytes
+		
+		/**
+		   @brief Default constructor, allocates memory
+		   @param mem_size  memory in bytes            
+		*/
 		vector_as_allocator( const size_t mem_size )
 			:m_memory( mem_size )
 		{}
 
-		//Returns addres of allocated segment
+		/**
+		   @brief Call this method to get  address of allocated segment
+		   @return  address of allocated segment
+		                                                               
+		*/
 		void* segment_base()
 		{ return &m_memory.front(); }
 
+		/**
+		   @brief stores memory
+		*/
 		std::vector<ubyte> m_memory;
+		/**
+		   @brief Memory type tag
+		*/
 		typedef heap_memory_tag	memory_type;
 	};
 

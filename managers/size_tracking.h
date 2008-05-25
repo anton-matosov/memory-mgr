@@ -190,8 +190,15 @@ namespace memory_mgr
 		
 	}
 
-	//Size tracking decorator for memory manager
-	//MemMgr - must support PointerConvertConcept
+	/**
+	   @brief Size tracking decorator for memory manager.
+	   @details Tracks size of allocated memory blocks, so when
+	   deallocating them there is no need to specify size of memory
+	   block
+	   @tparam MemMgr  memory_manager class, with or w/o decorators,
+	                  if supports PointerConvertConcept then tracking
+	                  operations will work faster                    
+	*/
 	template< class MemMgr >
 	class size_tracking 
 		: public detail::size_tracking_impl
@@ -200,7 +207,13 @@ namespace memory_mgr
 			typename is_category_supported<MemMgr, pointer_convertion_tag>::result 
 		>
 	{
+		/**
+		   @brief Synonym for template parameter
+		*/
 		typedef MemMgr									memmgr_type;
+		/**
+		   @brief Size tracking implementation type
+		*/
 		typedef detail::size_tracking_impl
 		< 
 			MemMgr, 
@@ -208,6 +221,16 @@ namespace memory_mgr
 		>	impl_type;
 
 	public:
+		/**
+		   @brief Constructor, creates memory manager with specified
+		   base address
+		   
+		   
+		   @param mem_base  Pointer to memory which will be managed by
+		                    manager, before first used memory must be
+		                    zero filled
+		   @see memory_manager::memory_manager                        
+		*/
 		explicit size_tracking( void* mem_base )
 			:impl_type( mem_base )
 		{}
