@@ -28,12 +28,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-namespace detail
+namespace memory_mgr
 {
-	//Helper structures for the STATIC_ASSERT
-	template<int> struct CompileTimeError;
-    template<> struct CompileTimeError<true> {};
-}
+	namespace detail
+	{
+		//Helper structures for the STATIC_ASSERT
+		template<int> struct CompileTimeError;
+		template<> struct CompileTimeError<true> {};
+	}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // macro STATIC_ASSERT
@@ -43,7 +46,7 @@ namespace detail
 ////////////////////////////////////////////////////////////////////////////////
 
 #define STATIC_ASSERT(expr, msg)\
-	::detail::CompileTimeError<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
-
+	::memory_mgr::detail::CompileTimeError<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
+}
 
 #endif// MGR_STATIC_ASSERT_HEADER

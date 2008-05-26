@@ -30,93 +30,98 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <stdexcept>
 
-namespace detail
+namespace memory_mgr
 {
-	template<typename T>
-	struct ptr_deleter
+	namespace detail
 	{
-		static void do_delete( const T* const ptr)
+		template<typename T>
+		struct ptr_deleter
 		{
-			delete ptr;
-		}
-	};
+			static void do_delete( const T* const ptr)
+			{
+				delete ptr;
+			}
+		};
 
-	template<typename T>
-	struct array_deleter
-	{
-		static void do_delete( const T* const ptr)
+		template<typename T>
+		struct array_deleter
 		{
-			delete[] ptr;
-		}
-	};
+			static void do_delete( const T* const ptr)
+			{
+				delete[] ptr;
+			}
+		};
+
+
+		template<typename T, template <class> class Deleter = detail::ptr_deleter>
+		class scoped_ptr
+		{
+			scoped_ptr( const scoped_ptr& );
+			scoped_ptr& operator=( const scoped_ptr& );
+		public:
+			typedef T				elem_t;
+			typedef elem_t*			pointer_t;
+			typedef const pointer_t const_pointer_t;
+
+			typedef elem_t&			reference_t;
+			typedef const elem_t&	const_reference_t;
+
+			typedef Deleter<T>		deleter_t;
+
+			scoped_ptr( pointer_t ptr = NULL )
+				:m_ptr( ptr )
+			{
+			}
+
+			void own( pointer_t ptr )
+			{
+				if( m_ptr )
+				{
+					throw std::logic_error( "scoped_ptr already owns an object" );
+				}
+
+				if( !ptr )
+				{
+					throw std::logic_error( "scoped_ptr unable to own NULL pointer" );
+				}
+				m_ptr = ptr;
+			}
+
+			pointer_t operator->()
+			{
+				return m_ptr;
+			}
+
+			const_pointer_t operator->() const
+			{
+				return m_ptr;
+			}
+
+			reference_t operator*()
+			{
+				assert( m_ptr != NULL && "Dereferencing NULL pointer" );
+				return *m_ptr;
+			}
+
+			const_reference_t operator*() const
+			{
+				assert( m_ptr != NULL && "Dereferencing NULL pointer" );
+				return *m_ptr;
+			}
+
+			~scoped_ptr()
+			{
+				cleanup();
+			}
+		private:
+			void cleanup()
+			{
+				deleter_t::do_delete( m_ptr );
+			}
+			pointer_t m_ptr;
+		};
+
+	}
 }
-
-template<typename T, template <class> class Deleter = detail::ptr_deleter>
-class scoped_ptr
-{
-	scoped_ptr( const scoped_ptr& );
-	scoped_ptr& operator=( const scoped_ptr& );
-public:
-	typedef T				elem_t;
-	typedef elem_t*			pointer_t;
-	typedef const pointer_t const_pointer_t;
-
-	typedef elem_t&			reference_t;
-	typedef const elem_t&	const_reference_t;
-
-	typedef Deleter<T>		deleter_t;
-
-	scoped_ptr( pointer_t ptr = NULL )
-		:m_ptr( ptr )
-	{
-	}
-
-	void own( pointer_t ptr )
-	{
-		if( m_ptr )
-		{
-			throw std::logic_error( "scoped_ptr already owns an object" );
-		}
-
-		if( !ptr )
-		{
-			throw std::logic_error( "scoped_ptr unable to own NULL pointer" );
-		}
-		m_ptr = ptr;
-	}
-
-	pointer_t operator->()
-	{
-		return m_ptr;
-	}
-
-	const_pointer_t operator->() const
-	{
-		return m_ptr;
-	}
-
-	reference_t operator*()
-	{
-		assert( m_ptr != NULL && "Dereferencing NULL pointer" );
-		return *m_ptr;
-	}
-
-	const_reference_t operator*() const
-	{
-		assert( m_ptr != NULL && "Dereferencing NULL pointer" );
-		return *m_ptr;
-	}
-
-	~scoped_ptr()
-	{
-		cleanup();
-	}
-private:
-	void cleanup()
-	{
-		deleter_t::do_delete( m_ptr );
-	}
-	pointer_t m_ptr;
-};
 
 #endif// MGR_SCOPED_PTR_HEADER

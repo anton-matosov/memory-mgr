@@ -220,10 +220,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail\dummy_sync.h"
-				>
-			</File>
-			<File
 				RelativePath=".\detail\helpers.h"
 				>
 			</File>

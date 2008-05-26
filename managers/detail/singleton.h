@@ -46,8 +46,8 @@ namespace memory_mgr
 	<
 		class T,
 		class InstT = T,
-		class SyncObj = detail::sync::critical_section, 
-		template <class> class ThreadingModel = detail::sync::class_level_lockable
+		class SyncObj = sync::critical_section, 
+		template <class> class ThreadingModel = sync::class_level_lockable
 	>
 	class  singleton : private ThreadingModel< SyncObj >
 	{

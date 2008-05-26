@@ -31,23 +31,21 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail
+	namespace sync
 	{
-		namespace sync
+		class pseudo_sync
 		{
-			class pseudo_sync
-			{
-			public:
-				void Enter() const
-				{}
+		public:
+			pseudo_sync()	{}
+			~pseudo_sync()	{}
+			void Enter() const	{}
+			void Leave() const	{}
+		private:
+			pseudo_sync(const pseudo_sync &);
+			pseudo_sync & operator=(const pseudo_sync &);
+		};
 
-				void Leave() const
-				{}
-			};
-
-		}//sync
-
-	}//detail
+	}//sync
 
 }//memory_mgr
 

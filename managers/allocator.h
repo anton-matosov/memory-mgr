@@ -29,6 +29,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include "simple_ptr.h"
+/**
+   @brief Main library's namespace
+*/
 namespace memory_mgr
 {
 

@@ -56,9 +56,9 @@ namespace memory_mgr
 		size_t MemorySize,
  		size_t ChunkSize,
 		class OffsetType = size_t,
-		class SyncObj = detail::sync::critical_section
+		class SyncObj = sync::critical_section
 	>
-	class memory_manager : protected detail::sync::object_level_lockable<SyncObj>
+	class memory_manager : protected sync::object_level_lockable<SyncObj>
 	{
 	public:
 		enum
@@ -69,7 +69,7 @@ namespace memory_mgr
 		};
 		
 	private:		
-		typedef typename detail::sync::object_level_lockable<SyncObj>::lock lock;
+		typedef typename sync::object_level_lockable<SyncObj>::lock lock;
 		
 		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
 		/**

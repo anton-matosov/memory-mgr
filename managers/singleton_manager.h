@@ -53,8 +53,8 @@ namespace memory_mgr
 	template 
 	<
 		class Mgr,
-		class SyncObj = detail::sync::critical_section, 
-		template <class> class ThreadingModel = detail::sync::class_level_lockable
+		class SyncObj = sync::critical_section, 
+		template <class> class ThreadingModel = sync::class_level_lockable
 	>
 	class  singleton_manager : public singleton< /*typename manager_traits<*/Mgr/*>::manager_type*/, Mgr, SyncObj, ThreadingModel >
 	{

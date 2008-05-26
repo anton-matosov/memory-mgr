@@ -30,110 +30,106 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail
+	namespace sync
 	{
-		namespace sync
-		{
-			//-------------------------------------
-			// Locks do nothing
-			template<class SyncObjT>
-			class pseudo_lockable
-			{  
-			public:
-				pseudo_lockable()
-				{}
+		//-------------------------------------
+		// Locks do nothing
+		template<class SyncObjT>
+		class pseudo_lockable
+		{  
+		public:
+			pseudo_lockable()
+			{}
 
-				class lock
-				{
-				public:
-					lock() 
-					{};
-
-					lock( const pseudo_lockable &c ) 
-					{};
-					~lock()
-					{};
-
-				private:
-					lock(const lock &c);
-					lock& operator=(const lock &c);
-				};
-
-			private:
-				pseudo_lockable( const pseudo_lockable& );
-				pseudo_lockable& operator=( const pseudo_lockable& );
-			};
-
-			//-------------------------------------
-			// Object level blocking
-			template<class SyncObjT>
-			class object_level_lockable
-			{  
-			public:
-				friend class lock;
-
-				object_level_lockable()
-				{}
-
-				class lock
-				{
-				public:
-					lock( const object_level_lockable &c ) 
-						: m_lackable(c)
-					{ 
-						m_lackable.m_syncObj.Enter();
-					};
-
-					~lock()
-					{ 
-						m_lackable.m_syncObj.Leave();
-					};
-
-				private:
-					object_level_lockable const &m_lackable;
-
-					lock(const lock &c);
-					lock& operator=(const lock &c);
-				};
-			private:
-				mutable SyncObjT m_syncObj;
-				object_level_lockable( const object_level_lockable& );
-				object_level_lockable& operator=( const object_level_lockable& );
-			};
-			//-------------------------------------
-
-			template <class SyncObjT>
-			class class_level_lockable
+			class lock
 			{
-				static SyncObjT sm_syncObj;
-
 			public:
-				//class lock;
-				friend class lock;
+				lock() 
+				{};
 
-				class lock
-				{
-					lock(const lock&);
-					lock& operator=(const lock&);
-				public:
-					lock()
-					{
-						sm_syncObj.Enter();
-					}
+				lock( const pseudo_lockable &c ) 
+				{};
+				~lock()
+				{};
 
-					~lock()
-					{
-						sm_syncObj.Leave();
-					}
-				};
+			private:
+				lock(const lock &c);
+				lock& operator=(const lock &c);
 			};
 
-			template <class SyncObjT>
-			SyncObjT class_level_lockable<SyncObjT>::sm_syncObj;
-		
-		}//sync
+		private:
+			pseudo_lockable( const pseudo_lockable& );
+			pseudo_lockable& operator=( const pseudo_lockable& );
+		};
 
-	}//detail
+		//-------------------------------------
+		// Object level blocking
+		template<class SyncObjT>
+		class object_level_lockable
+		{  
+		public:
+			friend class lock;
+
+			object_level_lockable()
+			{}
+
+			class lock
+			{
+			public:
+				lock( const object_level_lockable &c ) 
+					: m_lackable(c)
+				{ 
+					m_lackable.m_syncObj.Enter();
+				};
+
+				~lock()
+				{ 
+					m_lackable.m_syncObj.Leave();
+				};
+
+			private:
+				object_level_lockable const &m_lackable;
+
+				lock(const lock &c);
+				lock& operator=(const lock &c);
+			};
+		private:
+			mutable SyncObjT m_syncObj;
+			object_level_lockable( const object_level_lockable& );
+			object_level_lockable& operator=( const object_level_lockable& );
+		};
+		//-------------------------------------
+
+		template <class SyncObjT>
+		class class_level_lockable
+		{
+			static SyncObjT sm_syncObj;
+
+		public:
+			//class lock;
+			friend class lock;
+
+			class lock
+			{
+				lock(const lock&);
+				lock& operator=(const lock&);
+			public:
+				lock()
+				{
+					sm_syncObj.Enter();
+				}
+
+				~lock()
+				{
+					sm_syncObj.Leave();
+				}
+			};
+		};
+
+		template <class SyncObjT>
+		SyncObjT class_level_lockable<SyncObjT>::sm_syncObj;
+
+	}//sync
 
 }//memory_mgr
 

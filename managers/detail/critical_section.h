@@ -32,27 +32,24 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail
+	namespace sync
 	{
-		namespace sync
-		{
-			//-------------------------------------
-			class critical_section{
-			public:
-				critical_section()	{ osapi::initialize_critical_section	(&m_cs); }
-				~critical_section()	{ osapi::delete_critical_section		(&m_cs); }
-				void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
-				void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
-			private:
-				mutable osapi::critical_section m_cs;
+		//-------------------------------------
+		class critical_section{
+		public:
+			critical_section()	{ osapi::initialize_critical_section	(&m_cs); }
+			~critical_section()	{ osapi::delete_critical_section		(&m_cs); }
+			void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
+			void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
+		private:
+			mutable osapi::critical_section m_cs;
 
-				critical_section(const critical_section &);
-				critical_section & operator=(const critical_section &);
-			};
+			critical_section(const critical_section &);
+			critical_section & operator=(const critical_section &);
+		};
 
-		}//sync
+	}//sync
 
-	}//detail
 
 }//memory_mgr
 
