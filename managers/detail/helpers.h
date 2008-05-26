@@ -32,8 +32,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	@brief Helper classes
+	*/
 	namespace helpers 
 	{
+		/**
+		@brief Helper classes implementation details
+		*/
 		namespace detail 
 		{
 			template <typename T>

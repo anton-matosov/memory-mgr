@@ -35,6 +35,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "detail/offset_traits.h"
 #include "manager_category.h"
 
+/**
+   @brief Main namespace
+*/
 namespace memory_mgr
 {
 	/**

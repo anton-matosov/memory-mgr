@@ -33,6 +33,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief Implementation details
+	*/
 	namespace detail
 	{
 		enum bitMgrMemCtrl{ mcAuto = StaticArray, mcNone = CustomArray };

@@ -43,6 +43,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief OS specific API wrappers
+	*/
 	namespace osapi
 	{
 		/**

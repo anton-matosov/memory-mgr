@@ -32,6 +32,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief Types manipulation sub-library
+	*/
 	namespace type_manip
 	{
 		struct yes_type{};
@@ -63,6 +66,20 @@ namespace memory_mgr
 			type2type(){} // VC7
 		};
 
+		/**
+		   @brief Types manipulation sub-library implementation details
+		*/
+		namespace detail
+		{
+			template<bool, typename T, typename U>
+			struct select_impl 
+			{ typedef T result; };
+
+			template<typename T, typename U>
+			struct select_impl<false, T, U>
+			{ typedef U result; };
+		}
+
 		////////////////////////////////////////////////////////////////////////////////
 		// class template select
 		// Selects one of two types based upon a boolean constant
@@ -72,17 +89,6 @@ namespace memory_mgr
 		// T and U are types
 		// Result evaluates to T if flag is true, and to U otherwise.
 		////////////////////////////////////////////////////////////////////////////////
-		namespace detail
-		{
-			template<bool, typename T, typename U>
-			struct select_impl 
-			{ typedef T result; };
-
-			template<typename T, typename U>
-			struct select_impl<false, T, U>
-			{ typedef U result; };		
-		}
-
 		template <bool flag, typename T, typename U>
 		struct select
 		{
@@ -90,14 +96,6 @@ namespace memory_mgr
 		};
 
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template is_same_type
-		// Return true if two given types are the same
-		// Invocation: is_same_type<T, U>::value
-		// where:
-		// T and U are types
-		// Result evaluates to true if U == T (types equal)
-		////////////////////////////////////////////////////////////////////////////////
 		namespace detail
 		{
 			template<typename T, typename U>
@@ -109,6 +107,14 @@ namespace memory_mgr
 			{ enum { value = true }; };
 		}
 
+		////////////////////////////////////////////////////////////////////////////////
+		// class template is_same_type
+		// Return true if two given types are the same
+		// Invocation: is_same_type<T, U>::value
+		// where:
+		// T and U are types
+		// Result evaluates to true if U == T (types equal)
+		////////////////////////////////////////////////////////////////////////////////
 		template <typename T, typename U>
 		struct is_same_type
 		{

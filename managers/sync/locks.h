@@ -30,6 +30,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief Synchronization principles
+	*/
 	namespace sync
 	{
 		//-------------------------------------
