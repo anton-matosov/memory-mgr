@@ -30,8 +30,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "detail/ptr_helpers.h"
 #include "detail/bit_manager.h"
-#include "detail/critical_section.h"
-#include "detail/locks.h"
+#include "sync/critical_section.h"
+#include "sync/locks.h"
 #include "detail/offset_traits.h"
 #include "manager_category.h"
 
