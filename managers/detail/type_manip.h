@@ -34,36 +34,46 @@ namespace memory_mgr
 {
 	/**
 	   @brief Types manipulation sub-library
+	   @details Thanks to Andrei Alexandrescu for the original version of the library
 	*/
 	namespace type_manip
 	{
-		struct yes_type{};
-		struct no_type{};
-
-		////////////////////////////////////////////////////////////////////////////////
-		// class template int2type
-		// Converts each integral constant into a unique type, used for functions overriding
-		// based on integer values
-		// Invocation: int2type<v> where v is a compile-time constant integral
-		// Defines 'value', an enum that evaluates to v
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Converts each integral constant into a unique type
+		   @details Used for functions overriding based on integer
+		   values
+		   
+		   Invocation: int2type\< v \> -  where v is a compile-time constant
+		   integral
+		   
+		   Defines 'value', an enum that evaluates to v             
+		*/
 		template <int v>
 		struct int2type
 		{
-			enum { value = v };
+			/**
+			   @brief an enum that evaluates to v
+			*/
+			enum { value = v /**< evaluates to v*/};
 		};
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template type2type
-		// Converts each type into a unique, insipid type
-		// Invocation type2type<T> where T is a type
-		// Defines the type original_type which maps back to T
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		  @brief Converts each type into a unique, insipid type
+		  @details	Invocation type2type\< T \> where T is a type
+					Defines the type original_type which maps back to T
+		*/
 		template <typename T>
 		struct type2type
 		{   
+			/**
+			   @brief maps back to template parameter T
+			*/
 			typedef T original_type;
-			type2type(){} // VC7
+			
+			/**
+			   @brief Default constructor, to get rid of VC7 warning
+			*/
+			type2type(){}
 		};
 
 		/**
@@ -71,24 +81,37 @@ namespace memory_mgr
 		*/
 		namespace detail
 		{
+			/**
+			   @brief "select" implementation class, generic template, used
+			   when flag==true                                             
+			*/
 			template<bool, typename T, typename U>
 			struct select_impl 
-			{ typedef T result; };
+			{ /**
+			   @brief Select type T
+			*/
+			typedef T result; };
 
+			/**
+			   @brief "select" implementation class, template specialization
+			   for flag==false
+			                                                                
+			*/
 			template<typename T, typename U>
 			struct select_impl<false, T, U>
-			{ typedef U result; };
+			{ /**
+			     @brief Select type U
+			  */
+			typedef U result; };
 		}
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template select
-		// Selects one of two types based upon a boolean constant
-		// Invocation: select<flag, T, U>::Result
-		// where:
-		// flag is a compile-time boolean constant
-		// T and U are types
-		// Result evaluates to T if flag is true, and to U otherwise.
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Selects one of two types based upon a boolean constant
+		   @details Invocation: select::Result
+		   @tparam flag  a compile\-time boolean constant
+		   @tparam T     Type, selected if flag==true
+		   @tparam U     Type, selected if flag==false                   
+		*/
 		template <bool flag, typename T, typename U>
 		struct select
 		{
@@ -107,26 +130,32 @@ namespace memory_mgr
 			{ enum { value = true }; };
 		}
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template is_same_type
-		// Return true if two given types are the same
-		// Invocation: is_same_type<T, U>::value
-		// where:
-		// T and U are types
-		// Result evaluates to true if U == T (types equal)
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Checks given types on equality
+		   @details Invocation: is_same_type\<T, U\>::value
+					
+		   result evaluates to true if U == T (types equal) 
+		*/
 		template <typename T, typename U>
 		struct is_same_type
 		{
-			enum { value = detail::is_same_type_impl<T, U>::value };
+			enum { value /**< true if U == T, false otherwise*/ 
+				= detail::is_same_type_impl<T, U>::value  };
 		};
 
-		////////////////////////////////////////////////////////////////////////////////
-		// Helper types small_type and big_type - guarantee that sizeof(small_type) < sizeof(big_type)
-		////////////////////////////////////////////////////////////////////////////////
 		namespace detail
 		{
+			/**
+			   @brief Helper type. Used in pair with big_type
+			   @details guarantee that sizeof(small_type) \<
+			   sizeof(big_type)                              
+			*/
 			typedef char small_type;
+			/**
+			   @brief Helper type. Used in pair with small_type
+			   @details guarantee that sizeof(small_type) \<
+			   sizeof(big_type)                                
+			*/
 			class big_type { char dummy[2]; };
 
 			template<typename T>

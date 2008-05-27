@@ -58,8 +58,8 @@ namespace memory_mgr
 		};
 
 		template< class MemMgr >
-		struct new_helpers<MemMgr, typename is_category_supported<MemMgr, size_tracking_tag>::yes_type,
-			typename is_category_supported<MemMgr, pointer_convertion_tag>::yes_type>
+		struct new_helpers<MemMgr, yes_type,
+			yes_type>
 		{
 			typedef MemMgr mgr_type;
 			static inline void* new_impl( size_t size, mgr_type& mgr )

@@ -91,7 +91,7 @@ namespace memory_mgr
 		template< class MemMgr >
 		class size_tracking_impl<
 			MemMgr,
-			typename is_category_supported<MemMgr, pointer_convertion_tag>::yes_type >
+			yes_type /* pointer_convert supported */ >
 			: public size_tracking_impl_base< MemMgr >
 		{
 			typedef MemMgr								mgr_type;
@@ -139,16 +139,16 @@ namespace memory_mgr
 		template< class MemMgr >
 		class size_tracking_impl<
 			MemMgr,
-			typename is_category_supported<MemMgr, pointer_convertion_tag>::no_type >
+			no_type /* pointer_convert not supported */ >
 			: public size_tracking_impl< 
 				pointer_convert< MemMgr >,
-				typename is_category_supported<pointer_convert< MemMgr >, pointer_convertion_tag>::yes_type
+				yes_type /* pointer_convert supported */
 			>
 		{
 			typedef pointer_convert< MemMgr >				mgr_type;
 			typedef size_tracking_impl< 
 				mgr_type,
-				typename is_category_supported<mgr_type, pointer_convertion_tag>::yes_type
+				yes_type /* pointer_convert supported */
 			>	impl_base_type;
 
 			typedef pointer_convert< mgr_type > pconvert;

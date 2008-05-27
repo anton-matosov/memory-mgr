@@ -45,12 +45,12 @@ namespace memory_mgr
 	struct heap_memory_tag{};
 	struct shared_memory_tag{};
 
+	struct yes_type{};
+	struct no_type{};
+
 	template< class MemMgr, class Category >
 	struct is_category_supported
 	{
-		struct yes_type{};
-		struct no_type{};
-
 		enum {value = type_manip::super_subclass
 			< 
 			Category,
