@@ -121,10 +121,21 @@ namespace memory_mgr
 
 		namespace detail
 		{
+			/**
+			   @brief "is_same_type" implementation class, generic template, used
+			   when T and U different types 
+			   @tparam T Type to check on equality
+			   @tparam U Type to check on equality
+			*/
 			template<typename T, typename U>
 			struct is_same_type_impl 
 			{ enum { value = false }; };
 
+			/**
+			   @brief "is_same_type" implementation class, template specialization
+			   for same types
+			   @tparam U Type to check on equality (T is the same type)
+			*/
 			template<typename U>
 			struct is_same_type_impl<U, U>
 			{ enum { value = true }; };
@@ -135,6 +146,8 @@ namespace memory_mgr
 		   @details Invocation: is_same_type\<T, U\>::value
 					
 		   result evaluates to true if U == T (types equal) 
+		   @tparam T Type to check on equality
+		   @tparam U Type to check on equality
 		*/
 		template <typename T, typename U>
 		struct is_same_type
@@ -158,10 +171,14 @@ namespace memory_mgr
 			*/
 			class big_type { char dummy[2]; };
 
+			/**
+			   @brief Checks is type T a "void" type
+			   @tparam T Type to check on equality to "void"
+			*/
 			template<typename T>
 			struct is_void
 			{
-				enum { result = 
+				enum { result = /**< result value, true if T is void, false otherwise*/
 					is_same_type<T, void>::value          ||
 					is_same_type<T, const void>::value    ||
 					is_same_type<T, volatile void>::value ||
@@ -170,39 +187,66 @@ namespace memory_mgr
 			};
 		}
 
-		//
-		// is one type convertable to another?
-		//
+		/**
+		   @brief Checks is one type convertible to another
+		   @details Checks is type From convertible to type To
+		*/
 		template <class From, class To>
 		class is_convertible
 		{
+			/**
+			   @brief Helper struct, used as replacement of void type passed as
+			   template parameter, if any
+			*/
 			struct void_replace{};
 
+			/**
+			   @brief Validation of type From
+			   @details This step is required, because sizeof(void) will cause compiler error
+			*/
 			typedef typename select
 				<
 				detail::is_void<From>::result,
 				void_replace, From
 				>
-				::result From1;
+				::result from;
 
+			/**
+			   @brief Validation of type To
+			   @details This step is required, because sizeof(void) will cause compiler error
+			*/
 			typedef typename select
 				<
 				detail::is_void<To>::result,
 				void_replace, To
 				>
-				::result To1;
+				::result to;
 
+			/**
+			   @brief main function of conversion checking
+			   @details "called" if type From is inconvertible to type To
+			*/
 			static detail::big_type   test(...);
-			static detail::small_type test(To1);
-			static From1 MakeFrom();
+			/**
+			   @brief main function of conversion checking
+			   @details "called" if type From is convertible to type To
+			*/
+			static detail::small_type test(to);
+
+			/**
+			   @brief Helper function used to create temporary object of type From
+			   @return Temporary object of type From
+			*/
+			static from make_from();
 
 		public:       
-			enum { exists = sizeof(test(MakeFrom())) == sizeof(detail::small_type) };
+			enum { exists = sizeof( test( make_from() ) ) == sizeof( detail::small_type ) };
 		};
 
-		//////////////////////////////////////////////////////////////////////////
-		// Is type T a class
-		//////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Checks is type T a class
+		   @tparam T Type to check
+		*/
 		template <class T>
 		class is_class
 		{
@@ -212,38 +256,40 @@ namespace memory_mgr
 			enum { value = sizeof(test<T>(0)) == sizeof(detail::small_type) };
 		};
 		
+		/**
+		   @brief Figures out the conversion relationships between two types
+		   @details Invocations (From and To are types):
+		   
+		   @li conversion<From, To>::exists
+		   returns (at compile time) true if there is an implicit conversion from From
+		   to To (example: Derived to Base)
+		   @li conversion<From, To>::exists_2_way
+		   returns (at compile time) true if there are both conversions from From
+		   to To and from To to From (example: int to char and back)
+		   @li conversion<From, To>::same_type
+		   returns (at compile time) true if From and To represent the same type
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template conversion
-		// Figures out the conversion relationships between two types
-		// Invocations (FromType and ToType are types):
-		// a) conversion<FromType, ToType>::exists
-		// returns (at compile time) true if there is an implicit conversion from FromType
-		// to ToType (example: Derived to Base)
-		// b) conversion<FromType, ToType>::exists2Way
-		// returns (at compile time) true if there are both conversions from FromType
-		// to ToType and from ToType to FromType (example: int to char and back)
-		// c) conversion<FromType, ToType>::same_type
-		// returns (at compile time) true if FromType and ToType represent the same type
-		//
-		// Caveat: might not work if FromType and ToType are in a private inheritance hierarchy.
-		////////////////////////////////////////////////////////////////////////////////
-		template <class FromType, class ToType>
+		   @remarks Might not work if From and To are in a private inheritance hierarchy.
+		*/
+		template <class From, class To>
 		struct conversion
 		{
-			enum { exists = (is_convertible<FromType,ToType>::exists) };
-			enum { exists2Way = (exists && is_convertible<ToType, FromType>::exists) };
-			enum { same_type = (is_same_type<FromType, ToType>::value) };
+			enum { exists /**< true if there is an implicit conversion from From*/
+				= (is_convertible<From,To>::exists) };
+			enum { exists_2_way /**< true if there are both conversions from From
+								to To and from To to From (example: int to char and back)*/
+				= (exists && is_convertible<To, From>::exists) };
+			enum { same_type /**< true if From and To represent the same type*/
+				= (is_same_type<From, To>::value) };
 		};
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template super_subclass
-		// Invocation: super_subclass<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
-		// Returns true if B(ase) is a public base of D(erived), or if B(ase) and D(erived) are aliases of the 
-		// same type.
-		//
-		// Caveat: might not work if B(ase) and D are in a private inheritance hierarchy.
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Figures out relationships between two classes
+		   @details super_subclass<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
+		   @return true if B(ase) is a public base of D(erived), 
+		   or if B(ase) and D(erived) are aliases of the same type.
+		   @remarks Might not work if From and To are in a private inheritance hierarchy.
+		*/
 		template <class B/*Base*/, class D/*Derived*/>
 		struct super_subclass
 		{
@@ -251,13 +297,13 @@ namespace memory_mgr
 				!conversion<const volatile B*, const volatile void*>::same_type) };
 		};
 
-		////////////////////////////////////////////////////////////////////////////////
-		// class template super_subclass_strict
-		// Invocation: super_subclass_strict<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
-		// Returns true if B(ase) is a public base of D(erived).
-		//
-		// Caveat: might not work if B(ase) and D(erived) are in a private inheritance hierarchy.
-		////////////////////////////////////////////////////////////////////////////////
+		/**
+		   @brief Figures out strict relationships between two classes
+		   @details super_subclass_strict<B(ase), D(erived)>::value where B(ase) and D(erived) are types. 
+		   @return true if B(ase) is a public base of D(erived).
+
+		   @remarks Might not work if From and To are in a private inheritance hierarchy.
+		*/
 		template <class B/*Base*/, class D/*Derived*/>
 		struct super_subclass_strict
 		{
@@ -265,9 +311,6 @@ namespace memory_mgr
 				!conversion<const volatile B*, const volatile void*>::same_type &&
 				!conversion<const volatile B*, const volatile D*>::same_type) };
 		};
-
-
-
 	}
 }
 
