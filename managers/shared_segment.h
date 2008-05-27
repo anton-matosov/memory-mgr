@@ -171,7 +171,7 @@ namespace memory_mgr
 #define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
 	struct MGR_SEGMENT_NAME(var_name)\
 	{\
-		static inline const char* get_name( const size_t/* id */= 0)\
+		static inline const char* get_name( const size_t/* id*/= 0)\
 		{ return "memory_mgr-"segment_name; }\
 	};
 

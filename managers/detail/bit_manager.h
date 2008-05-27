@@ -75,7 +75,7 @@ namespace memory_mgr
 			*/
 			enum
 			{
-				aux_data_size = sizeof( char ) /**< size of auxiliary data required to store bit_manager internal data */,
+				aux_data_size = sizeof( char ) /**< size of auxiliary data required to store bit_manager internal data*/,
 				memory_usage = bitset_t::memory_usage + aux_data_size /**< amount of memory in bytes used by bit_manager*/,
 				num_bits = BitsCount /**< number of bits available for allocations*/
 			};

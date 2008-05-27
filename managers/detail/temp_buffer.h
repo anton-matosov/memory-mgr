@@ -37,10 +37,10 @@ namespace memory_mgr
 	{
 
 		/**
-		 * @brief Exception class for use by temp_buffer<> class
-		 * @details This exception will be thrown by temp_buffer<> class 
-		 * if you will try to allocate new buffer while class owns another one
-		 */
+		   @brief Exception class for use by temp_buffer<> class
+		   @details This exception will be thrown by temp_buffer<> class 
+		   if you will try to allocate new buffer while class owns another one
+		*/
 		class multiple_allocation: public std::runtime_error
 		{
 		public:
@@ -64,23 +64,23 @@ namespace memory_mgr
 			typedef const self_type&	const_self_ref_type;
 
 			enum {
-				item_size = sizeof( item_type ) /**< Size of buffer element in bytes */
+				item_size = sizeof( item_type ) /**< Size of buffer element in bytes*/
 			};
 
 			/**
-			 * @brief Default constructor, creates null size buffer
-			 * @exception newer throws
-			 */
+			   @brief Default constructor, creates null size buffer
+			   @exception newer throws
+			*/
 			temp_buffer()
 				:m_buffer( 0 ), m_size( 0 )
 			{}
 
 			/**
-			 * @brief Constructor, allocates memory for buffer with 'count' elements
-			 *
-			 * @param	count	buffer size in elements	
-			 * @exception newer throws		 
-			 */
+			   @brief Constructor, allocates memory for buffer with 'count' elements
+			  
+			   @param	count	buffer size in elements	
+			   @exception newer throws		 
+			*/
 			temp_buffer( size_type count )
 				:m_buffer( 0 ), m_size( 0 )
 			{
@@ -88,10 +88,10 @@ namespace memory_mgr
 			}
 
 			/**
-			 * @brief Copy constructor, creates independent buffer copy			 
-			 * @param	buf	buffer to copy from
-			 * @exception newer throws
-			 */
+			   @brief Copy constructor, creates independent buffer copy			 
+			   @param	buf	buffer to copy from
+			   @exception newer throws
+			*/
 			temp_buffer(const_self_ref_type buf)
 				:m_buffer( 0 ), m_size( 0 )
 			{
@@ -99,20 +99,20 @@ namespace memory_mgr
 			}
 
 			/**
-			 * @brief Destructor, frees buffer.
-			 * @exception newer throws
-			 */
+			   @brief Destructor, frees buffer.
+			   @exception newer throws
+			*/
 			~temp_buffer()
 			{
 				this->free_buffer();
 			}
 
 			/**
-			 * @brief Copy operator, creates independent buffer copy
-			 * @param	rhs	buffer to copy from
-			 * @exception newer throws
-			 * @return Reference to self
-			 */
+			   @brief Copy operator, creates independent buffer copy
+			   @param	rhs	buffer to copy from
+			   @exception newer throws
+			   @return Reference to self
+			*/
 			inline self_ref_type operator=(const_self_ref_type rhs)
 			{	
 				this->put( rhs.m_buffer, rhs.m_size );
@@ -120,60 +120,52 @@ namespace memory_mgr
 			}
 
 			/**
-			 * @brief Implicit cast operator
-			 * @exception newer throws
-			 * @return Pointer to buffer 
-			 */
+			   @brief Implicit cast operator
+			   @exception newer throws
+			   @return Pointer to buffer 
+			*/
 			inline operator buffer_type()
 			{
 				return this->m_buffer;
 			}
 
 			/**
-			 * @brief Call this method to get pointer to buffer	
-			 *
-			 * @exception newer throws
-			 *
-			 * @return Pointer to buffer 
-			 */
+			   @brief Call this method to get pointer to buffer
+			   @exception newer throws
+			   @return Pointer to buffer
+			*/
 			inline buffer_type get()
 			{
 				return this->m_buffer;
 			}
 
 			/**
-			 * @brief Call this method to get buffer size
-			 *
-			 * @exception newer throws
-			 *
-			 * @return Buffer size in bytes
-			 */
+			   @brief Call this method to get buffer size
+			   @exception newer throws
+			   @return Buffer size in bytes
+			*/
 			inline size_type size()
 			{
 				return this->m_size * item_size;
 			}
 
 			/**
-			 * @brief Call this method to get items count
-			 *
-			 * @exception newer throws
-			 *
-			 * @return Buffer size in elements
-			 */
+			   @brief Call this method to get items count
+			   @exception newer throws
+			   @return Buffer size in elements
+			*/
 			inline size_type count()
 			{
 				return this->m_size;
 			}
 
 			/**
-			 * @brief Call this method to put data from array with count items to buffer
-			 *
-			 * @param	array	array to copy from
-			 * @param	count	number of items to copy
-			 * @exception newer throws
-			 *
-			 * @return Pointer to new buffer
-			 */
+			   @brief Call this method to put data from array with count items to buffer
+			   @param	array	array to copy from
+			   @param	count	number of items to copy
+			   @exception newer throws
+			   @return Pointer to new buffer
+			*/
 			inline buffer_type put( const_buffer_type array, size_type count )
 			{
 				if( array && count )
@@ -195,12 +187,10 @@ namespace memory_mgr
 			}
 
 			/**
-			* @brief Call this method to allocate memory buffer
-			*
-			* @param	count	Size of buffer in elements, must be greater than NULL
-			* @exception multiple_allocation if object already owns another memory buffer
-			*
-			* @return Pointer to new buffer
+			  @brief Call this method to allocate memory buffer
+			  @param	count	Size of buffer in elements, must be greater than NULL
+			  @exception multiple_allocation if object already owns another memory buffer
+			  @return Pointer to new buffer
 			*/
 			inline buffer_type allocate( size_type count )
 			{	
@@ -218,13 +208,11 @@ namespace memory_mgr
 			}
 
 			/**
-			 * @brief Call this method to reallocate memory buffer
-			 *
-			 * @param	count	Size of new buffer in elements, must be greater than NULL
-			 * @exception newer throws
-			 *
-			 * @return Pointer to new buffer
-			 */
+			   @brief Call this method to reallocate memory buffer
+			   @param	count	Size of new buffer in elements, must be greater than NULL
+			   @exception newer throws
+			   @return Pointer to new buffer
+			*/
 			inline buffer_type reallocate( size_type count )
 			{	
 				if( count )
@@ -248,9 +236,9 @@ namespace memory_mgr
 			size_type m_size;
 
 			/**
-			 * @brief Call this method to free memory buffer
-			 * @exception newer throws
-			 */
+			   @brief Call this method to free memory buffer
+			   @exception newer throws
+			*/
 			inline void free_buffer()
 			{
 				if( m_buffer )
@@ -262,9 +250,9 @@ namespace memory_mgr
 			}
 
 			/**
-			 * @brief Call this method to zero fill buffer's memory
-			 * @exception newer throws 
-			 */
+			   @brief Call this method to zero fill buffer's memory
+			   @exception newer throws 
+			*/
 			inline void zero_buffer()
 			{
 				std::fill( m_buffer, m_buffer + m_size, 0 );
