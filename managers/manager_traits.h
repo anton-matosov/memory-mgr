@@ -30,23 +30,51 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	/**
+	   @brief memory_manager traits
+	   @details all associated types and constants are accessible using this type
+	*/
 	template<class MemMgr>
 	struct manager_traits
 	{
+		/**
+		   @brief Memory manager type
+		*/
 		typedef MemMgr										manager_type;
+
+		/**
+		   @brief memory manager category tag
+		*/
 		typedef typename manager_type::manager_category		manager_category;
 
+		/**
+		   @brief memory block pointer type
+		   @see static_bitset::block_ptr_type
+		*/
 		typedef typename manager_type::block_ptr_type		block_ptr_type;		
+		
+		/**
+		   @brief Type used to store size, commonly std::size_t
+		   @see static_bitset::size_type
+		*/
 		typedef typename manager_type::size_type			size_type;
+		
+		/**
+		   @brief Type of synchronization object passed as template
+		   parameter                                               
+		*/
 		typedef typename manager_type::sync_object_type		sync_object_type;
 
+		/**
+		   @brief memory offset type passed as template parameter
+		*/
 		typedef typename manager_type::offset_type			offset_type;
 
 		enum
 		{
-			chunk_size	= manager_type::chunk_size,
-			memory_size = manager_type::memory_size,
-			num_chunks	= manager_type::num_chunks
+			chunk_size	= manager_type::chunk_size /**< size of memory chunk*/,
+			memory_size = manager_type::memory_size /**< memory size in bytes available to manager */,
+			num_chunks	= manager_type::num_chunks /**< number of memory chunks that can be allocated */
 		};
 	};
 }

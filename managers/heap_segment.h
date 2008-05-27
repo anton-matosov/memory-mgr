@@ -69,12 +69,18 @@ namespace memory_mgr
 		typedef heap_memory_tag	memory_type;
 	};
 
-	//MemMgr - must support MemoryManagerConcept
+	/**
+	   @brief Heap segment for memory managers
+	   @tparam MemMgr - must support MemoryManagerConcept
+	*/
 	template< class MemMgr >	
 	class heap_segment 
 		: public memory_segment< vector_as_allocator, MemMgr >
 	{};
 
+	/**
+	   @brief memory_manager + heap_segment traits
+	*/
 	template< class MemMgr >
 	struct manager_traits< heap_segment< MemMgr > > 
 		: public manager_traits< MemMgr >

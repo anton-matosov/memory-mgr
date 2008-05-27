@@ -54,15 +54,20 @@ namespace memory_mgr
 		public:
 			/**
 			   @brief memory block type
-			   @see static_bitset
+			   @see static_bitset::block_type
 			*/
 			typedef typename bitset_t::block_type			block_type;
 
 			/**
 			   @brief memory block pointer type
-			   @see static_bitset
+			   @see static_bitset::block_ptr_type
 			*/
 			typedef typename bitset_t::block_ptr_type		block_ptr_type;
+
+			/**
+			  @brief Type used to store size, commonly std::size_t
+			  @see static_bitset::size_type
+			*/
 			typedef typename bitset_t::size_type			size_type;
 
 			/**

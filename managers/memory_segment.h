@@ -34,16 +34,23 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	//Default segment allocator traits
+	/**
+	   @brief Default segment allocator traits
+	*/
 	template<class SegmentAllocator>
 	struct segment_alloc_traits
 	{
+		/**
+		   @brief memory type tag, e.g. heap, shared memory, memory mapped file etc.
+		*/
 		typedef typename SegmentAllocator::memory_type	memory_type;
 	};
 
-	//Links memory_manager and memory segment
-	//SegmentAllocator - must support SegmentAllocatorConcept
-	//MemMgr - must support MemoryManagerConcept
+	/**
+	   @brief Adapter, used to link memory_manager and memory segment
+	   @tparam SegmentAllocator memory segment allocator, must support SegmentAllocatorConcept
+	   @tparam MemMgr memory manager type, must support MemoryManagerConcept
+	*/
 	template< class SegmentAllocator, class MemMgr >	
 	class memory_segment : private SegmentAllocator, public MemMgr
 	{
@@ -51,21 +58,28 @@ namespace memory_mgr
 		typedef	SegmentAllocator	memory;
 
 	public:
-		//Default constructor
+		/**
+		   @brief Default constructor
+		   @details Creates memory segment and memory manager linked to this segment
+		*/
 		memory_segment()
 			:memory( manager_traits<memmgr_type>::memory_size ),
 			memmgr_type( memory::segment_base() )
 		{}
 	};
 
-	//Memory segment manager_traits
+	/**
+	   @brief memory manager traits for memory_segment class
+	*/
 	template< class SegmentAllocator, class MemMgr >
 	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
 	};
 
-	//Default segment traits
+	/**
+	   @brief Default segment traits
+	*/
 	template< class SegmentAllocator, class MemMgr >
 	struct segment_traits< memory_segment< SegmentAllocator, MemMgr > > 
 	{

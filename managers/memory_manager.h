@@ -69,8 +69,8 @@ namespace memory_mgr
 		*/
 		enum
 		{
-			chunk_size = ChunkSize /**< stores size of memory chunk*/,
-			memory_size = MemorySize /**< stores memory size in bytes */,
+			chunk_size = ChunkSize /**< size of memory chunk*/,
+			memory_size = MemorySize /**< memory size in bytes */,
 			num_chunks = memory_size / chunk_size /**< number of memory chunks that can be allocated */
 		};
 		
@@ -109,12 +109,13 @@ namespace memory_mgr
 
 		/**
 		   @brief memory block pointer type
-		   @see static_bitset
+		   @see static_bitset::block_ptr_type
 		*/
 		typedef typename bitmgr_type::block_ptr_type		block_ptr_type;
 
 		/**
 		   @brief Type used to store size, commonly std::size_t
+		   @see static_bitset::size_type
 		*/
 		typedef typename bitmgr_type::size_type				size_type;
 		
