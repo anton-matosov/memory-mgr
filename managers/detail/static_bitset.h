@@ -241,17 +241,28 @@ namespace memory_mgr
 		typedef detail::Array< BlockType, BitsCount, StaticArr >	base_type;
 
 		/**
-		   @brief memory block pointer type
+		   @brief memory block type
 		*/
 		typedef typename base_type::block_type			block_type;
 		
+		/**
+		   @brief memory block reference type
+		*/
 		typedef typename base_type::block_ref_type		block_ref_type;
+
+		/**
+		   @brief memory block const reference type
+		*/
 		typedef typename base_type::const_block_ref_type	const_block_ref_type;
 		
 		/**
 		   @brief memory block pointer type
 		*/
 		typedef typename base_type::block_ptr_type		block_ptr_type;
+
+		/**
+		   @brief memory block const pointer type
+		*/
 		typedef typename base_type::const_block_ptr_type	const_block_ptr_type;
 
 		/**
@@ -260,6 +271,9 @@ namespace memory_mgr
 		typedef size_t		size_type;
 		typedef size_type	block_width_type;
 
+		/**
+		   @brief invalid index value (null pos)
+		*/
 		const static size_type npos = ~size_type(0);
 
 		/**

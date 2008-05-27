@@ -75,13 +75,18 @@ namespace memory_mgr
 			*/
 			enum
 			{
-				aux_data_size = sizeof( char ),
-				memory_usage = bitset_t::memory_usage + aux_data_size,
-				num_bits = BitsCount
+				aux_data_size = sizeof( char ) /**< size of auxiliary data required to store bit_manager internal data */,
+				memory_usage = bitset_t::memory_usage + aux_data_size /**< amount of memory in bytes used by bit_manager*/,
+				num_bits = BitsCount /**< number of bits available for allocations*/
 			};
 
 			const static size_type npos = bitset_t::npos;
 
+			/**
+			   @brief Default constructor, initializes bit manager
+			  
+			   @exception newer throws
+			*/
 			bit_manager()
 				:m_last_block( 0 ),
 				m_is_init(0)
@@ -89,9 +94,16 @@ namespace memory_mgr
 				m_bitset.set();				
 			}
 
-			//Memory must be zeroed before bit_manager creation
-			//It will initialize its state only if first byte is null
-			//Bitset will be placed starting from second byte
+			/**
+			   @brief Constructor
+			  
+			   @param	ptr	pointer to memory that will be used to store bitset
+			   @attention	Memory must be zeroed before bit_manager creation\n
+							It will initialize its state only if first byte is null\n
+							Bitset will be placed starting from second byte
+
+			   @exception newer throws
+			*/
 			bit_manager( block_ptr_type ptr )
 				:m_is_init( detail::char_cast( ptr ) ),
 				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
