@@ -64,17 +64,27 @@ namespace memory_mgr
 	class memory_manager : protected sync::object_level_lockable<SyncObj>
 	{
 	public:
+		/**
+		   @brief compile time computed constants
+		*/
 		enum
 		{
-			chunk_size = ChunkSize,
-			memory_size = MemorySize,
-			num_chunks = memory_size / chunk_size			
+			chunk_size = ChunkSize /**< stores size of memory chunk*/,
+			memory_size = MemorySize /**< stores memory size in bytes */,
+			num_chunks = memory_size / chunk_size /**< number of memory chunks that can be allocated */
 		};
 		
 	private:		
+		/**
+		   @brief lock type, used for synchronization
+		*/
 		typedef typename sync::object_level_lockable<SyncObj>::lock lock;
 		
+		/**
+		   @brief bit manager type, used to manipulate chunks bitmap
+		*/
 		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+
 		/**
 		   @brief Bit Manager used to store information about allocated
 		   memory chunks                                               
@@ -88,13 +98,34 @@ namespace memory_mgr
 		char* m_membase;
 		
 	public:
+		/**
+		   @brief Type of this
+		*/
 		typedef memory_manager								self_type;
+		/**
+		   @brief memory manager category tag
+		*/
 		typedef memory_manager_tag							manager_category;
 
+		/**
+		   @brief memory block pointer type
+		   @see static_bitset
+		*/
 		typedef typename bitmgr_type::block_ptr_type		block_ptr_type;
+
+		/**
+		   @brief Type used to store size, commonly std::size_t
+		*/
 		typedef typename bitmgr_type::size_type				size_type;
 		
+		/**
+		   @brief Type of synchronization object passed as template
+		   parameter                                               
+		*/
 		typedef SyncObj										sync_object_type;
+		/**
+		   @brief memory offset type passed as template parameter
+		*/
 		typedef OffsetType									offset_type;
 		
 

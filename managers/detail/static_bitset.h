@@ -118,12 +118,16 @@ namespace memory_mgr
 			typedef block_type*		block_ptr_type;
 			typedef const block_type*	const_block_ptr_type;
 
-			enum {			
-				bits_per_block = std::numeric_limits<block_type>::digits,
-				num_bits = BitsCount,
-				num_blocks = detail::calc_num_blocks<num_bits, bits_per_block>::result,
-				max_bits = num_blocks * bits_per_block,
-				memory_usage = sizeof(block_type) * num_blocks
+			/**
+			   @brief compile time computed constants
+			*/
+			enum
+			{			
+				bits_per_block	= std::numeric_limits<block_type>::digits,
+				num_bits		= BitsCount,
+				num_blocks		= detail::calc_num_blocks<num_bits, bits_per_block>::result,
+				max_bits		= num_blocks * bits_per_block,
+				memory_usage	= sizeof(block_type) * num_blocks
 			};
 		};
 
@@ -143,11 +147,15 @@ namespace memory_mgr
 			typedef typename array_traits::block_ptr_type		block_ptr_type;
 			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
 				
-			enum {			
+			/**
+			   @brief compile time computed constants
+			*/
+			enum
+			{			
 				bits_per_block	=	array_traits::bits_per_block,
-				num_bits	=	array_traits::num_bits,
-				num_blocks	=	array_traits::num_blocks,
-				max_bits	=	array_traits::max_bits,
+				num_bits		=	array_traits::num_bits,
+				num_blocks		=	array_traits::num_blocks,
+				max_bits		=	array_traits::max_bits,
 				memory_usage	=	array_traits::memory_usage
 			};
 			
@@ -165,8 +173,12 @@ namespace memory_mgr
 
 			typedef typename array_traits::block_ptr_type		block_ptr_type;
 			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
-				
-			enum {			
+
+			/**
+			   @brief compile time computed constants
+			*/
+			enum
+			{			
 				bits_per_block	=	array_traits::bits_per_block,
 				num_bits	=	array_traits::num_bits,
 				num_blocks	=	array_traits::num_blocks,
@@ -196,11 +208,14 @@ namespace memory_mgr
 			typedef typename array_traits::block_ptr_type		block_ptr_type;
 			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
 			
+			/**
+			   @brief compile time computed constants
+			*/
 			enum {			
 				bits_per_block	=	array_traits::bits_per_block,
-				num_bits	=	array_traits::num_bits,
-				num_blocks	=	array_traits::num_blocks,
-				max_bits	=	array_traits::max_bits,
+				num_bits		=	array_traits::num_bits,
+				num_blocks		=	array_traits::num_blocks,
+				max_bits		=	array_traits::max_bits,
 				memory_usage	=	array_traits::memory_usage
 			};
 			
@@ -232,16 +247,23 @@ namespace memory_mgr
 		typedef typename base_type::block_ptr_type		block_ptr_type;
 		typedef typename base_type::const_block_ptr_type	const_block_ptr_type;
 
+		/**
+		   @brief Type used to store size, commonly std::size_t
+		*/
 		typedef size_t		size_type;
 		typedef size_type	block_width_type;
 
 		const static size_type npos = ~size_type(0);
-	
-		enum {			
+
+		/**
+		   @brief compile time computed constants
+		*/
+		enum
+		{			
 			bits_per_block	=	base_type::bits_per_block,
-			num_bits	=	base_type::num_bits,
-			num_blocks	=	base_type::num_blocks,
-			max_bits	=	base_type::max_bits,
+			num_bits		=	base_type::num_bits,
+			num_blocks		=	base_type::num_blocks,
+			max_bits		=	base_type::max_bits,
 			memory_usage	=	base_type::memory_usage
 		};
 		
@@ -345,7 +367,9 @@ namespace memory_mgr
 		self_ref_type flip()
 		{
 			for (size_type i = 0; i < num_blocks; ++i)
+			{
 				this->m_bits[i] = ~this->m_bits[i];
+			}
 			zero_unused_bits();
 			return *this;
 		}
@@ -388,8 +412,7 @@ namespace memory_mgr
 		}
 
 		size_type find_next( size_type pos ) const
-		{
-			
+		{			
 			++pos;
 
 			size_type blk_index = block_index(pos);
@@ -472,9 +495,6 @@ namespace memory_mgr
 			const block_type mask = bit_mask( first, count );
 			return (this->m_bits[block] &  mask) == mask;
 		}
-
-
-
 
 		// If size() is not a multiple of bits_per_block
 		// then not all the bits in the last block are used.

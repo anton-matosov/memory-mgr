@@ -43,14 +43,33 @@ namespace memory_mgr
 		class bit_manager
 		{
 			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;
-			enum {not_initialized = 0,
-				initialized};
+			/**
+			   @brief constants
+			*/
+			enum
+			{
+				not_initialized = 0,
+				initialized
+			};
 		public:
+			/**
+			   @brief memory block type
+			   @see static_bitset
+			*/
 			typedef typename bitset_t::block_type			block_type;
+
+			/**
+			   @brief memory block pointer type
+			   @see static_bitset
+			*/
 			typedef typename bitset_t::block_ptr_type		block_ptr_type;
 			typedef typename bitset_t::size_type			size_type;
 
-			enum {
+			/**
+			   @brief compile time computed constants
+			*/
+			enum
+			{
 				aux_data_size = sizeof( char ),
 				memory_usage = bitset_t::memory_usage + aux_data_size,
 				num_bits = BitsCount
@@ -112,7 +131,8 @@ namespace memory_mgr
 
 			void deallocate( size_type pos, size_type bits_count )
 			{
-				assert( ( this->m_bitset.test( pos, bits_count ) == false ) && "Bits are already deallocated or invalid size." );
+				assert( ( this->m_bitset.test( pos, bits_count ) == false ) 
+					&& "Bits are already deallocated or invalid size." );
 				this->m_bitset.set( pos, bits_count );
 				//cache block index
 				this->m_last_block = block_index(pos);
@@ -157,7 +177,8 @@ namespace memory_mgr
 		};
 
 		template< class Ch, class Tr, class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
-		std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
+		std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr,
+			const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
 		{
 			return b.print( ostr );
 		}
