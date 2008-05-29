@@ -60,7 +60,7 @@ namespace memory_mgr
 		}
 	};
 
-	//MemMgr - must support PointerConvertConcept, SingletonManagerConcept
+	//MemMgr - must support PointerConverterConcept, SingletonManagerConcept
 	template< class MemMgr >
 	class managed_base
 	{

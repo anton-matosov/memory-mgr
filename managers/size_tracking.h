@@ -37,40 +37,80 @@ namespace memory_mgr
 {
 	namespace detail
 	{
+		/**
+		   @brief Base class for size_tracking implementation classes
+		   @tparam MemMgr memory_manager class, with or w/o decorators
+		*/
 		template< class MemMgr >
 		class size_tracking_impl_base
 		{
 			typedef MemMgr									mgr_type;
 		public:	
  			typedef typename manager_traits<mgr_type>::size_type			size_type;
+			
+			/**
+			   @brief Call this method to know is there available memory in
+				manager
 
+			   @exception newer  throws
+			   @retval true   if there is no more free memory to
+				allocate
+			   @retval false  otherwise                                    
+			*/
 			bool empty()
 			{
-				return m_memmgr.empty();
+				return m_mgr.empty();
 			}
 
+			
+			/**
+			   @brief Call this method to know is there any allocated blocks
+			   @exception newer  throws
+			   @retval true   no blocks are allocated by this manager
+			   @retval false  otherwise                                     
+			*/
 			bool free()
 			{
-				return m_memmgr.free();
+				return m_mgr.free();
 			}
 
-			//Returns base address
+			/**
+			   @brief Call this method to get memory base address from which offset
+			   is calculated
+			   @exception newer  throws
+			   @return pointer to memory base address                               
+			*/
 			const char* get_base() const
 			{
-				return m_memmgr.get_base();
+				return m_mgr.get_base();
 			}
 
 		protected:
 			explicit size_tracking_impl_base( void* mem_base )
-				:m_memmgr( mem_base )
+				:m_mgr( mem_base )
 			{}
 
-			void update_size( size_type size )
+			/**
+			   @brief Adds size of auxiliary data to 'size' parameter
+			  
+			   @param	size	variable that should be updated
+			   @exception newer throws
+			*/
+			void update_size( size_type& size )
 			{
 				//Additional memory for size storing
 				size += sizeof( size_type );
 			}
 
+			/**
+			   @brief Puts memory block size at the beginning of memory block
+			  
+			   @param	ptr	pointer to allocated memory block
+			   @param	size	size of allocated memory block 
+			   @exception newer throws
+			  
+			   @return pointer to first byte after stored size
+			*/
 			void* store_size( void* ptr, size_type size )
 			{
 				//Store size
@@ -81,17 +121,22 @@ namespace memory_mgr
 
 			
 
-			mgr_type m_memmgr;
+			mgr_type m_mgr;
 		};
 
-		//base class for templates specializations
+		/**
+		   @brief Base class for size tracking implementation template classes specializations
+		*/
 		template<class MemMgr, class pointer_conv_flag >
 		class size_tracking_impl;
 
+		/**
+		   @brief Size tracking implementation for memory manager that supports PointerConverterConcept
+		*/
 		template< class MemMgr >
 		class size_tracking_impl<
 			MemMgr,
-			yes_type /* pointer_convert supported*/ >
+			yes_type /* PointerConverterConcept supported*/ >
 			: public size_tracking_impl_base< MemMgr >
 		{
 			typedef MemMgr								mgr_type;
@@ -105,50 +150,66 @@ namespace memory_mgr
 		public:
 			typedef typename impl_base_type::size_type			size_type;
 
-			//Call this method to allocate memory block
-			//size - block size in bytes
+			/**
+			  @brief Call this method to allocate memory block
+			  @param size  block size in bytes
+			  @exception bad_alloc if manager went out of memory
+			  @return pointer to allocated memory block
+			*/
 			void* allocate( size_type size )
 			{			
 				update_size( size );
-				return store_size( this->m_memmgr.allocate( size ), size );
+				return store_size( this->m_mgr.allocate( size ), size );
 			}
 
-			//Call this method to allocate memory block
-			//Newer throws
-			//size - block size in bytes
+			/**
+			   @brief Call this method to allocate memory block
+			   @param size     block size in bytes 
+			   @param nothrow  unused parameter, just to overload existing
+							   function
+			   
+			   @exception newer  throws
+			   @return pointer to allocated memory block         
+			*/
 			void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
 				update_size( size );
-				return store_size( this->m_memmgr.allocate( size, nothrow ), size );
+				return store_size( this->m_mgr.allocate( size, nothrow ), size );
 			}
 
-			//Call this method to deallocate memory block
-			//p - pointer calculated as mgr_mem_base + offset, returned by allocate method
-			//size - this value is ignored
-			void deallocate( void* ptr, size_type = 0)
+			/**
+			   @brief Call this method to deallocate memory block
+			   @param p  pointer to memory block, returned by allocate method
+			   @param size    this value is ignored
+			   @exception newer  throws
+			*/
+			void deallocate( void* ptr, size_type /*size*/ = 0)
 			{
-				assert( ptr >= this->m_memmgr.get_base() && "Invalid pointer value");
-				assert( ptr < ( this->m_memmgr.get_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
+				assert( ptr >= this->m_mgr.get_base() && "Invalid pointer value");
+				assert( ptr < ( this->m_mgr.get_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
 
 				size_type *ps = detail::size_cast( ptr );
 				--ps;
-				this->m_memmgr.deallocate( ps, *ps );
+				this->m_mgr.deallocate( ps, *ps );
 			}
 		};
 
+		/**
+		   @brief Size tracking implementation for memory manager that doesn't support PointerConverterConcept
+		*/
 		template< class MemMgr >
 		class size_tracking_impl<
 			MemMgr,
-			no_type /* pointer_convert not supported*/ >
+			no_type /* PointerConverterConcept not supported*/ >
 			: public size_tracking_impl< 
 				pointer_convert< MemMgr >,
-				yes_type /* pointer_convert supported*/
+				yes_type /* PointerConverterConcept supported*/
 			>
 		{
 			typedef pointer_convert< MemMgr >				mgr_type;
 			typedef size_tracking_impl< 
 				mgr_type,
-				yes_type /* pointer_convert supported*/
+				yes_type /* PointerConverterConcept supported*/
 			>	impl_base_type;
 
 			typedef pointer_convert< mgr_type > pconvert;
@@ -160,34 +221,43 @@ namespace memory_mgr
 			typedef typename impl_base_type::size_type				size_type;
 			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
 
-			//Call this method to allocate memory block
-			//size - block size in bytes
-			//Returns: offset in bytes from memory base address.
+			/**
+			   @brief Call this method to allocate memory block
+			   @param size  block size in bytes
+			   @exception bad_alloc if manager went out of memory
+			   @return offset in bytes from memory base address.
+			*/
 			offset_type allocate( size_type size )
 			{					
-				return detail::pointer_to_offset( impl_base_type::allocate( size ), this->m_memmgr );
+				return detail::pointer_to_offset( impl_base_type::allocate( size ), this->m_mgr );
 			}
 
-			//Call this method to allocate memory block
-			//Newer throws
-			//size - block size in bytes
-			//Returns: offset in bytes from memory base address.
+			/**
+			   @brief Call this method to allocate memory block
+			   @param size     block size in bytes 
+			   @param nothrow  unused parameter, just to overload existing
+				function
+
+			   @exception newer  throws
+			   @return offset in bytes from memory base address.          
+			*/
 			offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{			
-				return detail::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_memmgr );
+				return detail::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_mgr );
 			}
 
-			//Call this method to deallocate memory block
-			//offset - offset returned by allocate method
-			//size - block size in bytes
-			void deallocate( const offset_type offset )
+			/**
+			   @brief Call this method to deallocate memory block
+			   @param offset  offset returned by allocate method
+			   @param size    this value is ignored
+			   @exception newer  throws
+			*/
+			void deallocate( const offset_type offset, size_type /*size*/ = 0 )
 			{
-				impl_base_type::deallocate( detail::offset_to_pointer( offset, this->m_memmgr ) );
+				impl_base_type::deallocate( detail::offset_to_pointer( offset, this->m_mgr ) );
 			}
 		};
 
-
-		
 	}
 
 	/**
@@ -196,8 +266,9 @@ namespace memory_mgr
 	   deallocating them there is no need to specify size of memory
 	   block
 	   @tparam MemMgr  memory_manager class, with or w/o decorators,
-	                  if supports PointerConvertConcept then tracking
-	                  operations will work faster                    
+					must support MemoryManagerConcept.
+	                If supports PointerConverterConcept then tracking
+	                operations will work faster                    
 	*/
 	template< class MemMgr >
 	class size_tracking 
@@ -211,6 +282,7 @@ namespace memory_mgr
 		   @brief Synonym for template parameter
 		*/
 		typedef MemMgr									memmgr_type;
+
 		/**
 		   @brief Size tracking implementation type
 		*/
@@ -224,8 +296,6 @@ namespace memory_mgr
 		/**
 		   @brief Constructor, creates memory manager with specified
 		   base address
-		   
-		   
 		   @param mem_base  Pointer to memory which will be managed by
 		                    manager, before first used memory must be
 		                    zero filled

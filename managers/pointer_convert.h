@@ -36,8 +36,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	//Replaces memory_manager allocate/deallocate methods to work with pointers instead of offsets 
-	//MemMgr - must support MemoryManagerConcept
+	/**
+	   @brief Pointer converting decorator for memory manager. Implements PointerConverterConcept
+	   @details Replaces memory_manager allocate/deallocate methods to work with pointers instead of offsets
+	   @tparam MemMgr  memory_manager class, with or w/o decorators.
+					must support MemoryManagerConcept
+	*/
 	template< class MemMgr >	
 	class pointer_convert 
 	{

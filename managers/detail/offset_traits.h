@@ -30,21 +30,39 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	//Offset traits class
+	/**
+	   @brief Memory offset traits
+	   @details Stores associated types and values, e.g. invalid_offset
+	   @tparam OffsetType offset type
+	*/
 	template<class OffsetType>
 	struct offset_traits
 	{
+		/**
+		   @brief type passed as template parameter
+		*/
 		typedef OffsetType			offset_type;
 
+		/**
+		   @brief Value that represents invalid offset, like NULL for pointers
+		*/
 		static const offset_type	invalid_offset;
 	};
-	
-	//Specialized value for size_t offset
+
+	/**
+	   @brief Memory offset traits for size_t type
+	*/
 	template<>
 	struct offset_traits<size_t>
 	{
+		/**
+		   @brief type passed as template parameter
+		*/
 		typedef size_t			offset_type;
 
+		/**
+		   @brief Value that represents invalid offset, like NULL for pointers
+		*/
 		static const offset_type	invalid_offset = static_cast< offset_type >(-1);
 	};
 
