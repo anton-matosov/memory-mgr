@@ -44,8 +44,16 @@ namespace memory_mgr
 		template< class MemMgr >
 		class size_tracking_impl_base
 		{
+			/**
+			   @brief Memory manager class that should be decorated
+			*/
 			typedef MemMgr									mgr_type;
 		public:	
+
+			/**
+			   @brief Type used to store size, commonly std::size_t
+			   @see static_bitset::size_type
+			*/
  			typedef typename manager_traits<mgr_type>::size_type			size_type;
 			
 			/**
@@ -119,8 +127,9 @@ namespace memory_mgr
 				return ++psize;
 			}
 
-			
-
+			/**
+			   @brief Memory Manager instance that is decorated be size tracking
+			*/
 			mgr_type m_mgr;
 		};
 
@@ -139,15 +148,33 @@ namespace memory_mgr
 			yes_type /* PointerConverterConcept supported*/ >
 			: public size_tracking_impl_base< MemMgr >
 		{
+			/**
+			   @brief Memory manager class that should be decorated
+			*/
 			typedef MemMgr								mgr_type;
+
+			/**
+			   @brief size tracking implementation base class
+			*/
 			typedef size_tracking_impl_base< mgr_type >	impl_base_type;
 
 		protected:
+			/**
+			   @brief Protected constructor, simply passes parameters to base class' constructor
+			  
+			   @param	mem_base	Pointer to memory which will be managed by
+									manager
+			   @exception newer throws
+			*/
 			explicit size_tracking_impl( void* mem_base )
 				:impl_base_type( mem_base )
 			{}
 
 		public:
+			/**
+			   @brief Type used to store size, commonly std::size_t
+			   @see static_bitset::size_type
+			*/
 			typedef typename impl_base_type::size_type			size_type;
 
 			/**
@@ -179,7 +206,7 @@ namespace memory_mgr
 
 			/**
 			   @brief Call this method to deallocate memory block
-			   @param p  pointer to memory block, returned by allocate method
+			   @param ptr  pointer to memory block, returned by allocate method
 			   @param size    this value is ignored
 			   @exception newer  throws
 			*/
@@ -206,19 +233,45 @@ namespace memory_mgr
 				yes_type /* PointerConverterConcept supported*/
 			>
 		{
+			/**
+			   @brief Decorating memory manager class using pointer_convert decorator,
+			   @details	so now internally we can use implementation of size tracking for
+					memory managers that supports PointerConverterConcept
+			*/
 			typedef pointer_convert< MemMgr >				mgr_type;
+
+			/**
+			   @brief size tracking implementation base class
+			   @details this class is size tracking implementation
+						that supports PointerConverterConcept, it implements main functionality
+						of size tracking
+			*/
 			typedef size_tracking_impl< 
 				mgr_type,
 				yes_type /* PointerConverterConcept supported*/
 			>	impl_base_type;
-
-			typedef pointer_convert< mgr_type > pconvert;
 		protected:
+			/**
+			   @brief Protected constructor, simply passes parameters to base class' constructor
+			  
+			   @param	mem_base	Pointer to memory which will be managed by
+									manager
+			   @exception newer throws
+			*/
 			explicit size_tracking_impl( void* mem_base )
 				:impl_base_type( mem_base )
 			{}
 		public:
+			/**
+			   @brief Type used to store size, commonly std::size_t
+			   @see static_bitset::size_type
+			*/
 			typedef typename impl_base_type::size_type				size_type;
+
+			/**
+			   @brief type that used to store memory offset
+			   @see memory_manager::offset_type
+			*/
 			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
 
 			/**
@@ -228,7 +281,9 @@ namespace memory_mgr
 			   @return offset in bytes from memory base address.
 			*/
 			offset_type allocate( size_type size )
-			{					
+			{	
+				//Just calls allocate method of size tracking implementation that supports PointerConverterConcept
+				//and converts returned pointer to offset
 				return detail::pointer_to_offset( impl_base_type::allocate( size ), this->m_mgr );
 			}
 
@@ -242,7 +297,9 @@ namespace memory_mgr
 			   @return offset in bytes from memory base address.          
 			*/
 			offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
-			{			
+			{		
+				//Calls allocate method of size tracking implementation that supports PointerConverterConcept
+				//and converts returned pointer to offset
 				return detail::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_mgr );
 			}
 
@@ -254,6 +311,8 @@ namespace memory_mgr
 			*/
 			void deallocate( const offset_type offset, size_type /*size*/ = 0 )
 			{
+				//Converts passed offset into pointer and calls deallocate method
+				//of size tracking implementation that supports PointerConverterConcept
 				impl_base_type::deallocate( detail::offset_to_pointer( offset, this->m_mgr ) );
 			}
 		};
@@ -279,7 +338,7 @@ namespace memory_mgr
 		>
 	{
 		/**
-		   @brief Synonym for template parameter
+		   @brief Memory manager class that should be decorated
 		*/
 		typedef MemMgr									memmgr_type;
 
@@ -306,10 +365,17 @@ namespace memory_mgr
 		{}
 	};
 
+	/**
+	   @brief memory_manager + size_tracking traits
+	   @details Adds size_tracking_tag to manager_category
+	*/
 	template<class MemMgr>
 	struct manager_traits< size_tracking< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Add size_tracking_tag to manager_category
+		*/
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,
 			public virtual size_tracking_tag

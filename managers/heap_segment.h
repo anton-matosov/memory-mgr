@@ -63,6 +63,7 @@ namespace memory_mgr
 		   @brief stores memory
 		*/
 		std::vector<ubyte> m_memory;
+		
 		/**
 		   @brief Memory type tag
 		*/

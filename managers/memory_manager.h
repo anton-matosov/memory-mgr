@@ -48,7 +48,7 @@ namespace memory_mgr
 	                      available to manager
 	   @tparam ChunkSize   size of minimum block in bytes, which
 	                      manager can allocate
-	   @tparam OffsetType  type that will be used for memory offset
+	   @tparam OffsetType  type that will be used to store memory offset
 	   @tparam SyncObj     Synchronization object that will be used to
 	                      synchronize access to internal structures
 	                      during management operations               

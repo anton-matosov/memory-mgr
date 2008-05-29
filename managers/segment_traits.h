@@ -30,10 +30,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-
+	/**
+	   @brief Base memory segment traits
+	*/
 	template< class MemMgr >
 	struct segment_traits
 	{
+		/**
+		   @brief memory type tag
+		   @details Binds to 'unknown' tag, should be replaced for real memory segments
+		*/
 		typedef unknown_memory_tag	memory_type;
 	};
 

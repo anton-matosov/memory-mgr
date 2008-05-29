@@ -45,16 +45,38 @@ namespace memory_mgr
 	template< class MemMgr >	
 	class pointer_convert 
 	{
+		/**
+		   @brief Memory manager class that should be decorated
+		*/
 		typedef MemMgr				mgr_type;
+
+		/**
+		   @brief Memory Manager instance that is decorated be pointer converter
+		*/
 		mgr_type m_mgr;
 	public:	
+		/**
+		   @brief Type used to store size, commonly std::size_t
+		   @see static_bitset::size_type
+		*/
  		typedef typename manager_traits<mgr_type>::size_type			size_type;
 
-
+		/**
+		   @brief type that used to store memory offset
+		   @see memory_manager::offset_type
+		*/
  		typedef typename manager_traits<mgr_type>::offset_type		offset_type;
 
-		pointer_convert( void* base_address )
-			:m_mgr( base_address)
+		/**
+		   @brief Constructor, creates memory manager with specified
+		   base address
+		   @param mem_base  Pointer to memory which will be managed by
+		                    manager, before first used memory must be
+		                    zero filled
+		   @see memory_manager::memory_manager                        
+		*/
+		pointer_convert( void* mem_base )
+			:m_mgr( mem_base )
 		{}
 
 		/**
@@ -132,10 +154,17 @@ namespace memory_mgr
 		
 	};
 
+	/**
+	   @brief memory_manager + pointer_convert traits
+	   @details Adds pointer_convertion_tag to manager_category
+	*/
 	template< class MemMgr >
 	struct manager_traits< pointer_convert< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Add pointer_convertion_tag to manager_category
+		*/
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,
 			public virtual pointer_convertion_tag

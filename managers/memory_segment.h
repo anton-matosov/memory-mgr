@@ -54,7 +54,15 @@ namespace memory_mgr
 	template< class SegmentAllocator, class MemMgr >	
 	class memory_segment : private SegmentAllocator, public MemMgr
 	{
+		/**
+		   @brief Memory manager that will be linked with allocated memory segment
+		*/
 		typedef MemMgr				memmgr_type;
+		
+		/**
+		   @brief Memory segment allocator type
+		   @details Will be used to allocate memory segment
+		*/
 		typedef	SegmentAllocator	memory;
 
 	public:
@@ -69,7 +77,7 @@ namespace memory_mgr
 	};
 
 	/**
-	   @brief memory manager traits for memory_segment class
+	   @brief memory manager traits for memory managers decorated by memory_segment class
 	*/
 	template< class SegmentAllocator, class MemMgr >
 	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
@@ -78,11 +86,15 @@ namespace memory_mgr
 	};
 
 	/**
-	   @brief Default segment traits
+	   @brief Default memory segment traits
 	*/
 	template< class SegmentAllocator, class MemMgr >
 	struct segment_traits< memory_segment< SegmentAllocator, MemMgr > > 
 	{
+		/**
+		   @brief memory type tag
+		   @details retrieves memory type from segment allocator traits
+		*/
 		typedef typename segment_alloc_traits<SegmentAllocator>::memory_type	memory_type;
 	};
 
