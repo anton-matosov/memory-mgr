@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
+	//Forward declaration
 	template
 	< 
 		class Mgr, 
@@ -42,6 +43,7 @@ namespace memory_mgr
 	>
 	class  singleton_manager;
 
+	//Forward declaration
 	template 
 	<
 		class Mgr,
@@ -50,6 +52,17 @@ namespace memory_mgr
 	>
 	struct manager_traits< singleton_manager< Mgr, SyncObj, ThreadingModel > >;
 
+	/**
+	   @brief Singleton decorator for memory manager. Implements SingletonManagerConcept
+	   @details Transforms memory manager to singleton.\n
+				Adds instance() static method to manager and locks it's constructor
+	   @tparam MemMgr  memory_manager class, must have default constructor.
+					must support MemoryManagerConcept 
+	   @tparam SyncObj	Synchronization object that will be used to
+						synchronize instance creation
+	   @tparam ThreadingModel synchronization model policy, one of class_level_locable or pseudo_lockable policies
+	
+	*/
 	template 
 	<
 		class Mgr,
@@ -59,12 +72,31 @@ namespace memory_mgr
 	class  singleton_manager : public singleton< /*typename manager_traits<*/Mgr/*>::manager_type*/, Mgr, SyncObj, ThreadingModel >
 	{
 	private:
+		/**
+		   @brief Private constructor, to prevent creation of instances of this class
+		*/
 		singleton_manager();
+
+		/**
+		   @brief Private destructor, to prevent creation of instances of this class
+		*/
 		~singleton_manager();
+
+		/**
+		   @brief Private copy constructor, to prevent creation of instances of this class
+		*/
 		singleton_manager(const singleton_manager&);
+
+		/**
+		   @brief Private copy operator, to prevent copying of instances of this class
+		*/
 		singleton_manager& operator=(const singleton_manager&);
 	};
 
+	/**
+	   @brief memory_manager + singleton_manager traits
+	   @details Adds singleton_manager_tag to manager_category
+	*/
 	template 
 	<
 		class MemMgr,
@@ -74,6 +106,9 @@ namespace memory_mgr
 	struct manager_traits< singleton_manager< MemMgr, SyncObj, ThreadingModel > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Adds singleton_manager_tag to manager_category
+		*/
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,
 			public virtual singleton_manager_tag

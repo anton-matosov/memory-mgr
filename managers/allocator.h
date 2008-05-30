@@ -104,7 +104,7 @@ namespace memory_mgr
 		// allocate array of _Count elements
 		pointer allocate(size_type count)
 		{	
-			return pointer( static_cast<value_type*>( memmgr_t::instance().allocate( item_size * count ).get_ptr( memmgr_t::instance() ) ) );
+			return new(memmgr_t::instance()) value_type[count];
 		}
 
 		// allocate array of _Count elements, ignore hint
@@ -117,15 +117,12 @@ namespace memory_mgr
 		void construct(pointer ptr, const_reference val)
 		{	
 			::new (&*ptr) T(val);
-			//memory_mgr::construct( ptr );
 		}
 
 		// destroy object at _Ptr
 		void destroy(pointer ptr)
 		{	
 			(&*ptr)->~T();
-			//destruct( ptr );
-			//sh_mem_mgr::Instance().deallocate( sh_ptr(ptr) );
 		}
 
 		// estimate maximum array size

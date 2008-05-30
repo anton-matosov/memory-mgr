@@ -34,34 +34,97 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {
 	//Tags to categorize memory managers capabilities
+
+	/**
+	   @brief Simple memory manager tag
+	*/
 	struct memory_manager_tag{};
+
+	/**
+	   @brief Singleton memory manager tag
+	*/
 	struct singleton_manager_tag{};
+
+	/**
+	   @brief Memory manager with size tracking capability tag
+	*/
 	struct size_tracking_tag{};
+
+	/**
+	   @brief Memory manager with pointer conversion capability tag
+	*/
 	struct pointer_convertion_tag{};
+
+	/**
+	   @brief Tag for memory manager with capability to allocate named objects 
+	*/
 	struct named_objects_manager_tag{};
 
 	//Tags to categorize memory types
+
+	/**
+	   @brief Tag for memory segments of unknown type
+	*/
 	struct unknown_memory_tag{};
+
+	/**
+	   @brief Tag for heap memory segments
+	*/
 	struct heap_memory_tag{};
+	
+	/**
+	   @brief Tag for shared memory segments
+	*/
 	struct shared_memory_tag{};
 
+	
+	/**
+	   @brief Yes type, indicates success
+	*/
 	struct yes_type{};
+
+	/**
+	   @brief No type, indicates failure
+	*/
 	struct no_type{};
 
+	/**
+	   @brief Checks at compile time is specified memory manager class supports
+				specified category
+	   @details Invocation:\n
+				is_category_supported<my_mgr, size_tracking_tag>::value\n
+				or\n
+				is_category_supported<my_mgr, size_tracking_tag>::result\n
+	   @tparam MemMgr memory manager class that should be checked
+	   @tparam Category category tag that should be checked
+	*/
 	template< class MemMgr, class Category >
 	struct is_category_supported
 	{
+		/**
+		   @brief Stores the result of check
+		   @details if memory manager supports specified category 
+					then value will be equal to 'true'
+					otherwise it will be equal to 'false'
+		*/
 		enum {value = type_manip::super_subclass
 			< 
-			Category,
-			typename manager_traits<MemMgr>::manager_category			 
+				Category,
+				typename manager_traits<MemMgr>::manager_category			 
 			>::value};
 
-		typedef typename type_manip::select< 
-			value, 
-			yes_type,
-			no_type
-		>::result result;
+		/**
+		   @brief Stores the result of check
+		   @details if memory manager supports specified category 
+					then result will be yes_type
+					otherwise it will be no_type
+		*/
+		typedef typename type_manip::select
+			< 
+				value, 
+				yes_type,
+				no_type
+			>::result result;
 	};
 }
 
