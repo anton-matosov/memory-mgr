@@ -29,27 +29,91 @@ bool test_managed_base()
 {
 	TEST_START( L"managed_base" );
 	test_class* t1 = new test_class();
-	test_class* t2 = new test_class();
-	test_class* t3 = new test_class();
-	test_class* t4 = new test_class();
-	
-	test_class* arr = new test_class[5];
-
 	t1->set( 101 );
-	t2->set( 102 );
-	t3->set( 103 );
-	t4->set( 104 );
 
+	test_class* t2 = new test_class();
+	t2->set( 102 );
+
+	test_class* arr = new test_class[6];
 	arr[0].set(100);
 	arr[1] = *t1;
 	arr[2] = *t2;
+	arr[5].set(105);
+
+	test_class* t3 = new test_class();
+	t3->set( 103 );
+
+
 	arr[3] = *t3;
+
+	test_class* t4 = new test_class();
+	t4->set( 104 );
+
 	arr[4] = *t4;
+	
+	TEST_CHECK_MSG( (t1->get() == 101) && (t2->get() == 102) && (t3->get() == 103) && (t4->get() == 104), L"allocated memory data is corrupted" );
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
+
+	test_class* arr2 = new test_class[4];
+
+	TEST_CHECK_MSG( (t1->get() == 101) && (t2->get() == 102) && (t3->get() == 103) && (t4->get() == 104), L"allocated memory data is corrupted" );
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
 
 	delete t2;
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
+
 	delete t4;
+
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
+
+	delete[] arr2;
+
+	TEST_CHECK_MSG( (t1->get() == 101) && (t3->get() == 103), L"allocated memory data is corrupted" );
+
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
+
 	delete t1;
+
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
+
 	delete t3;
+	
+	TEST_CHECK_MSG( (arr[0].get() == 100) &&
+		(arr[1].get() == 101) && 
+		(arr[2].get() == 102) && 
+		(arr[3].get() == 103) && 
+		(arr[4].get() == 104) &&
+		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
 	delete[] arr;
 
 	TEST_END( test_class::mem_mgr::instance().free() );

@@ -35,6 +35,17 @@ namespace memory_mgr
 {
 	namespace detail
 	{
+		/**
+		   @brief Call this method to get full size of memory block 
+					that was used to store array
+		  
+		   @param	p	pointer to memory block 
+					that was used to store array
+		   @param	size	size passed as parameter to delete[] function
+		   @exception newer throws
+		  
+		   @return size of memory block 
+		*/
 		static inline size_t calc_full_size( void* p, size_t size )
 		{
 #ifdef _MSC_VER
@@ -45,22 +56,47 @@ namespace memory_mgr
 #endif
 		}
 	}
-	class object_name
-			
+
+	/**
+	   @brief Helper class, used to pass object's name to  new/new[] operators
+	*/
+	class object_name			
 	{	
+		/**
+		   @brief Pointer to null terminated string that stores object's name
+		*/
 		const wchar_t* m_name;
 	public:
+		/**
+		   @brief Constructor 
+		   @param name Pointer to null terminated string that stores object's name
+
+		   @warning Pointer, passed as name parameter, must 
+					be valid until the end of allocation operation.
+		*/
 		object_name( const wchar_t* name )
 			: m_name( name )
 		{}
 
+
+		/**
+		   @brief Call this method to get stored name
+		  
+		   @exception newer throws
+		  
+		   @return Pointer to null terminated string that stores object's name 
+		*/
 		const wchar_t* get_name()
 		{
 			return m_name;
 		}
 	};
 
-	//MemMgr - must support PointerConverterConcept, SingletonManagerConcept
+	/**
+	   @brief 
+	   @details 
+	   @tparam MemMgr Memory manager class, must support PointerConverterConcept, SingletonManagerConcept
+	*/
 	template< class MemMgr >
 	class managed_base
 	{
@@ -69,7 +105,7 @@ namespace memory_mgr
 		{}
 
 		typedef MemMgr mem_mgr;
-	public:	
+	public:
 		static void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
 			return mem_mgr::instance().allocate( size );			
@@ -77,8 +113,10 @@ namespace memory_mgr
 
 		static void* operator new( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
 		{
-			//TODO:implement correct logic in this method
-			//mem_mgr::instance().allocate( size, name );
+			/**
+			   @todo implement correct logic in this method
+			   mem_mgr::instance().allocate( size, name );
+			*/
 			STATIC_ASSERT( false, named_objects_not_supported );
 			return 0;
 		}
@@ -100,8 +138,10 @@ namespace memory_mgr
 
 		static void operator delete( void* /*p*/, size_t size, const object_name& /*name*/ )
 		{
-			//TODO:implement correct logic in this method
-			//mem_mgr::instance().deallocate( p, size );
+			/**
+			   @todo implement correct logic in this method
+			   mem_mgr::instance().deallocate( size, name );
+			*/
 			STATIC_ASSERT( false, named_objects_not_supported );
 		}
 
@@ -112,8 +152,10 @@ namespace memory_mgr
 
 		static void* operator new[]( size_t size, const object_name& /*name*/ )/*throw( std::bad_alloc )*/
 		{
-			//TODO:implement correct logic in this method
-			//mem_mgr::instance().allocate( size, name );
+			/**
+			   @todo implement correct logic in this method
+			   mem_mgr::instance().allocate( size, name );
+			*/
 			STATIC_ASSERT( false, named_objects_not_supported );
 			return 0;
 		}
@@ -136,8 +178,10 @@ namespace memory_mgr
 
 		static void operator delete[]( void* /*p*/, size_t size, const object_name& /*name*/ )
 		{
-			//TODO:implement correct logic in this method
-			//mem_mgr::instance().deallocate( p, size );
+			/**
+			   @todo implement correct logic in this method
+			   mem_mgr::instance().deallocate( size, name );
+			*/
 			STATIC_ASSERT( false, named_objects_not_supported );
 		}
 	};
