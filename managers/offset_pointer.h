@@ -274,15 +274,15 @@ namespace memory_mgr
 	}
 	
 	template<class T, class Mgr>
-	void do_delete( offset_pointer<T, Mgr>& ptr )
+	void delete_( offset_pointer<T, Mgr>& ptr )
 	{
-		return ::do_delete( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class T, class Mgr>
-	void do_delete_arr( offset_pointer<T, Mgr>& ptr )
+	void delete_array( offset_pointer<T, Mgr>& ptr )
 	{
-		return ::do_delete_arr( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_array( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
 	}
 }
 

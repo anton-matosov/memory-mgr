@@ -96,7 +96,7 @@ namespace
 		MemMgr mgr;
 
 		TEST_START_LOOP( count );
-		do_delete( new( mem_mgr( mgr ) ) test_class2, mem_mgr( mgr ) );
+		delete_( new( mem_mgr( mgr ) ) test_class2, mem_mgr( mgr ) );
 		TEST_END_LOOP( std::wcout );
 
 		return TEST_ELAPCED_MCS;
@@ -107,7 +107,7 @@ namespace
 	{		
 		MemMgr::instance();
 		TEST_START_LOOP( count );
-		do_delete( new( mem_mgr( MemMgr::instance() ) ) test_class2,
+		delete_( new( mem_mgr( MemMgr::instance() ) ) test_class2,
 			mem_mgr( MemMgr::instance() ) );
 		TEST_END_LOOP( std::wcout );
 		MemMgr::destruct();
@@ -147,7 +147,7 @@ namespace
 		MemMgr mgr;
 
 		TEST_START_LOOP( count );
-		do_delete( new( mem_mgr( mgr ) ) int, mem_mgr( mgr ) );
+		delete_( new( mem_mgr( mgr ) ) int, mem_mgr( mgr ) );
 		TEST_END_LOOP( std::wcout );
 
 		return TEST_ELAPCED_MCS;
@@ -158,7 +158,7 @@ namespace
 	{		
 		MemMgr::instance();
 		TEST_START_LOOP( count );
-		do_delete( new( mem_mgr( MemMgr::instance() ) ) int,
+		delete_( new( mem_mgr( MemMgr::instance() ) ) int,
 			mem_mgr( MemMgr::instance() ) );
 		TEST_END_LOOP( std::wcout );
 		MemMgr::destruct();

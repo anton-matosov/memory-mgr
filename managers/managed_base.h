@@ -246,7 +246,7 @@ namespace memory_mgr
 
 		//////////////////////////////////////////////////////////////////////////
 		/**
-		   @brief Overloaded operator delete, deallocates memory block in memory managed by mem_mgr
+		   @brief Overloaded operator delete[], deallocates memory block in memory managed by mem_mgr
 		   @param p pointer to memory block
 		   @param size size of memory block that should be deallocated
 		   @exception newer throws

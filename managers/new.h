@@ -140,6 +140,13 @@ namespace memory_mgr
 		
 	}
 
+	/**
+	   @brief Helper function for global operator new overloads
+	   @details used to pass memory manager object to operator new
+	   @param mgr memory manager object that should be used by operator new
+	   @exception newer throws
+	   @return helper object that should be passed as parameter to operator new
+	*/	
 	template<class MemMgr>
 	static inline detail::mem_mgr_helper<MemMgr> mem_mgr( MemMgr& mgr )
 	{
@@ -148,6 +155,14 @@ namespace memory_mgr
 	};
 }
 
+/**
+   @brief Overloaded operator new, allocates memory block in memory managed passed as second parameter
+   @param size size of memory block required to store object,
+				this parameter is passed by compiler automatically
+   @param mgr helper object returned by mem_mgr( mgr_obj ) function 
+   @exception bad_alloc if manager went out of memory  
+   @return pointer to allocated memory block
+*/
 template<class MemMgr>
 void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
@@ -163,6 +178,14 @@ void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
 
+/**
+   @brief Overloaded operator new[], allocates memory block in memory managed by mem_mgr
+   @param size size of memory block required to store array,
+				this parameter is passed by compiler automatically
+   @param mgr helper object returned by mem_mgr( mgr_obj ) function 
+   @exception bad_alloc if manager went out of memory
+   @return pointer to allocated memory block
+*/
 template<class MemMgr>
 void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
@@ -178,15 +201,14 @@ void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemM
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
 
-// template<class MemMgr>
-// void do_delete( memory_mgr::managed_base<MemMgr>* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
-// {
-// 	//typedef MemMgr mgr_type;
-// 	delete p;
-// }
-
+/**
+   @brief Sort of overloaded operator delete, deallocates memory block in memory managed by mem_mgr
+   @param p pointer to memory block
+   @param mgr helper object returned by mem_mgr( mgr_obj ) function 
+   @exception newer throws
+*/
 template<class T, class MemMgr>
-void do_delete( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
@@ -201,8 +223,14 @@ void do_delete( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 	return helper_type::delete_impl( p, mgr.m_mgr );
 }
 
+/**
+   @brief Sort of overloaded operator delete[], deallocates memory block in memory managed by mem_mgr
+   @param p pointer to memory block
+   @param mgr helper object returned by mem_mgr( mgr_obj ) function 
+   @exception newer throws
+*/
 template<class T, class MemMgr>
-void do_delete_arr( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
@@ -216,12 +244,5 @@ void do_delete_arr( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr 
 
 	return helper_type::delete_arr_impl( p, mgr.m_mgr );
 }
-
-// template<class MemMgr>
-// void do_delete( memory_mgr::managed_base<MemMgr> p[], const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
-// {
-// 	typedef MemMgr mgr_type;
-// 	delete[] p;
-// }
 
 #endif //MGR_NEW_HEADER

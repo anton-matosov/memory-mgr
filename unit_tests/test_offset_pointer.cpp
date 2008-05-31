@@ -122,10 +122,10 @@ bool test_construction()
 	base_ptr4 = derived_ptr2;
 	TEST_CHECK( base_ptr4 == derived_ptr2  );
 
- 	do_delete( base_ptr );// points to derived_ptr
-	do_delete( base_ptr4 );// points to derived_ptr2
+ 	delete_( base_ptr );// points to derived_ptr
+	delete_( base_ptr4 );// points to derived_ptr2
 
-	do_delete( ptr1 );
+	delete_( ptr1 );
 	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
 
@@ -157,7 +157,7 @@ bool test_dereferencing()
 
 	
 
-	do_delete( ptr );// points to derived_ptr
+	delete_( ptr );// points to derived_ptr
 	SUBTEST_END( ptr_mem_mgr::instance().free() );
 }
 
@@ -288,7 +288,7 @@ bool test_operators()
 	TEST_OPERATOR_PRINT( L"-, (ptr1 - ptr) == (ptr3 - ptr2)" );
 	TEST_CHECK( (ptr1 - ptr) == (ptr3 - ptr2) );
 
-	do_delete_arr( ptr );// points to derived_ptr
+	delete_array( ptr );// points to derived_ptr
 	SUBTEST_END( ptr_mem_mgr::instance().free() );
 
 }
@@ -296,7 +296,7 @@ bool test_operators()
 bool test_offset_pointer()
 {
 	int* pi = ::new( mem_mgr(sz_heap_mgr::instance()) ) int;
-	do_delete( pi, mem_mgr(sz_heap_mgr::instance() ) );
+	delete_( pi, mem_mgr(sz_heap_mgr::instance() ) );
 
 	TEST_START( L"offset_pointer" );
 	
