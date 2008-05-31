@@ -1,6 +1,5 @@
  - Add comments for:
     * new.h
-    * managed_base.h
     * offset_pointer.h
     * shared_segment.h
     
