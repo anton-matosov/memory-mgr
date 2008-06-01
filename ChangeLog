@@ -1,5 +1,36 @@
-In dev (rev. 103)
+In dev (rev. 270)
  - 
+
+Version 1.1.5 (svn rev. 270, 01.06.2008):
+ - Task: 1929292: "Write technical documentation"
+   Fully documented following files: type_manip.h, new.h,
+      pointer_convert.h, size_tracking.h, heap_segment.h,
+	  memory_segment.h, segment_traits.h, managed_base.h,
+	  singleton_manager.h, manager_traits.h,
+	  memory_manager.h and manager_category.h files
+   
+ - fixed code alignment in static_bitset
+ - updated Doxyfile configuration
+ - fixed identifiers names to match naming convention
+
+!!!!!
+ - fixed compiler errors on VC8 (VS2005)
+ - Fixed issue with size_tracking decorator that brings memory corruption
+ - Implemented unit test to catch memory corruptions made by size tracker decorator
+ - Implemented overload of mem_mgr() function for singleton manager (to make life easier)
+ - Added base_manager_type typedef to manager traits and decorator traits, this type represent manager type w/o decorator
+ - renamed do_delete into delete_ and do_delete_arr into delete_array
+ - improved unit tests for managed_base class, so now stored values are also checked
+!!!!!
+
+ - added build notes to README
+ - updated copyright statement, web-site link and dev's nickname in files headers
+ - updated configuration of VS2005 solution/projects
+ - moved sync classes out of details namespace
+ - all classes that were our of memory_mgr namespace were moved into
+ - moved sync classes headers to "sync" folder
+ - moved yes_type and no_type out of is_categoy_suppoted class
+ - updated unit tests to use new mem_mgr function
  
   
 Version 1.0.0 (svn rev. 103, 03.03.2008):
