@@ -37,6 +37,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	template<class T>
+	ulong ulong_cast( T val )
+	{
+		return static_cast<ulong>( val );
+	}
+
 	namespace osapi
 	{
 		typedef CRITICAL_SECTION critical_section;
@@ -99,7 +105,7 @@ namespace memory_mgr
 		static inline std::string get_executable_path()
 		{			
 			detail::char_buffer path( 512 );
-			while( GetModuleFileNameA( 0, path, path.count() ) == path.count() )
+			while( GetModuleFileNameA( 0, path, ulong_cast( path.count() ) ) == path.count() )
 			{
 				path.reallocate( path.count() * 2 );
 			}	

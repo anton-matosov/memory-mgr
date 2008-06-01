@@ -75,7 +75,7 @@ namespace memory_mgr
 			std::string name = "Global\\";
 			name += SegNameOp::get_name();
 			m_mapping = osapi::create_file_mapping( name, 0,
-				PAGE_READWRITE, mem_size );
+				PAGE_READWRITE, ulong_cast( mem_size ) );
 
 			if( m_mapping == osapi::invalid_mapping_handle  )
 			{

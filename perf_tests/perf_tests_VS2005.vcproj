@@ -174,16 +174,24 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="perf_tests"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\managers.h"
+				>
+			</File>
 			<File
 				RelativePath=".\perf_tests.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\test_bit_manager.cpp"
+				RelativePath=".\perf_timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\test_managed_base.cpp"
 				>
 			</File>
 			<File
@@ -191,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_static_bitset.cpp"
+				RelativePath=".\test_offset_pointer.cpp"
 				>
 			</File>
 		</Filter>
@@ -199,11 +207,27 @@
 			Name="detail"
 			>
 			<File
-				RelativePath=".\detail\perf_timer.cpp"
+				RelativePath=".\detail\posix_perf_timer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\detail\perf_timer.h"
+				RelativePath=".\detail\posix_perf_timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\win_perf_timer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\win_perf_timer.h"
 				>
 			</File>
 		</Filter>

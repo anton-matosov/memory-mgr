@@ -60,7 +60,7 @@ struct progress_bar
 template<class Ch, class Tr>
 static inline std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& stream, const progress_bar& bar )
 {
-	stream.width( bar.m_bar );	
+	stream.width( static_cast<std::streamsize>( bar.m_bar ) );	
 	stream << std::basic_string<Ch, Tr>( bar.m_bar, '|' );
 	return stream << ' ' << static_cast<size_t>(bar.m_percent * 100) << '%';
 }

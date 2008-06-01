@@ -169,7 +169,9 @@ namespace memory_mgr
 			static inline void delete_arr_impl( T* p, mgr_type& mgr )
 			{				
 				std::pair<void*, size_t> ptr_n_count = 
-					delete_helper<T>::get_ptr_and_count(p);
+					delete_helper<T,
+						type_manip::is_class< T >::value //VC8
+					>::get_ptr_and_count(p);
 
 				for( size_t i = 0; i < ptr_n_count.second; ++i )
 				{
@@ -277,7 +279,7 @@ template<class MemMgr>
 void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 	
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
@@ -294,7 +296,7 @@ template<class MemMgr>
 void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
@@ -309,7 +311,7 @@ template<class T, class MemMgr>
 void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
 	return helper_type::delete_impl( p, mgr.m_mgr );
 }
@@ -324,7 +326,7 @@ template<class T, class MemMgr>
 void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 	
 	return helper_type::delete_arr_impl( p, mgr.m_mgr );
 }

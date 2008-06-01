@@ -151,7 +151,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="memory_mgr"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
@@ -200,7 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\simple_ptr.h"
+				RelativePath=".\shared_segment.h"
 				>
 			</File>
 			<File
@@ -225,15 +225,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail\critical_section.h"
-				>
-			</File>
-			<File
 				RelativePath=".\detail\helpers.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\locks.h"
 				>
 			</File>
 			<File
@@ -242,10 +234,6 @@
 			</File>
 			<File
 				RelativePath=".\detail\pointer_traits.h"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\pseudo_sync.h"
 				>
 			</File>
 			<File
@@ -277,10 +265,23 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
+		<Filter
+			Name="sync"
+			Filter="sync\*.*"
 			>
-		</File>
+			<File
+				RelativePath=".\sync\critical_section.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sync\locks.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sync\pseudo_sync.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
