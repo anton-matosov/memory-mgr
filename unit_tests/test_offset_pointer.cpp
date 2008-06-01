@@ -98,7 +98,7 @@ bool test_construction()
 	derived_class_ptr derived_ptr2( new DerivedTestClass(1) );
 	
 	TEST_PRINT( L"Creating builtin_type()" );
-	builtin_ptr ptr1( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type() );
+	builtin_ptr ptr1( new( mem_mgr<ptr_mem_mgr>() ) builtin_type() );
 
 	TEST_PRINT( L"Constructing base_ptr from derived_ptr" );
 	base_class_ptr base_ptr( derived_ptr );
