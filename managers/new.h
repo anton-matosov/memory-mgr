@@ -95,7 +95,8 @@ namespace memory_mgr
 
 			/**
 			   @brief Implementation of global operator delete_
-			   @details deallocates memory that was allocated by new operator
+			   @details deallocates memory that was allocated by new operator,
+						and calls destructor before deallocation
 			   @param	p	pointer memory that was allocated by new operator 
 			   @param	mgr memory manager that was used for memory allocation
 			   @exception newer throws
@@ -123,11 +124,10 @@ namespace memory_mgr
 			{
 				
 				/**
-				   @brief Call this method to get real base pointer of memory block and number of array objects
-				  
+				   @brief Call this method to get real base pointer 
+							of memory block and number of array objects				  
 				   @param	p	pointer to array's memory
-				   @exception newer throws
-				  
+				   @exception newer throws				  
 				   @return std::pair<real base pointer of memory block, number of array objects>
 				*/
 				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
@@ -143,6 +143,13 @@ namespace memory_mgr
 			template<class T>
 			struct delete_helper<T, false>
 			{
+				/**
+				   @brief Call this method to get real base pointer 
+							of memory block and number of array objects				  
+				   @param	p	pointer to array's memory
+				   @exception newer throws				  
+				   @return std::pair<real base pointer of memory block, number of array objects>
+				*/
 				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
 				{
 					size_t* size = size_cast(p) - 1;
@@ -150,7 +157,14 @@ namespace memory_mgr
 				}
 			};
 			
-
+			/**
+			   @brief Implementation of global operator delete_arr
+			   @details deallocates memory that was allocated by new[] operator
+						and calls destructors of array objects
+			   @param	p	pointer memory that was allocated by new[] operator 
+			   @param	mgr memory manager that was used for memory allocation
+			   @exception newer throws
+			*/
 			template<class T>
 			static inline void delete_arr_impl( T* p, mgr_type& mgr )
 			{				
@@ -161,7 +175,7 @@ namespace memory_mgr
 				{
 					p[i].~T();
 				}
-				//count - points to real memory address
+
 				return mgr.deallocate( ptr_n_count.first );
 			}
 		};

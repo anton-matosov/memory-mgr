@@ -1,5 +1,4 @@
  - Add comments for:
-    * new.h
     * offset_pointer.h
     * shared_segment.h
     
