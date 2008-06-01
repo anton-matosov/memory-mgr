@@ -334,7 +334,7 @@ namespace memory_mgr
 		: public detail::size_tracking_impl
 		< 
 			MemMgr, 
-			typename is_category_supported<MemMgr, pointer_convertion_tag>::result 
+			typename is_category_supported<MemMgr, pointer_conversion_tag>::result 
 		>
 	{
 		/**
@@ -348,7 +348,7 @@ namespace memory_mgr
 		typedef detail::size_tracking_impl
 		< 
 			MemMgr, 
-			typename is_category_supported<MemMgr, pointer_convertion_tag>::result 
+			typename is_category_supported<MemMgr, pointer_conversion_tag>::result 
 		>	impl_type;
 
 	public:
@@ -373,6 +373,11 @@ namespace memory_mgr
 	struct manager_traits< size_tracking< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
+
 		/**
 		   @brief Add size_tracking_tag to manager_category
 		*/

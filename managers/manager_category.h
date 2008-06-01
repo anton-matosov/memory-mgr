@@ -53,7 +53,7 @@ namespace memory_mgr
 	/**
 	   @brief Memory manager with pointer conversion capability tag
 	*/
-	struct pointer_convertion_tag{};
+	struct pointer_conversion_tag{};
 
 	/**
 	   @brief Tag for memory manager with capability to allocate named objects 

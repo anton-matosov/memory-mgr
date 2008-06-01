@@ -32,6 +32,10 @@ namespace memory_mgr
 {
 	namespace detail
 	{
+		/**
+		   @brief New/delete implementation base
+		   @details Fake class, all methods generates compile time error
+		*/
 		template
 		<
 			class MemMgr,
@@ -57,10 +61,17 @@ namespace memory_mgr
 			}			
 		};
 
+		/**
+		   @brief New/delete implementation base
+		   @details Real implementation class
+		*/
 		template< class MemMgr >
 		struct new_helpers<MemMgr, yes_type,
 			yes_type>
 		{
+			/**
+			   @brief Memory manager class
+			*/
 			typedef MemMgr mgr_type;
 			static inline void* new_impl( size_t size, mgr_type& mgr )
 			{
@@ -114,27 +125,70 @@ namespace memory_mgr
 		};
 	
 
+		/**
+-		   @brief Helper class for global overloaded new/delete operators
+		   @details stores reference to memory manager and verifies memory manager class
+		   @tparam MemMgr Memory manager type that should be checked,
+							must implement PointerConverterConcept and SizeTrackingConcept
+		*/
 		template<class MemMgr> 
 		class mem_mgr_helper
-		{			
+		{
+			/**
+			   @brief Private copy operator. Declared to prevent warning messages
+			   @details Declared by not defined
+			*/
 			mem_mgr_helper& operator=( const mem_mgr_helper& );
 		public:
+			/**
+			   @brief Memory manager type that should be checked
+			*/
 			typedef MemMgr mgr_type;
 
-			typedef typename memory_mgr::is_category_supported
+			/**
+			   @brief Pointer conversion category check result
+			*/
+			typedef ::memory_mgr::is_category_supported
 				<
-					mgr_type, typename memory_mgr::pointer_convertion_tag
-				>::result supports_pointer_conv;
+					mgr_type, typename ::memory_mgr::pointer_conversion_tag
+				> pointer_conv_check;
 
-			typedef typename memory_mgr::is_category_supported
+			/**
+			   @brief Size tracking category check result
+			*/
+			typedef ::memory_mgr::is_category_supported
 				<
-					mgr_type, typename memory_mgr::size_tracking_tag
-				>::result supports_size_tracking;
+					mgr_type, typename ::memory_mgr::size_tracking_tag
+				> size_tracking_check;
 
+			/**
+			   @brief New/delete implementation class
+			*/
+			typedef new_helpers
+				<
+					mgr_type,
+					typename size_tracking_check::result,
+					typename pointer_conv_check::result
+				> new_helper_type;
+
+			/**
+			   @brief Reference to memory manager
+			   @details that was passed as constructor parameter
+			*/
 			mutable mgr_type& m_mgr;
+
+			/**
+			   @brief Constructor, stores reference to memory manager
+			   @details Generates compile time error if memory manager does not
+						support required categories
+			   @param mgr reference to memory manager that should be used by new/delete operators
+			*/
 			mem_mgr_helper( mgr_type& mgr )
 				:m_mgr( mgr )
-			{}
+			{
+				STATIC_ASSERT( pointer_conv_check::value && size_tracking_check::value, 
+					Invalid_manager_type );
+			}
 		};
 
 		
@@ -167,13 +221,7 @@ template<class MemMgr>
 void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
-	typedef memory_mgr::detail::new_helpers
-		<
-			mgr_type,
-			typename mgr_helper_type::supports_size_tracking,
-			typename mgr_helper_type::supports_pointer_conv
-		> helper_type;
+	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 	
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
@@ -190,13 +238,7 @@ template<class MemMgr>
 void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
-	typedef memory_mgr::detail::new_helpers
-		<
-		mgr_type,
-		typename mgr_helper_type::supports_size_tracking,
-		typename mgr_helper_type::supports_pointer_conv
-		> helper_type;
+	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
@@ -211,15 +253,8 @@ template<class T, class MemMgr>
 void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
-	typedef memory_mgr::detail::new_helpers
-		<
-		mgr_type,
-		typename mgr_helper_type::supports_size_tracking,
-		typename mgr_helper_type::supports_pointer_conv
-		> helper_type;
+	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
-	
 	return helper_type::delete_impl( p, mgr.m_mgr );
 }
 
@@ -233,15 +268,8 @@ template<class T, class MemMgr>
 void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
-	typedef memory_mgr::detail::mem_mgr_helper<mgr_type> mgr_helper_type;
-	typedef memory_mgr::detail::new_helpers
-		<
-		mgr_type,
-		typename mgr_helper_type::supports_size_tracking,
-		typename mgr_helper_type::supports_pointer_conv
-		> helper_type;
-
-
+	typedef memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	
 	return helper_type::delete_arr_impl( p, mgr.m_mgr );
 }
 

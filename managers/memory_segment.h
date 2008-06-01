@@ -83,6 +83,10 @@ namespace memory_mgr
 	struct manager_traits< memory_segment< SegmentAllocator, MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
 	};
 
 	/**

@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "detail/singleton.h"
 #include "manager_traits.h"
+#include "new.h"
 #include "manager_category.h"
 
 namespace memory_mgr
@@ -107,6 +108,11 @@ namespace memory_mgr
 		: public manager_traits< MemMgr >
 	{
 		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
+
+		/**
 		   @brief Adds singleton_manager_tag to manager_category
 		*/
 		struct manager_category 
@@ -114,6 +120,27 @@ namespace memory_mgr
 			public virtual singleton_manager_tag
 		{};
 	};
+
+	/**
+	   @brief Helper function for global operator new overloads
+	   @details used to pass memory manager object to operator new
+	   @param mgr memory manager object that should be used by operator new
+	   @exception newer throws
+	   @return helper object that should be passed as parameter to operator new
+	*/	
+	template 
+	<
+		class SingletonManager
+	>
+	static inline detail::mem_mgr_helper< typename manager_traits< SingletonManager >::base_manager_type > mem_mgr()
+	{
+		typedef SingletonManager mgr_type;
+		typedef is_category_supported< mgr_type, singleton_manager_tag > singleton_support;
+		STATIC_ASSERT( singleton_support::value, Memeory_manager_must_implement_singleton_concept );
+		return detail::mem_mgr_helper< typename manager_traits< mgr_type >::base_manager_type >( mgr_type::instance() );
+	};
 }
+
+using memory_mgr::mem_mgr;
 
 #endif// MGR_SINGLETON_MANAGER_HEADER

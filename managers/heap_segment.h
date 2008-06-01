@@ -86,6 +86,10 @@ namespace memory_mgr
 	struct manager_traits< heap_segment< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
 	};
 }
 

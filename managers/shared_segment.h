@@ -188,6 +188,10 @@ MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 	struct manager_traits< shared_segment< MemMgr, SegNameOp > > 
 		: public manager_traits< MemMgr >
 	{
+		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
 	};
 }
 

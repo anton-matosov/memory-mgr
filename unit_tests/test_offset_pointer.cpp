@@ -164,7 +164,7 @@ bool test_dereferencing()
 bool test_operators()
 {
 	SUBTEST_START( L"operators" );	
-	builtin_ptr ptr( new( mem_mgr(ptr_mem_mgr::instance()) ) builtin_type[5] );
+	builtin_ptr ptr( new( mem_mgr<ptr_mem_mgr>() ) builtin_type[5] );
 
 
 	TEST_OPERATOR_PRINT( L"+, non method" );

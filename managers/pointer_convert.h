@@ -156,18 +156,23 @@ namespace memory_mgr
 
 	/**
 	   @brief memory_manager + pointer_convert traits
-	   @details Adds pointer_convertion_tag to manager_category
+	   @details Adds pointer_conversion_tag to manager_category
 	*/
 	template< class MemMgr >
 	struct manager_traits< pointer_convert< MemMgr > > 
 		: public manager_traits< MemMgr >
 	{
 		/**
-		   @brief Add pointer_convertion_tag to manager_category
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
+
+		/**
+		   @brief Add pointer_conversion_tag to manager_category
 		*/
 		struct manager_category 
 			: public virtual manager_traits<MemMgr>::manager_category,
-			public virtual pointer_convertion_tag
+			public virtual pointer_conversion_tag
 		{};
 	};
 }

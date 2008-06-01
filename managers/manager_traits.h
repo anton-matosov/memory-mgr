@@ -43,6 +43,11 @@ namespace memory_mgr
 		typedef MemMgr										manager_type;
 
 		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef void										base_manager_type;
+
+		/**
 		   @brief memory manager category tag
 		*/
 		typedef typename manager_type::manager_category		manager_category;
