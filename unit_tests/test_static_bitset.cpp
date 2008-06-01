@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 typedef unsigned char block_type;
 
 static const size_t bits_count = 32;
-typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::StaticArray> bitset_type;
+typedef memory_mgr::static_bitset<block_type, bits_count, memory_mgr::static_array> bitset_type;
 
 
 bool test_static_bitset()

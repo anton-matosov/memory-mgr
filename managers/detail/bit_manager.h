@@ -38,11 +38,11 @@ namespace memory_mgr
 	*/
 	namespace detail
 	{
-		enum bitMgrMemCtrl{ mcAuto = StaticArray, mcNone = CustomArray };
+		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = custom_array };
 		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
-			typedef static_bitset< BlockType, BitsCount, arrayType(memoryCtrl) > bitset_t;
+			typedef static_bitset< BlockType, BitsCount, array_type(memoryCtrl) > bitset_t;
 			/**
 			   @brief constants
 			*/

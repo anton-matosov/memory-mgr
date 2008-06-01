@@ -132,9 +132,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Constructor, performs initialization of manager and
-		   memory passed as parameter
-		   
-		   
+					memory passed as parameter
 		   @param mem_base  Pointer to memory which will be managed by
 		                    manager, before first used memory must be
 		                    zero filled                               
@@ -147,7 +145,7 @@ namespace memory_mgr
 		
 		/**
 		   @brief Call this method to allocate memory block
-		   @param size  block size in bytes
+		   @param size size of memory block in bytes
 		   @exception bad_alloc if manager went out of memory
 		   @return offset in bytes from memory base address.
 		*/
@@ -159,7 +157,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Call this method to allocate memory block
-		   @param size     block size in bytes 
+		   @param size    size of memory block in bytes 
 		   @param nothrow  unused parameter, just to overload existing
 		                   function
 		   
@@ -174,7 +172,7 @@ namespace memory_mgr
 		/**
 		   @brief Call this method to deallocate memory block
 		   @param offset  offset returned by allocate method
-		   @param size    block size in bytes
+		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
  		void deallocate( const offset_type offset, size_type size )
@@ -237,7 +235,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Returns chunks count by bytes count
-		   @param size  size in bytes
+		   @param size size in bytes
 		   @exception newer  throws
 		*/
 		static inline size_type chunks_count( size_type size )
@@ -253,7 +251,7 @@ namespace memory_mgr
 		/**
 		   @brief Returns number of chunks required to store requested
 		   bytes number		   
-		   @param size  size in bytes
+		   @param size size in bytes
 		   @exception newer  throws
 		*/
 		static inline size_type chunks_required( size_type size )
@@ -266,7 +264,7 @@ namespace memory_mgr
 		/**
 		   @brief Call this method to allocate memory block
 		   @return offset in bytes from memory base address.
-		   @param size          block size in bytes
+		   @param size         size of memory block in bytes
 		   @param OnNoMemoryOp  Callback for "out of memory" event
 		   @exception n/a Callback function can throw an exception, 
 		   but by itself method never throws

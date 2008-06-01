@@ -123,8 +123,7 @@ namespace memory_mgr
 
 	/**
 	   @brief Helper function for global operator new overloads
-	   @details used to pass memory manager object to operator new
-	   @param mgr memory manager object that should be used by operator new
+	   @details used to pass memory manager object to operator new	   
 	   @exception newer throws
 	   @return helper object that should be passed as parameter to operator new
 	*/	

@@ -33,8 +33,8 @@ namespace memory_mgr
 	namespace detail
 	{
 		//Helper structures for the STATIC_ASSERT
-		template<int> struct CompileTimeError;
-		template<> struct CompileTimeError<true> {};
+		template<int> struct compile_time_error;
+		template<> struct compile_time_error<true> {};
 	}
 
 
@@ -46,7 +46,7 @@ namespace memory_mgr
 ////////////////////////////////////////////////////////////////////////////////
 
 #define STATIC_ASSERT(expr, msg)\
-	::memory_mgr::detail::CompileTimeError<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
+	::memory_mgr::detail::compile_time_error<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
 }
 
 #endif// MGR_STATIC_ASSERT_HEADER

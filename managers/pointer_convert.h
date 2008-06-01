@@ -81,7 +81,7 @@ namespace memory_mgr
 
 		/**
 		  @brief Call this method to allocate memory block
-		  @param size  block size in bytes
+		  @param size size of memory block in bytes
 		  @exception bad_alloc if manager went out of memory
 		  @return pointer to allocated memory block
 		*/
@@ -92,7 +92,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Call this method to allocate memory block
-		   @param size     block size in bytes 
+		   @param size    size of memory block in bytes 
 		   @param nothrow  unused parameter, just to overload existing
 		                   function
 		   
@@ -107,7 +107,7 @@ namespace memory_mgr
 		/**
 		   @brief Call this method to deallocate memory block
 		   @param p  pointer to memory block, returned by allocate method
-		   @param size    block size in bytes
+		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
  		void deallocate( const void* p, size_type size )

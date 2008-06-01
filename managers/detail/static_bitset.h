@@ -37,7 +37,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	enum arrayType{ StaticArray, DynamicArray, CustomArray };
+	enum array_type{ static_array, dynamic_array, custom_array };
 	namespace detail
 	{
 		template<size_t BitsPerBlock>
@@ -109,7 +109,7 @@ namespace memory_mgr
 
 		//Type traits for all array types
 		template< class BlockType, int BitsCount >
-		struct ArrayTraits
+		struct array_traits
 		{
 			typedef BlockType		block_type;
 			typedef block_type&		block_ref_type;
@@ -133,14 +133,14 @@ namespace memory_mgr
 		};
 
 		//Basic array structure for array specializations 
-		template< class BlockType, size_t BitsCount, arrayType Type >
-		struct Array{};
+		template< class BlockType, size_t BitsCount, array_type Type >
+		struct array{};
 
 		//Array specializations for static array
 		template< class BlockType, size_t BitsCount >
-		struct Array< BlockType, BitsCount, StaticArray> : public ArrayTraits<BlockType, BitsCount>
+		struct array< BlockType, BitsCount, static_array> : public array_traits<BlockType, BitsCount>
 		{		
-			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef array_traits<BlockType, BitsCount> 		array_traits;
 			typedef typename array_traits::block_type		block_type;
 			typedef typename array_traits::block_ref_type		block_ref_type;
 			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
@@ -165,9 +165,9 @@ namespace memory_mgr
 
 		//Array specializations for dynamic array
 		template< class BlockType, size_t BitsCount >
-		struct Array< BlockType, BitsCount, DynamicArray> : public ArrayTraits<BlockType, BitsCount>
+		struct array< BlockType, BitsCount, dynamic_array> : public array_traits<BlockType, BitsCount>
 		{		
-			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef array_traits<BlockType, BitsCount> 		array_traits;
 			typedef typename array_traits::block_type		block_type;
 			typedef typename array_traits::block_ref_type		block_ref_type;
 			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
@@ -187,11 +187,11 @@ namespace memory_mgr
 				memory_usage	=	array_traits::memory_usage
 			};
 			
-			Array()
+			array()
 				:m_bits( 0 )
 			{ this->m_bits = new block_type[num_blocks]; }
 
-			~Array()
+			~array()
 			{ delete[] this->m_bits; }
 
 			block_type* m_bits;
@@ -199,9 +199,9 @@ namespace memory_mgr
 
 		//Array specializations for custom array
 		template< class BlockType, size_t BitsCount >
-		struct Array< BlockType, BitsCount, CustomArray> : public ArrayTraits<BlockType, BitsCount>
+		struct array< BlockType, BitsCount, custom_array> : public array_traits<BlockType, BitsCount>
 		{		
-			typedef ArrayTraits<BlockType, BitsCount> 		array_traits;
+			typedef array_traits<BlockType, BitsCount> 		array_traits;
 			typedef typename array_traits::block_type		block_type;
 			typedef typename array_traits::block_ref_type		block_ref_type;
 			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
@@ -220,7 +220,7 @@ namespace memory_mgr
 				memory_usage	=	array_traits::memory_usage
 			};
 			
-			Array( block_ptr_type arr_ptr )
+			array( block_ptr_type arr_ptr )
 				:m_bits( arr_ptr )
 			{}
 
@@ -229,8 +229,8 @@ namespace memory_mgr
 
 	}
 
-	template< class BlockType, size_t BitsCount, arrayType StaticArr = StaticArray >
-	class static_bitset: public detail::Array< BlockType, BitsCount, StaticArr >
+	template< class BlockType, size_t BitsCount, array_type StaticArr = static_array >
+	class static_bitset: public detail::array< BlockType, BitsCount, StaticArr >
 	{		
 		static_bitset( const static_bitset& );
 		static_bitset& operator=( const static_bitset& );
@@ -238,7 +238,7 @@ namespace memory_mgr
 		typedef static_bitset	self_type;		
 		typedef self_type&	self_ref_type;
 
-		typedef detail::Array< BlockType, BitsCount, StaticArr >	base_type;
+		typedef detail::array< BlockType, BitsCount, StaticArr >	base_type;
 
 		/**
 		   @brief memory block type
@@ -568,7 +568,7 @@ namespace memory_mgr
 		};
 	};
 
-	template <class Ch, class Tr, class BlockType, size_t BitsCount, arrayType Type >
+	template <class Ch, class Tr, class BlockType, size_t BitsCount, array_type Type >
 	std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const static_bitset<BlockType, BitsCount, Type>& b )
 	{
 		typedef Ch char_type;
