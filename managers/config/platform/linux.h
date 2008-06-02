@@ -47,6 +47,7 @@ namespace memory_mgr
 
 		typedef int				file_handle_t;
 		typedef file_handle_t	mapping_handle_t;
+		typedef ::mode_t		mode_t;
 		static const mapping_handle_t invalid_mapping_handle = -1;
 		static void* invalid_mapping_address = MAP_FAILED;
 
@@ -80,8 +81,8 @@ namespace memory_mgr
 			return ::close(handle);
 		}
 
-		static inline mapping_handle_t create_file_mapping(const std::string& name,
-			int open_flag, mode_t access_mode)
+		static inline mapping_handle_t create_file_mapping( const std::string& name,
+			int open_flag, mode_t access_mode, size_t /*size*/ )
 		{
 			return shm_open( name.c_str(), open_flag, access_mode );
 		}

@@ -42,21 +42,84 @@ namespace memory_mgr
 		class shared_allocator_base
 		{
 		public:
-			shared_allocator_base()
-				:m_mapping( osapi::invalid_mapping_handle ),
-				m_base( osapi::invalid_mapping_address )
-			{
+			typedef std::size_t size_type;
 
-			}
+			shared_allocator_base( const size_type mem_size, const std::string& name )
+				:m_mapping( osapi::invalid_mapping_handle ),
+				m_base( osapi::invalid_mapping_address ),
+				m_name( name ),
+				m_size( mem_size )
+			{}
+
+			
 			//Returns address of allocated segment
 			void* segment_base()
-			{ return m_base; }
+			{ 
+				if( m_base == osapi::invalid_mapping_address )
+				{
+					create_segment();
+				}
+				return m_base; 
+			}
 
 			typedef shared_memory_tag	memory_type;
 
+		private:
+			void create_segment()
+			{
+				this->validate_name( m_name );
+
+				//Create file mapping
+				this->m_mapping = osapi::create_file_mapping( this->m_name, this->get_open_flags(),
+					this->get_access_mode(), this->m_size );
+				if( this->m_mapping == osapi::invalid_mapping_handle )
+				{
+					throw std::runtime_error( "file mapping creation failed" );
+				}
+
+				//Resize file mapping
+				if( osapi::resize_file_mapping( this->m_mapping, this->m_size ) != 0 )
+				{
+					throw std::runtime_error( "failed to resize file mapping" );
+				}
+
+				//Map file to memory
+				this->m_base = osapi::map_view_of_file( this->m_mapping, 
+					this->get_file_access_mask(), this->m_size );
+
+				if( this->m_base == osapi::invalid_mapping_address )
+				{
+					throw std::runtime_error( "memory mapping failed" );
+				}
+			}
 		protected:
 			osapi::mapping_handle_t m_mapping;
-			void*  m_base;
+			void*					m_base;
+			std::string				m_name;
+			size_type				m_size;
+
+			virtual void validate_name( std::string& name ) = 0;
+			virtual osapi::mode_t get_access_mode() = 0;
+			virtual int get_file_access_mask() = 0;
+
+			virtual int get_open_flags()
+			{ return 0;	}
+
+			virtual ~shared_allocator_base()
+			{
+				if( this->m_base != osapi::invalid_mapping_address )
+				{
+					osapi::unmap_view_of_file( m_base, m_size );
+				}			 
+
+				if( this->m_mapping != osapi::invalid_mapping_handle )
+				{
+					osapi::close_file_mapping( m_name, m_mapping );
+				}
+			}
+
+			shared_allocator_base( const shared_allocator_base& );
+			shared_allocator_base& operator=( const shared_allocator_base& );
 		};
 	}
 
@@ -64,105 +127,71 @@ namespace memory_mgr
 
 #ifdef MGR_WINDOWS_PLATFORM
 	//Windows shared memory allocator to SegmentAllocatorConcept 
-	template<class SegNameOp>
+	template<class SegmentParams>
 	class shared_allocator: public detail::shared_allocator_base
 	{
+		typedef SegmentParams					segment_params;
+		typedef detail::shared_allocator_base	base_type;		
+
+		void validate_name( std::string& name )
+		{
+			name = "Global\\" + name;
+		}
+
+		osapi::mode_t get_access_mode()
+		{
+			return PAGE_READWRITE;
+		}
+
+		int get_file_access_mask()
+		{
+			return FILE_MAP_ALL_ACCESS;
+		}
 	public:
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
-		{
-			std::string name = "Global\\";
-			name += SegNameOp::get_name();
-			m_mapping = osapi::create_file_mapping( name, 0,
-				PAGE_READWRITE, ulong_cast( mem_size ) );
-
-			if( m_mapping == osapi::invalid_mapping_handle  )
-			{
-				throw std::runtime_error( "file mapping creation failed" );
-			}
-
-			m_base = osapi::map_view_of_file( m_mapping, FILE_MAP_ALL_ACCESS,
-				mem_size);
-			if( m_base == osapi::invalid_mapping_address)
-			{
-				throw std::runtime_error( "memory mapping failed" );
-			}			
-		}
-		
-		~shared_allocator()
-		{
-			if( m_base != osapi::invalid_mapping_address)
-			{
-				osapi::unmap_view_of_file(m_base);
-			}
-
-			if( m_mapping != osapi::invalid_mapping_handle )
-			{
-				osapi::close_handle(m_mapping);
-			}
-		}
+			:base_type( mem_size, segment_params::get_name() )
+		{}
 	};
 
 #elif defined( MGR_LINUX_PLATFORM )
 	
 	//Posix shared memory allocator to SegmentAllocatorConcept 
-	template<class SegNameOp>
+	template<class SegmentParams>
 	class shared_allocator: public detail::shared_allocator_base
 	{
-		typedef detail::shared_allocator_base base_type;
-		std::string m_name;
-		const size_t m_size;
-	public:			
+		typedef SegmentParams					segment_params;
+		typedef detail::shared_allocator_base	base_type;		
+
+		void validate_name( std::string& name )
+		{
+			helpers::add_leading_slash( name );
+		}
+
+		int get_open_flags()
+		{ 
+			return O_RDWR //read-write mode
+				| O_CREAT;//Create new or open existent
+		}
+
+		osapi::mode_t get_access_mode()
+		{
+			return S_IRWXO  //read, write, execute/search by others 
+				| S_IRWXG	//read, write, execute/search by group
+				| S_IRWXU;	//read, write, execute/search by owner
+		}
+
+		int get_file_access_mask()
+		{
+			return PROT_READ | PROT_WRITE;
+		}
+	public:	
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
 		shared_allocator( const size_t mem_size )
-			:m_size( mem_size ),
-			m_name( SegNameOp::get_name() )
-		{
-			helpers::add_leading_slash( m_name );
-			int open_flag = O_RDWR //read-write mode
-				| O_CREAT;//Create new or open existent
-
-			mode_t access_mode = S_IRWXO //read, write, execute/search by others 
-				| S_IRWXG	//read, write, execute/search by group
-				| S_IRWXU;	//read, write, execute/search by owner
-
-			m_mapping = osapi::create_file_mapping(m_name, open_flag, access_mode);
-			if( base_type::m_mapping == osapi::invalid_mapping_handle )
-			{
-				throw std::runtime_error( "file mapping creation failed" );
-			}
-
-			//Resize file mapping
-			if( osapi::resize_file_mapping( base_type::m_mapping, m_size ) != 0 )
-			{
-				throw std::runtime_error( "failed to resize file mapping" );
-			}
-
-			//Map file to memory
-			m_base = osapi::map_view_of_file( base_type::m_mapping, 
-				PROT_READ | PROT_WRITE, mem_size );
-
-			if( m_base == osapi::invalid_mapping_address )
-			{
-				throw std::runtime_error( "memory mapping failed" );
-			}
-		}
-
-		~shared_allocator()
-		{		
-			if( m_base != osapi::invalid_mapping_address )
-			{
-				osapi::unmap_view_of_file( m_base, m_size );
-			}			 
-			
-			if( base_type::m_mapping != osapi::invalid_mapping_handle )
-			{
-				osapi::close_file_mapping( m_name, m_mapping );
-			}
-
-		}
+			:base_type( mem_size, segment_params::get_name() )
+		{}
 	};
 #endif
 

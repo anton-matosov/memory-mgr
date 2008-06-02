@@ -49,6 +49,7 @@ namespace memory_mgr
 
 		typedef void*			file_handle_t;
 		typedef file_handle_t	mapping_handle_t;
+		typedef ulong			mode_t;
 		static const mapping_handle_t invalid_mapping_handle = 0;
 		static void* invalid_mapping_address = 0;
 
@@ -72,10 +73,25 @@ namespace memory_mgr
 			return LeaveCriticalSection( cs );
 		}
 
-		static inline file_handle_t create_file_mapping( const std::string& name, LPSECURITY_ATTRIBUTES file_mapping_attributes, ulong access, ulong low_size, ulong high_size = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
+		static inline int close_handle(file_handle_t handle)
+		{
+			return CloseHandle(handle);
+		}
+
+		static inline file_handle_t create_file_mapping( const std::string& name, ulong access, ulong low_size, ulong high_size = 0, LPSECURITY_ATTRIBUTES file_mapping_attributes = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
 		{
 			return CreateFileMappingA( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
 		}
+
+		static inline file_handle_t create_file_mapping( const std::string& name,
+			int /*open_flag*/, mode_t access_mode, size_t size )
+		{
+			return create_file_mapping( name,
+				access_mode, ulong_cast( size ) );
+		}
+
+		static inline int resize_file_mapping( osapi::mapping_handle_t /*m_mapping*/, size_t /*size*/ )
+		{ return 0;	}
 
 		static inline file_handle_t open_file_mapping( ulong access, std::string& name )
 		{
@@ -87,14 +103,14 @@ namespace memory_mgr
 			return MapViewOfFileEx(handle, file_access, highoffset, lowoffset, numbytes, base_addr);
 		}
 
-		static inline int unmap_view_of_file(void* address)
+		static inline int unmap_view_of_file(void* address, size_t /*size*/ = 0)
 		{
 			return UnmapViewOfFile(address);
 		}
 
-		static inline int close_handle(file_handle_t handle)
+		static inline int close_file_mapping(const std::string& /*name*/, mapping_handle_t mapping)
 		{
-			return CloseHandle(handle);
+			return close_handle( mapping );
 		}
 
 		static inline ulong get_last_error()
