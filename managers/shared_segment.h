@@ -215,7 +215,7 @@ MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 
 	template< class MemMgr, class SegNameOp >
 	struct manager_traits< shared_segment< MemMgr, SegNameOp > > 
-		: public manager_traits< MemMgr >
+		: public manager_traits< memory_segment< shared_allocator<SegNameOp>, MemMgr > >
 	{
 		/**
 		   @brief Memory manager class, that was decorated

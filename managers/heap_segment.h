@@ -84,7 +84,7 @@ namespace memory_mgr
 	*/
 	template< class MemMgr >
 	struct manager_traits< heap_segment< MemMgr > > 
-		: public manager_traits< MemMgr >
+		: public manager_traits< memory_segment< vector_as_allocator, MemMgr > >
 	{
 		/**
 		   @brief Memory manager class, that was decorated
