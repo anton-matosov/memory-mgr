@@ -60,6 +60,11 @@ namespace memory_mgr
 	*/
 	struct named_objects_manager_tag{};
 
+	/**
+	   @brief Tag for memory manager with attached memory segment
+	*/
+	struct memory_segment_tag{};
+
 	//Tags to categorize memory types
 
 	/**

@@ -39,11 +39,11 @@ typedef int builtin_type;
 
 typedef memory_mgr::singleton_manager
 < 
-	memory_mgr::heap_segment
+	memory_mgr::size_tracking
 	<
-		memory_mgr::size_tracking
+		memory_mgr::pointer_convert
 		< 
-			memory_mgr::pointer_convert
+			memory_mgr::heap_segment
 			< 
 				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
 			> 

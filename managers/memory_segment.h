@@ -87,6 +87,14 @@ namespace memory_mgr
 		   @brief Memory manager class, that was decorated
 		*/
 		typedef MemMgr base_manager_type;
+
+		/**
+		   @brief Add memory_segment_tag to manager_category
+		*/
+		struct manager_category 
+			: public virtual manager_traits<MemMgr>::manager_category,
+			public virtual memory_segment_tag
+		{};
 	};
 
 	/**

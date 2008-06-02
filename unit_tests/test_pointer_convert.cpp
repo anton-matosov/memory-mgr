@@ -34,7 +34,7 @@ static const size_t memory_size = 256;
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
 
-template class memory_mgr::pointer_convert<memmgr_type>;
+//template class memory_mgr::pointer_convert<memmgr_type>;
 
 
 

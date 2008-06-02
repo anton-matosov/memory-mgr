@@ -38,8 +38,8 @@ typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
 typedef memory_mgr::size_tracking< pconv_type > sz_pconv_track_mgr;
 typedef memory_mgr::size_tracking< memmgr_type > sz_track_mgr;
 
-template class memory_mgr::size_tracking< memmgr_type >;
-template class memory_mgr::size_tracking< pconv_type >;
+//template class memory_mgr::size_tracking< memmgr_type >;
+//template class memory_mgr::size_tracking< pconv_type >;
 
 template<class MgrType, class ptr_type>
 bool test_size_tracking_impl( const wchar_t* name )

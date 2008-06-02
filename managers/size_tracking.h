@@ -94,6 +94,18 @@ namespace memory_mgr
 			}
 
 		protected:
+			/**
+			   @brief Default constructor, creates memory manager 
+			   @remarks Can be used only if decorates memory manager with 
+						attached memory segment
+			   @see memory_manager::memory_segment                        
+			*/
+			size_tracking_impl_base()
+			{}
+
+			/**
+			   @missing_comments 
+			*/
 			explicit size_tracking_impl_base( void* mem_base )
 				:m_mgr( mem_base )
 			{}
@@ -159,6 +171,15 @@ namespace memory_mgr
 			typedef size_tracking_impl_base< mgr_type >	impl_base_type;
 
 		protected:
+			/**
+			   @brief Default constructor, creates memory manager 
+			   @remarks Can be used only if decorates memory manager with 
+						attached memory segment
+			   @see memory_manager::memory_segment                        
+			*/
+			size_tracking_impl()
+			{}
+
 			/**
 			   @brief Protected constructor, simply passes parameters to base class' constructor
 			  
@@ -252,6 +273,15 @@ namespace memory_mgr
 			>	impl_base_type;
 		protected:
 			/**
+			   @brief Default constructor, creates memory manager 
+			   @remarks Can be used only if decorates memory manager with 
+						attached memory segment
+			   @see memory_manager::memory_segment                        
+			*/
+			size_tracking_impl()
+			{}
+
+			/**
 			   @brief Protected constructor, simply passes parameters to base class' constructor
 			  
 			   @param	mem_base	Pointer to memory which will be managed by
@@ -340,18 +370,29 @@ namespace memory_mgr
 		/**
 		   @brief Memory manager class that should be decorated
 		*/
-		typedef MemMgr									memmgr_type;
+		typedef MemMgr									mgr_type;
 
 		/**
 		   @brief Size tracking implementation type
 		*/
 		typedef detail::size_tracking_impl
 		< 
-			MemMgr, 
+			mgr_type, 
 			typename is_category_supported<MemMgr, pointer_conversion_tag>::result 
 		>	impl_type;
 
 	public:
+		/**
+		   @brief Default constructor, creates memory manager 
+		   @remarks Can be used only if decorates memory manager with 
+					attached memory segment
+		   @see memory_manager::memory_segment                        
+		*/
+		size_tracking()
+		{
+			STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value), Memory_manager_does_not_have_attached_memory_segment );
+		}
+
 		/**
 		   @brief Constructor, creates memory manager with specified
 		   base address

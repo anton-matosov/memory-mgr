@@ -67,6 +67,18 @@ namespace memory_mgr
 		*/
  		typedef typename manager_traits<mgr_type>::offset_type		offset_type;
 
+
+		/**
+		   @brief Default constructor, creates memory manager 
+		   @remarks Can be used only if decorates memory manager with 
+					attached memory segment
+		   @see memory_manager::memory_segment                        
+		*/
+		pointer_convert()
+		{
+			STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value), Memory_manager_does_not_have_attached_memory_segment );
+		}
+
 		/**
 		   @brief Constructor, creates memory manager with specified
 		   base address

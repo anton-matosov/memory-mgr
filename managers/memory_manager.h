@@ -131,6 +131,19 @@ namespace memory_mgr
 		
 
 		/**
+		   @brief Default constructor, declared only to
+					support decorators technology
+		*/
+		memory_manager()
+		{
+			/**
+			   @warning If you use explicit template instantiation you will get this error
+						don't remove this assert, better remove explicit template instantiation
+			*/
+			STATIC_ASSERT( false, Default_constructor_cant_be_used_for_creation_of_memory_manage );
+		}
+
+		/**
 		   @brief Constructor, performs initialization of manager and
 					memory passed as parameter
 		   @param mem_base  Pointer to memory which will be managed by
