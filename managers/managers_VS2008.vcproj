@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\segment_manager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\segment_traits.h"
 				>
 			</File>

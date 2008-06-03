@@ -82,13 +82,13 @@ namespace memory_mgr
 		/**
 		   @brief Constructor, creates memory manager with specified
 		   base address
-		   @param mem_base  Pointer to memory which will be managed by
+		   @param segment_base  Pointer to memory which will be managed by
 		                    manager, before first used memory must be
 		                    zero filled
 		   @see memory_manager::memory_manager                        
 		*/
-		pointer_convert( void* mem_base )
-			:m_mgr( mem_base )
+		pointer_convert( void* segment_base )
+			:m_mgr( segment_base )
 		{}
 
 		/**
@@ -158,12 +158,18 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to memory base address                               
 		*/
-		const char* get_base() const
+		char* get_offset_base( const offset_type offset = 0 ) const
 		{
-			return m_mgr.get_base();
+			return m_mgr.get_offset_base( offset );
 		}
 
-		
+		/**
+		   @add_comments
+		*/
+		char* get_ptr_base( const void* ptr )
+		{
+			return m_mgr.get_ptr_base( ptr );
+		}
 	};
 
 	/**

@@ -57,6 +57,12 @@ namespace memory_mgr
  			typedef typename manager_traits<mgr_type>::size_type			size_type;
 			
 			/**
+			   @brief type that used to store memory offset
+			   @see memory_manager::offset_type
+			*/
+			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
+
+			/**
 			   @brief Call this method to know is there available memory in
 				manager
 
@@ -88,11 +94,18 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to memory base address                               
 			*/
-			const char* get_base() const
+			char* get_offset_base( const offset_type offset = 0 ) const
 			{
-				return m_mgr.get_base();
+				return m_mgr.get_offset_base( offset );
 			}
 
+			/**
+			   @add_comments
+			*/
+			char* get_ptr_base( const void* ptr )
+			{
+				return m_mgr.get_ptr_base( ptr );
+			}
 		protected:
 			/**
 			   @brief Default constructor, creates memory manager 
@@ -106,8 +119,8 @@ namespace memory_mgr
 			/**
 			   @missing_comments 
 			*/
-			explicit size_tracking_impl_base( void* mem_base )
-				:m_mgr( mem_base )
+			explicit size_tracking_impl_base( void* segment_base )
+				:m_mgr( segment_base )
 			{}
 
 			/**
@@ -183,12 +196,12 @@ namespace memory_mgr
 			/**
 			   @brief Protected constructor, simply passes parameters to base class' constructor
 			  
-			   @param	mem_base	Pointer to memory which will be managed by
+			   @param	segment_base	Pointer to memory which will be managed by
 									manager
 			   @exception newer throws
 			*/
-			explicit size_tracking_impl( void* mem_base )
-				:impl_base_type( mem_base )
+			explicit size_tracking_impl( void* segment_base )
+				:impl_base_type( segment_base )
 			{}
 
 		public:
@@ -233,8 +246,8 @@ namespace memory_mgr
 			*/
 			void deallocate( void* ptr, size_type /*size*/ = 0)
 			{
-				assert( ptr >= this->m_mgr.get_base() && "Invalid pointer value");
-				assert( ptr < ( this->m_mgr.get_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
+				assert( ptr >= this->m_mgr.get_offset_base() && "Invalid pointer value");
+				assert( ptr < ( this->m_mgr.get_offset_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
 
 				size_type *ps = detail::size_cast( ptr );
 				--ps;
@@ -284,12 +297,12 @@ namespace memory_mgr
 			/**
 			   @brief Protected constructor, simply passes parameters to base class' constructor
 			  
-			   @param	mem_base	Pointer to memory which will be managed by
+			   @param	segment_base	Pointer to memory which will be managed by
 									manager
 			   @exception newer throws
 			*/
-			explicit size_tracking_impl( void* mem_base )
-				:impl_base_type( mem_base )
+			explicit size_tracking_impl( void* segment_base )
+				:impl_base_type( segment_base )
 			{}
 		public:
 			/**
@@ -396,13 +409,13 @@ namespace memory_mgr
 		/**
 		   @brief Constructor, creates memory manager with specified
 		   base address
-		   @param mem_base  Pointer to memory which will be managed by
+		   @param segment_base  Pointer to memory which will be managed by
 		                    manager, before first used memory must be
 		                    zero filled
 		   @see memory_manager::memory_manager                        
 		*/
-		explicit size_tracking( void* mem_base )
-			:impl_type( mem_base )
+		explicit size_tracking( void* segment_base )
+			:impl_type( segment_base )
 		{}
 	};
 

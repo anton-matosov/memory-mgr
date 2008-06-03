@@ -93,10 +93,14 @@ namespace memory_mgr
 
 		/**
 		   @brief Pointer to memory base address from which offset is
-		   calculated                                                
+					calculated                                                
 		*/
-		char* m_membase;
+		char* m_offset_base;
 		
+		/**
+		   @brief Pointer to memory segment base address                                                
+		*/
+		void* m_segment_base;
 	public:
 		/**
 		   @brief Type of this
@@ -146,14 +150,15 @@ namespace memory_mgr
 		/**
 		   @brief Constructor, performs initialization of manager and
 					memory passed as parameter
-		   @param mem_base  Pointer to memory which will be managed by
+		   @param segment_base  Pointer to memory which will be managed by
 		                    manager, before first used memory must be
 		                    zero filled                               
 		*/
-		explicit memory_manager( void* mem_base )
-			:m_bitmgr( static_cast< block_ptr_type >( mem_base ) )
+		explicit memory_manager( void* segment_base )
+			:m_bitmgr( static_cast< block_ptr_type >( segment_base ) ),
+			m_segment_base( segment_base )
 		{
-			m_membase = detail::char_cast( detail::shift( mem_base, bitmgr_type::memory_usage ) );
+			m_offset_base = detail::char_cast( detail::shift( segment_base, bitmgr_type::memory_usage ) );
 		}
 		
 		/**
@@ -197,12 +202,29 @@ namespace memory_mgr
 		/**
 		   @brief Call this method to get memory base address from which offset
 		   is calculated
+		   @param offset offset for which base address should be returned
 		   @exception newer  throws
 		   @return pointer to memory base address                               
 		*/
-		char* get_base() const
+		char* get_offset_base( const offset_type /*offset*/ = 0 ) const
 		{
-			return m_membase;
+			return m_offset_base;
+		}
+
+		/**
+		   @add_comments
+		*/
+		char* get_ptr_base( const void* /*ptr*/ )
+		{
+			return m_offset_base;
+		}
+
+		/**
+		   @add_comments
+		*/
+		void* get_segment_base()
+		{
+			return m_segment_base;
 		}
 
 		/**
