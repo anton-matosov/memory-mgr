@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include "manager_category.h"
+
 namespace memory_mgr
 {
 	namespace detail

@@ -23,6 +23,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include "config/config.h"
+#include "memory_manager.h"
+#include "singleton_manager.h"
+#include "size_tracking.h"
+#include "heap_segment.h"
+#include "allocator.h"
 #include <deque>
 #include <string>
 
@@ -37,14 +42,31 @@ bool test_pointer_convert();
 bool test_offset_pointer();
 bool test_shared_segment();
 
+typedef memory_mgr::singleton_manager
+< 
+	memory_mgr::size_tracking
+	<
+		memory_mgr::pointer_convert
+		< 
+			memory_mgr::heap_segment
+			< 
+				memory_mgr::memory_manager<size_t, 2 * 1024 * 1024, 4> 
+			> 
+		>
+	>
+> sz_heap_mgr;
+
+typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+sz_heap_mgr> > string_type;
+
 class tests_manager
 {
-	typedef std::pair< bool, std::wstring > test_entry_type;
+	typedef std::pair< bool, string_type > test_entry_type;
 	typedef std::deque< test_entry_type > test_results_type;
 	
 	test_results_type m_test_results;
 public:
-	void add_result( bool result, const std::wstring& test_name )
+	void add_result( bool result, const string_type& test_name )
 	{
 		m_test_results.push_back( std::make_pair( result, test_name ) );
 	}

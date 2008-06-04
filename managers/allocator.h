@@ -27,9 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
-
-#include "simple_ptr.h"
-
+//std::allocator
 namespace memory_mgr
 {
 
@@ -45,36 +43,27 @@ namespace memory_mgr
 		typedef T									value_type;
 		typedef allocator< value_type, memmgr_t >	self_type;
 
-		//*
-		typedef typename simple_ptr< value_type, memmgr_t >		pointer;
-		typedef typename const simple_ptr< value_type, memmgr_t >	const_pointer;
-		typedef typename simple_ptr< value_type, memmgr_t >::reference_type		reference;
-		typedef typename simple_ptr< value_type, memmgr_t >::const_reference_type	const_reference;
-		//*/
-
-		/*
 		typedef value_type*								pointer;
 		typedef const value_type*						const_pointer;
-		typedef value_type&		reference;
-		typedef const value_type&	const_reference;
-		//*/
-
-		typedef typename memmgr_t::size_type size_type;
-		typedef ptrdiff_t difference_type;
+		typedef value_type&								reference;
+		typedef const value_type&						const_reference;
+		
+		typedef typename manager_traits<memmgr_t>::size_type	size_type;
+		typedef ptrdiff_t										difference_type;
 
 		template<class Other>
 		struct rebind
-		{	// convert an allocator<_Ty> to an allocator <_Other>
+		{	// convert an allocator<T> to an allocator <Other>
 			typedef typename memory_mgr::allocator< Other, memmgr_t > other;
 		};
 
-		// return address of mutable _Val
+		// return address of mutable val
 		pointer address( reference val ) const
 		{	
 			return pointer(&val);
 		}
 
-		// return address of nonmutable _Val
+		// return address of nonmutable val
 		const_pointer address( const_reference val ) const
 		{	
 			return const_pointer(&val);
@@ -84,6 +73,7 @@ namespace memory_mgr
 		allocator()
 		{	
 		}
+
 		template<class other>
 		allocator( const allocator<other, memmgr_t>& ) _THROW0()
 		{	// construct from a related allocator (do nothing)
@@ -95,31 +85,31 @@ namespace memory_mgr
 			return (*this);
 		}
 
-		// deallocate object at _Ptr, ignore size
+		// deallocate object at ptr, ignore size
 		void deallocate( pointer ptr, size_type size )
 		{	
-			memmgr_t::instance().deallocate( &ptr, size );
+			memmgr_t::instance().deallocate( &*ptr, size );
 		}
 
-		// allocate array of _Count elements
+		// allocate array of count elements
 		pointer allocate(size_type count)
 		{	
-			return new(memmgr_t::instance()) value_type[count];
+			return static_cast<pointer>( memmgr_t::instance().allocate( count * item_size ) );
 		}
 
-		// allocate array of _Count elements, ignore hint
+		// allocate array of count elements, ignore hint
 		pointer allocate(size_type count, const void _FARQ *)
 		{	
 			return (allocate(count));
 		}
 
-		// construct object at _Ptr with value _Val
+		// construct object at ptr with value val
 		void construct(pointer ptr, const_reference val)
 		{	
 			::new (&*ptr) T(val);
 		}
 
-		// destroy object at _Ptr
+		// destroy object at ptr
 		void destroy(pointer ptr)
 		{	
 			(&*ptr)->~T();
@@ -128,7 +118,7 @@ namespace memory_mgr
 		// estimate maximum array size
 		size_type max_size() const 
 		{	
-			return memmgr_t::memory_size;
+			return manager_traits<memmgr_t>::memory_size;
 		}
 
 	};
