@@ -75,7 +75,7 @@ namespace memory_mgr
 		}
 
 		template<class other>
-		allocator( const allocator<other, memmgr_t>& ) _THROW0()
+		allocator( const allocator<other, memmgr_t>& ) /*throw()*/
 		{	// construct from a related allocator (do nothing)
 		}
 
@@ -98,7 +98,7 @@ namespace memory_mgr
 		}
 
 		// allocate array of count elements, ignore hint
-		pointer allocate(size_type count, const void _FARQ *)
+		pointer allocate(size_type count, const void *)
 		{	
 			return (allocate(count));
 		}
@@ -126,14 +126,14 @@ namespace memory_mgr
 	// allocator TEMPLATE OPERATORS
 	template<class T,
 	class U, class mem_mgr > inline
-		bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) _THROW0()
+		bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator equality (always true)
 		return (true);
 	}
 
 	template<class T,
 	class U, class mem_mgr > inline
-		bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) _THROW0()
+		bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator inequality (always false)
 		return (false);
 	}

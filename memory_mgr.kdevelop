@@ -18,8 +18,8 @@
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>perf_tests/perf_tests</activetarget>
-      <useconfiguration>debug</useconfiguration>
+      <activetarget>unit_tests/unit_tests</activetarget>
+      <useconfiguration>optimized</useconfiguration>
     </general>
     <run>
       <mainprogram>unit_tests/unit_tests</mainprogram>
