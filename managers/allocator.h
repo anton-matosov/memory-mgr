@@ -34,10 +34,6 @@ namespace memory_mgr
 	template< class T,	class MemMgr >
 	class allocator
 	{
-		enum
-		{
-			item_size = sizeof(T)
-		};
 	public:
 		typedef MemMgr								memmgr_t;
 		typedef T									value_type;
@@ -94,7 +90,7 @@ namespace memory_mgr
 		// allocate array of count elements
 		pointer allocate(size_type count)
 		{	
-			return static_cast<pointer>( memmgr_t::instance().allocate( count * item_size ) );
+			return static_cast<pointer>( memmgr_t::instance().allocate( count * sizeof(T) ) );
 		}
 
 		// allocate array of count elements, ignore hint

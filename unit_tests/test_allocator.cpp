@@ -57,7 +57,7 @@ alloc_mgr> > vector_type;
 template class std::vector<int, memory_mgr::allocator<int, 
 alloc_mgr> >;
 
-typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
+typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<const int, int>, 
 alloc_mgr> > map_type;
 template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
 alloc_mgr> >;
@@ -80,11 +80,11 @@ bool std_containers_test()
 		}
 		std::random_shuffle( vec.begin(), vec.end() );
 
-		map_type map;
-		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-		{
-			map[ rand() % items_count ] = *it;
-		}
+ 		map_type map;
+ 		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+ 		{
+ 			map[ rand() % items_count ] = *it;
+ 		}
 	}
 	SUBTEST_END( alloc_mgr::instance().free() );
 }
@@ -98,3 +98,4 @@ bool test_allocator()
 		);
 
 }
+
