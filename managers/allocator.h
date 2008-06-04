@@ -27,7 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
-//std::allocator
+
 namespace memory_mgr
 {
 
@@ -112,6 +112,7 @@ namespace memory_mgr
 		// destroy object at ptr
 		void destroy(pointer ptr)
 		{	
+			ptr;//VS 2008 warning
 			(&*ptr)->~T();
 		}
 

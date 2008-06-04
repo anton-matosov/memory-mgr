@@ -41,6 +41,7 @@ bool test_managed_base();
 bool test_pointer_convert();
 bool test_offset_pointer();
 bool test_shared_segment();
+bool test_allocator();
 
 typedef memory_mgr::singleton_manager
 < 
@@ -109,6 +110,7 @@ int main(int /*argc*/, char* /*argv*/[])
 	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
 	TestMgr.add_result( test_offset_pointer(),	L"test_offset_pointer" );
 	TestMgr.add_result( test_shared_segment(),	L"test_shared_segment" );
+	TestMgr.add_result( test_allocator(),		L"test_allocator" );
 
 	TestMgr.print_results();
 	return std::cin.get();

@@ -197,6 +197,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\test_allocator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_bit_manager.cpp"
 				>
 			</File>
