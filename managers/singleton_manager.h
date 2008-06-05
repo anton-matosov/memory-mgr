@@ -79,11 +79,6 @@ namespace memory_mgr
 		singleton_manager();
 
 		/**
-		   @brief Private destructor, to prevent creation of instances of this class
-		*/
-		~singleton_manager();
-
-		/**
 		   @brief Private copy constructor, to prevent creation of instances of this class
 		*/
 		singleton_manager(const singleton_manager&);

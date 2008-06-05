@@ -32,9 +32,9 @@ static const size_t memory_size = 256;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-template class memory_mgr::memory_segment< memory_mgr::vector_as_allocator, memmgr_type >;
+template class memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type >;
 
-typedef memory_mgr::memory_segment< memory_mgr::vector_as_allocator, memmgr_type > segmmgr_type;
+typedef memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type > segmmgr_type;
 typedef memmgr_type::offset_type offset_type;
 
 bool test_memory_segment()

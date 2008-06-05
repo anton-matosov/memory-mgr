@@ -410,8 +410,7 @@ namespace memory_mgr
 		   @brief Constructor, creates memory manager with specified
 		   base address
 		   @param segment_base  Pointer to memory which will be managed by
-		                    manager, before first used memory must be
-		                    zero filled
+		                    manager
 		   @see memory_manager::memory_manager                        
 		*/
 		inline explicit size_tracking( void* segment_base )

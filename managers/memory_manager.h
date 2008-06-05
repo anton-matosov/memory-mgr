@@ -151,8 +151,8 @@ namespace memory_mgr
 		   @brief Constructor, performs initialization of manager and
 					memory passed as parameter
 		   @param segment_base  Pointer to memory which will be managed by
-		                    manager, before first used memory must be
-		                    zero filled                               
+		                    manager, before first use first byte of memory
+							segment must be zeroed                   
 		*/
 		explicit memory_manager( void* segment_base )
 			:m_bitmgr( static_cast< block_ptr_type >( segment_base ) ),
@@ -317,6 +317,21 @@ namespace memory_mgr
 			return calc_offset( chunk_ind );
 		}
 	};	
+
+/**
+   @brief Helper macros, using it you can easily create derived class from memory manager
+   @details 
+*/
+#define MGR_DECLARE_MANAGER_CLASS(name, manager_type)\
+	struct name:\
+		public manager_type\
+	{};\
+	namespace memory_mgr{\
+		template<>\
+		struct manager_traits<name>:\
+			public manager_traits<manager_type>\
+		{};\
+	}
 }
 
 

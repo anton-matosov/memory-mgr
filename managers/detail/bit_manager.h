@@ -98,7 +98,7 @@ namespace memory_mgr
 			   @brief Constructor
 			  
 			   @param	ptr	pointer to memory that will be used to store bitset
-			   @attention	Memory must be zeroed before bit_manager creation\n
+			   @attention	First byte of memory segment must be zeroed before bit_manager creation\n
 							It will initialize its state only if first byte is null\n
 							Bitset will be placed starting from second byte
 

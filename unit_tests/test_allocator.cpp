@@ -47,20 +47,22 @@ typedef memory_mgr::singleton_manager
 	>
 > alloc_mgr;
 
+MGR_DECLARE_MANAGER_CLASS(allocator_manager, alloc_mgr);
+
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-alloc_mgr> > string_type;
+allocator_manager> > string_type;
 template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-alloc_mgr> >;
+allocator_manager> >;
 
 typedef std::vector<int, memory_mgr::allocator<int, 
-alloc_mgr> > vector_type;
+allocator_manager> > vector_type;
 template class std::vector<int, memory_mgr::allocator<int, 
-alloc_mgr> >;
+allocator_manager> >;
 
 typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<const int, int>, 
-alloc_mgr> > map_type;
+allocator_manager> > map_type;
 template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
-alloc_mgr> >;
+allocator_manager> >;
 
 bool unit_test()
 {
@@ -86,7 +88,7 @@ bool std_containers_test()
  			map[ rand() % items_count ] = *it;
  		}
 	}
-	SUBTEST_END( alloc_mgr::instance().free() );
+	SUBTEST_END( allocator_manager::instance().free() );
 }
 
 bool test_allocator()

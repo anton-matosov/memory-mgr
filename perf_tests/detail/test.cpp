@@ -43,7 +43,7 @@ void perf_test_manager::print_entry( const test_entry_type& entry )
 		<< L"\tOperation time: "<< std::fixed << entry.first / entry.second << std::endl ;
 }
 
-void perf_test_manager::add_result( const std::string& category_name, const std::string& test_name, long double test_time, size_t count )
+void perf_test_manager::add_result( const string_type& category_name, const string_type& test_name, long double test_time, size_t count )
 {
 	m_test_results[category_name][test_name].push_back( std::make_pair( test_time, count ) );
 }
@@ -56,7 +56,7 @@ void perf_test_manager::print_results()
 		std::wcout << L"\nTesting results:\n";
 		typedef test_results_type::iterator res_iter_type;
 		cmp_test_series cmp_results;
-		std::string results_file_path = memory_mgr::osapi::get_exe_dir();
+		string_type results_file_path = memory_mgr::osapi::get_exe_dir().c_str();
 		memory_mgr::helpers::add_trailing_slash( results_file_path );
 		results_file_path += "perf_test_results.txt";
 		std::ofstream result_file(  results_file_path.c_str()  );
@@ -69,13 +69,13 @@ void perf_test_manager::print_results()
 
 		for( test_cat_iter_type cat_test = m_test_results.begin(); cat_test != m_test_results.end(); ++cat_test )		
 		{
-			std::string category_name = cat_test->first;
+			string_type category_name = cat_test->first;
 			test_named_results_type& test = cat_test->second;
 
 			cmp_results.clear();
 			for( named_test_iter_type test_res = test.begin(); test_res != test.end(); ++test_res )		
 			{
-				std::string test_name = test_res->first;
+				string_type test_name = test_res->first;
 				test_series& tests = test_res->second;
 				//typedef test_series::const_iterator test_iter;
 				//std::wcout << L"Test '" << test_name.c_str() << L"'\n";
@@ -98,7 +98,7 @@ void perf_test_manager::print_results()
 				result_file << "Category: " << category_name << "\n";
 				
 				std::sort( cmp_results.begin(), cmp_results.end() );
-				const long double max_val = std::max_element( cmp_results.begin(), cmp_results.end(), &less_second<std::string, long double> )->second;
+				const long double max_val = std::max_element( cmp_results.begin(), cmp_results.end(), &less_second<string_type, long double> )->second;
 				typedef cmp_test_series::const_iterator cmp_iter_type;		
 				for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
 				{

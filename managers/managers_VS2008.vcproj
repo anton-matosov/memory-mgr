@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\malloc_allocator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\offset_traits.h"
 				>
 			</File>
@@ -261,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\types.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\vector_as_allocator.h"
 				>
 			</File>
 		</Filter>

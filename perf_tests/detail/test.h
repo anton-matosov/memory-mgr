@@ -35,10 +35,33 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <algorithm>
 #include <limits>
 #include <iterator>
+#include "allocator.h"
 #include "detail/helpers.h"
 #include "detail/singleton.h"
 #include "../perf_timer.h"
-#include "manager_traits.h"
+#include "../managers.h"
+
+typedef memory_mgr::singleton_manager
+< 
+	memory_mgr::size_tracking
+	<
+		memory_mgr::pointer_convert
+		< 
+			memory_mgr::heap_segment
+			< 
+				memory_mgr::memory_manager<size_t, 35 * 1024 * 1024, 4> 
+			> 
+		>
+	>
+> alloc_mgr;
+
+MGR_DECLARE_MANAGER_CLASS(heap_manager, alloc_mgr);
+
+typedef std::basic_string<char, std::char_traits<char>, memory_mgr::allocator<char, 
+heap_manager> > string_type;
+
+typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+heap_manager> > wstring_type;
 
 template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
@@ -70,20 +93,20 @@ class perf_test_manager: public memory_mgr::singleton<perf_test_manager>
 {
 	typedef std::pair<long double, size_t> test_entry_type;
 	typedef std::vector<test_entry_type> test_series;
-	typedef std::map< std::string, test_series > test_named_results_type;
-	typedef std::map< std::string, test_named_results_type > test_results_type;
+	typedef std::map< string_type, test_series > test_named_results_type;
+	typedef std::map< string_type, test_named_results_type > test_results_type;
 
 	test_results_type m_test_results;
 	void print_entry( const test_entry_type& entry );
 
-	typedef std::pair<std::string, long double> cmp_test_entry_type;
+	typedef std::pair<string_type, long double> cmp_test_entry_type;
 	typedef std::vector<cmp_test_entry_type> cmp_test_series;
 
 	bool m_results_printed;
 
 	enum { graph_length = 79 };
 public:
-	void add_result( const std::string& category_name, const std::string& test_name,
+	void add_result( const string_type& category_name, const string_type& test_name,
 		long double test_time, size_t count );
 
 	void print_results();
@@ -108,8 +131,8 @@ public:
 #define TEST_ELAPCED_MCS timer__.elapsed_mcs();
 
 template<class TestOp>
-void run_perf_test( const std::string& category_name,
-				   const std::string& test_name, TestOp test,
+void run_perf_test( const string_type& category_name,
+				   const string_type& test_name, TestOp test,
 				   const int op_repeat, const int test_repeat )
 {
 	std::wcout << L"\n" << test_name.c_str() << L"\n";

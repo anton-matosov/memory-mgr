@@ -55,10 +55,13 @@ typedef memory_mgr::singleton_manager
 			> 
 		>
 	>
-> sz_heap_mgr;
+> sz_heap_mgr_type;
+
+MGR_DECLARE_MANAGER_CLASS(heap_manager, sz_heap_mgr_type);
+
 
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-sz_heap_mgr> > string_type;
+heap_manager> > string_type;
 
 class tests_manager
 {
