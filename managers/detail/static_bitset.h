@@ -290,32 +290,32 @@ namespace memory_mgr
 		
 		//Default constructor
 		//Resets all bits
-		static_bitset()
+		inline static_bitset()
 		{ 
 			STATIC_ASSERT( num_bits != 0, Bitset_cant_be_empty );
 		}
 
 		//Constructor used only by custom arrays to initialize
 		//array's pointer
-		explicit static_bitset( block_ptr_type bits_ptr )
+		inline explicit static_bitset( block_ptr_type bits_ptr )
 			:base_type(bits_ptr)
 		{
 			STATIC_ASSERT( num_bits != 0, Bitset_cant_be_empty );
 		}
 
-		~static_bitset()
+		inline ~static_bitset()
 		{}
 
-		size_type size() const
+		inline size_type size() const
 		{ return num_bits; }
 
-		bool test( size_type pos ) const
+		inline bool test( size_type pos ) const
 		{
 			assert(pos < num_bits);
 			return unchecked_test(pos);
 		}
 
-		bool test( size_type pos, size_type count ) const
+		inline bool test( size_type pos, size_type count ) const
 		{
 			assert(pos < num_bits);
 			assert(count > 0);
@@ -339,14 +339,14 @@ namespace memory_mgr
 			return true;
 		}
 		
-		self_ref_type set()
+		inline self_ref_type set()
 		{
 			std::fill(this->m_bits, this->m_bits + num_blocks, ~block_type(0));
 			zero_unused_bits();
 			return *this;
 		}
 
-		self_ref_type set( size_type pos)
+		inline self_ref_type set( size_type pos)
 		{
 			assert(pos < num_bits);
 
@@ -355,37 +355,37 @@ namespace memory_mgr
 		}
 
 
-		self_ref_type set( size_type pos, size_type count )
+		inline self_ref_type set( size_type pos, size_type count )
 		{			
 			return do_set<detail::set_op>( pos, count );
 		}
 
-		self_ref_type reset(size_type pos)
+		inline self_ref_type reset(size_type pos)
 		{
 			assert(pos < num_bits);
 			this->m_bits[block_index(pos)] &= ~bit_mask(pos);
 			return *this;
 		}
 
-		self_ref_type reset( size_type pos, size_type count )
+		inline self_ref_type reset( size_type pos, size_type count )
 		{			
 			return do_set<detail::reset_op>( pos, count );
 		}
 
-		self_ref_type reset()
+		inline self_ref_type reset()
 		{
 			std::fill(this->m_bits, this->m_bits + num_blocks, block_type(0));
 			return *this;
 		}
 
-		self_ref_type flip(size_type pos)
+		inline self_ref_type flip(size_type pos)
 		{
 			assert(pos < num_bits);
 			this->m_bits[block_index(pos)] ^= bit_mask(pos);
 			return *this;
 		}
 
-		self_ref_type flip()
+		inline self_ref_type flip()
 		{
 			for (size_type i = 0; i < num_blocks; ++i)
 			{
@@ -396,7 +396,7 @@ namespace memory_mgr
 		}
 
 
-		size_type find_n( size_type count,  size_type first_block = 0 )
+		inline size_type find_n( size_type count,  size_type first_block = 0 )
 		{
 			if( count == 0 )
 			{
@@ -426,13 +426,13 @@ namespace memory_mgr
 			return (lowest_bit != npos) ? first_block * bits_per_block + lowest_bit : npos;
 		}
 
-		size_type find_first() const
+		inline size_type find_first() const
 		{
 			size_type blk_index = 0;
 			return blk_index * bits_per_block + do_find_from( blk_index );
 		}
 
-		size_type find_next( size_type pos ) const
+		inline size_type find_next( size_type pos ) const
 		{			
 			++pos;
 
@@ -441,7 +441,7 @@ namespace memory_mgr
 		}
 		
 		//Return true if all bits are set to 0
-		bool empty()
+		inline bool empty()
 		{
 			//Is there at least one block with bit set to 1
 			return find_first_block(0) >= num_blocks;
@@ -472,12 +472,12 @@ namespace memory_mgr
 		static inline size_type blocks_count( size_type bits_count ) 
 		{ return block_index( bits_count ); }
 
-		bool unchecked_test(size_type pos) const
+		inline bool unchecked_test(size_type pos) const
 		{ return (this->m_bits[block_index(pos)] & bit_mask(pos)) != 0; }
 		
 
 		//Find first block with at list one bit set to 1
-		size_type find_first_block( size_type from ) const
+		inline size_type find_first_block( size_type from ) const
 		{
 			// skip null blocks
 			while (from < num_blocks && this->m_bits[from] == 0)
@@ -487,7 +487,7 @@ namespace memory_mgr
 			return from;
 		}
 
-		size_type do_find_from( size_type& first_block ) const
+		inline size_type do_find_from( size_type& first_block ) const
 		{
 			first_block = find_first_block( first_block );
 
@@ -499,7 +499,7 @@ namespace memory_mgr
 			return helpers::lowest_bit(this->m_bits[first_block]);
 		}
 
-		size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
+		inline size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
 		{
 			if ( bit_ind >= num_bits )
 			{
@@ -511,7 +511,7 @@ namespace memory_mgr
 				do_find_from( ++blk_ind );
 		}
 
-		bool contains_bits( size_type block, size_type first, size_type count ) const
+		inline bool contains_bits( size_type block, size_type first, size_type count ) const
 		{
 			const block_type mask = bit_mask( first, count );
 			return (this->m_bits[block] &  mask) == mask;
@@ -522,7 +522,7 @@ namespace memory_mgr
 		// This function resets the unused bits (convenient
 		// for the implementation of many member functions)
 		//
-		void zero_unused_bits()
+		inline void zero_unused_bits()
 		{
 			// if != 0 this is the number of bits used in the last block
 			detail::do_zero_unused_bits< block_type, type_manip::int2type< detail::extra_bits<num_bits, bits_per_block>::result > >()( highest_block() );
@@ -530,20 +530,20 @@ namespace memory_mgr
 
 		// gives a reference to the highest block
 		//
-		block_ref_type highest_block()
+		inline block_ref_type highest_block()
 		{
 			return this->m_bits[num_blocks - 1];
 		}
 
 		// gives a const-reference to the highest block
 		//
-		const_block_ref_type highest_block() const
+		inline const_block_ref_type highest_block() const
 		{
 			return this->m_bits[num_blocks - 1];
 		}
 
 		template< class set_op >
-		self_ref_type do_set( size_type pos, size_type count )
+		inline self_ref_type do_set( size_type pos, size_type count )
 		{
 			assert(pos < num_bits);
 			count = (count != npos ? count : num_bits - pos); 

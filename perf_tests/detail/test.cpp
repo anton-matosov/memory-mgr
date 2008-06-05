@@ -86,7 +86,7 @@ void perf_test_manager::print_results()
 				//print_entry( *tests.begin() );
 
 				//add test with best result to independent storage
-				cmp_results.push_back( std::make_pair( test_name, tests.begin()->first / tests.begin()->second) );
+				cmp_results.push_back( std::make_pair( test_name, tests.begin()->first /*/ tests.begin()->second*/) );
 			}
 
 			if( !cmp_results.empty() )

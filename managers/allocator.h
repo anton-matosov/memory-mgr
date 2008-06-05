@@ -54,66 +54,66 @@ namespace memory_mgr
 		};
 
 		// return address of mutable val
-		pointer address( reference val ) const
+		inline pointer address( reference val ) const
 		{	
 			return pointer(&val);
 		}
 
 		// return address of nonmutable val
-		const_pointer address( const_reference val ) const
+		inline const_pointer address( const_reference val ) const
 		{	
 			return const_pointer(&val);
 		}
 
 		// construct default allocator (do nothing)
-		allocator()
+		inline allocator()
 		{	
 		}
 
 		template<class other>
-		allocator( const allocator<other, memmgr_t>& ) /*throw()*/
+		inline allocator( const allocator<other, memmgr_t>& ) /*throw()*/
 		{	// construct from a related allocator (do nothing)
 		}
 
 		template<class other>
-		self_type& operator=( const allocator<other, memmgr_t>& )
+		inline self_type& operator=( const allocator<other, memmgr_t>& )
 		{	// assign from a related allocator (do nothing)
 			return (*this);
 		}
 
 		// deallocate object at ptr, ignore size
-		void deallocate( pointer ptr, size_type size )
+		inline void deallocate( pointer ptr, size_type size )
 		{	
 			memmgr_t::instance().deallocate( &*ptr, size );
 		}
 
 		// allocate array of count elements
-		pointer allocate(size_type count)
+		inline pointer allocate(size_type count)
 		{	
 			return static_cast<pointer>( memmgr_t::instance().allocate( count * sizeof(T) ) );
 		}
 
 		// allocate array of count elements, ignore hint
-		pointer allocate(size_type count, const void *)
+		inline pointer allocate(size_type count, const void *)
 		{	
 			return (allocate(count));
 		}
 
 		// construct object at ptr with value val
-		void construct(pointer ptr, const_reference val)
+		inline void construct(pointer ptr, const_reference val)
 		{	
 			::new (&*ptr) T(val);
 		}
 
 		// destroy object at ptr
-		void destroy(pointer ptr)
+		inline void destroy(pointer ptr)
 		{	
 			ptr;//VS 2008 warning
 			(&*ptr)->~T();
 		}
 
 		// estimate maximum array size
-		size_type max_size() const 
+		inline size_type max_size() const 
 		{	
 			return manager_traits<memmgr_t>::memory_size;
 		}
@@ -122,15 +122,15 @@ namespace memory_mgr
 
 	// allocator TEMPLATE OPERATORS
 	template<class T,
-	class U, class mem_mgr > inline
-		bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
+	class U, class mem_mgr >
+	inline bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator equality (always true)
 		return (true);
 	}
 
 	template<class T,
-	class U, class mem_mgr > inline
-		bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
+	class U, class mem_mgr >
+	inline bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator inequality (always false)
 		return (false);
 	}

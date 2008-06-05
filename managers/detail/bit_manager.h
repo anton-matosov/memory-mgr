@@ -187,14 +187,14 @@ namespace memory_mgr
 				return detail::block_index<bitset_t::bits_per_block>(pos);
 			}
 
-			block_ptr_type block_ptr_cast( void* ptr )
+			static inline block_ptr_type block_ptr_cast( void* ptr )
 			{
 				return static_cast<block_ptr_type>( ptr );
 			}
 		};
 
 		template< class Ch, class Tr, class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
-		std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr,
+		static inline std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr,
 			const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
 		{
 			return b.print( ostr );

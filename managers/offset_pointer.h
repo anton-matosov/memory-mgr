@@ -62,22 +62,22 @@ namespace memory_mgr
 
 		//Default constructor
 		//Constructs null pointer
-		offset_pointer()
+		inline offset_pointer()
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{}
 
 		//Construct pointer from offset
-		explicit offset_pointer( const offset_type offset )
+		inline explicit offset_pointer( const offset_type offset )
 			:m_offset( offset )
 		{}
 
 		//Copy constructor
-		offset_pointer( const offset_pointer& ptr )
+		inline offset_pointer( const offset_pointer& ptr )
 			:m_offset( ptr.m_offset )
 		{}
 
 		//Pointer constructor
-		offset_pointer( const_pointer_type p )
+		inline offset_pointer( const_pointer_type p )
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{
 			do_set_pointer(p);
@@ -85,7 +85,7 @@ namespace memory_mgr
 
 		//Polymorph copy constructor
 		template < typename U >
-		offset_pointer( const offset_pointer< U, mgr_type >& ptr )
+		inline offset_pointer( const offset_pointer< U, mgr_type >& ptr )
 			:m_offset( get_offset( ptr ) )
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
@@ -93,49 +93,49 @@ namespace memory_mgr
 
 		//Polymorph copy operator
 		template < typename U >
-		offset_pointer& operator=( const offset_pointer< U, mgr_type >& ptr )			
+		inline offset_pointer& operator=( const offset_pointer< U, mgr_type >& ptr )			
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 			m_offset = get_offset( ptr );			
 			return *this;
 		}
 
-		pointer_type operator->()
+		inline pointer_type operator->()
 		{
 			return get_pointer();
 		}
 
-		const_pointer_type operator->() const
+		inline const_pointer_type operator->() const
 		{
 			return get_pointer();
 		}
 
-		reference_type operator*()
+		inline reference_type operator*()
 		{
 			return *get_pointer();
 		}
 
-		const_reference_type operator*() const
+		inline const_reference_type operator*() const
 		{
 			return *get_pointer();
 		}
 
-		pointer_type operator&()
+		inline pointer_type operator&()
 		{
 			return get_pointer();
 		}
 
-		const_pointer_type operator&() const
+		inline const_pointer_type operator&() const
 		{
 			return get_pointer();
 		}
 
-		reference_type operator[](difference_type n)
+		inline reference_type operator[](difference_type n)
 		{
 			return *(get_pointer() + n);
 		}
 
-		const_reference_type operator[](difference_type n) const
+		inline const_reference_type operator[](difference_type n) const
 		{
 			return *(get_pointer() + n);
 		}
@@ -154,68 +154,68 @@ namespace memory_mgr
 		bool is_not_null() const { return !is_null(); }
 		bool operator!() const { return  is_null(); }
 
-		self_ref_type operator++()
+		inline self_ref_type operator++()
 		{
 			return *this += 1;
 		}
 
-		self_type operator++(int)
+		inline self_type operator++(int)
 		{
 			offset_type offset = m_offset;
 			++*this;
 			return self_type( offset );
 		}
 
-		self_ref_type operator--()
+		inline self_ref_type operator--()
 		{			
 			return *this -= 1;
 		}
 
- 		self_type operator--(int)
+ 		inline self_type operator--(int)
  		{
  			offset_type offset = m_offset;
  			--*this;
  			return self_type( offset );
  		}
 
-		self_ref_type operator+=(difference_type n)
+		inline self_ref_type operator+=(difference_type n)
 		{
 			do_set_pointer( get_pointer() + n );
 			return *this;
 		}
 
-		self_ref_type operator-=(difference_type n)
+		inline self_ref_type operator-=(difference_type n)
 		{
 			do_set_pointer( get_pointer() - n );
 			return *this;
 		}
 
-		self_type operator+(difference_type n) const
+		inline self_type operator+(difference_type n) const
 		{
 			return self_type( get_pointer() + n );
 		}
 
-		self_type operator-(difference_type n) const
+		inline self_type operator-(difference_type n) const
 		{
 			return self_type( get_pointer() - n );
 		}
 
-		difference_type operator-( const self_type& ptr ) const
+		inline difference_type operator-( const self_type& ptr ) const
 		{
 			return get_pointer() - ptr.get_pointer();
 		}
 		
-		bool operator==( const self_type& rhs ) const
+		inline bool operator==( const self_type& rhs ) const
 		{
 			return m_offset == rhs.m_offset;
 		}
 
-		bool operator<( const self_type& rhs ) const
+		inline bool operator<( const self_type& rhs ) const
 		{
 			return m_offset < rhs.m_offset;
 		}
 
-		bool operator>( const self_type& rhs ) const
+		inline bool operator>( const self_type& rhs ) const
 		{
 			return m_offset > rhs.m_offset;
 		}
@@ -274,13 +274,13 @@ namespace memory_mgr
 	}
 	
 	template<class T, class Mgr>
-	void delete_( offset_pointer<T, Mgr>& ptr )
+	static inline void delete_( offset_pointer<T, Mgr>& ptr )
 	{
 		return ::delete_( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class T, class Mgr>
-	void delete_array( offset_pointer<T, Mgr>& ptr )
+	static inline void delete_array( offset_pointer<T, Mgr>& ptr )
 	{
 		return ::delete_array( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
 	}

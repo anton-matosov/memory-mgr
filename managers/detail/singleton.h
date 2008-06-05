@@ -62,7 +62,7 @@ namespace memory_mgr
 		   
 		   @return Reference to instance of singleton class                   
 		*/
-		static T& instance()
+		inline static T& instance()
 		{
 			if ( !m_instance )
 			{

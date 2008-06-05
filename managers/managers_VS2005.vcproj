@@ -149,6 +149,18 @@
 				RelativePath=".\config\config.h"
 				>
 			</File>
+			<Filter
+				Name="platform"
+				>
+				<File
+					RelativePath=".\config\platform\linux.h"
+					>
+				</File>
+				<File
+					RelativePath=".\config\platform\win32.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="memory_mgr"

@@ -74,7 +74,7 @@ namespace memory_mgr
 					attached memory segment
 		   @see memory_manager::memory_segment                        
 		*/
-		pointer_convert()
+		inline pointer_convert()
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value), Memory_manager_does_not_have_attached_memory_segment );
 		}
@@ -87,7 +87,7 @@ namespace memory_mgr
 		                    zero filled
 		   @see memory_manager::memory_manager                        
 		*/
-		pointer_convert( void* segment_base )
+		inline pointer_convert( void* segment_base )
 			:m_mgr( segment_base )
 		{}
 
@@ -97,7 +97,7 @@ namespace memory_mgr
 		  @exception bad_alloc if manager went out of memory
 		  @return pointer to allocated memory block
 		*/
-		void* allocate( size_type size )
+		inline void* allocate( size_type size )
 		{			
 			return detail::offset_to_pointer( m_mgr.allocate( size ), m_mgr );
 		}
@@ -111,7 +111,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to allocated memory block         
 		*/
-		void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 		{			
 			return detail::offset_to_pointer( m_mgr.allocate( size, nothrow ), m_mgr );
 		}
@@ -122,7 +122,7 @@ namespace memory_mgr
 		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
- 		void deallocate( const void* p, size_type size )
+ 		inline void deallocate( const void* p, size_type size )
  		{
 			m_mgr.deallocate( detail::pointer_to_offset( p, m_mgr ), size );
  		}
@@ -136,7 +136,7 @@ namespace memory_mgr
 		                  allocate
 		   @retval false  otherwise                                    
 		*/
-		bool empty()
+		inline bool empty()
 		{
 			return m_mgr.empty();
 		}
@@ -147,7 +147,7 @@ namespace memory_mgr
 		   @retval true   no blocks are allocated by this manager
 		   @retval false  otherwise                                     
 		*/
-		bool free()
+		inline bool free()
 		{
 			return m_mgr.free();
 		}
@@ -158,7 +158,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to memory base address                               
 		*/
-		char* get_offset_base( const offset_type offset = 0 ) const
+		inline char* get_offset_base( const offset_type offset = 0 ) const
 		{
 			return m_mgr.get_offset_base( offset );
 		}
@@ -166,7 +166,7 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		char* get_ptr_base( const void* ptr )
+		inline char* get_ptr_base( const void* ptr )
 		{
 			return m_mgr.get_ptr_base( ptr );
 		}

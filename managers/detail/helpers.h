@@ -43,7 +43,7 @@ namespace memory_mgr
 		namespace detail 
 		{
 			template <typename T>
-			int integer_log2_impl(T x, int n) 
+			static inline int integer_log2_impl(T x, int n) 
 			{
 				int result = 0;
 				while (x != 1) 
@@ -83,7 +83,7 @@ namespace memory_mgr
 		// ---------------
 		//
 		template <typename T>
-		int integer_log2(T x) 
+		static inline int integer_log2(T x) 
 		{
 			assert(x > 0); // PRE
 
@@ -94,7 +94,7 @@ namespace memory_mgr
 		}
 
 		template <typename T>
-		int lowest_bit(T x) 
+		static inline  int lowest_bit(T x) 
 		{
 			assert(x >= 1); // PRE
 

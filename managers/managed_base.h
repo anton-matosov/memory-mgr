@@ -113,7 +113,7 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new( size_t size )/*throw( std::bad_alloc )*/
+		static inline void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
 			return mem_mgr::instance().allocate( size );			
 		}
@@ -127,7 +127,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
+		static inline void* operator new( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
 			return mem_mgr::instance().allocate( size, nothrow );			
 		}
@@ -138,7 +138,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer passed as second parameter
 		*/
-		static void* operator new(  size_t, void* p ) /*throw()*/
+		static inline void* operator new(  size_t, void* p ) /*throw()*/
 		{
 			return p;
 		}
@@ -152,7 +152,7 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
+		static inline void* operator new( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
 		{
 			name;
 			/**
@@ -171,7 +171,7 @@ namespace memory_mgr
 		   @exception newer throws
 		   @remark all parameters are passed by compiler automatically
 		*/
-		static void operator delete( void* p, size_t size )
+		static inline void operator delete( void* p, size_t size )
 		{
 			mem_mgr::instance().deallocate( p, size );
 		}
@@ -185,7 +185,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @remark all parameters are passed by compiler automatically
 		*/
-		static void operator delete( void* p, size_t size, const object_name& name )
+		static inline void operator delete( void* p, size_t size, const object_name& name )
 		{
 			p;
 			name;
@@ -204,7 +204,7 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new[]( size_t size )/*throw( std::bad_alloc )*/
+		static inline void* operator new[]( size_t size )/*throw( std::bad_alloc )*/
 		{			
 			return mem_mgr::instance().allocate( size );			
 		}
@@ -214,7 +214,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new[]( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
+		static inline void* operator new[]( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
 			
 			return mem_mgr::instance().allocate( size, nothrow );			
@@ -226,7 +226,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer passed as second parameter
 		*/
-		static void* operator new[](  size_t, void* p ) /*throw()*/
+		static inline void* operator new[](  size_t, void* p ) /*throw()*/
 		{
 			return p;
 		}
@@ -240,7 +240,7 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return pointer to allocated memory block
 		*/
-		static void* operator new[]( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
+		static inline void* operator new[]( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
 		{
 			name;
 			/**
@@ -259,7 +259,7 @@ namespace memory_mgr
 		   @exception newer throws
 		   @remark all parameters are passed by compiler automatically
 		*/
-		static void operator delete[]( void* p, size_t size )
+		static inline void operator delete[]( void* p, size_t size )
 		{
 			mem_mgr::instance().deallocate( p, detail::calc_full_size( p, size) );
 		}
@@ -273,7 +273,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @remark all parameters are passed by compiler automatically
 		*/
-		static void operator delete[]( void* p, size_t size, const object_name& name )
+		static inline void operator delete[]( void* p, size_t size, const object_name& name )
 		{
 			p;
 			name;

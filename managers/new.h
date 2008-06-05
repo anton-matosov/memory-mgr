@@ -278,7 +278,7 @@ namespace memory_mgr
    @return pointer to allocated memory block
 */
 template<class MemMgr>
-void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+inline void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
@@ -295,7 +295,7 @@ void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr
    @return pointer to allocated memory block
 */
 template<class MemMgr>
-void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
@@ -310,7 +310,7 @@ void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemM
    @exception newer throws
 */
 template<class T, class MemMgr>
-void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+static inline void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
@@ -325,7 +325,7 @@ void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
    @exception newer throws
 */
 template<class T, class MemMgr>
-void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+static inline void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;

@@ -41,17 +41,17 @@ namespace memory_mgr
 				return static_cast<const op_type&>( *this );
 			}
 		public:
-			bool operator!=( const op_type& rhs ) const
+			inline bool operator!=( const op_type& rhs ) const
 			{
 				return !( get_lhs() == rhs);
 			}
 
-			bool operator<=( const op_type& rhs ) const
+			inline bool operator<=( const op_type& rhs ) const
 			{
 				return !(get_lhs() > rhs);
 			}
 
-			bool operator>=( const op_type& rhs ) const
+			inline bool operator>=( const op_type& rhs ) const
 			{
 				return !(get_lhs() < rhs);
 			}

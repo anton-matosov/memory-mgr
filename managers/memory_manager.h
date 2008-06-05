@@ -167,7 +167,7 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return offset in bytes from memory base address.
 		*/
-		offset_type allocate( size_type size )
+		inline offset_type allocate( size_type size )
 		{			
 			return do_allocate( size, helpers::throw_bad_alloc );
 		}
@@ -182,7 +182,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return offset in bytes from memory base address.          
 		*/
-		offset_type allocate( size_type size, const std::nothrow_t& /*nothrow*/ )/*throw()*/
+		inline offset_type allocate( size_type size, const std::nothrow_t& /*nothrow*/ )/*throw()*/
 		{			
 			return do_allocate( size, helpers::do_nothing );
 		}
@@ -193,7 +193,7 @@ namespace memory_mgr
 		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
- 		void deallocate( const offset_type offset, size_type size )
+ 		inline void deallocate( const offset_type offset, size_type size )
  		{
 			lock l(*this);
  			m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
@@ -206,7 +206,7 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to memory base address                               
 		*/
-		char* get_offset_base( const offset_type /*offset*/ = 0 ) const
+		inline char* get_offset_base( const offset_type /*offset*/ = 0 ) const
 		{
 			return m_offset_base;
 		}
@@ -214,7 +214,7 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		char* get_ptr_base( const void* /*ptr*/ )
+		inline char* get_ptr_base( const void* /*ptr*/ )
 		{
 			return m_offset_base;
 		}
@@ -222,7 +222,7 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		void* get_segment_base()
+		inline void* get_segment_base()
 		{
 			return m_segment_base;
 		}
@@ -236,7 +236,7 @@ namespace memory_mgr
 		                  allocate
 		   @retval false  otherwise                                    
 		*/
-		bool empty()
+		inline bool empty()
 		{
 			return m_bitmgr.empty();
 		}
@@ -247,7 +247,7 @@ namespace memory_mgr
 		   @retval true   no blocks are allocated by this manager
 		   @retval false  otherwise                                     
 		*/
-		bool free()
+		inline bool free()
 		{
 			return m_bitmgr.free();
 		}

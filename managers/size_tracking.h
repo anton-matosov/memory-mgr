@@ -71,7 +71,7 @@ namespace memory_mgr
 				allocate
 			   @retval false  otherwise                                    
 			*/
-			bool empty()
+			inline bool empty()
 			{
 				return m_mgr.empty();
 			}
@@ -83,7 +83,7 @@ namespace memory_mgr
 			   @retval true   no blocks are allocated by this manager
 			   @retval false  otherwise                                     
 			*/
-			bool free()
+			inline bool free()
 			{
 				return m_mgr.free();
 			}
@@ -94,7 +94,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to memory base address                               
 			*/
-			char* get_offset_base( const offset_type offset = 0 ) const
+			inline char* get_offset_base( const offset_type offset = 0 ) const
 			{
 				return m_mgr.get_offset_base( offset );
 			}
@@ -102,7 +102,7 @@ namespace memory_mgr
 			/**
 			   @add_comments
 			*/
-			char* get_ptr_base( const void* ptr )
+			inline char* get_ptr_base( const void* ptr )
 			{
 				return m_mgr.get_ptr_base( ptr );
 			}
@@ -113,13 +113,13 @@ namespace memory_mgr
 						attached memory segment
 			   @see memory_manager::memory_segment                        
 			*/
-			size_tracking_impl_base()
+			inline size_tracking_impl_base()
 			{}
 
 			/**
 			   @missing_comments 
 			*/
-			explicit size_tracking_impl_base( void* segment_base )
+			inline explicit size_tracking_impl_base( void* segment_base )
 				:m_mgr( segment_base )
 			{}
 
@@ -129,7 +129,7 @@ namespace memory_mgr
 			   @param	size	variable that should be updated
 			   @exception newer throws
 			*/
-			void update_size( size_type& size )
+			inline void update_size( size_type& size )
 			{
 				//Additional memory for size storing
 				size += sizeof( size_type );
@@ -144,7 +144,7 @@ namespace memory_mgr
 			  
 			   @return pointer to first byte after stored size
 			*/
-			void* store_size( void* ptr, size_type size )
+			inline void* store_size( void* ptr, size_type size )
 			{
 				//Store size
 				size_type* psize = detail::size_cast( ptr );
@@ -190,7 +190,7 @@ namespace memory_mgr
 						attached memory segment
 			   @see memory_manager::memory_segment                        
 			*/
-			size_tracking_impl()
+			inline size_tracking_impl()
 			{}
 
 			/**
@@ -200,7 +200,7 @@ namespace memory_mgr
 									manager
 			   @exception newer throws
 			*/
-			explicit size_tracking_impl( void* segment_base )
+			inline explicit size_tracking_impl( void* segment_base )
 				:impl_base_type( segment_base )
 			{}
 
@@ -217,7 +217,7 @@ namespace memory_mgr
 			  @exception bad_alloc if manager went out of memory
 			  @return pointer to allocated memory block
 			*/
-			void* allocate( size_type size )
+			inline void* allocate( size_type size )
 			{			
 				update_size( size );
 				return store_size( this->m_mgr.allocate( size ), size );
@@ -232,7 +232,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to allocated memory block         
 			*/
-			void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
 				update_size( size );
 				return store_size( this->m_mgr.allocate( size, nothrow ), size );
@@ -244,7 +244,7 @@ namespace memory_mgr
 			   @param size   this value is ignored
 			   @exception newer  throws
 			*/
-			void deallocate( void* ptr, size_type /*size*/ = 0)
+			inline void deallocate( void* ptr, size_type /*size*/ = 0)
 			{
 				assert( ptr >= this->m_mgr.get_offset_base() && "Invalid pointer value");
 				assert( ptr < ( this->m_mgr.get_offset_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
@@ -291,7 +291,7 @@ namespace memory_mgr
 						attached memory segment
 			   @see memory_manager::memory_segment                        
 			*/
-			size_tracking_impl()
+			inline size_tracking_impl()
 			{}
 
 			/**
@@ -301,7 +301,7 @@ namespace memory_mgr
 									manager
 			   @exception newer throws
 			*/
-			explicit size_tracking_impl( void* segment_base )
+			inline explicit size_tracking_impl( void* segment_base )
 				:impl_base_type( segment_base )
 			{}
 		public:
@@ -323,7 +323,7 @@ namespace memory_mgr
 			   @exception bad_alloc if manager went out of memory
 			   @return offset in bytes from memory base address.
 			*/
-			offset_type allocate( size_type size )
+			inline offset_type allocate( size_type size )
 			{	
 				//Just calls allocate method of size tracking implementation that supports PointerConverterConcept
 				//and converts returned pointer to offset
@@ -339,7 +339,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return offset in bytes from memory base address.          
 			*/
-			offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			inline offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{		
 				//Calls allocate method of size tracking implementation that supports PointerConverterConcept
 				//and converts returned pointer to offset
@@ -352,7 +352,7 @@ namespace memory_mgr
 			   @param size   this value is ignored
 			   @exception newer  throws
 			*/
-			void deallocate( const offset_type offset, size_type /*size*/ = 0 )
+			inline void deallocate( const offset_type offset, size_type /*size*/ = 0 )
 			{
 				//Converts passed offset into pointer and calls deallocate method
 				//of size tracking implementation that supports PointerConverterConcept
@@ -401,7 +401,7 @@ namespace memory_mgr
 					attached memory segment
 		   @see memory_manager::memory_segment                        
 		*/
-		size_tracking()
+		inline size_tracking()
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value), Memory_manager_does_not_have_attached_memory_segment );
 		}
@@ -414,7 +414,7 @@ namespace memory_mgr
 		                    zero filled
 		   @see memory_manager::memory_manager                        
 		*/
-		explicit size_tracking( void* segment_base )
+		inline explicit size_tracking( void* segment_base )
 			:impl_type( segment_base )
 		{}
 	};
