@@ -38,22 +38,22 @@ namespace memory_mgr
 	class allocator
 	{
 	public:
-		typedef MemMgr								memmgr_t;
+		typedef MemMgr								mgr_type;
 		typedef T									value_type;
-		typedef allocator< value_type, memmgr_t >	self_type;
+		typedef allocator< value_type, mgr_type >	self_type;
 
 		typedef value_type*								pointer;
 		typedef const value_type*						const_pointer;
 		typedef value_type&								reference;
 		typedef const value_type&						const_reference;
 		
-		typedef typename manager_traits<memmgr_t>::size_type	size_type;
+		typedef typename manager_traits<mgr_type>::size_type	size_type;
 		typedef ptrdiff_t										difference_type;
 
 		template<class Other>
 		struct rebind
 		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename memory_mgr::allocator< Other, memmgr_t > other;
+			typedef typename memory_mgr::allocator< Other, mgr_type > other;
 		};
 
 		// return address of mutable val
@@ -70,16 +70,21 @@ namespace memory_mgr
 
 		// construct default allocator (do nothing)
 		inline allocator()
-		{	
+		{
+			STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
+				(is_category_supported< mgr_type, size_tracking_tag >::value) &&
+				(is_category_supported< mgr_type, pointer_conversion_tag >::value) &&
+				(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
+
 		}
 
 		template<class other>
-		inline allocator( const allocator<other, memmgr_t>& ) /*throw()*/
+		inline allocator( const allocator<other, mgr_type>& ) /*throw()*/
 		{	// construct from a related allocator (do nothing)
 		}
 
 		template<class other>
-		inline self_type& operator=( const allocator<other, memmgr_t>& )
+		inline self_type& operator=( const allocator<other, mgr_type>& )
 		{	// assign from a related allocator (do nothing)
 			return (*this);
 		}
@@ -87,13 +92,13 @@ namespace memory_mgr
 		// deallocate object at ptr, ignore size
 		inline void deallocate( pointer ptr, size_type size )
 		{	
-			memmgr_t::instance().deallocate( &*ptr, size );
+			mgr_type::instance().deallocate( &*ptr, size );
 		}
 
 		// allocate array of count elements
 		inline pointer allocate(size_type count)
 		{	
-			return static_cast<pointer>( memmgr_t::instance().allocate( count * sizeof(T) ) );
+			return static_cast<pointer>( mgr_type::instance().allocate( count * sizeof(T) ) );
 		}
 
 		// allocate array of count elements, ignore hint
@@ -118,7 +123,7 @@ namespace memory_mgr
 		// estimate maximum array size
 		inline size_type max_size() const 
 		{	
-			return manager_traits<memmgr_t>::memory_size;
+			return manager_traits<mgr_type>::memory_size;
 		}
 
 	};
