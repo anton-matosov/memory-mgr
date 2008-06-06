@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <iostream>
 #include "detail/test.h"
 #include "managers.h"
+#include "test_templates.h"
 
 namespace
 {
@@ -39,7 +40,7 @@ namespace
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// new class
+	// new class, managers
 	//////////////////////////////////////////////////////////////////////////
 	template<class MemMgr>
 	long double test_new_mem_mgr( const int count )
@@ -77,40 +78,31 @@ namespace
 		return TEST_ELAPCED_MCS;
 	}
 
-	long double test_std_new_class( const int count )
-	{
-
-		TEST_START_LOOP( count );
-		new test_class2;
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
 	//////////////////////////////////////////////////////////////////////////
-	// new/delete class
+	// new/delete class, managers
 	//////////////////////////////////////////////////////////////////////////
-	template<class MemMgr>
+	template<class MemMgr, class TestType>
 	long double test_new_delete_mem_mgr( const int count )
 	{
 		MemMgr mgr;
 
+		typedef TestType test_type;
+		typedef test_type* pointer_type;
+		pointer_type *p;
+		p = new pointer_type[count];
+
 		TEST_START_LOOP( count );
-		delete_( new( mem_mgr( mgr ) ) test_class2, mem_mgr( mgr ) );
+		{
+			p[TEST_ITERATION_NUMBER] = new( mem_mgr( mgr ) ) test_type;
+		}
+		TEST_SPLIT_LOOP;
+		{
+			delete_( p[TEST_ITERATION_NUMBER], mem_mgr( mgr ) );;
+		}
 		TEST_END_LOOP( std::wcout );
 
-		return TEST_ELAPCED_MCS;
-	}
+		delete[] p;
 
-	template<class MemMgr>
-	long double test_new_delete_singleton_mem_mgr( const int count )
-	{		
-		MemMgr::instance();
-		TEST_START_LOOP( count );
-		delete_( new( mem_mgr( MemMgr::instance() ) ) test_class2,
-			mem_mgr( MemMgr::instance() ) );
-		TEST_END_LOOP( std::wcout );
-		MemMgr::destruct();
 		return TEST_ELAPCED_MCS;
 	}
 	
@@ -120,60 +112,54 @@ namespace
 		typedef test_class<MemMgr> test_class;
 
 		MemMgr::instance();
+
+		typedef test_class* pointer_type;
+		pointer_type *p = new pointer_type[count];
 		TEST_START_LOOP( count );
-		delete new test_class;
+		{
+			p[TEST_ITERATION_NUMBER] = new test_class;
+		}
+		TEST_SPLIT_LOOP;
+		{
+			delete p[TEST_ITERATION_NUMBER];
+		}
 		TEST_END_LOOP( std::wcout );
+
 		MemMgr::destruct();
 
-		return TEST_ELAPCED_MCS;
-	}
-
-	long double test_std_new_delete_class( const int count )
-	{
-
-		TEST_START_LOOP( count );
-		delete new test_class2;
-		TEST_END_LOOP( std::wcout );
+		delete[] p;
 
 		return TEST_ELAPCED_MCS;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	// new/delete int
+	// new/delete singleton maanger
 	//////////////////////////////////////////////////////////////////////////
-	template<class MemMgr>
-	long double test_new_delete_int_mem_mgr( const int count )
-	{
-		MemMgr mgr;
-
-		TEST_START_LOOP( count );
-		delete_( new( mem_mgr( mgr ) ) int, mem_mgr( mgr ) );
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
-	template<class MemMgr>
-	long double test_new_delete_int_singleton_mem_mgr( const int count )
+	template<class MemMgr, class TestType>
+	long double test_new_delete_singleton_mem_mgr( const int count )
 	{		
 		MemMgr::instance();
+
+		typedef TestType test_type;
+		typedef test_type* pointer_type;
+		pointer_type *p = new pointer_type[count];
 		TEST_START_LOOP( count );
-		delete_( new( mem_mgr( MemMgr::instance() ) ) int,
-			mem_mgr( MemMgr::instance() ) );
+		{
+			p[TEST_ITERATION_NUMBER] = new( mem_mgr<MemMgr>() ) test_type;
+		}
+		TEST_SPLIT_LOOP;
+		{
+			delete_( p[TEST_ITERATION_NUMBER], mem_mgr<MemMgr>() );
+		}
 		TEST_END_LOOP( std::wcout );
+
 		MemMgr::destruct();
+
+		delete[] p;
+
 		return TEST_ELAPCED_MCS;
 	}
 	
-	long double test_std_new_delete_int( const int count )
-	{
-		TEST_START_LOOP( count );
-		delete new int;
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
 	const char* new_class_category = "new class (std/managed/new.h)";
 	const char* new_delete_class_category = "new/delete class (std/managed/new.h)";
 	const char* new_delete_int_category = "new/delete int (std/new.h)";
@@ -189,6 +175,8 @@ namespace
 		
 		long double test_std_new_class( const int count )
 		*/
+
+		typedef test_class2* test_class_type;
 		
 		//////////////////////////////////////////////////////////////////////////
 		// new class
@@ -209,20 +197,20 @@ namespace
  			test_new_managed_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
  
 		run_perf_test( new_class_category, "std new class",
-			test_std_new_class, op_repeat, test_repeat );
+			test_std_new<test_class_type>, op_repeat, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
 		// new/delete class
 		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( new_delete_class_category, "new/delete class heap sz pt mgr",
-			test_new_delete_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_mem_mgr<heap_sz_pt_mgr, test_class_type>, op_repeat, test_repeat );
 		run_perf_test( new_delete_class_category, "new/delete class shared sz pt mgr",
-			test_new_delete_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_mem_mgr<shared_sz_pt_mgr, test_class_type>, op_repeat, test_repeat );
 
 		run_perf_test( new_delete_class_category, "new/delete class sing heap sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_singleton_mem_mgr<sing_heap_sz_pt_mgr, test_class_type>, op_repeat, test_repeat );
 		run_perf_test( new_delete_class_category, "new/delete class sing shared sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_singleton_mem_mgr<sing_shared_sz_pt_mgr, test_class_type>, op_repeat, test_repeat );
 
 		run_perf_test( new_delete_class_category, "new/delete managed class sing heap sz pt mgr",
 			test_new_delete_managed_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
@@ -230,23 +218,23 @@ namespace
 			test_new_delete_managed_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
 
 		run_perf_test( new_delete_class_category, "std new/delete class",
-			test_std_new_delete_class, op_repeat, test_repeat );
+			test_std_new_delete<test_class_type>, op_repeat, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
 		// new/delete int
 		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( new_delete_int_category, "new/delete int heap sz pt mgr",
-			test_new_delete_int_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_mem_mgr<heap_sz_pt_mgr, int>, op_repeat, test_repeat );
 		run_perf_test( new_delete_int_category, "new/delete int shared sz pt mgr",
-			test_new_delete_int_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_mem_mgr<shared_sz_pt_mgr, int>, op_repeat, test_repeat );
 
 		run_perf_test( new_delete_int_category, "new/delete int sing heap sz pt mgr",
-			test_new_delete_int_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_singleton_mem_mgr<sing_heap_sz_pt_mgr, int>, op_repeat, test_repeat );
 		run_perf_test( new_delete_int_category, "new/delete int sing shared sz pt mgr",
-			test_new_delete_int_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_new_delete_singleton_mem_mgr<sing_shared_sz_pt_mgr, int>, op_repeat, test_repeat );
 
 		run_perf_test( new_delete_int_category, "std new/delete int",
-			test_std_new_delete_int, op_repeat, test_repeat );
+			test_std_new_delete<int>, op_repeat, test_repeat );
 
 	}
 }

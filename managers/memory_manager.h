@@ -151,7 +151,7 @@ namespace memory_mgr
 		   @brief Constructor, performs initialization of manager and
 					memory passed as parameter
 		   @param segment_base  Pointer to memory which will be managed by
-		                    manager, before first use first byte of memory
+		                    manager, before first use First four bytes (dword) of memory
 							segment must be zeroed                   
 		*/
 		explicit memory_manager( void* segment_base )

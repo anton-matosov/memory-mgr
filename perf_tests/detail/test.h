@@ -122,6 +122,12 @@ public:
 	timer__.start();\
 	while( --loop__ ){
 
+#define TEST_ITERATION_NUMBER loop__
+
+#define TEST_SPLIT_LOOP } loop__ = repeate_count__; while( --loop__ ){
+
+#define TEST_SPLIT_LOOP_STOP_TIMER } timer__.stop();{ TEST_SPLIT_LOOP
+
 #define  TEST_END_LOOP( out_stream )\
 	}timer__.stop();\
 	out_stream << L"Full time: " << std::fixed << timer__.elapsed_mcs() << L" mcs";\

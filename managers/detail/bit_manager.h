@@ -98,14 +98,14 @@ namespace memory_mgr
 			   @brief Constructor
 			  
 			   @param	ptr	pointer to memory that will be used to store bitset
-			   @attention	First byte of memory segment must be zeroed before bit_manager creation\n
-							It will initialize its state only if first byte is null\n
-							Bitset will be placed starting from second byte
+			   @attention	First four bytes (dword) of memory segment must be zeroed before bit_manager creation\n
+							It will initialize its state only if first four bytes are null\n
+							Bitset will be placed starting from the fifth byte (the second dword)
 
 			   @exception newer throws
 			*/
 			bit_manager( block_ptr_type ptr )
-				:m_is_init( detail::char_cast( ptr ) ),
+				:m_is_init( detail::size_cast( ptr ) ),
 				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
 				 m_last_block( 0 )
 			{
@@ -176,7 +176,7 @@ namespace memory_mgr
 
 		private:
 			//Bitset
-			char*		m_is_init;
+			size_type*		m_is_init;
 			bitset_t	m_bitset;
 
 			//Block cache

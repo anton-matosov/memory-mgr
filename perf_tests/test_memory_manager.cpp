@@ -24,15 +24,19 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <iostream>
 #include "detail/test.h"
 #include "managers.h"
+#include "offset_pointer.h"
+#include "test_templates.h"
 
 namespace
 {
-
+	//////////////////////////////////////////////////////////////////////////
+	// alloc managers
+	//////////////////////////////////////////////////////////////////////////
 	template<class MemMgr>
 	long double test_alloc_mem_mgr( const int count )
 	{
 		MemMgr mgr;
-
+		
 		TEST_START_LOOP( count );
 		mgr.allocate( chunk_size );
 		TEST_END_LOOP( std::wcout );
@@ -50,50 +54,30 @@ namespace
 		MemMgr::destruct();
 		return TEST_ELAPCED_MCS;
 	}
+	//////////////////////////////////////////////////////////////////////////
 
 
-	long double test_malloc( const int count )
-	{
-
-		TEST_START_LOOP( count );
-		malloc(chunk_size);
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
-	long double test_std_new_int( const int count )
-	{
-
-		TEST_START_LOOP( count );
-		new int;
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
-
-	template<class MemMgr>
+	//////////////////////////////////////////////////////////////////////////
+	// alloc/dealloc managers
+	//////////////////////////////////////////////////////////////////////////
+	template<class MemMgr, class PointerType >
 	long double test_alloc_dealloc_mem_mgr( const int count )
 	{
 		MemMgr mgr;
 
+		typedef PointerType pointer_type;
+		pointer_type *p = new pointer_type[count];
 		TEST_START_LOOP( count );
-		mgr.deallocate( mgr.allocate( chunk_size ), chunk_size );
+		{
+			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( mgr.allocate( chunk_size ) );
+		}
+		TEST_SPLIT_LOOP;
+		{
+			mgr.deallocate( p[TEST_ITERATION_NUMBER], chunk_size );
+		}
 		TEST_END_LOOP( std::wcout );
 
-		return TEST_ELAPCED_MCS;
-	}
-
-	template<class MemMgr>
-	long double test_alloc_dealloc_sz_mem_mgr( const int count )
-	{
-		MemMgr mgr;
-
-		TEST_START_LOOP( count );
-		mgr.deallocate( mgr.allocate( chunk_size ) );
-		TEST_END_LOOP( std::wcout );
-
+		delete[] p;
 		return TEST_ELAPCED_MCS;
 	}
 
@@ -101,49 +85,76 @@ namespace
 	long double test_alloc_dealloc_singleton_mem_mgr( const int count )
 	{
 		MemMgr::instance();
+		
+		typedef int* pointer_type;
+		pointer_type *p = new pointer_type[count];
 		TEST_START_LOOP( count );
-		MemMgr::instance().deallocate( MemMgr::instance().allocate( chunk_size ), chunk_size );
+		{
+			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( MemMgr::instance().allocate( chunk_size ) );
+		}
+		TEST_SPLIT_LOOP;
+		{
+			MemMgr::instance().deallocate( p[TEST_ITERATION_NUMBER], chunk_size );
+		}
 		TEST_END_LOOP( std::wcout );
+
 		MemMgr::destruct();
+
+		delete[] p;
+
 		return TEST_ELAPCED_MCS;
 	}
+	//////////////////////////////////////////////////////////////////////////
 
-	template<class MemMgr>
-	long double test_alloc_dealloc_singleton_sz_mem_mgr( const int count )
+	//////////////////////////////////////////////////////////////////////////
+	// malloc
+	//////////////////////////////////////////////////////////////////////////
+	long double test_malloc( const int count )
 	{
-		MemMgr::instance();
+		int **p;
+		p = new int*[count];
 		TEST_START_LOOP( count );
-		MemMgr::instance().deallocate( MemMgr::instance().allocate( chunk_size ) );
+		{
+			p[TEST_ITERATION_NUMBER] = (int*)malloc(chunk_size);
+		}
+		TEST_SPLIT_LOOP_STOP_TIMER;
+		{
+			free( p[TEST_ITERATION_NUMBER] );
+		}
 		TEST_END_LOOP( std::wcout );
-		MemMgr::destruct();
+
+		delete[] p;
+
 		return TEST_ELAPCED_MCS;
 	}
 
 	long double test_malloc_free( const int count )
 	{
-
+		typedef int* pointer_type;
+		pointer_type *p;
+		p = new pointer_type[count];
 		TEST_START_LOOP( count );
-		free( malloc(chunk_size) );
+		{
+			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( malloc(chunk_size) );
+		}
+		TEST_SPLIT_LOOP;
+		{
+			free( p[TEST_ITERATION_NUMBER] );
+		}
 		TEST_END_LOOP( std::wcout );
+
+		delete[] p;
 
 		return TEST_ELAPCED_MCS;
 	}
+	//////////////////////////////////////////////////////////////////////////
 
-	long double test_std_new_delete_int( const int count )
-	{
-
-		TEST_START_LOOP( count );
-		delete new int;
-		TEST_END_LOOP( std::wcout );
-
-		return TEST_ELAPCED_MCS;
-	}
-
-	const char* simple_alloc_category = "simple alloc";
-	const char* alloc_dealloc_category = "alloc/dealloc";
+	const char* simple_alloc_category = "allocate chunk";
+	const char* alloc_dealloc_category = "allocate/deallocate chunk";
 
 	void run_all_tests( const int op_repeat, const int test_repeat )
 	{
+		typedef memory_mgr::manager_traits<shared_mgr>::offset_type offset_type;
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
@@ -164,33 +175,33 @@ namespace
 		run_perf_test( simple_alloc_category, "alloc sing shared sz pt mgr",
 			test_alloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
 
-		run_perf_test( alloc_dealloc_category, "alloc dealloc heap mgr",
-			test_alloc_dealloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc dealloc shared mgr",
-			test_alloc_dealloc_mem_mgr<shared_mgr>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap mgr",
+			test_alloc_dealloc_mem_mgr<heap_mgr, offset_type>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared mgr",
+			test_alloc_dealloc_mem_mgr<shared_mgr, offset_type>, op_repeat, test_repeat );
 
-		run_perf_test( alloc_dealloc_category, "alloc dealloc heap sz mgr",
-			test_alloc_dealloc_sz_mem_mgr<heap_sz_mgr>, op_repeat, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc dealloc heap pt mgr",
-			test_alloc_dealloc_mem_mgr<heap_pt_mgr>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap sz mgr",
+			test_alloc_dealloc_mem_mgr<heap_sz_mgr, offset_type>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap pt mgr",
+			test_alloc_dealloc_mem_mgr<heap_pt_mgr, int*>, op_repeat, test_repeat );
 
-		run_perf_test( alloc_dealloc_category, "alloc dealloc heap sz pt mgr",
-			test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc dealloc shared sz pt mgr",
-			test_alloc_dealloc_sz_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap sz pt mgr",
+			test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr, int*>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared sz pt mgr",
+			test_alloc_dealloc_mem_mgr<shared_sz_pt_mgr, int*>, op_repeat, test_repeat );
 
-		run_perf_test( alloc_dealloc_category, "alloc dealloc sing heap sz pt mgr",
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing heap sz pt mgr",
 			test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc dealloc sing shared sz pt mgr",
-			test_alloc_dealloc_singleton_sz_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing shared sz pt mgr",
+			test_alloc_dealloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
 
-		run_perf_test( alloc_dealloc_category, "std new delete int",
-			test_std_new_delete_int, op_repeat, test_repeat );
-		run_perf_test( alloc_dealloc_category, "malloc - free",
+		run_perf_test( alloc_dealloc_category, "std new/delete int",
+			test_std_new_delete<int>, op_repeat, test_repeat );
+		run_perf_test( alloc_dealloc_category, "malloc/free",
 			test_malloc_free, op_repeat, test_repeat );
 
 		run_perf_test( simple_alloc_category, "std new int",
-			test_std_new_int, op_repeat, test_repeat );
+			test_std_new<int>, op_repeat, test_repeat );
 		run_perf_test( simple_alloc_category, "malloc",
 			test_malloc, op_repeat, test_repeat );
 	}

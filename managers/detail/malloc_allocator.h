@@ -47,7 +47,7 @@ namespace memory_mgr
 			malloc_allocator( const size_t mem_size )
 			{
 				m_memory = malloc( mem_size );
-				*detail::char_cast(m_memory) = 0;
+				*detail::size_cast(m_memory) = 0;
 			}
 
 			/**
