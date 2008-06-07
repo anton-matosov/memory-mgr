@@ -28,10 +28,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_templates.h"
 //#include <stdext/Memory.h>
 
-#ifndef STD_NEW
-#	define STD_NEW( x, y ) 0
-#else
-#pragma comment( lib, "boost-memory" )
+#ifdef STD_NEW
+#	define GC_ALLOC_DECLARED
+#	pragma comment( lib, "boost-memory" )
 #endif
 
 namespace
@@ -87,7 +86,7 @@ namespace
 		delete[] p;
 		return TEST_ELAPCED_MCS;
 	}
-
+#ifdef GC_ALLOC_DECLARED
 	template< class PointerType >
 	long double test_alloc_dealloc_gc_alloc( const int count )
 	{
@@ -111,7 +110,7 @@ namespace
 
 		return TEST_ELAPCED_MCS;
 	}
-
+#endif //GC_ALLOC_DECLARED
 	template<class MemMgr>
 	long double test_alloc_dealloc_singleton_mem_mgr( const int count )
 	{

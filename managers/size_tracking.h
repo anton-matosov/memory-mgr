@@ -213,7 +213,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size )
 			{			
-				size += aux_data_size;
+				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size ), size );
 			}
 
@@ -228,7 +228,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
-				size += aux_data_size;
+				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size, nothrow ), size );
 			}
 
