@@ -58,10 +58,13 @@ namespace
 	long double test_new_singleton_mem_mgr( const int count )
 	{		
 		MemMgr::instance();
+
 		TEST_START_LOOP( count );
 		new( mem_mgr( MemMgr::instance() ) ) test_class2;
 		TEST_END_LOOP( std::wcout );
+
 		MemMgr::destruct();
+
 		return TEST_ELAPCED_MCS;
 	}
 
@@ -71,10 +74,13 @@ namespace
 		typedef test_class<MemMgr> test_class;
 
 		MemMgr::instance();
+
 		TEST_START_LOOP( count );
 		new test_class;
 		TEST_END_LOOP( std::wcout );
+
 		MemMgr::destruct();
+
 		return TEST_ELAPCED_MCS;
 	}
 

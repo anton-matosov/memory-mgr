@@ -26,6 +26,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "managers.h"
 #include "offset_pointer.h"
 #include "test_templates.h"
+//#include <stdext/Memory.h>
+
+#ifndef STD_NEW
+#	define STD_NEW( x, y ) 0
+#else
+#pragma comment( lib, "boost-memory" )
+#endif
 
 namespace
 {
@@ -78,6 +85,30 @@ namespace
 		TEST_END_LOOP( std::wcout );
 
 		delete[] p;
+		return TEST_ELAPCED_MCS;
+	}
+
+	template< class PointerType >
+	long double test_alloc_dealloc_gc_alloc( const int count )
+	{
+		
+		//std::BlockPool m_recycle;
+
+		typedef PointerType pointer_type;
+		memory_mgr::perf_timer timer__;
+		int loop__ = count;
+		int repeate_count__ = count;
+		timer__.start();
+		{
+			std::BlockPool m_recycle;
+			std::ScopeAlloc alloc(m_recycle);
+			while( --loop__ ){
+			{
+				pointer_type* p = STD_NEW( alloc, pointer_type );
+			}
+		}		
+		TEST_END_LOOP( std::wcout );
+
 		return TEST_ELAPCED_MCS;
 	}
 
@@ -155,6 +186,9 @@ namespace
 	void run_all_tests( const int op_repeat, const int test_repeat )
 	{
 		typedef memory_mgr::manager_traits<shared_mgr>::offset_type offset_type;
+
+		
+
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
@@ -194,7 +228,10 @@ namespace
 			test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing shared sz pt mgr",
 			test_alloc_dealloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
-
+//////////////////////////////////////////////////////////////////////////
+//		run_perf_test( alloc_dealloc_category, "GC Allocator",
+//			test_alloc_dealloc_gc_alloc<int>, op_repeat, test_repeat );
+//////////////////////////////////////////////////////////////////////////
 		run_perf_test( alloc_dealloc_category, "std new/delete int",
 			test_std_new_delete<int>, op_repeat, test_repeat );
 		run_perf_test( alloc_dealloc_category, "malloc/free",
