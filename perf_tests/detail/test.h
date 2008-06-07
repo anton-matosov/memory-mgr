@@ -57,11 +57,9 @@ typedef memory_mgr::singleton_manager
 
 MGR_DECLARE_MANAGER_CLASS(heap_manager, alloc_mgr);
 
-typedef std::basic_string<char, std::char_traits<char>, memory_mgr::allocator<char, 
-heap_manager> > string_type;
+typedef memory_mgr::allocator<char, heap_manager> char_allocator;
 
-typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-heap_manager> > wstring_type;
+typedef std::basic_string<char, std::char_traits<char>, char_allocator > string_type;
 
 template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )
