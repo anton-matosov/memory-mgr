@@ -1,6 +1,67 @@
-In dev (rev. 270)
- - 
+In dev (rev. 299)
+-
 
+*****************************************************************************************************************
+Version 1.2.0b (svn rev. 298, 07.06.2008):
+------------------------------------
+Performance improvements:
+ - 10%    fixed memory alignment for static_bitset that used by bit_manager, now bitset is uses memory starting from fifth byte, first four bytes used by bit_manager, updated malloc_allocator and memory_manager constructor comments to fit this changes
+ - 250%   changed caching algorithm in bit_manager, now instead of caching of the block index used in for previous allocation, it will cache bit_hint - a bit number that used as a hint for static_bitset for find_n operation, it points to: prev_alloc_bit+prev_alloc_bits_count. 
+ - 20-25% implemented alignment of allocatable memory area. for this purpose was implemented template that can round integer value to specified base value. 
+ - 10-15% removed update_size routine from size_tracking implementation 
+------------
+ = 300%
+ 
+------------------------------------
+Implemented feature requests:
+ - #1929433: Refactore implementation of shared memory allocators.
+    * Refactored shared segment classes using NVI design pattern.
+    * Made signatures of OS dependent APIs (for memory mapping) identical
+
+------------------------------------
+Fixed bugz:
+ - #1983655: "allocator class implementation is incorrect"
+ - #1981817: "It's impossible to use memory segment as first decorator"
+    * Added default constructor to memory_manager class, it will generate compile time error if used
+    * Added default constructor to pointer_convert and size_tracking classes, it will generate compile time error if decorated memory manager doesn't have attached memory segment
+    * Added memory_segment_tag which indicates that memory manager has attached memory segment
+    * Added memory_segment_tag  to manager_category of manager_traits for memory_segment
+    * Removed explicit templates instantiation from unit tests
+ - #1981826: "Heap and shared segments provides invalid manager_traits"
+   * Changed base class' template specialization parameters for manager_traits for segments
+ - #1985090: "vector_as_allocator works too slow"
+    * implemented malloc_allocator that uses malloc/free to alloc/dealloc memory segment
+    * moved vector_as_allocator to separate file
+    * changed allocator heap_segment to malloc_allocator instead of vector_as_allocator
+ - #1986144: "memory leaks in performance tests"
+    * alloc(new) test function were updated, now they track all allocated objects, and before exit they deallocate these objects
+ - #1986138: "alloc/dealloc tests implemented incorrectly"
+    * alloc/dealloc tests were reimplemented to fit required test-scenario
+ - #1986130: "there is a lot of code duplications in performance tests"
+    * source code was refactored to use the same function for common tests
+ - 1985107: "allocator does not validate memory manager type"
+    * Implemented validation of memory manager categories in allocator's constructor
+------------------------------------
+Tasks:
+ - #148941: "Implement memory segment manager"
+    * added additional parameter to get_base - offset, so, now to get offset's base address you have to pass this offset to get_base method
+    * renamed get_base method of memory_manager and it's decorators into get_offset_base
+    * added two additional methods (get_segment_base and get_ptr_base) that return base addresses for memory segment and for specified pointer
+    * added segment_manager class
+------------------------------------	
+Other:
+ - added footer and stylesheet for doxy documentation
+ - fixed precompiled header project settings for VS2005 
+ - marked all managers functions as inline
+ - enabled inlining and optimization for VS 2005 perf_tests project
+ - updated comments for bit_manager memory_manager
+ - used allocator class for std::string class in unit tests and performance tests 
+ - implemented stub to prevent showing of assert box when quiting from performance test in debug build 
+ - added time stamp to perf_results file name
+ - added perf test for (external) GC Allocator - ScopeAlloc - just to compare performance
+ - changed optimization level for VS2005 projects
+ 
+*****************************************************************************************************************
 Version 1.1.5 (svn rev. 270, 01.06.2008):
  - Task: 1929292: "Write technical documentation"
    Fully documented following files: type_manip.h, new.h,
@@ -32,7 +93,7 @@ Version 1.1.5 (svn rev. 270, 01.06.2008):
  - moved yes_type and no_type out of is_categoy_suppoted class
  - updated unit tests to use new mem_mgr function
  
-  
+*****************************************************************************************************************  
 Version 1.0.0 (svn rev. 103, 03.03.2008):
  - implemented offset_pointer unit tests 
  - implemented size_tracking for offset and pointer managers
@@ -90,7 +151,7 @@ Version 1.0.0 (svn rev. 103, 03.03.2008):
  - implemented temp_buffer class and unit tests for it
  - added get_executable_path and get_exe_dir OS independent functions
 
- 
+***************************************************************************************************************** 
 Version 0.8.0 (svn rev. 64):
  - change log file was added
  - allocator class added
@@ -132,7 +193,7 @@ Version 0.8.0 (svn rev. 64):
  - implemented manager_traits - traits class for memory managers
  - categorized memory managers and memory segments
    
-
+*****************************************************************************************************************
 Version 0.6.3 beta (svn rev. 25)
  - license agreement was added
  - compiler dependent code was removed
@@ -146,6 +207,7 @@ Version 0.6.3 beta (svn rev. 25)
  - added type manipulation library
  - added simple_ptr template class - a basic class for all smart pointers
 
+******************************************************************************************************************
 Version 0.6.0
  - implemented generic singleton
  - implemented singleton manager (heap_memory_manager)
@@ -166,10 +228,12 @@ Version 0.6.0
  - files were restructured
  - removed unused project's folders 
 
+*****************************************************************************************************************
 Version 0.1.0a
  - removed boost dependencies 
  - unit tests implementation started
  - comments were added
- 
+
+***************************************************************************************************************** 
 Version 0.0.3 
  - basic functionality implemented
