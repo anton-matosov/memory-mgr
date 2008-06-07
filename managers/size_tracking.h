@@ -107,6 +107,12 @@ namespace memory_mgr
 				return m_mgr.get_ptr_base( ptr );
 			}
 		protected:
+
+			/**
+			   @brief Size of auxiliary data required to store size
+			*/
+			enum{ aux_data_size = sizeof( size_type ) };
+
 			/**
 			   @brief Default constructor, creates memory manager 
 			   @remarks Can be used only if decorates memory manager with 
@@ -122,19 +128,7 @@ namespace memory_mgr
 			inline explicit size_tracking_impl_base( void* segment_base )
 				:m_mgr( segment_base )
 			{}
-
-			/**
-			   @brief Adds size of auxiliary data to 'size' parameter
-			  
-			   @param	size	variable that should be updated
-			   @exception newer throws
-			*/
-			inline void update_size( size_type& size )
-			{
-				//Additional memory for size storing
-				size += sizeof( size_type );
-			}
-
+			
 			/**
 			   @brief Puts memory block size at the beginning of memory block
 			  
@@ -219,7 +213,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size )
 			{			
-				update_size( size );
+				size += aux_data_size;
 				return store_size( this->m_mgr.allocate( size ), size );
 			}
 
@@ -234,7 +228,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
-				update_size( size );
+				size += aux_data_size;
 				return store_size( this->m_mgr.allocate( size, nothrow ), size );
 			}
 

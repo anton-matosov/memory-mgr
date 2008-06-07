@@ -396,14 +396,20 @@ namespace memory_mgr
 		}
 
 
-		inline size_type find_n( size_type count,  size_type first_block = 0 )
+		inline size_type find_n( size_type count, /*size_type first_block = 0,*/ size_type bit_hint = 0 )
 		{
 			if( count == 0 )
 			{
 				return npos;
 			}
-			size_type lowest_bit = do_find_from(first_block);
 
+
+ 			size_type first_block = block_index( bit_hint );
+ 			size_type lowest_bit = bit_index( bit_hint );
+			if( !unchecked_test( first_block, bit_hint ) )
+			{
+				lowest_bit = do_find_from(first_block);
+			}
 			size_type blk = first_block;
 			size_type ind = lowest_bit;
 			ptrdiff_t left = count;
@@ -455,7 +461,10 @@ namespace memory_mgr
 		{ return pos % bits_per_block; }
 
 		static inline block_type bit_mask(size_type pos) 
-		{ return static_cast<block_type>( block_type(1) << bit_index(pos) ); }
+		{ return unchecked_bit_mask( bit_index(pos) ); }
+
+		static inline block_type unchecked_bit_mask(size_type pos) 
+		{ return static_cast<block_type>( block_type(1) << pos ); }
 		
 		static inline block_type bit_mask(size_type pos, size_type count) 
 		{ 
@@ -473,8 +482,11 @@ namespace memory_mgr
 		{ return block_index( bits_count ); }
 
 		inline bool unchecked_test(size_type pos) const
-		{ return (this->m_bits[block_index(pos)] & bit_mask(pos)) != 0; }
+		{ return unchecked_test( block_index(pos), bit_index(pos) ); }
 		
+		inline bool unchecked_test(size_type block_ind, size_type bit_ind) const
+		{ return (this->m_bits[block_ind] & unchecked_bit_mask(bit_ind)) != 0; }
+
 
 		//Find first block with at list one bit set to 1
 		inline size_type find_first_block( size_type from ) const

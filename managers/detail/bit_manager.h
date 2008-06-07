@@ -38,6 +38,13 @@ namespace memory_mgr
 	*/
 	namespace detail
 	{
+		//Rounds integer value to upper value using specified integer base
+		template<size_t value, size_t base>
+		struct round_int
+		{
+			enum {result = ( (value / base) * base) + (value % base ? base : 0)};
+		};
+
 		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = custom_array };
 		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
@@ -70,13 +77,14 @@ namespace memory_mgr
 			*/
 			typedef typename bitset_t::size_type			size_type;
 
+			typedef size_type aux_data_type;
 			/**
 			   @brief compile time computed constants
 			*/
 			enum
 			{
-				aux_data_size = sizeof( char ) /**< size of auxiliary data required to store bit_manager internal data*/,
-				memory_usage = bitset_t::memory_usage + aux_data_size /**< amount of memory in bytes used by bit_manager*/,
+				aux_data_size = sizeof( aux_data_type ) /**< size of auxiliary data required to store bit_manager internal data*/,
+				memory_usage = round_int<bitset_t::memory_usage + aux_data_size, 32>::result /**< amount of memory in bytes used by bit_manager*/,
 				num_bits = BitsCount /**< number of bits available for allocations*/
 			};
 
@@ -88,8 +96,8 @@ namespace memory_mgr
 			   @exception newer throws
 			*/
 			bit_manager()
-				:m_last_block( 0 ),
-				m_is_init(0)
+				:m_is_init(0),
+				m_bit_hint( 0 )
 			{
 				m_bitset.set();				
 			}
@@ -107,7 +115,7 @@ namespace memory_mgr
 			bit_manager( block_ptr_type ptr )
 				:m_is_init( detail::size_cast( ptr ) ),
 				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
-				 m_last_block( 0 )
+				 m_bit_hint( 0 )
 			{
 				if( *m_is_init == not_initialized )
 				{
@@ -121,23 +129,23 @@ namespace memory_mgr
 				return memory_usage;
 			}
 
-			size_type allocate( size_type bits_count )
+			inline size_type allocate( size_type bits_count )
 			{
-				size_type pos = m_bitset.find_n( bits_count, m_last_block );
+				size_type pos = m_bitset.find_n( bits_count,  m_bit_hint );
 				//if found set bits
 				if( pos != npos )
 				{
 					//cache block index
-					m_last_block = block_index(pos);
+					m_bit_hint = pos + bits_count;
 					m_bitset.reset( pos, bits_count );
 				}
 				else
 				{
 					//If cache is used
-					if (m_last_block != 0)
+					if (m_bit_hint != 0)
 					{
 						//Invalidate cache
-						m_last_block = 0;
+						m_bit_hint = 0;
 						//And try one more time
 						return allocate( bits_count );
 					}					
@@ -146,13 +154,13 @@ namespace memory_mgr
 				return pos;
 			}
 
-			void deallocate( size_type pos, size_type bits_count )
+			inline void deallocate( size_type pos, size_type bits_count )
 			{
 				assert( ( this->m_bitset.test( pos, bits_count ) == false ) 
 					&& "Bits are already deallocated or invalid size." );
 				this->m_bitset.set( pos, bits_count );
 				//cache block index
-				this->m_last_block = block_index(pos);
+				m_bit_hint = pos;
 			}
 
 			template <class Ch, class Tr>
@@ -164,23 +172,23 @@ namespace memory_mgr
 			/**
 			   @brief Return true if there is no more free bits to allocate
 			*/
-			bool empty()
+			inline bool empty()
 			{
 				return this->m_bitset.empty();
 			}
 
-			bool free()
+			inline bool free()
 			{
 				return this->m_bitset.test( 0, num_bits );
 			}
 
 		private:
 			//Bitset
-			size_type*		m_is_init;
+			aux_data_type*		m_is_init;
 			bitset_t	m_bitset;
 
-			//Block cache
-			size_type m_last_block;
+			//Cache
+			size_type m_bit_hint;
 
 			static inline size_type block_index(size_type pos) 
 			{
