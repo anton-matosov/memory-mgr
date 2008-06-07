@@ -36,6 +36,11 @@ int main(int /*argc*/, char* /*argv*/[])
 	const int op_repeat = 50000;
 	const int test_repeat = 10;
 
+	/**
+	   @todo Got rid of this, stub!!!
+	*/
+	alloc_mgr::instance();
+
 	test_memory_manager( op_repeat, test_repeat );
 	test_managed_base( op_repeat, test_repeat );
 	test_offset_pointer( op_repeat, test_repeat );
