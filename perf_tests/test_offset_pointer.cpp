@@ -22,7 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
-bool test_offset_pointer( const int /*op_repeat*/, const int /*test_repeat*/ )
+bool test_offset_pointer( const int /*op_repeat*/, const int /*per_alloc*/, const int /*test_repeat*/ )
 {
 
 	return false;

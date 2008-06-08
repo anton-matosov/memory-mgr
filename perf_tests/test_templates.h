@@ -31,13 +31,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 template<class TestType>
-long double test_std_new( const int count )
+long double test_std_new( const int op_repeat, const int per_alloc )
 {
 	typedef TestType test_type;
 	typedef test_type* pointer_type;
-	pointer_type *p = new pointer_type[count];
+	pointer_type *p = new pointer_type[per_alloc];
 
-	TEST_START_LOOP( count );
+	TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 	{
 		p[TEST_ITERATION_NUMBER] = new test_type;
 	}
@@ -53,13 +53,13 @@ long double test_std_new( const int count )
 }
 
 template<class TestType>
-long double test_std_new_delete( const int count )
+long double test_std_new_delete( const int op_repeat, const int per_alloc )
 {
 	typedef TestType test_type;
 	typedef test_type* pointer_type;
-	pointer_type *p = new pointer_type[count];
+	pointer_type *p = new pointer_type[per_alloc];
 
-	TEST_START_LOOP( count );
+	TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 	{
 		p[TEST_ITERATION_NUMBER] = new test_type;
 	}

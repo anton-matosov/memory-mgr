@@ -1,8 +1,8 @@
-In dev (rev. 299)
+In dev (rev. 300)
 -
 
 *****************************************************************************************************************
-Version 1.2.0b (svn rev. 298, 07.06.2008):
+Version 1.2.0b (svn rev. 300, 07.06.2008):
 ------------------------------------
 Performance improvements:
  - 10%    fixed memory alignment for static_bitset that used by bit_manager, now bitset is uses memory starting from fifth byte, first four bytes used by bit_manager, updated malloc_allocator and memory_manager constructor comments to fit this changes

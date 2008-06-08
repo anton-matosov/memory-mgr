@@ -39,7 +39,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 typedef unsigned int chunk_type;
 static const size_t chunk_size = 4;
-static const size_t memory_size = 64 * 1024 * 1024;
+static const size_t memory_size = 4 * 1024 * 1024;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, size_t, memory_mgr::sync::pseudo_sync > memmgr_type;
 

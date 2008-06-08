@@ -189,6 +189,7 @@ namespace memory_mgr
 			inline void clear()
 			{
 				m_bitset.set();
+				m_bit_hint = 0;
 			}
 		private:
 			//Bitset

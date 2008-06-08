@@ -113,43 +113,62 @@ public:
 	~perf_test_manager();
 };
 
-#define  TEST_START_LOOP( repeate_count )\
+#define TEST_PRINT_MEM_INFO( op_repeat_count, alloc_count, memmgr_type, object_type )\
+	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";\
+	std::wcout << L"Required memory: " << op_repeat_count * alloc_count * sizeof( object_type ) << L"\n";
+
+
+#define  TEST_START_LOOP( op_repeat_count, alloc_count, pointer_type )\
 	memory_mgr::perf_timer timer__;\
-	int loop__ = repeate_count;\
-	int repeate_count__ = repeate_count;\
+	int op_repeat_count__ = op_repeat_count;\
+	int loop_outer__ = op_repeat_count__;\
+	int alloc_count__ = alloc_count;\
+	int full_repeat_count__ = alloc_count__ * op_repeat_count__;\
+	double accum__ = 0.0;\
+	pointer_type *ptr_storage__ = new pointer_type[full_repeat_count__];ptr_storage__;\
 	timer__.start();\
-	while( --loop__ ){
+	while( loop_outer__-- ){\
+		int loop_inner__ = alloc_count__;\
+		while( loop_inner__-- ){
 
-#define TEST_ITERATION_NUMBER loop__
+#define TEST_GET_TRACKED_PTR ptr_storage__[loop_inner__]
+#define TEST_TRACK_PTR TEST_GET_TRACKED_PTR =
+#define TEST_ITERATION_NUMBER loop_inner__
 
-#define TEST_SPLIT_LOOP } loop__ = repeate_count__; while( --loop__ ){
+
+#define TEST_SPLIT_LOOP } loop_inner__ = alloc_count__; while( --loop_inner__ ){
 
 #define TEST_SPLIT_LOOP_STOP_TIMER } timer__.stop();{ TEST_SPLIT_LOOP
 
 #define  TEST_END_LOOP( out_stream )\
-	}timer__.stop();\
-	out_stream << L"Full time: " << std::fixed << timer__.elapsed_mcs() << L" mcs";\
-	out_stream << L"\tRepeat count: " << count;\
-	out_stream << L"\tOperation time: " << std::fixed << timer__.elapsed_mcs() / repeate_count__ << L" mcs\n";\
+		}\
+	}\
+	timer__.stop();\
+	accum__ = timer__.elapsed_mcs();\
+	delete[] ptr_storage__;\
+	out_stream << L"Full time: " << std::fixed << accum__ << L" mcs";\
+	out_stream << L"\tRepeat count: " << alloc_count__;\
+	out_stream << L"\tOperation time: " << std::fixed << accum__ * 1000.0 / full_repeat_count__ << L" Ns\n";\
 
-#define TEST_ELAPCED_MCS timer__.elapsed_mcs();
+#define TEST_ACCUMULATE_RESULT accum__ = timer__.elapsed_mcs();
+#define TEST_ELAPCED_MCS accum__ / op_repeat_count__
 
 template<class TestOp>
 void run_perf_test( const string_type& category_name,
 				   const string_type& test_name, TestOp test,
-				   const int op_repeat, const int test_repeat )
+				   const int op_repeat, const int per_alloc, const int test_repeat )
 {
 	std::wcout << L"\n" << test_name.c_str() << L"\n";
 	int i = test_repeat;
 	while( i-- )
 	{
-		perf_test_manager::instance().add_result( category_name, test_name, test( op_repeat ), op_repeat );
+		perf_test_manager::instance().add_result( category_name, test_name, test( op_repeat, per_alloc ), per_alloc );
 	}
 }
 
 template<class MemMgr>
 void print_perf_test_header( const std::wstring& name,
-							const int op_repeat, const int test_repeat )
+							const int op_repeat, const int per_alloc, const int test_repeat )
 {
 	typedef MemMgr memmgr_type;
 	memory_mgr::perf_timer timer;
@@ -164,10 +183,10 @@ void print_perf_test_header( const std::wstring& name,
 	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), name_fill, L'-' );
 	std::wcout << L'\n';
 
-	std::wcout << L"Test repeat: " << test_repeat << L"\n";
-	std::wcout << L"Operation repeat: " << op_repeat << L"\n";
+	std::wcout << L"Test repeated: " << test_repeat << L"\n";
+	std::wcout << L"Allocations repeated: " << op_repeat << L"\n";
+	std::wcout << L"Allocated objects: " << per_alloc << L"\n";
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";
-	std::wcout << L"Required memory: " << op_repeat * memory_mgr::manager_traits<memmgr_type>::chunk_size << L"\n";
 	std::wcout << L"Timer resolution: " << std::fixed << timer.resolution_mcs() << L" mcs\n";
 	std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, L'=' );
 

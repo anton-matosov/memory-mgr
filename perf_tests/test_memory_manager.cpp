@@ -39,23 +39,37 @@ namespace
 	// alloc managers
 	//////////////////////////////////////////////////////////////////////////
 	template<class MemMgr>
-	long double test_alloc_mem_mgr( const int count )
+	long double test_alloc_mem_mgr( const int op_repeat, const int per_alloc )
 	{
 		MemMgr mgr;
 		
-		TEST_START_LOOP( count );
-		mgr.allocate( chunk_size );
+		TEST_START_LOOP( op_repeat, per_alloc, char );
+		{
+			mgr.allocate( chunk_size );
+		}
+		TEST_SPLIT_LOOP_STOP_TIMER;
+		{
+			mgr.clear();
+			break;
+		}
 		TEST_END_LOOP( std::wcout );
 
 		return TEST_ELAPCED_MCS;
 	}
 
 	template<class MemMgr>
-	long double test_alloc_singleton_mem_mgr( const int count )
+	long double test_alloc_singleton_mem_mgr( const int op_repeat, const int per_alloc )
 	{
 		MemMgr::instance();
-		TEST_START_LOOP( count );
-		MemMgr::instance().allocate( chunk_size );
+		TEST_START_LOOP( op_repeat, per_alloc, char );
+		{
+			MemMgr::instance().allocate( chunk_size );
+		}
+		TEST_SPLIT_LOOP_STOP_TIMER;
+		{
+			MemMgr::instance().clear();
+			break;
+		}
 		TEST_END_LOOP( std::wcout );
 		MemMgr::destruct();
 		return TEST_ELAPCED_MCS;
@@ -67,36 +81,36 @@ namespace
 	// alloc/dealloc managers
 	//////////////////////////////////////////////////////////////////////////
 	template<class MemMgr, class PointerType >
-	long double test_alloc_dealloc_mem_mgr( const int count )
+	long double test_alloc_dealloc_mem_mgr( const int op_repeat, const int per_alloc )
 	{
 		MemMgr mgr;
 
 		typedef PointerType pointer_type;
-		pointer_type *p = new pointer_type[count];
-		TEST_START_LOOP( count );
+		
+		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( mgr.allocate( chunk_size ) );
+			TEST_TRACK_PTR static_cast<pointer_type>( mgr.allocate( chunk_size ) );
 		}
 		TEST_SPLIT_LOOP;
 		{
-			mgr.deallocate( p[TEST_ITERATION_NUMBER], chunk_size );
+			mgr.deallocate( TEST_GET_TRACKED_PTR, chunk_size );
 		}
 		TEST_END_LOOP( std::wcout );
 
-		delete[] p;
+		
 		return TEST_ELAPCED_MCS;
 	}
 #ifdef GC_ALLOC_DECLARED
 	template< class PointerType >
-	long double test_alloc_dealloc_gc_alloc( const int count )
+	long double test_alloc_dealloc_gc_alloc( const int op_repeat, const int per_alloc )
 	{
 		
 		//std::BlockPool m_recycle;
 
 		typedef PointerType pointer_type;
 		memory_mgr::perf_timer timer__;
-		int loop__ = count;
-		int repeate_count__ = count;
+		int loop__ = per_alloc;
+		int repeate_count__ = per_alloc;
 		timer__.start();
 		{
 			std::BlockPool m_recycle;
@@ -112,25 +126,25 @@ namespace
 	}
 #endif //GC_ALLOC_DECLARED
 	template<class MemMgr>
-	long double test_alloc_dealloc_singleton_mem_mgr( const int count )
+	long double test_alloc_dealloc_singleton_mem_mgr( const int op_repeat, const int per_alloc )
 	{
 		MemMgr::instance();
 		
 		typedef int* pointer_type;
-		pointer_type *p = new pointer_type[count];
-		TEST_START_LOOP( count );
+		
+		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( MemMgr::instance().allocate( chunk_size ) );
+			TEST_TRACK_PTR static_cast<pointer_type>( MemMgr::instance().allocate( chunk_size ) );
 		}
 		TEST_SPLIT_LOOP;
 		{
-			MemMgr::instance().deallocate( p[TEST_ITERATION_NUMBER], chunk_size );
+			MemMgr::instance().deallocate( TEST_GET_TRACKED_PTR, chunk_size );
 		}
 		TEST_END_LOOP( std::wcout );
 
 		MemMgr::destruct();
 
-		delete[] p;
+		
 
 		return TEST_ELAPCED_MCS;
 	}
@@ -139,41 +153,39 @@ namespace
 	//////////////////////////////////////////////////////////////////////////
 	// malloc
 	//////////////////////////////////////////////////////////////////////////
-	long double test_malloc( const int count )
-	{
-		int **p;
-		p = new int*[count];
-		TEST_START_LOOP( count );
+	long double test_malloc( const int op_repeat, const int per_alloc )
+	{		
+		TEST_START_LOOP( op_repeat, per_alloc, int* );
 		{
-			p[TEST_ITERATION_NUMBER] = (int*)malloc(chunk_size);
+			TEST_TRACK_PTR (int*)malloc(chunk_size);
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
-			free( p[TEST_ITERATION_NUMBER] );
+			free( TEST_GET_TRACKED_PTR );
 		}
 		TEST_END_LOOP( std::wcout );
 
-		delete[] p;
+		
 
 		return TEST_ELAPCED_MCS;
 	}
 
-	long double test_malloc_free( const int count )
+	long double test_malloc_free( const int op_repeat, const int per_alloc )
 	{
 		typedef int* pointer_type;
-		pointer_type *p;
-		p = new pointer_type[count];
-		TEST_START_LOOP( count );
+		
+		
+		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			p[TEST_ITERATION_NUMBER] = static_cast<pointer_type>( malloc(chunk_size) );
+			TEST_TRACK_PTR static_cast<pointer_type>( malloc(chunk_size) );
 		}
 		TEST_SPLIT_LOOP;
 		{
-			free( p[TEST_ITERATION_NUMBER] );
+			free( TEST_GET_TRACKED_PTR );
 		}
 		TEST_END_LOOP( std::wcout );
 
-		delete[] p;
+		
 
 		return TEST_ELAPCED_MCS;
 	}
@@ -182,74 +194,74 @@ namespace
 	const char* simple_alloc_category = "allocate chunk";
 	const char* alloc_dealloc_category = "allocate/deallocate chunk";
 
-	void run_all_tests( const int op_repeat, const int test_repeat )
+	void run_all_tests( const int op_repeat, const int per_alloc, const int test_repeat )
 	{
 		typedef memory_mgr::manager_traits<shared_mgr>::offset_type offset_type;
 
 		
 
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
-			test_alloc_mem_mgr<heap_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<heap_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
-			test_alloc_mem_mgr<shared_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<shared_mgr>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( simple_alloc_category, "alloc heap sz mgr",
-			test_alloc_mem_mgr<heap_sz_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc heap pt mgr",
-			test_alloc_mem_mgr<heap_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<heap_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( simple_alloc_category, "alloc heap sz pt mgr",
-			test_alloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared sz pt mgr",
-			test_alloc_mem_mgr<shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_mem_mgr<shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( simple_alloc_category, "alloc sing heap sz pt mgr",
-			test_alloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc sing shared sz pt mgr",
-			test_alloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap mgr",
-			test_alloc_dealloc_mem_mgr<heap_mgr, offset_type>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<heap_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared mgr",
-			test_alloc_dealloc_mem_mgr<shared_mgr, offset_type>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<shared_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap sz mgr",
-			test_alloc_dealloc_mem_mgr<heap_sz_mgr, offset_type>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<heap_sz_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap pt mgr",
-			test_alloc_dealloc_mem_mgr<heap_pt_mgr, int*>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<heap_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap sz pt mgr",
-			test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr, int*>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared sz pt mgr",
-			test_alloc_dealloc_mem_mgr<shared_sz_pt_mgr, int*>, op_repeat, test_repeat );
+			test_alloc_dealloc_mem_mgr<shared_sz_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing heap sz pt mgr",
-			test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing shared sz pt mgr",
-			test_alloc_dealloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, test_repeat );
+			test_alloc_dealloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 //////////////////////////////////////////////////////////////////////////
 //		run_perf_test( alloc_dealloc_category, "GC Allocator",
-//			test_alloc_dealloc_gc_alloc<int>, op_repeat, test_repeat );
+//			test_alloc_dealloc_gc_alloc<int>, op_repeat, per_alloc, test_repeat );
 //////////////////////////////////////////////////////////////////////////
 		run_perf_test( alloc_dealloc_category, "std new/delete int",
-			test_std_new_delete<int>, op_repeat, test_repeat );
+			test_std_new_delete<int>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "malloc/free",
-			test_malloc_free, op_repeat, test_repeat );
+			test_malloc_free, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( simple_alloc_category, "std new int",
-			test_std_new<int>, op_repeat, test_repeat );
+			test_std_new<int>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "malloc",
-			test_malloc, op_repeat, test_repeat );
+			test_malloc, op_repeat, per_alloc, test_repeat );
 	}
 
 }
 
-bool test_memory_manager( const int op_repeat, const int test_repeat )
+bool test_memory_manager( const int op_repeat, const int per_alloc, const int test_repeat )
 {	
 
 	print_perf_test_header<memmgr_type>( L"Testing memory managers",
-		op_repeat, test_repeat );
-	run_all_tests( op_repeat, test_repeat );
+		op_repeat, per_alloc, test_repeat );
+	run_all_tests( op_repeat, per_alloc, test_repeat );
 
 
 	return false;

@@ -206,6 +206,10 @@
 				RelativePath=".\test_offset_pointer.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\test_templates.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="detail"
