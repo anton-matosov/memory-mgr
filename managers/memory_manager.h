@@ -251,6 +251,15 @@ namespace memory_mgr
 		{
 			return m_bitmgr.free();
 		}
+
+		/**
+		   @brief Call this method to deallocate all allocated memory
+		   @exception newer  throws                                     
+		*/
+		inline void clear()
+		{
+			m_bitmgr.clear();
+		}
 	private:
 		/**
 		   @brief Returns offset by chunk index

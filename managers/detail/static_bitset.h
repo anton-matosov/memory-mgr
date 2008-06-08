@@ -321,7 +321,7 @@ namespace memory_mgr
 			assert(count > 0);
 
 			size_type blk = block_index( pos );
-			size_type ind = bit_index( pos );
+			size_type ind = pos - blk * bits_per_block;//bit_index( pos );
 			ptrdiff_t left = count;
 			while( left > 0 )
 			{
@@ -405,7 +405,8 @@ namespace memory_mgr
 
 
  			size_type first_block = block_index( bit_hint );
- 			size_type lowest_bit = bit_index( bit_hint );
+ 			size_type lowest_bit = bit_hint - first_block * bits_per_block; //bit_index( bit_hint );
+
 			if( !unchecked_test( first_block, bit_hint ) )
 			{
 				lowest_bit = do_find_from(first_block);
@@ -454,6 +455,12 @@ namespace memory_mgr
 		}
 
 	private:
+		enum{
+			one = block_type(1),
+			block_max = static_cast<block_type>( ~block_type(0) )
+
+		};
+
 		static inline size_type block_index(size_type pos) 
 		{ return pos / bits_per_block; }
 		
@@ -464,19 +471,19 @@ namespace memory_mgr
 		{ return unchecked_bit_mask( bit_index(pos) ); }
 
 		static inline block_type unchecked_bit_mask(size_type pos) 
-		{ return static_cast<block_type>( block_type(1) << pos ); }
+		{ return static_cast<block_type>( one << pos ); }
 		
 		static inline block_type bit_mask(size_type pos, size_type count) 
 		{ 
 			count = (count % bits_per_block) < count ? -1 : count;
-			return block_type( ((block_type(1) << count ) - 1) << bit_index(pos) ); 
+			return block_type( ((one << count ) - 1) << bit_index(pos) ); 
 		}
 
 		static inline block_type higher_bit_mask(size_type pos) 
-		{ return block_type( ~block_type(0) << bit_index(pos) ); }
+		{ return block_type( block_max << bit_index(pos) ); }
 
 		static inline block_type lower_bit_mask(size_type pos) 
-		{ return ~higher_bit_mask(pos); }
+		{ return ~higher_bit_mask(); }
 
 		static inline size_type blocks_count( size_type bits_count ) 
 		{ return block_index( bits_count ); }
@@ -526,7 +533,7 @@ namespace memory_mgr
 		inline bool contains_bits( size_type block, size_type first, size_type count ) const
 		{
 			const block_type mask = bit_mask( first, count );
-			return (this->m_bits[block] &  mask) == mask;
+			return (this->m_bits[block] & mask) == mask;
 		}
 
 		// If size() is not a multiple of bits_per_block

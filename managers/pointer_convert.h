@@ -152,6 +152,15 @@ namespace memory_mgr
 		}
 
 		/**
+		   @brief Call this method to deallocate all allocated memory
+		   @exception newer  throws                                     
+		*/
+		inline void clear()
+		{
+			m_mgr.clear();
+		}
+
+		/**
 		   @brief Call this method to get memory base address from which offset
 		   is calculated
 		   @exception newer  throws

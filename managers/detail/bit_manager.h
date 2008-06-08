@@ -99,7 +99,7 @@ namespace memory_mgr
 				:m_is_init(0),
 				m_bit_hint( 0 )
 			{
-				m_bitset.set();				
+				clear();				
 			}
 
 			/**
@@ -119,7 +119,7 @@ namespace memory_mgr
 			{
 				if( *m_is_init == not_initialized )
 				{
-					m_bitset.set();
+					clear();
 					*m_is_init = initialized;
 				}
 			}
@@ -182,6 +182,14 @@ namespace memory_mgr
 				return this->m_bitset.test( 0, num_bits );
 			}
 
+			/**
+			   @brief Call this method to deallocate all allocated bits
+			   @exception newer  throws                                     
+			*/
+			inline void clear()
+			{
+				m_bitset.set();
+			}
 		private:
 			//Bitset
 			aux_data_type*		m_is_init;
