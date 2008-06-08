@@ -77,7 +77,19 @@ namespace memory_mgr
 			*/
 			typedef typename bitset_t::size_type			size_type;
 
-			typedef size_type aux_data_type;
+			//typedef size_type aux_data_type;
+			struct aux_data_type
+			{
+				size_type m_is_init;
+
+				//Cache
+				size_type m_bit_hint;
+			};
+
+			aux_data_type* aux_cast( void* p )
+			{
+				return static_cast<aux_data_type*>( p );
+			}
 			/**
 			   @brief compile time computed constants
 			*/
@@ -113,14 +125,13 @@ namespace memory_mgr
 			   @exception newer throws
 			*/
 			bit_manager( block_ptr_type ptr )
-				:m_is_init( detail::size_cast( ptr ) ),
-				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
-				 m_bit_hint( 0 )
+				:m_state( aux_cast( ptr ) ),
+				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) )
 			{
-				if( *m_is_init == not_initialized )
+				if( m_state->m_is_init == not_initialized )
 				{
 					clear();
-					*m_is_init = initialized;
+					m_state->m_is_init = initialized;
 				}
 			}
 
@@ -131,21 +142,21 @@ namespace memory_mgr
 
 			inline size_type allocate( size_type bits_count )
 			{
-				size_type pos = m_bitset.find_n( bits_count,  m_bit_hint );
+				size_type pos = m_bitset.find_n( bits_count,  m_state->m_bit_hint );
 				//if found set bits
 				if( pos != npos )
 				{
 					//cache block index
-					m_bit_hint = pos + bits_count;
+					m_state->m_bit_hint = pos + bits_count;
 					m_bitset.reset( pos, bits_count );
 				}
 				else
 				{
 					//If cache is used
-					if (m_bit_hint != 0)
+					if (m_state->m_bit_hint != 0)
 					{
 						//Invalidate cache
-						m_bit_hint = 0;
+						m_state->m_bit_hint = 0;
 						//And try one more time
 						return allocate( bits_count );
 					}					
@@ -160,7 +171,7 @@ namespace memory_mgr
 					&& "Bits are already deallocated or invalid size." );
 				this->m_bitset.set( pos, bits_count );
 				//cache block index
-				m_bit_hint = pos;
+				m_state->m_bit_hint = pos;
 			}
 
 			template <class Ch, class Tr>
@@ -189,15 +200,13 @@ namespace memory_mgr
 			inline void clear()
 			{
 				m_bitset.set();
-				m_bit_hint = 0;
+				m_state->m_bit_hint = 0;
 			}
 		private:
 			//Bitset
-			aux_data_type*		m_is_init;
+			aux_data_type*		m_state;
 			bitset_t	m_bitset;
 
-			//Cache
-			size_type m_bit_hint;
 
 			static inline size_type block_index(size_type pos) 
 			{
