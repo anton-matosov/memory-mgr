@@ -110,6 +110,42 @@ bool test_out_of_memory()
 
 
 
+/*
+	Bug: #1987919: chunks number and available memory calculated incorrectly 
+
+	chunks number and available memory calculated incorrectly, so memory
+	manager can allocate block to memory that is out of memory segment, using
+	of this block can bring access violation error and/or memory corruption
+*/
+bool test_size_calculation()
+{
+	SUBTEST_START( L"size calculation" );
+	std::vector<chunk_type> memory( memory_size );
+	memmgr_type mgr( &*memory.begin() );
+
+	try
+	{
+		memory_mgr::manager_traits< memmgr_type >::offset_type ptr;
+		char* upper_bound = memory_mgr::detail::char_cast( mgr.get_segment_base() )
+			+ memory_mgr::manager_traits< memmgr_type >::memory_size;
+		for( size_t i = 0; i <  memory_mgr::manager_traits< memmgr_type >::num_chunks; ++i )
+		{
+			ptr = mgr.allocate( memory_mgr::manager_traits< memmgr_type >::chunk_size );
+			char* p = mgr.get_offset_base() + ptr;
+			if( p >= upper_bound )
+			{
+				TEST_FAILED;
+			}
+
+		}
+	}
+	catch( std::bad_alloc& )
+	{
+		SUBTEST_SUCCEDED;
+	}	
+	SUBTEST_SUCCEDED;	
+}
+
 
 bool test_memory_manager()
 {
@@ -118,6 +154,7 @@ bool test_memory_manager()
 	TEST_END( test_alloc_dealloc() &&
 			test_out_of_memory() &&
 			test_out_of_memory_nothrow()
+			&& test_size_calculation()
 	);
 
 }
