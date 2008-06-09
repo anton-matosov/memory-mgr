@@ -102,7 +102,11 @@ namespace memory_mgr
 	{
 	protected:
 		~managed_base()
-		{}
+		{
+			STATIC_ASSERT( (is_category_supported< mem_mgr, singleton_manager_tag>::value) &&
+				(is_category_supported< mem_mgr, pointer_conversion_tag>::value),				
+				Memory_manager_does_not_implement_required_concepts );
+		}
 
 		typedef MemMgr mem_mgr;
 	public:
