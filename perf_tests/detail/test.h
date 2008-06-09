@@ -125,7 +125,7 @@ public:
 	int alloc_count__ = alloc_count;\
 	int full_repeat_count__ = alloc_count__ * op_repeat_count__;\
 	double accum__ = 0.0;\
-	pointer_type *ptr_storage__ = new pointer_type[full_repeat_count__];ptr_storage__;\
+	pointer_type *ptr_storage__ = new pointer_type[alloc_count__ + 1];ptr_storage__;\
 	timer__.start();\
 	while( loop_outer__-- ){\
 		int loop_inner__ = alloc_count__;\
