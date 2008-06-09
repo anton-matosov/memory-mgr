@@ -37,8 +37,52 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 
 typedef memmgr_type::offset_type offset_type;
 
+namespace memory_mgr
+{
+	template<class BlockType, 
+		size_t MemorySize,
+		size_t ChunkSize>
+	struct calc_required_bits
+	{
+		enum
+		{
+			chunk_size = ChunkSize,
+			memory_size = MemorySize,
+			num_chunks = memory_size / chunk_size
+		};
+
+		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+
+		enum
+		{
+			used_memory = bitmgr_type::memory_usage,
+			used_chunks = used_memory / chunk_size,
+
+			available_memory = memory_size - used_memory,
+			available_chunks = num_chunks - used_chunks,
+
+		};
+
+		typedef calc_required_bits<BlockType, available_chunks, chunk_size> required;
+
+		enum
+		{
+			required_chunks = required::num_chunks
+		};
+	};
+
+	template<class BlockType,
+		size_t ChunkSize>
+	struct calc_required_bits< BlockType, -1, ChunkSize >
+	{
+
+	};
+}
+
 bool test_alloc_dealloc()
 {
+	memory_mgr::calc_required_bits<size_t, 1024, 4> calc;
+
 	SUBTEST_START( L"allocation/deallocation" );
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
