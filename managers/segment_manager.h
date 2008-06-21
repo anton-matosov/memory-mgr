@@ -30,6 +30,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "manager_traits.h"
 #include "manager_category.h"
+#include "detail/helpers.h"
+#include <assert.h>
 
 namespace memory_mgr
 {
@@ -144,11 +146,11 @@ namespace memory_mgr
 		}
 
 		/**
-		@add_comments
+		   @add_comments
 		*/
 		inline char* get_ptr_base( const void* ptr )
 		{
-			return m_mgr.get_ptr_base( ptr );
+			return 0;//m_mgr.get_ptr_base( ptr );
 		}
 	};
 

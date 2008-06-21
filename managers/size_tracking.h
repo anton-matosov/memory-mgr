@@ -28,9 +28,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+
 #include "manager_traits.h"
 #include "manager_category.h"
 #include "pointer_convert.h"
+#include "detail/decorator_base.h"
 #include "detail/ptr_helpers.h"
 
 namespace memory_mgr
@@ -43,80 +45,15 @@ namespace memory_mgr
 		*/
 		template< class MemMgr >
 		class size_tracking_impl_base
+			:public decorator_base<MemMgr>
 		{
-			/**
-			   @brief Memory manager class that should be decorated
-			*/
-			typedef MemMgr									mgr_type;
-		public:	
-
+			typedef decorator_base<MemMgr> base_type;
+		protected:
 			/**
 			   @brief Type used to store size, commonly std::size_t
 			   @see static_bitset::size_type
 			*/
- 			typedef typename manager_traits<mgr_type>::size_type			size_type;
-			
-			/**
-			   @brief type that used to store memory offset
-			   @see memory_manager::offset_type
-			*/
-			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
-
-			/**
-			   @brief Call this method to know is there available memory in
-				manager
-
-			   @exception newer  throws
-			   @retval true   if there is no more free memory to
-				allocate
-			   @retval false  otherwise                                    
-			*/
-			inline bool empty()
-			{
-				return m_mgr.empty();
-			}
-
-			
-			/**
-			   @brief Call this method to know is there any allocated blocks
-			   @exception newer  throws
-			   @retval true   no blocks are allocated by this manager
-			   @retval false  otherwise                                     
-			*/
-			inline bool free()
-			{
-				return m_mgr.free();
-			}
-
-			/**
-			   @brief Call this method to deallocate all allocated memory
-			   @exception newer  throws                                     
-			*/
-			inline void clear()
-			{
-				m_mgr.clear();
-			}
-
-			/**
-			   @brief Call this method to get memory base address from which offset
-			   is calculated
-			   @exception newer  throws
-			   @return pointer to memory base address                               
-			*/
-			inline char* get_offset_base( const offset_type offset = 0 ) const
-			{
-				return m_mgr.get_offset_base( offset );
-			}
-
-			/**
-			   @add_comments
-			*/
-			inline char* get_ptr_base( const void* ptr )
-			{
-				return m_mgr.get_ptr_base( ptr );
-			}
-		protected:
-
+			typedef typename base_type::size_type size_type;
 			/**
 			   @brief Size of auxiliary data required to store size
 			*/
@@ -135,7 +72,7 @@ namespace memory_mgr
 			   @missing_comments 
 			*/
 			inline explicit size_tracking_impl_base( void* segment_base )
-				:m_mgr( segment_base )
+				:base_type( segment_base )
 			{}
 			
 			/**
@@ -155,10 +92,6 @@ namespace memory_mgr
 				return ++psize;
 			}
 
-			/**
-			   @brief Memory Manager instance that is decorated be size tracking
-			*/
-			mgr_type m_mgr;
 		};
 
 		/**
@@ -405,9 +338,7 @@ namespace memory_mgr
 		   @see memory_manager::memory_segment                        
 		*/
 		inline size_tracking()
-		{
-			STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value), Memory_manager_does_not_have_attached_memory_segment );
-		}
+		{}
 
 		/**
 		   @brief Constructor, creates memory manager with specified

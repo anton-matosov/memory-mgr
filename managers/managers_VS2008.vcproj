@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\decorator_base.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\helpers.h"
 				>
 			</File>
