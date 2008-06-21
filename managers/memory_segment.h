@@ -70,8 +70,8 @@ namespace memory_mgr
 		   @brief Default constructor
 		   @details Creates memory segment and memory manager linked to this segment
 		*/
-		memory_segment()
-			:memory( manager_traits<memmgr_type>::memory_size ),
+		memory_segment( const size_t id = 0 )
+			:memory( manager_traits<memmgr_type>::memory_size, id ),
 			memmgr_type( memory::segment_base() )
 		{}
 	};

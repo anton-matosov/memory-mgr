@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <stdexcept>
+#include <sstream>
 #include "config/config.h"
 #include "detail/helpers.h"
 #include "memory_segment.h"
@@ -150,8 +151,8 @@ namespace memory_mgr
 	public:
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
-		shared_allocator( const size_t mem_size )
-			:base_type( mem_size, segment_params::get_name() )
+		shared_allocator( const size_t mem_size, const size_t id = 0 )
+			:base_type( mem_size, segment_params::get_name( id ) )
 		{}
 	};
 
@@ -189,8 +190,8 @@ namespace memory_mgr
 	public:	
 		//Default constructor, allocates mem_size bytes
 		//in segment with name returned by SegNameOp function		
-		shared_allocator( const size_t mem_size )
-			:base_type( mem_size, segment_params::get_name() )
+		shared_allocator( const size_t mem_size, const size_t id = 0 )
+			:base_type( mem_size, segment_params::get_name( id ) )
 		{}
 	};
 #endif
@@ -200,8 +201,12 @@ namespace memory_mgr
 #define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
 	struct MGR_SEGMENT_NAME(var_name)\
 	{\
-		static inline const char* get_name( const size_t/* id*/= 0)\
-		{ return "memory_mgr-"segment_name; }\
+		static inline std::string get_name( const size_t id = 0 )\
+		{\
+			std::stringstream name;\
+			name << "memory_mgr-" << segment_name << "-" << id;\
+			return name.str();\
+		}\
 	};
 
 MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
@@ -211,6 +216,11 @@ MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 	class shared_segment 
 		: public memory_segment< shared_allocator<SegNameOp>, MemMgr >
 	{
+		typedef memory_segment< shared_allocator<SegNameOp>, MemMgr > base_type;
+	public:
+		shared_segment( const size_t id = 0 )
+			:base_type( id )
+		{}
 	};
 
 	template< class MemMgr, class SegNameOp >

@@ -42,6 +42,7 @@ bool test_pointer_convert();
 bool test_offset_pointer();
 bool test_shared_segment();
 bool test_allocator();
+bool test_segment_manager();
 
 typedef memory_mgr::singleton_manager
 < 
@@ -103,6 +104,7 @@ int main(int /*argc*/, char* /*argv*/[])
 	std::wcout << L"Unit tests for memory_mgr library\n";
 	std::wcout << L"Exe path: " << memory_mgr::osapi::get_executable_path().c_str() << L"\n";
 	std::wcout << L"Exe dir: " << memory_mgr::osapi::get_exe_dir().c_str() << L"\n";
+	TestMgr.add_result( test_segment_manager(),	L"test_segment_manager" );
 	TestMgr.add_result( test_temp_buffer(), 	L"test_temp_buffer" );
 	TestMgr.add_result( test_type_manip(), 		L"test_type_manip" );
 	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );

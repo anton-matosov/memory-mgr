@@ -233,6 +233,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_segment_manager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_shared_segment.cpp"
 				>
 			</File>

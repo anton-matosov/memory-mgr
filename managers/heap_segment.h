@@ -45,7 +45,13 @@ namespace memory_mgr
 	template< class MemMgr >	
 	class heap_segment 
 		: public memory_segment< detail::malloc_allocator, MemMgr >
-	{};
+	{
+		typedef memory_segment< detail::malloc_allocator, MemMgr > base_type;
+	public:
+		 heap_segment( const size_t id = 0 )
+			 :base_type( id )
+		 {}
+	};
 
 	/**
 	   @brief memory_manager + heap_segment traits

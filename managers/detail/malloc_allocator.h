@@ -44,7 +44,7 @@ namespace memory_mgr
 			   @brief Default constructor, allocates memory
 			   @param mem_size  memory in bytes            
 			*/
-			malloc_allocator( const size_t mem_size )
+			malloc_allocator( const size_t mem_size, const size_t /*id*/ = 0 )
 			{
 				m_memory = malloc( mem_size );
 				*detail::size_cast(m_memory) = 0;
