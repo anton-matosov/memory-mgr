@@ -1,6 +1,6 @@
 /* 
 Generic STL (genericstl)
-Copyright (c) 2008 Anton Matosov
+Copyright (c) 2008 Anton (shikin) Matosov
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
