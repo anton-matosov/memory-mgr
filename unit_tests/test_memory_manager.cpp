@@ -39,50 +39,11 @@ typedef memmgr_type::offset_type offset_type;
 
 namespace memory_mgr
 {
-	template<class BlockType, 
-		size_t MemorySize,
-		size_t ChunkSize>
-	struct calc_required_bits
-	{
-		enum
-		{
-			chunk_size = ChunkSize,
-			memory_size = MemorySize,
-			num_chunks = memory_size / chunk_size
-		};
-
-		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
-
-		enum
-		{
-			used_memory = bitmgr_type::memory_usage,
-			used_chunks = used_memory / chunk_size,
-
-			available_memory = memory_size - used_memory,
-			available_chunks = num_chunks - used_chunks,
-
-		};
-
-		typedef calc_required_bits<BlockType, available_chunks, chunk_size> required;
-
-		enum
-		{
-			required_chunks = required::num_chunks
-		};
-	};
-
-	template<class BlockType,
-		size_t ChunkSize>
-	struct calc_required_bits< BlockType, -1, ChunkSize >
-	{
-
-	};
+	
 }
 
 bool test_alloc_dealloc()
 {
-	memory_mgr::calc_required_bits<size_t, 1024, 4> calc;
-
 	SUBTEST_START( L"allocation/deallocation" );
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
@@ -108,15 +69,16 @@ bool test_out_of_memory_nothrow()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
+	size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
 	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
 	try
 	{
 		TEST_PRINT( "Allocating memory block bigger than avaliable memory" );
-		offset_type p_inval1 = mgr.allocate( memory_size + 1, std::nothrow_t() );
+		offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
 		TEST_CHECK( p_inval1 == null_ptr );
 
 		TEST_PRINT( "Allocating all memory" );
-		offset_type p_valid = mgr.allocate( memory_size, std::nothrow_t() );
+		offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
 		TEST_CHECK( p_valid != null_ptr );
 
 		TEST_PRINT( "Allocating one more byte" );
@@ -140,15 +102,16 @@ bool test_out_of_memory()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
+	size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
 	try
 	{
-		mgr.allocate( memory_size );
-		mgr.allocate( memory_size );
+		mgr.allocate( allocable_memory );
+		mgr.allocate( allocable_memory );
 	}
 	catch( std::bad_alloc& )
 	{
 		SUBTEST_SUCCEDED;
-	}	
+	}
 	SUBTEST_FAILED;	
 }
 
