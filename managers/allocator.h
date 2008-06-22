@@ -123,7 +123,7 @@ namespace memory_mgr
 		// estimate maximum array size
 		inline size_type max_size() const 
 		{	
-			size_type count = manager_traits<mgr_type>::memory_size / sizeof value_type;
+			size_type count = manager_traits<mgr_type>::memory_size / sizeof( value_type );
 			return (0 < count ? count : 1);
 		}
 
