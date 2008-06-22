@@ -114,6 +114,7 @@ namespace
 	{
 		MemMgr mgr;
 
+		TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, TestType );
 		typedef TestType test_type;
 		typedef test_type* pointer_type;
 

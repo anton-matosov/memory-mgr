@@ -115,7 +115,7 @@ public:
 
 #define TEST_PRINT_MEM_INFO( op_repeat_count, alloc_count, memmgr_type, object_type )\
 	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";\
-	std::wcout << L"Required memory: " << op_repeat_count * alloc_count * sizeof( object_type ) << L"\n";
+	std::wcout << L"Required memory: " << op_repeat_count * alloc_count * (sizeof( object_type ) + memory_mgr::manager_traits<memmgr_type>::memory_overhead ) << L"\n";
 
 
 #define  TEST_START_LOOP( op_repeat_count, alloc_count, pointer_type )\

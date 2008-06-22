@@ -79,7 +79,8 @@ namespace memory_mgr
 		{
 			chunk_size	= manager_type::chunk_size /**< size of memory chunk*/,
 			memory_size = manager_type::memory_size /**< memory size in bytes available to manager*/,
-			num_chunks	= manager_type::num_chunks /**< number of memory chunks that can be allocated*/
+			num_chunks	= manager_type::num_chunks /**< number of memory chunks that can be allocated*/,
+			memory_overhead = manager_type::memory_overhead  /**< memory overhead per allocated memory block in bytes*/
 		};
 	};
 }

@@ -365,6 +365,8 @@ namespace memory_mgr
 		*/
 		typedef MemMgr base_manager_type;
 
+		typedef manager_traits<base_manager_type> base_traits;
+
 		/**
 		   @brief Add size_tracking_tag to manager_category
 		*/
@@ -372,6 +374,11 @@ namespace memory_mgr
 			: public virtual manager_traits<MemMgr>::manager_category,
 			public virtual size_tracking_tag
 		{};
+
+		enum
+		{
+			memory_overhead = base_traits::memory_overhead + sizeof( typename base_traits::size_type ) /**< memory overhead per allocated memory block in bytes*/
+		};
 	};
 }
 

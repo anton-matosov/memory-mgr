@@ -71,7 +71,8 @@ namespace memory_mgr
 		{
 			chunk_size = ChunkSize /**< size of memory chunk*/,
 			memory_size = MemorySize /**< memory size in bytes*/,
-			num_chunks = memory_size / chunk_size /**< number of memory chunks that can be allocated*/
+			num_chunks = memory_size / chunk_size /**< number of memory chunks that can be allocated*/,
+			memory_overhead = 0 /**< memory overhead per allocated memory block in bytes*/
 		};
 		
 	private:		

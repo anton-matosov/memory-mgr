@@ -86,7 +86,8 @@ namespace
 		MemMgr mgr;
 
 		typedef PointerType pointer_type;
-		
+		TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, int );
+
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
 			TEST_TRACK_PTR static_cast<pointer_type>( mgr.allocate( chunk_size ) );
