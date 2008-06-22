@@ -98,7 +98,7 @@ namespace memory_mgr
 		// allocate array of count elements
 		inline pointer allocate(size_type count)
 		{	
-			return static_cast<pointer>( mgr_type::instance().allocate( count * sizeof(T) ) );
+			return static_cast<pointer>( mgr_type::instance().allocate( count * sizeof(value_type) ) );
 		}
 
 		// allocate array of count elements, ignore hint
@@ -110,20 +110,21 @@ namespace memory_mgr
 		// construct object at ptr with value val
 		inline void construct(pointer ptr, const_reference val)
 		{	
-			::new (&*ptr) T(val);
+			::new (&*ptr) value_type(val);
 		}
 
 		// destroy object at ptr
 		inline void destroy(pointer ptr)
 		{	
 			ptr;//VS 2008 warning
-			(&*ptr)->~T();
+			(&*ptr)->~value_type();
 		}
 
 		// estimate maximum array size
 		inline size_type max_size() const 
 		{	
-			return manager_traits<mgr_type>::memory_size;
+			size_type count = manager_traits<mgr_type>::memory_size / sizeof value_type;
+			return (0 < count ? count : 1);
 		}
 
 	};
@@ -133,14 +134,14 @@ namespace memory_mgr
 	class U, class mem_mgr >
 	inline bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator equality (always true)
-		return (true);
+		return true;
 	}
 
 	template<class T,
 	class U, class mem_mgr >
 	inline bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
 	{	// test for allocator inequality (always false)
-		return (false);
+		return false;
 	}
 
 }

@@ -28,8 +28,30 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "size_tracking.h"
 #include "heap_segment.h"
 #include "allocator.h"
-#include <deque>
-#include <string>
+
+#include "unit_tests_manager.h"
+
+// typedef memory_mgr::singleton_manager
+// < 
+// 	memory_mgr::size_tracking
+// 	<
+// 		memory_mgr::pointer_convert
+// 		< 
+// 			memory_mgr::heap_segment
+// 			< 
+// 				memory_mgr::memory_manager<size_t, 2 * 1024 * 1024, 4> 
+// 			> 
+// 		>
+// 	>
+// > sz_heap_mgr_type;
+// 
+// MGR_DECLARE_MANAGER_CLASS(heap_manager, sz_heap_mgr_type);
+// 
+// 
+// typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+// heap_manager> > string_type;
+
+
 
 bool test_temp_buffer();
 bool test_type_manip();
@@ -44,62 +66,12 @@ bool test_shared_segment();
 bool test_allocator();
 bool test_segment_manager();
 
-typedef memory_mgr::singleton_manager
-< 
-	memory_mgr::size_tracking
-	<
-		memory_mgr::pointer_convert
-		< 
-			memory_mgr::heap_segment
-			< 
-				memory_mgr::memory_manager<size_t, 2 * 1024 * 1024, 4> 
-			> 
-		>
-	>
-> sz_heap_mgr_type;
-
-MGR_DECLARE_MANAGER_CLASS(heap_manager, sz_heap_mgr_type);
 
 
-typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-heap_manager> > string_type;
-
-class tests_manager
-{
-	typedef std::pair< bool, string_type > test_entry_type;
-	typedef std::deque< test_entry_type > test_results_type;
-	
-	test_results_type m_test_results;
-public:
-	void add_result( bool result, const string_type& test_name )
-	{
-		m_test_results.push_back( std::make_pair( result, test_name ) );
-	}
-
-	void print_results()
-	{
-		std::wcout << L"\nTesting results:\n";
-		test_entry_type test_entry;
-		while( !m_test_results.empty() )
-		{
-			test_entry = m_test_results.front();
-			m_test_results.pop_front();
-			std::wcout << L"Test '" << test_entry.second << L"'\t" << ( test_entry.first ? L"succeeded" : L"failed" ) << std::endl;
-		}
-	}
-
-	~tests_manager()
-	{
-		if( !m_test_results.empty() )
-		{
-			print_results();
-		}
-	}
-};
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-	tests_manager TestMgr;
+	unit_tests_manager TestMgr;
 		
 	std::wcout << L"Unit tests for memory_mgr library\n";
 	std::wcout << L"Exe path: " << memory_mgr::osapi::get_executable_path().c_str() << L"\n";

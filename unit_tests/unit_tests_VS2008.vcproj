@@ -260,6 +260,10 @@
 				RelativePath=".\unit_tests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\unit_tests_manager.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -276,6 +280,10 @@
 			</File>
 			<File
 				RelativePath=".\test_class.h"
+				>
+			</File>
+			<File
+				RelativePath=".\unit_tests_manager.h"
 				>
 			</File>
 		</Filter>
