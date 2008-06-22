@@ -207,6 +207,10 @@
 				RelativePath=".\size_tracking.h"
 				>
 			</File>
+			<File
+				RelativePath=".\usage_tracker.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="detail"
