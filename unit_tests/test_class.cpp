@@ -21,4 +21,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#include "test_class.h"
+
+test_class::test_class() :m_i(0)
+{
+
+}
+
+test_class::~test_class()
+{
+	m_i = 0;
+}
+
+void test_class::set( int i )
+{
+	m_i = i;
+}
+
+int test_class::get()
+{
+	return m_i;
+}

@@ -21,4 +21,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#include <iostream>
+
+#include "unit_tests_manager.hpp"
+#include <gstl/config/config.hpp>
+
+
+bool test_allocator();
+
+
+
+
+int main(int /*argc*/, char* /*argv*/[])
+{
+	unit_tests_manager TestMgr;
+		
+	std::wcout << L"Unit tests for Generic STL library\n";
+	std::wcout << L"Exe path: " << gstl::osapi::get_executable_path().c_str() << L"\n";
+	std::wcout << L"Exe dir: " << gstl::osapi::get_exe_dir().c_str() << L"\n";
+	TestMgr.add_result( test_allocator(),		L"test_allocator" );
+
+	TestMgr.print_results();
+	return std::cin.get();
+}

@@ -1,6 +1,7 @@
 /* 
 Generic STL (genericstl)
-Copyright (c) 2008 Anton (shikin) Matosov
+http://genericstl.sourceforge.net/
+Copyright (c) 2007-2008 Anton (shikin) Matosov
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -23,13 +24,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #ifndef GSTL_ALLOCATOR_HEADER
 #define GSTL_ALLOCATOR_HEADER
 
-#ifdef PRAGMA_ONCE_SUPPORTED
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
 namespace gstl
 {
-template< class T >
+
+	template< class T >
 	class allocator
 	{
 	public:

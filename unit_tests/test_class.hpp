@@ -21,4 +21,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#ifndef GSTL_TEST_CLASS_UNIT_HEADER
+#define GSTL_TEST_CLASS_UNIT_HEADER
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
+
+class test_class
+{
+	int m_i,m_i1,m_i2,m_i3,m_i4;
+public:
+
+	test_class();
+	~test_class();
+
+	void set( int i );
+	int get();
+};
+
+#endif //GSTL_TEST_CLASS_UNIT_HEADER

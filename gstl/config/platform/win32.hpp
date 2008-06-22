@@ -21,4 +21,40 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#ifndef GSTL_WIN32_HEADER
+#define GSTL_WIN32_HEADER
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
+
+#define GSTL_WINDOWS_PLATFORM
+#include <windows.h>
+#include <string>
+#include <gstl/detail/types.hpp>
+#include <gstl/detail/temp_buffer.hpp>
+
+namespace gstl
+{
+	template<class T>
+	ulong ulong_cast( T val )
+	{
+		return static_cast<ulong>( val );
+	}
+
+	namespace osapi
+	{
+		static inline std::string get_executable_path()
+		{			
+			detail::char_buffer path( 512 );
+			while( GetModuleFileNameA( 0, path, ulong_cast( path.count() ) ) == path.count() )
+			{
+				path.reallocate( path.count() * 2 );
+			}	
+
+			return path.get();
+		}
+	}
+}
+
+#endif //GSTL_WIN32_HEADER

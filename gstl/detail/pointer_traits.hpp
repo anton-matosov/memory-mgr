@@ -21,4 +21,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
+#ifndef GSTL_POINTER_TRAITS_HEADER
+#define GSTL_VECTOR_HEADER
+
+#ifdef PRAGMA_ONCE_SUPPORTED
+#	pragma once
+#endif
+
 #include <gstl/detail/allocator.hpp>
+
+namespace gstl
+{
+	struct pointer_traits
+	{
+
+	};
+}
+
+#endif GSTL_POINTER_TRAITS_HEADER

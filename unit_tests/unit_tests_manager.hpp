@@ -21,4 +21,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#ifndef GSTL_UNIT_TESTS_MANAGER_HEADER
+#define GSTL_UNIT_TESTS_MANAGER_HEADER
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
+
+#include <deque>
+#include <string>
+
+typedef std::wstring string_type;
+
+class unit_tests_manager
+{
+	typedef std::pair< bool, string_type > test_entry_type;
+	typedef std::deque< test_entry_type > test_results_type;
+
+	test_results_type m_test_results;
+public:
+	void add_result( bool result, const string_type& test_name );
+
+	void print_results();
+
+	~unit_tests_manager();
+};
+
+#endif //GSTL_UNIT_TESTS_MANAGER_HEADER
+

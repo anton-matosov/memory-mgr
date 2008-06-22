@@ -21,18 +21,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef GSTL_VECTOR_HEADER
-#define GSTL_VECTOR_HEADER
+#ifndef GSTL_CONFIG_HEADER
+#define GSTL_CONFIG_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include <gstl/detail/allocator.hpp>
+#if defined(linux) || defined(__linux) || defined(__linux__)
+// linux:
+#  define GSTL_PLATFORM_CONFIG <gstl/config/platform/linux.hpp>
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#	define GSTL_PLATFORM_CONFIG <gstl/config/platform/win32.hpp>
+#else 
+#	error "Unsupported platform. In future all the platforms will be supported."
+#endif
+
+#include GSTL_PLATFORM_CONFIG
+
+#include <gstl/detail/helpers.hpp>
 
 namespace gstl
 {
-
+	/**
+	   @brief OS specific API wrappers
+	*/
+	namespace osapi
+	{
+		/**
+		   @brief Call this function to get path to folder from which executable was launched
+		   @return path to folder from which executable was launched
+		*/
+		static inline std::string get_exe_dir()
+		{
+			return helpers::get_parent_dir( get_executable_path() );
+		}
+	}
 }
 
-#endif GSTL_VECTOR_HEADER
+#endif// GSTL_CONFIG_HEADER

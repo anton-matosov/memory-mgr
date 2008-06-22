@@ -21,4 +21,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <gstl/detail/allocator.hpp>
+#include <iostream>
+#include "unit_tests_manager.hpp"
+
+
+void unit_tests_manager::add_result( bool result, const string_type& test_name )
+{
+	m_test_results.push_back( std::make_pair( result, test_name ) );
+}
+
+void unit_tests_manager::print_results()
+{
+	std::wcout << L"\nTesting results:\n";
+	test_entry_type test_entry;
+	while( !m_test_results.empty() )
+	{
+		test_entry = m_test_results.front();
+		m_test_results.pop_front();
+		std::wcout << L"Test '" << test_entry.second << L"'\t" << ( test_entry.first ? L"succeeded" : L"failed" ) << std::endl;
+	}
+}
+
+unit_tests_manager::~unit_tests_manager()
+{
+	if( !m_test_results.empty() )
+	{
+		print_results();
+	}
+}
