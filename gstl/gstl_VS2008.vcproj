@@ -152,6 +152,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pointer_traits"
+				>
+			</File>
+			<File
 				RelativePath=".\vector"
 				>
 			</File>
@@ -165,6 +169,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\helpers.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\pointer_traits.hpp"
 				>
 			</File>
 			<File
