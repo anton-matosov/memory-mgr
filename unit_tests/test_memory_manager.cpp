@@ -37,6 +37,11 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 
 typedef memmgr_type::offset_type offset_type;
 
+namespace memory_mgr
+{
+	
+}
+
 bool test_alloc_dealloc()
 {
 	SUBTEST_START( L"allocation/deallocation" );
@@ -64,15 +69,16 @@ bool test_out_of_memory_nothrow()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
+	size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
 	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
 	try
 	{
 		TEST_PRINT( "Allocating memory block bigger than avaliable memory" );
-		offset_type p_inval1 = mgr.allocate( memory_size + 1, std::nothrow_t() );
+		offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
 		TEST_CHECK( p_inval1 == null_ptr );
 
 		TEST_PRINT( "Allocating all memory" );
-		offset_type p_valid = mgr.allocate( memory_size, std::nothrow_t() );
+		offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
 		TEST_CHECK( p_valid != null_ptr );
 
 		TEST_PRINT( "Allocating one more byte" );
@@ -96,19 +102,56 @@ bool test_out_of_memory()
 	std::vector<chunk_type> memory( memory_size );
 	memmgr_type mgr( &*memory.begin() );
 
+	size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
 	try
 	{
-		mgr.allocate( memory_size );
-		mgr.allocate( memory_size );
+		mgr.allocate( allocable_memory );
+		mgr.allocate( allocable_memory );
+	}
+	catch( std::bad_alloc& )
+	{
+		SUBTEST_SUCCEDED;
+	}
+	SUBTEST_FAILED;	
+}
+
+
+
+/*
+	Bug: #1987919: chunks number and available memory calculated incorrectly 
+
+	chunks number and available memory calculated incorrectly, so memory
+	manager can allocate block to memory that is out of memory segment, using
+	of this block can bring access violation error and/or memory corruption
+*/
+bool test_size_calculation()
+{
+	SUBTEST_START( L"size calculation" );
+	std::vector<chunk_type> memory( memory_size );
+	memmgr_type mgr( &*memory.begin() );
+
+	try
+	{
+		memory_mgr::manager_traits< memmgr_type >::offset_type ptr;
+		char* upper_bound = memory_mgr::detail::char_cast( mgr.get_segment_base() )
+			+ memory_mgr::manager_traits< memmgr_type >::memory_size;
+		for( size_t i = 0; i <  memory_mgr::manager_traits< memmgr_type >::num_chunks; ++i )
+		{
+			ptr = mgr.allocate( memory_mgr::manager_traits< memmgr_type >::chunk_size );
+			char* p = mgr.get_offset_base() + ptr;
+			if( p >= upper_bound )
+			{
+				TEST_FAILED;
+			}
+
+		}
 	}
 	catch( std::bad_alloc& )
 	{
 		SUBTEST_SUCCEDED;
 	}	
-	SUBTEST_FAILED;	
+	SUBTEST_SUCCEDED;	
 }
-
-
 
 
 bool test_memory_manager()
@@ -118,6 +161,7 @@ bool test_memory_manager()
 	TEST_END( test_alloc_dealloc() &&
 			test_out_of_memory() &&
 			test_out_of_memory_nothrow()
+			&& test_size_calculation()
 	);
 
 }

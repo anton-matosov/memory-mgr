@@ -40,6 +40,63 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 namespace memory_mgr
 {
+	template
+	<
+		class  BlockType, 
+		size_t MemorySize,
+		size_t ChunkSize
+	>
+	struct allocable_memory_calc
+	{
+		enum
+		{
+			chunk_size  = ChunkSize,
+			memory_size = MemorySize,
+			num_chunks  = memory_size / chunk_size
+		};
+
+		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+
+		enum
+		{
+			used_memory = bitmgr_type::memory_usage,
+			used_chunks = used_memory / chunk_size,
+
+			allocable_memory = memory_size - used_memory,
+			allocable_chunks = num_chunks - used_chunks,
+		};
+
+		typedef detail::bit_manager<BlockType, allocable_chunks, detail::mcNone> allocable_bitmgr_type;
+
+		enum
+		{
+			required_memory = allocable_bitmgr_type::memory_usage,
+			lost_memory_tmp = used_memory - required_memory,
+			lost_memory		= lost_memory_tmp > 0 ? lost_memory_tmp : 0
+		};
+		typedef allocable_memory_calc<BlockType, lost_memory, chunk_size> lost_calc;
+
+		enum
+		{
+			result_used_memory		= used_memory + lost_calc::used_memory,
+			result_allocable_memory = allocable_memory + lost_calc::allocable_memory,
+			result_lost_memory		= lost_calc::lost_memory,
+			result_allocable_chunks = result_allocable_memory / chunk_size,
+		};
+	};
+
+	template<class BlockType,
+		size_t ChunkSize>
+	struct allocable_memory_calc< BlockType, 0, ChunkSize >
+	{
+		enum
+		{
+			lost_memory = 0,
+			used_memory = 0,
+			allocable_memory = 0
+		};
+	};
+
 	/**
 	   @brief Encapsulates work with memory
 	   @tparam BlockType   integral type, that will be used in
@@ -63,19 +120,22 @@ namespace memory_mgr
 	>
 	class memory_manager : protected sync::object_level_lockable<SyncObj>
 	{
+		typedef memory_mgr::allocable_memory_calc<BlockType, MemorySize, ChunkSize> calc_type;
 	public:
 		/**
 		   @brief compile time computed constants
 		*/
 		enum
 		{
-			chunk_size = ChunkSize /**< size of memory chunk*/,
-			memory_size = MemorySize /**< memory size in bytes*/,
-			num_chunks = memory_size / chunk_size /**< number of memory chunks that can be allocated*/,
-			memory_overhead = 0 /**< memory overhead per allocated memory block in bytes*/
+			chunk_size			= ChunkSize		/**< size of memory chunk*/,
+			memory_size			= MemorySize	/**< memory size in bytes*/,
+			num_chunks			= memory_size / chunk_size /**< number of memory chunks that can be allocated*/,
+			memory_overhead		= 0				/**< memory overhead per allocated memory block in bytes*/,
+			allocable_memory	= calc_type::result_allocable_memory /**< size of memory that can be allocated*/
 		};
 		
-	private:		
+	private:	
+
 		/**
 		   @brief lock type, used for synchronization
 		*/
@@ -84,7 +144,7 @@ namespace memory_mgr
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
-		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+		typedef detail::bit_manager<BlockType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
 
 		/**
 		   @brief Bit Manager used to store information about allocated
