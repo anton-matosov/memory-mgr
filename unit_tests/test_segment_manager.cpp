@@ -47,17 +47,30 @@ bool test_get_offset_base()
 	
 	segmgr_type segmgr;
 
-	size_t p1 = segmgr.allocate( 5 );
-	size_t p2 = segmgr.allocate( 5 );
-	size_t p3 = segmgr.allocate( 5 );
+	size_t p1 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+	bool not_free = segmgr.free();
+	bool not_empty = segmgr.empty();
+	size_t p2 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+	size_t p3 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+	size_t p4 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+	size_t p5 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory, std::nothrow_t() );
 	segmgr.get_offset_base( p1 );
 	segmgr.get_offset_base( p2 );
 	segmgr.get_offset_base( p3 );
+	segmgr.get_offset_base( p4 );
+	segmgr.get_offset_base( p5 );
+
+	segmgr.deallocate( p3, memory_mgr::manager_traits<segmgr_type>::allocable_memory  );
+	//segmgr.deallocate( p4, memory_mgr::manager_traits<segmgr_type>::allocable_memory  );
+	segmgr.deallocate( p1, memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+	segmgr.deallocate( p2, memory_mgr::manager_traits<segmgr_type>::allocable_memory );
+
 	segmgr.get_offset_base( memory_size - 1 );
 	segmgr.get_offset_base( memory_size );
 	segmgr.get_offset_base( memory_size + 1 );
 	segmgr.get_offset_base( memory_size * 3 + 5 );
 
+	segmgr.clear();
 	return true;
 }
 
