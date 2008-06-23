@@ -79,9 +79,10 @@ namespace memory_mgr
 		enum
 		{
 			result_used_memory		= used_memory + lost_calc::used_memory,
-			result_allocable_memory = allocable_memory + lost_calc::allocable_memory,
+			res_allocable_memory	= allocable_memory + lost_calc::allocable_memory,
 			result_lost_memory		= lost_calc::lost_memory,
-			result_allocable_chunks = result_allocable_memory / chunk_size,
+			result_allocable_chunks = res_allocable_memory / chunk_size,
+			result_allocable_memory = result_allocable_chunks * chunk_size
 		};
 	};
 
@@ -303,7 +304,7 @@ namespace memory_mgr
 		}
 
 		/**
-		   @brief Call this method to know is there any allocated blocks
+		   @brief Call this method to know that there is no allocated blocks
 		   @exception newer  throws
 		   @retval true   no blocks are allocated by this manager
 		   @retval false  otherwise                                     
