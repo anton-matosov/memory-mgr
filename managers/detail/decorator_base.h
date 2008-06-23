@@ -95,7 +95,7 @@ namespace memory_mgr
 
 			
 			/**
-			   @brief Call this method to know is there any allocated blocks
+			   @brief Call this method to know that there is no allocated blocks
 			   @exception newer  throws
 			   @retval true   no blocks are allocated by this manager
 			   @retval false  otherwise                                     

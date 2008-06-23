@@ -39,7 +39,7 @@ namespace memory_mgr
  	template<class PtrT>
  	struct pointer_traits
  	{
- 		typedef PtrT					poiner_type;
+ 		typedef PtrT								poiner_type;
  		typedef typename poiner_type::mgr_type		mgr_type;
  
  		static const poiner_type null_ptr;

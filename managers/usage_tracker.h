@@ -31,13 +31,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {
 	template< class MemMgr >
-	class usage_tracker
+	class usage_tracker: public MemMgr
 	{
 		/**
-		@brief Memory manager class that should be traced
+		   @brief Memory manager class that should be tracked
 		*/
 		typedef MemMgr									mgr_type;
 
+		enum
+		{
+			allocable_memory = manager_traits<mgr_type>::allocable_memory
+		};
 	};
 }
 
