@@ -145,6 +145,19 @@ namespace memory_mgr
 		};
 
 	}
+
+	/**
+	   @brief memory_manager + decorator_base traits
+	*/
+	template<class MemMgr>
+	struct manager_traits< detail::decorator_base< MemMgr > > 
+		: public manager_traits< MemMgr >
+	{
+		/**
+		   @brief Memory manager class, that was decorated
+		*/
+		typedef MemMgr base_manager_type;
+	};
 }
 
 #endif //MGR_DECORATOR_BASE_HEADER

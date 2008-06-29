@@ -31,12 +31,28 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "manager_traits.h"
 #include "manager_category.h"
 #include "detail/helpers.h"
+#include "detail/decorator_base.h"
 #include <assert.h>
 #include <functional>
+#include <vector>
 
 namespace memory_mgr
 {
+	namespace detail
+	{
+		//typedef std::pair<char*,void*> seg_data_type;
+		typedef char* seg_data_type;
 
+		struct seg_data_cmp
+		{
+			bool operator()( const void* lhs, const void* ptr )
+			{
+				return lhs < ptr;
+			}
+		};
+
+		//typedef std::map< seg_data_type, char*, seg_data_cmp> seg_bases_type;
+	}
 	/**
 	   @brief memory segments manager
 	   @details 
@@ -49,17 +65,19 @@ namespace memory_mgr
 	>
 	class segment_manager
 	{
-		typedef detail::decorator_base< MemMgr >		mgr_type;
+		typedef /*detail::decorator_base<*/ MemMgr/* >*/		mgr_type;
 		typedef mgr_type*	mgr_pointer_type;
 
+	public:
 		enum
 		{
 			num_segments = SegmentsCount,
-			segment_size = manager_traits<mgr_type>::memory_size
+			segment_size = manager_traits<mgr_type>::memory_size,
+			allocable_memory = manager_traits<mgr_type>::allocable_memory
 			//offset_mask,
 			//segment_mask
 		};
-		
+	private:
 
 		
 
@@ -84,6 +102,11 @@ namespace memory_mgr
 
 		//base_ptr_type		m_bases[num_segments];
 		mgr_pointer_type	m_segments[num_segments];
+
+		typedef detail::seg_data_type				seg_data_type;
+		typedef std::vector<seg_data_type>			seg_bases_type;
+
+		seg_bases_type m_bases;
 	public:
 		segment_manager()
 			:curr_segment(0)
@@ -93,6 +116,8 @@ namespace memory_mgr
 			offset_mask = ~segment_mask;
 			//offset_bits( segment_size );
 			std::fill<mgr_pointer_type*,mgr_pointer_type>( m_segments, m_segments + num_segments, 0 );
+
+			m_bases.reserve( num_segments );
 		}
 
 		~segment_manager()
@@ -105,6 +130,8 @@ namespace memory_mgr
 			if( !segment )
 			{
 				segment = new mgr_type( seg_id );
+				m_bases.push_back( seg_data_type( segment->get_offset_base()/*, detail::shift( segment->get_offset_base(), allocable_memory )*/ ) );
+				std::sort( m_bases.begin(), m_bases.end(), detail::seg_data_cmp() );
 			}
 			return segment;
 		}
@@ -222,7 +249,38 @@ namespace memory_mgr
 		*/
 		inline char* get_ptr_base( const void* ptr )
 		{
-			return 0;//m_mgr.get_ptr_base( ptr );
+			seg_bases_type::const_iterator fres = std::lower_bound( m_bases.begin(), m_bases.end(), ptr, detail::seg_data_cmp() );
+			return *fres/*->first*/;//m_mgr.get_ptr_base( ptr );
+		}
+
+		/**
+		   @add_comments
+		*/
+		inline void* offset_to_pointer( offset_type offset )
+		{
+			if( offset == offset_traits<offset_type>::invalid_offset )
+			{
+				return 0;
+			}
+			else
+			{
+				size_type seg_id = offset >> offset_bits;
+				assert( seg_id < num_segments );
+				offset_type real_offset = offset & offset_mask;
+
+				return get_segment(seg_id)->offset_to_pointer( real_offset );
+			}
+		}
+
+		/**
+		   @add_comments
+		*/
+		inline offset_type pointer_to_offset( const void* ptr )
+		{
+			//assert( ptr >= m_offset_base && "Invalid pointer value");
+			//assert(ptr < ( m_offset_base + manager_traits<MemMgr>::memory_size ) && "Invalid pointer value" );
+			//return detail::diff( ptr, m_offset_base );
+			return 0;
 		}
 
 		/**

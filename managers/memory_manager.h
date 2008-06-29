@@ -266,15 +266,21 @@ namespace memory_mgr
  		}
 
 
+		/**
+		   @add_comments
+		*/
 		inline void* offset_to_pointer( offset_type offset )
 		{
 			return detail::shift( m_offset_base, offset );
 		}
 
+		/**
+		   @add_comments
+		*/
 		inline offset_type pointer_to_offset( const void* ptr )
 		{
 			assert( ptr >= m_offset_base && "Invalid pointer value");
-			assert(ptr < ( m_offset_base + manager_traits<MemMgr>::memory_size ) && "Invalid pointer value" );
+			assert(ptr < ( m_offset_base + memory_size ) && "Invalid pointer value" );
 			return detail::diff( ptr, m_offset_base );
 		}
 
@@ -318,6 +324,27 @@ namespace memory_mgr
 		inline void clear()
 		{
 			m_bitmgr.clear();
+		}
+
+		
+		/**
+		   @brief Call this method to get memory base address from which offset
+		   is calculated
+		   @param offset offset for which base address should be returned
+		   @exception newer  throws
+		   @return pointer to memory base address                               
+		*/
+		inline char* get_offset_base( const offset_type /*offset*/ = 0 ) const
+		{
+			return m_offset_base;
+		}
+
+		/**
+		   @add_comments
+		*/
+		inline char* get_ptr_base( const void* /*ptr*/ )
+		{
+			return m_offset_base;
 		}
 	private:
 		/**
@@ -363,25 +390,6 @@ namespace memory_mgr
 		};
 
 		
-		/**
-		   @brief Call this method to get memory base address from which offset
-		   is calculated
-		   @param offset offset for which base address should be returned
-		   @exception newer  throws
-		   @return pointer to memory base address                               
-		*/
-		inline char* get_offset_base( const offset_type /*offset*/ = 0 ) const
-		{
-			return m_offset_base;
-		}
-
-		/**
-		   @add_comments
-		*/
-		inline char* get_ptr_base( const void* /*ptr*/ )
-		{
-			return m_offset_base;
-		}
 
 
 		/**

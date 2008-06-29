@@ -38,7 +38,7 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 //typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
 //typedef memory_mgr::size_tracking< memmgr_type > sz_pconv_track_mgr;
 typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
-typedef memory_mgr::segment_manager<heapmgr_type, 4> segmgr_type;
+typedef memory_mgr::segment_manager<heapmgr_type, 500> segmgr_type;
 
 
 bool test_get_offset_base()
@@ -54,11 +54,23 @@ bool test_get_offset_base()
 	size_t p3 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
 	size_t p4 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory );
 	size_t p5 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory, std::nothrow_t() );
-	segmgr.get_offset_base( p1 );
+
+	for( size_t i = 0; i < segmgr_type::num_segments; ++i )
+	{
+		segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory, std::nothrow_t() );
+	}
+
+	void* p1_base = segmgr.get_offset_base( p1 );
 	segmgr.get_offset_base( p2 );
 	segmgr.get_offset_base( p3 );
 	segmgr.get_offset_base( p4 );
 	segmgr.get_offset_base( p5 );
+	
+
+	void* vp1 = segmgr.offset_to_pointer( p1 );
+	void* vp1_base = segmgr.get_ptr_base( vp1 );
+
+	TEST_CHECK_MSG( vp1_base == p1_base, L"Invalid base" );
 
 	segmgr.deallocate( p3, memory_mgr::manager_traits<segmgr_type>::allocable_memory  );
 	//segmgr.deallocate( p4, memory_mgr::manager_traits<segmgr_type>::allocable_memory  );
