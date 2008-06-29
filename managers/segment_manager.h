@@ -43,13 +43,13 @@ namespace memory_mgr
 	   @tparam MemMgr memory manager with attached memory segment
 	*/
 	template
-		<
-			class MemMgr,
-			size_t SegmentsCount
-		>
+	<
+		class MemMgr,
+		size_t SegmentsCount
+	>
 	class segment_manager
 	{
-		typedef MemMgr		mgr_type;
+		typedef detail::decorator_base< MemMgr >		mgr_type;
 		typedef mgr_type*	mgr_pointer_type;
 
 		enum

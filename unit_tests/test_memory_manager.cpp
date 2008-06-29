@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "memory_manager.h"
 #include "heap_segment.h"
+#include "detail/ptr_helpers.h"
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;
@@ -133,12 +134,12 @@ bool test_size_calculation()
 	try
 	{
 		memory_mgr::manager_traits< memmgr_type >::offset_type ptr;
-		char* upper_bound = memory_mgr::detail::char_cast( mgr.get_segment_base() )
+		void* upper_bound = memory_mgr::detail::char_cast( mgr.get_segment_base() )
 			+ memory_mgr::manager_traits< memmgr_type >::memory_size;
 		for( size_t i = 0; i <  memory_mgr::manager_traits< memmgr_type >::num_chunks; ++i )
 		{
 			ptr = mgr.allocate( memory_mgr::manager_traits< memmgr_type >::chunk_size );
-			char* p = mgr.get_offset_base() + ptr;
+			void* p = memory_mgr::detail::offset_to_pointer( ptr, mgr );
 			if( p >= upper_bound )
 			{
 				TEST_FAILED;

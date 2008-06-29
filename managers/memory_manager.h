@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "sync/locks.h"
 #include "detail/offset_traits.h"
 #include "manager_category.h"
+#include "detail/decorator_base.h"
 
 /**
    @brief Main namespace
@@ -122,6 +123,9 @@ namespace memory_mgr
 	class memory_manager : protected sync::object_level_lockable<SyncObj>
 	{
 		typedef memory_mgr::allocable_memory_calc<BlockType, MemorySize, ChunkSize> calc_type;
+
+		template<class Mgr>
+		friend class decorator_base;
 	public:
 		/**
 		   @brief compile time computed constants
@@ -261,24 +265,17 @@ namespace memory_mgr
  			m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
  		}
 
-		/**
-		   @brief Call this method to get memory base address from which offset
-		   is calculated
-		   @param offset offset for which base address should be returned
-		   @exception newer  throws
-		   @return pointer to memory base address                               
-		*/
-		inline char* get_offset_base( const offset_type /*offset*/ = 0 ) const
+
+		inline void* offset_to_pointer( offset_type offset )
 		{
-			return m_offset_base;
+			return detail::shift( m_offset_base, offset );
 		}
 
-		/**
-		   @add_comments
-		*/
-		inline char* get_ptr_base( const void* /*ptr*/ )
+		inline offset_type pointer_to_offset( const void* ptr )
 		{
-			return m_offset_base;
+			assert( ptr >= m_offset_base && "Invalid pointer value");
+			assert(ptr < ( m_offset_base + manager_traits<MemMgr>::memory_size ) && "Invalid pointer value" );
+			return detail::diff( ptr, m_offset_base );
 		}
 
 		/**
@@ -366,6 +363,26 @@ namespace memory_mgr
 		};
 
 		
+		/**
+		   @brief Call this method to get memory base address from which offset
+		   is calculated
+		   @param offset offset for which base address should be returned
+		   @exception newer  throws
+		   @return pointer to memory base address                               
+		*/
+		inline char* get_offset_base( const offset_type /*offset*/ = 0 ) const
+		{
+			return m_offset_base;
+		}
+
+		/**
+		   @add_comments
+		*/
+		inline char* get_ptr_base( const void* /*ptr*/ )
+		{
+			return m_offset_base;
+		}
+
 
 		/**
 		   @brief Call this method to allocate memory block

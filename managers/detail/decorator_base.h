@@ -133,6 +133,15 @@ namespace memory_mgr
 				return m_mgr.get_ptr_base( ptr );
 			}
 
+			inline void* offset_to_pointer( offset_type offset )
+			{
+				return m_mgr.offset_to_pointer( offset );
+			}
+
+			inline offset_type pointer_to_offset( const void* ptr )
+			{
+				return m_mgr.pointer_to_offset( ptr );
+			}
 		};
 
 	}
