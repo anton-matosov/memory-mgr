@@ -46,18 +46,19 @@ public:
 #define TEST_START( name ) test_case __Test__Case__Entry__( (name) );
 #define SUBTEST_START( name ) test_case __Test__Case__Entry__( (name), L'-' );
 
-#define TEST_END( expr ) if (!(expr)){__Test__Case__Entry__.failed(); return false;} else {return true;}
+#define TEST_END( expr ) if (!(expr)){ TEST_FAILED } else {return true;}
 #define SUBTEST_END( expr ) TEST_END( expr )
 
 #define TEST_SUCCEDED {return true;}
 #define SUBTEST_SUCCEDED TEST_SUCCEDED
 
-#define TEST_FAILED {__Test__Case__Entry__.failed(); return false;}
+#define TEST_FAILED_MSG( msg ) {__Test__Case__Entry__.failed( msg ); std::wcout << L"Line: " << __LINE__ << L"\n"; return false;}
+#define TEST_FAILED TEST_FAILED_MSG( L"" )
 #define SUBTEST_FAILED TEST_FAILED
 
 
-#define TEST_CHECK( expr ) if (!(expr)){__Test__Case__Entry__.failed(); std::wcout << L"Line: " << __LINE__ << L"\n"; return false;} else {std::wcout << L"Succeeded\n";}
-#define TEST_CHECK_MSG( expr, msg ) if (!(expr)){__Test__Case__Entry__.failed(msg); std::wcout << L"Line: " << __LINE__ << L"\n"; return false;} else {std::wcout << L"Succeeded\n";}
+#define TEST_CHECK( expr ) if (!(expr)){TEST_FAILED} else {std::wcout << L"Succeeded\n";}
+#define TEST_CHECK_MSG( expr, msg ) if (!(expr)){ TEST_FAILED_MSG( msg ) } else {std::wcout << L"Succeeded\n";}
 #define TEST_PRINT( msg ) std::wcout << (msg) << L"\n";
 #define TEST_METHOD_PRINT( method_name ) std::wcout << L"Testing " << (method_name) << L" method...\n";
 #define TEST_OPERATOR_PRINT( operator_name ) std::wcout << L"Testing operator" << (operator_name) << L"\n";

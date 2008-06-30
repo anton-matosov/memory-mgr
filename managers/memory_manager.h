@@ -136,7 +136,8 @@ namespace memory_mgr
 			memory_size			= MemorySize	/**< memory size in bytes*/,
 			num_chunks			= memory_size / chunk_size /**< number of memory chunks that can be allocated*/,
 			memory_overhead		= 0				/**< memory overhead per allocated memory block in bytes*/,
-			allocable_memory	= calc_type::result_allocable_memory /**< size of memory that can be allocated*/
+			allocable_memory	= calc_type::result_allocable_memory /**< size of memory that can be allocated*/,
+			allocable_chunks = calc_type::result_allocable_chunks
 		};
 		
 	private:	

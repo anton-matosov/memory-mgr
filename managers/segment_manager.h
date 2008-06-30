@@ -35,6 +35,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <assert.h>
 #include <functional>
 #include <vector>
+#include <map>
 
 namespace memory_mgr
 {
@@ -104,39 +105,51 @@ namespace memory_mgr
 		mgr_pointer_type	m_segments[num_segments];
 
 		typedef detail::seg_data_type				seg_data_type;
-		typedef std::vector<seg_data_type>			seg_bases_type;
+		typedef std::map<seg_data_type, size_t>		seg_bases_type;
 
 		seg_bases_type m_bases;
+
+		bool in_segment( const char* base, const char* ptr )
+		{
+			ptrdiff_t diff = ptr - base;
+			if ( diff >= 0 )
+			{
+				if( diff <= allocable_memory )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	public:
 		segment_manager()
 			:curr_segment(0)
 		{
-			offset_bits = calc_offset_bits( segment_size );
+			offset_bits = calc_offset_bits( allocable_memory );
 			segment_mask = ~size_type(0) << offset_bits;
 			offset_mask = ~segment_mask;
 			//offset_bits( segment_size );
 			std::fill<mgr_pointer_type*,mgr_pointer_type>( m_segments, m_segments + num_segments, 0 );
 
-			m_bases.reserve( num_segments );
+			//m_bases.reserve( num_segments );
 		}
 
 		~segment_manager()
 		{
 		}
 
-		mgr_pointer_type get_segment( size_type seg_id )
+		inline mgr_pointer_type get_segment( size_type seg_id )
 		{
-			mgr_pointer_type& segment = m_segments[seg_id];
+			mgr_pointer_type segment = m_segments[seg_id];
 			if( !segment )
 			{
-				segment = new mgr_type( seg_id );
-				m_bases.push_back( seg_data_type( segment->get_offset_base()/*, detail::shift( segment->get_offset_base(), allocable_memory )*/ ) );
-				std::sort( m_bases.begin(), m_bases.end(), detail::seg_data_cmp() );
+				segment = m_segments[seg_id] = new mgr_type( seg_id );
+				m_bases[segment->get_offset_base()] = seg_id;
 			}
 			return segment;
 		}
 
-		offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
+		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
 		{
 			return offset | (seg_id << offset_bits);
 		}
@@ -211,7 +224,10 @@ namespace memory_mgr
 				{
 					curr_segment = seg_id;
 				}
-				++seg_id;
+				else
+				{
+					++seg_id;
+				}
 			}
 
 			if( offset == offset_traits<offset_type>::invalid_offset )
@@ -240,17 +256,32 @@ namespace memory_mgr
 				assert( seg_id < num_segments );
 				offset_type real_offset = offset & offset_mask;
 
-				return get_segment(seg_id)->get_offset_base( real_offset );
+				mgr_pointer_type seg = get_segment(seg_id);
+				char* base = seg->get_offset_base( real_offset );
+				return base;
 			}
 		}
 
 		/**
 		   @add_comments
 		*/
-		inline char* get_ptr_base( const void* ptr )
+		inline char* get_ptr_base( const void*  ptr )
 		{
-			seg_bases_type::const_iterator fres = std::lower_bound( m_bases.begin(), m_bases.end(), ptr, detail::seg_data_cmp() );
-			return *fres/*->first*/;//m_mgr.get_ptr_base( ptr );
+			const char* p = detail::char_cast( ptr );
+			seg_bases_type::const_iterator fres = m_bases.lower_bound( detail::unconst_char( p ) );
+			if( (fres == m_bases.end()) || (fres != m_bases.begin() && fres->first != p) )
+			{
+				--fres;
+			}
+
+			if( in_segment( fres->first, p ) )
+			{
+				return fres->first;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/**
@@ -296,7 +327,8 @@ namespace memory_mgr
 		{
 			bool result = true;
 			mgr_pointer_type* pseg = m_segments;
-			while( pseg != (m_segments + num_segments) && result )
+			mgr_pointer_type* end = m_segments + num_segments;
+			while( pseg != end && result )
 			{
 				if( *pseg )
 				{
@@ -321,7 +353,8 @@ namespace memory_mgr
 		{
 			bool result = true;
 			mgr_pointer_type* pseg = m_segments;
-			while( pseg != (m_segments + num_segments) && result )
+			mgr_pointer_type* end = m_segments + num_segments;
+			while( pseg != end && result )
 			{
 				if( *pseg )
 				{
@@ -339,7 +372,8 @@ namespace memory_mgr
 		inline void clear()
 		{
 			mgr_pointer_type* pseg = m_segments;
-			while( pseg != m_segments + num_segments )
+			mgr_pointer_type* end = m_segments + num_segments;
+			while( pseg != end )
 			{
 				if( *pseg )
 				{

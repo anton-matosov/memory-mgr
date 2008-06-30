@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf_tests", "perf_tests\pe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
 EndProject
+Project("{4CAA2610-1955-4629-BDC1-8133FE0B2087}") = "profiler", "profiler\profiler.aqt", "{E9EBD4A1-5C7D-41D8-9593-D63A8FC47F01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
