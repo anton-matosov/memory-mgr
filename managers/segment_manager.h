@@ -123,6 +123,17 @@ namespace memory_mgr
 
 		~segment_manager()
 		{
+			mgr_pointer_type* pseg = m_segments;
+			mgr_pointer_type* end = m_segments + num_segments;
+			while( pseg != end )
+			{
+				if( *pseg )
+				{
+					delete *pseg;
+					*pseg = 0;
+				}
+				++pseg;
+			}
 		}
 
 		inline mgr_pointer_type get_segment( size_type seg_id )
