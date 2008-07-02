@@ -215,9 +215,9 @@ namespace
 			test_alloc_mem_mgr<heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc heap pt mgr",
 			test_alloc_mem_mgr<heap_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( simple_alloc_category, "alloc seg heap sz mgr",
+		run_perf_test( simple_alloc_category, "alloc heap seg sz mgr",
 			test_alloc_mem_mgr<seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( simple_alloc_category, "alloc seg heap pt mgr",
+		run_perf_test( simple_alloc_category, "alloc heap seg pt mgr",
 			test_alloc_mem_mgr<seg_heap_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ namespace
 			test_alloc_mem_mgr<heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared sz pt mgr",
 			test_alloc_mem_mgr<shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( simple_alloc_category, "alloc seg heap sz pt mgr",
+		run_perf_test( simple_alloc_category, "alloc heap seg sz pt mgr",
 			test_alloc_mem_mgr<seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
@@ -233,13 +233,15 @@ namespace
 			test_alloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc sing shared sz pt mgr",
 			test_alloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( simple_alloc_category, "alloc sing heap seg sz pt mgr",
+			test_alloc_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap mgr",
 			test_alloc_dealloc_mem_mgr<heap_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared mgr",
 			test_alloc_dealloc_mem_mgr<shared_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc/dealloc seg heap mgr",
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap seg mgr",
 			test_alloc_dealloc_mem_mgr<seg_heap_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
@@ -247,7 +249,7 @@ namespace
 			test_alloc_dealloc_mem_mgr<heap_sz_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap pt mgr",
 			test_alloc_dealloc_mem_mgr<heap_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc/dealloc seg heap sz mgr",
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap seg sz mgr",
 			test_alloc_dealloc_mem_mgr<seg_heap_sz_mgr, offset_type>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
@@ -255,7 +257,7 @@ namespace
 			test_alloc_dealloc_mem_mgr<heap_sz_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared sz pt mgr",
 			test_alloc_dealloc_mem_mgr<shared_sz_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( alloc_dealloc_category, "alloc/dealloc seg heap sz pt mgr",
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap seg sz pt mgr",
 			test_alloc_dealloc_mem_mgr<seg_heap_sz_pt_mgr, int*>, op_repeat, per_alloc, test_repeat );
 
 		//////////////////////////////////////////////////////////////////////////
@@ -263,6 +265,8 @@ namespace
 			test_alloc_dealloc_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing shared sz pt mgr",
 			test_alloc_dealloc_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( alloc_dealloc_category, "alloc/dealloc sing heap seg sz pt mgr",
+			test_alloc_dealloc_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
 //////////////////////////////////////////////////////////////////////////
 //		run_perf_test( alloc_dealloc_category, "GC Allocator",
 //			test_alloc_dealloc_gc_alloc<int>, op_repeat, per_alloc, test_repeat );
