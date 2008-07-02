@@ -207,7 +207,9 @@ namespace
 			test_alloc_mem_mgr<shared_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc seg heap mgr",
 			test_alloc_mem_mgr<seg_heap_mgr>, op_repeat, per_alloc, test_repeat );
-		
+		run_perf_test( simple_alloc_category, "alloc seg shared mgr",
+			test_alloc_mem_mgr<seg_shared_mgr>, op_repeat, per_alloc, test_repeat );
+
 		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( simple_alloc_category, "alloc heap sz mgr",
 			test_alloc_mem_mgr<heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
