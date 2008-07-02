@@ -53,7 +53,7 @@ namespace memory_mgr
 	>
 	class segment_manager
 	{
-		typedef /*detail::decorator_base<*/ MemMgr/* >*/		mgr_type;
+		typedef MemMgr		mgr_type;
 		typedef mgr_type*	mgr_pointer_type;
 
 	public:
@@ -66,9 +66,6 @@ namespace memory_mgr
 			//segment_mask
 		};
 	private:
-
-		
-
 		typedef typename manager_traits<mgr_type>::size_type		size_type;
 		typedef typename manager_traits<mgr_type>::offset_type		offset_type;
 
@@ -88,14 +85,11 @@ namespace memory_mgr
 
 		size_type m_curr_segment;
 
-		//base_ptr_type		m_bases[num_segments];
+		typedef char*								seg_base_type;
+		typedef std::map<seg_base_type, size_t>		seg_bases_type;
+
 		mgr_pointer_type	m_segments[num_segments];
-
-
-		typedef char*								seg_data_type;
-		typedef std::map<seg_data_type, size_t>		seg_bases_type;
-
-		seg_bases_type m_bases;
+		seg_bases_type		m_bases;
 
 		bool in_segment( const char* base, const char* ptr )
 		{
@@ -107,6 +101,39 @@ namespace memory_mgr
 				}
 			}
 			return false;
+		}
+
+
+
+		inline mgr_pointer_type get_segment( size_type seg_id )
+		{
+			mgr_pointer_type segment = m_segments[seg_id];
+			if( !segment )
+			{
+				segment = m_segments[seg_id] = new mgr_type( seg_id );
+				m_bases[segment->get_offset_base()] = seg_id;
+			}
+			return segment;
+		}
+
+		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
+		{
+			return offset | (seg_id << m_offset_bits);
+		}
+
+		inline seg_bases_type::const_iterator find_segment( const void*  ptr )
+		{
+			const char* p = detail::char_cast( ptr );
+			seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
+			if( fres != m_bases.begin() )
+			{
+				--fres;
+				if( in_segment( fres->first, p ) )
+				{
+					return fres;
+				}
+			}
+			return m_bases.end();
 		}
 	public:
 		segment_manager()
@@ -134,22 +161,6 @@ namespace memory_mgr
 				}
 				++pseg;
 			}
-		}
-
-		inline mgr_pointer_type get_segment( size_type seg_id )
-		{
-			mgr_pointer_type segment = m_segments[seg_id];
-			if( !segment )
-			{
-				segment = m_segments[seg_id] = new mgr_type( seg_id );
-				m_bases[segment->get_offset_base()] = seg_id;
-			}
-			return segment;
-		}
-
-		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
-		{
-			return offset | (seg_id << m_offset_bits);
 		}
 
 		/**
@@ -186,7 +197,7 @@ namespace memory_mgr
 		*/
  		inline void deallocate( const offset_type offset, size_type size )
  		{
-			if( offset == offset_traits<offset_type>::invalid_offset )
+			if( offset != offset_traits<offset_type>::invalid_offset )
 			{
 // 				size_type seg_id = offset >> m_offset_bits;
 // 				assert( seg_id < num_segments );
@@ -275,21 +286,6 @@ namespace memory_mgr
 			}
 			return 0;
 			
-		}
-
-		inline seg_bases_type::const_iterator find_segment( const void*  ptr )
-		{
-			const char* p = detail::char_cast( ptr );
-			seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
-			if( fres != m_bases.begin() )
-			{
-				--fres;
-				if( in_segment( fres->first, p ) )
-				{
-					return fres;
-				}
-			}
-			return m_bases.end();
 		}
 
 		/**

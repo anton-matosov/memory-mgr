@@ -31,28 +31,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "unit_tests_manager.h"
 
-// typedef memory_mgr::singleton_manager
-// < 
-// 	memory_mgr::size_tracking
-// 	<
-// 		memory_mgr::pointer_convert
-// 		< 
-// 			memory_mgr::heap_segment
-// 			< 
-// 				memory_mgr::memory_manager<size_t, 2 * 1024 * 1024, 4> 
-// 			> 
-// 		>
-// 	>
-// > sz_heap_mgr_type;
-// 
-// MGR_DECLARE_MANAGER_CLASS(heap_manager, sz_heap_mgr_type);
-// 
-// 
-// typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-// heap_manager> > string_type;
-
-
-
 bool test_temp_buffer();
 bool test_type_manip();
 bool test_static_bitset();
@@ -67,8 +45,6 @@ bool test_allocator();
 bool test_segment_manager();
 
 
-
-
 int main(int /*argc*/, char* /*argv*/[])
 {
 	unit_tests_manager TestMgr;
@@ -77,17 +53,17 @@ int main(int /*argc*/, char* /*argv*/[])
 	std::wcout << L"Exe path: " << memory_mgr::osapi::get_executable_path().c_str() << L"\n";
 	std::wcout << L"Exe dir: " << memory_mgr::osapi::get_exe_dir().c_str() << L"\n";
 	TestMgr.add_result( test_segment_manager(),	L"test_segment_manager" );
-	TestMgr.add_result( test_temp_buffer(), 	L"test_temp_buffer" );
-	TestMgr.add_result( test_type_manip(), 		L"test_type_manip" );
-	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );
-	TestMgr.add_result( test_bit_manager(), 	L"test_bit_manager" );
-	TestMgr.add_result( test_memory_manager(),	L"test_memory_manager" );
-	TestMgr.add_result( test_pointer_convert(),	L"test_pointer_convert" );
-	TestMgr.add_result( test_size_tracking(),	L"test_size_tracking" );
-	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
-	TestMgr.add_result( test_offset_pointer(),	L"test_offset_pointer" );
-	TestMgr.add_result( test_shared_segment(),	L"test_shared_segment" );
-	TestMgr.add_result( test_allocator(),		L"test_allocator" );
+ 	TestMgr.add_result( test_temp_buffer(), 	L"test_temp_buffer" );
+ 	TestMgr.add_result( test_type_manip(), 		L"test_type_manip" );
+ 	TestMgr.add_result( test_static_bitset(), 	L"test_static_bitset" );
+ 	TestMgr.add_result( test_bit_manager(), 	L"test_bit_manager" );
+ 	TestMgr.add_result( test_memory_manager(),	L"test_memory_manager" );
+ 	TestMgr.add_result( test_pointer_convert(),	L"test_pointer_convert" );
+ 	TestMgr.add_result( test_size_tracking(),	L"test_size_tracking" );
+ 	TestMgr.add_result( test_managed_base(),	L"test_managed_base" );
+ 	TestMgr.add_result( test_offset_pointer(),	L"test_offset_pointer" );
+ 	TestMgr.add_result( test_shared_segment(),	L"test_shared_segment" );
+ 	TestMgr.add_result( test_allocator(),		L"test_allocator" );
 
 	TestMgr.print_results();
 	return std::cin.get();

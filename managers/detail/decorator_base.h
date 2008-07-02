@@ -28,7 +28,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+
 #include "manager_traits.h"
+#include "static_assert.h"
 
 namespace memory_mgr
 {

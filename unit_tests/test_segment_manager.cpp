@@ -35,45 +35,85 @@ static const size_t memory_size = 1024;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-//typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
-//typedef memory_mgr::size_tracking< memmgr_type > sz_pconv_track_mgr;
 typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
-typedef memory_mgr::segment_manager<heapmgr_type, 500> segmgr_type;
+typedef memory_mgr::segment_manager<heapmgr_type, 50> segmgr_type;
+
+typedef memory_mgr::pointer_convert<segmgr_type> pconv_segmgr_type;
+typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
+
+typedef memory_mgr::manager_traits<segmgr_type>::offset_type offset_type;
 
 
-bool test_get_offset_base()
+enum
+{
+	alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1
+};
+
+bool is_valid_ptr( offset_type p )
+{
+	return p != memory_mgr::offset_traits<size_t>::invalid_offset;
+}
+
+bool is_valid_ptr( void* p )
+{
+	return p != 0;
+}
+
+template< class MemMgr, class PtrType>
+bool test_alloc_dealloc()
+{
+	SUBTEST_START( L"allocation/deallocation" );
+
+	typedef PtrType					ptr_type;
+	typedef std::vector< ptr_type >	ptrs_vec;
+
+	MemMgr segmgr;
+	ptrs_vec ptrs;
+
+	ptr_type p = 0;
+
+	ptrs.reserve( alloc_chunks );
+	for( size_t i = 0; i < alloc_chunks; ++i )
+	{
+		p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
+		
+		ptrs.push_back( p );
+		if( !is_valid_ptr( p ) )
+		{
+			break;
+		}
+	}
+
+	std::random_shuffle( ptrs.begin(), ptrs.end() );
+	
+	for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
+	{
+		segmgr.deallocate( *it, chunk_size );
+	}
+
+	SUBTEST_END( segmgr.free() );
+}
+
+bool test_offset_convertions()
 {
 	SUBTEST_START( L"get_offset_base" );
 	
+	
+	typedef std::vector< offset_type > ptrs_vec;
+
 	segmgr_type segmgr;
 
-	segmgr.allocate( chunk_size );
-// 	size_t p1 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory - chunk_size );
-// 	bool not_free = segmgr.free();
-// 	bool not_empty = segmgr.empty();
-// 	segmgr.allocate( chunk_size );
-// 	size_t p2 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory  - chunk_size);
-// 	segmgr.allocate( chunk_size );
-// 	size_t p3 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory  - chunk_size);
-// 	segmgr.allocate( chunk_size );
-// 	size_t p4 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory  - chunk_size);
-// 	size_t p5 = segmgr.allocate( memory_mgr::manager_traits<segmgr_type>::allocable_memory, std::nothrow_t() );
-
-	size_t p5 = 0;
-	typedef std::vector<size_t> ptrs_vec;
+	size_t p = 0;
 	ptrs_vec ptrs;
-	size_t alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1;
+	
 	ptrs.reserve( alloc_chunks );
- 	for( size_t i = 0; i < alloc_chunks && p5 != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
+ 	for( size_t i = 0; i < alloc_chunks && p != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
  	{
-		p5 = segmgr.allocate( chunk_size, std::nothrow_t() );
-		ptrs.push_back( p5 );
+		p = segmgr.allocate( chunk_size, std::nothrow_t() );
+		ptrs.push_back( p );
  	}
 
-	//std::random_shuffle( ptrs.begin(), ptrs.end() );
-
-	size_t i =0;
-	size_t count = ptrs.size();
+	std::random_shuffle( ptrs.begin(), ptrs.end() );
 
 	for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 	{
@@ -91,54 +131,22 @@ bool test_get_offset_base()
 		{
 			TEST_FAILED_MSG( L"Invalid offset" );
 		}
-		++i;
+
+		segmgr.deallocate( *it, chunk_size );
 	}
 
-// 	void* p1_base = segmgr.get_offset_base( p1 );
-// 	void* p2_base = segmgr.get_offset_base( p2 );
-// 	void* p3_base = segmgr.get_offset_base( p3 );
-// 	void* p4_base = segmgr.get_offset_base( p4 );
-// 	void* p5_base = segmgr.get_offset_base( p5 );
-// 	
-// 
-// 	void* vp1 = segmgr.offset_to_pointer( p1 );
-// 	void* vp2 = segmgr.offset_to_pointer( p2 );
-// 	void* vp3 = segmgr.offset_to_pointer( p3 );
-// 	void* vp4 = segmgr.offset_to_pointer( p4 );
-// 	void* vp5 = segmgr.offset_to_pointer( p5 );
-// 	void* base0 = segmgr.get_ptr_base( 0 );
-// 	void* vp1_base = segmgr.get_ptr_base( vp1 );
-// 	void* vp2_base = segmgr.get_ptr_base( vp2 );
-// 	void* vp3_base = segmgr.get_ptr_base( vp3 );
-// 	void* vp4_base = segmgr.get_ptr_base( vp4 );
-// 
-// 	TEST_CHECK_MSG( vp1_base == p1_base, L"Invalid base" );
-// 	TEST_CHECK_MSG( vp2_base == p2_base, L"Invalid base" );
-// 	TEST_CHECK_MSG( vp3_base == p3_base, L"Invalid base" );
-// 	TEST_CHECK_MSG( vp4_base == p4_base, L"Invalid base" );
-
-// 	segmgr.deallocate( p3, memory_mgr::manager_traits<segmgr_type>::allocable_memory - chunk_size );
-// 	segmgr.deallocate( p4, memory_mgr::manager_traits<segmgr_type>::allocable_memory  );
-// 	segmgr.deallocate( p1, memory_mgr::manager_traits<segmgr_type>::allocable_memory - chunk_size );
-// 	segmgr.deallocate( p2, memory_mgr::manager_traits<segmgr_type>::allocable_memory - chunk_size );
-
-	//segmgr.get_offset_base( memory_size - 1 );
-	//segmgr.get_offset_base( memory_size );
-	//segmgr.get_offset_base( memory_size + 1 );
-	//segmgr.get_offset_base( memory_size * 3 + 5 );
-
-	for( size_t i = 0; i < alloc_chunks; ++i )
-	{
-		new int();
-	}
-	segmgr.clear();
-	return true;
+	SUBTEST_END( segmgr.free() );
 }
 
 bool test_segment_manager()
 {
 	TEST_START( L"test_segment_manager" );
-	TEST_END( test_get_offset_base() );
+	TEST_END( (
+		test_alloc_dealloc<segmgr_type, offset_type>() &&
+		test_offset_convertions() &&
+		test_alloc_dealloc<pconv_segmgr_type, void*>() &&
+		test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
+		)  );
 }
 
 

@@ -38,10 +38,6 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 
 typedef memmgr_type::offset_type offset_type;
 
-namespace memory_mgr
-{
-	
-}
 
 bool test_alloc_dealloc()
 {
