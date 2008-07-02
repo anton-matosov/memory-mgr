@@ -87,9 +87,13 @@ namespace memory_mgr
 			inline void* store_size( void* ptr, size_type size )
 			{
 				//Store size
-				size_type* psize = detail::size_cast( ptr );
-				*psize = size;
-				return ++psize;
+				if( ptr )
+				{
+					size_type* psize = detail::size_cast( ptr );
+					*psize = size;
+					return ++psize;
+				}
+				return ptr;
 			}
 
 		};
@@ -182,12 +186,15 @@ namespace memory_mgr
 			*/
 			inline void deallocate( void* ptr, size_type /*size*/ = 0)
 			{
-				assert( ptr >= this->m_mgr.get_offset_base() && "Invalid pointer value");
-				assert( ptr < ( this->m_mgr.get_offset_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
+				if( ptr )
+				{
+					assert( ptr >= this->m_mgr.get_offset_base() && "Invalid pointer value");
+					assert( ptr < ( this->m_mgr.get_offset_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
 
-				size_type *ps = detail::size_cast( ptr );
-				--ps;
-				this->m_mgr.deallocate( ps, *ps );
+					size_type *ps = detail::size_cast( ptr );
+					--ps;
+					this->m_mgr.deallocate( ps, *ps );
+				}
 			}
 		};
 
