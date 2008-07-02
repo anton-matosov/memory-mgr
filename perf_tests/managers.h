@@ -35,13 +35,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "size_tracking.h"
 #include "managed_base.h"
 #include "singleton_manager.h"
+#include "segment_manager.h"
 #include "sync/pseudo_sync.h"
 
 typedef unsigned int chunk_type;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 4 * 1024 * 1024;
+static const size_t memory_size_small = 16 * 1024;
+static const size_t segments_count = 1024;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, size_t, memory_mgr::sync::pseudo_sync > memmgr_type;
+typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, size_t, memory_mgr::sync::pseudo_sync > memmgr_small_type;
 
 typedef memmgr_type::offset_type offset_type;
 
@@ -78,6 +82,62 @@ typedef memory_mgr::heap_segment
 		> 
 	>
 > heap_sz_pt_mgr;
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+typedef memory_mgr::segment_manager
+< 
+	typedef memory_mgr::heap_segment
+	<
+		memmgr_small_type
+	>
+	,
+	segments_count
+> seg_heap_mgr;
+
+typedef memory_mgr::size_tracking
+<
+	memory_mgr::segment_manager
+	< 
+		typedef memory_mgr::heap_segment
+		<
+			memmgr_small_type
+		>
+		,
+		segments_count
+	> 
+> seg_heap_sz_mgr;
+
+typedef memory_mgr::pointer_convert
+<
+	memory_mgr::segment_manager
+	< 
+		typedef memory_mgr::heap_segment
+		<
+			memmgr_small_type
+		>
+		,
+		segments_count
+	> 
+> seg_heap_pt_mgr;
+
+typedef memory_mgr::size_tracking
+<
+	memory_mgr::pointer_convert
+	< 
+		memory_mgr::segment_manager
+		< 
+			typedef memory_mgr::heap_segment
+			<
+				memmgr_small_type
+			>
+			,
+			segments_count
+		> 
+	>
+> seg_heap_sz_pt_mgr;
+//////////////////////////////////////////////////////////////////////////
+
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::shared_segment

@@ -33,7 +33,7 @@ bool test_offset_pointer( const int op_repeat, const int per_alloc, const int te
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-	const int op_repeat = 10;
+	const int op_repeat = 5;
 	const int per_alloc = 50000;
 	const int test_repeat = 10;
 

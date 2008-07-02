@@ -39,25 +39,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail
-	{
-		//typedef std::pair<char*,void*> seg_data_type;
-		typedef char* seg_data_type;
 
-		struct seg_data_cmp
-		{
-			bool operator()( const void* lhs, const void* ptr )
-			{
-				return lhs < ptr;
-			}
-		};
-
-		//typedef std::map< seg_data_type, char*, seg_data_cmp> seg_bases_type;
-	}
 	/**
 	   @brief memory segments manager
 	   @details 
 	   @tparam MemMgr memory manager with attached memory segment
+	   @tparam SegmentsCount maximum number of segments
 	*/
 	template
 	<
@@ -95,26 +82,26 @@ namespace memory_mgr
 			return log2 + (extra ? 1 : 0);
 		}
 
-		size_type segment_mask;
-		size_type offset_mask;
-		size_type offset_bits;
+		size_type m_segment_mask;
+		size_type m_offset_mask;
+		size_type m_offset_bits;
 
-		size_type curr_segment;
+		size_type m_curr_segment;
 
 		//base_ptr_type		m_bases[num_segments];
 		mgr_pointer_type	m_segments[num_segments];
 
-		typedef detail::seg_data_type				seg_data_type;
+
+		typedef char*								seg_data_type;
 		typedef std::map<seg_data_type, size_t>		seg_bases_type;
 
 		seg_bases_type m_bases;
 
 		bool in_segment( const char* base, const char* ptr )
 		{
-			ptrdiff_t diff = ptr - base;
-			if ( diff >= 0 )
+			if ( ptr >= base )
 			{
-				if( diff <= allocable_memory )
+				if( (ptr - base) <= allocable_memory )
 				{
 					return true;
 				}
@@ -123,11 +110,11 @@ namespace memory_mgr
 		}
 	public:
 		segment_manager()
-			:curr_segment(0)
+			:m_curr_segment(0)
 		{
-			offset_bits = calc_offset_bits( allocable_memory );
-			segment_mask = ~size_type(0) << offset_bits;
-			offset_mask = ~segment_mask;
+			m_offset_bits = calc_offset_bits( allocable_memory );
+			m_segment_mask = ~size_type(0) << m_offset_bits;
+			m_offset_mask = ~m_segment_mask;
 			//offset_bits( segment_size );
 			std::fill<mgr_pointer_type*,mgr_pointer_type>( m_segments, m_segments + num_segments, 0 );
 
@@ -151,7 +138,7 @@ namespace memory_mgr
 
 		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
 		{
-			return offset | (seg_id << offset_bits);
+			return offset | (seg_id << m_offset_bits);
 		}
 
 		/**
@@ -188,11 +175,14 @@ namespace memory_mgr
 		*/
  		inline void deallocate( const offset_type offset, size_type size )
  		{
-			size_type seg_id = offset >> offset_bits;
-			assert( seg_id < num_segments );
-			offset_type real_offset = offset & offset_mask;
+			if( offset == offset_traits<offset_type>::invalid_offset )
+			{
+// 				size_type seg_id = offset >> m_offset_bits;
+// 				assert( seg_id < num_segments );
+// 				offset_type real_offset = offset & m_offset_mask;
 
-			return get_segment(seg_id)->deallocate( real_offset, size );
+				get_segment( offset >> m_offset_bits )->deallocate( offset & m_offset_mask, size );
+			}
  		}
 
 		template< class OnNoMemory >
@@ -205,13 +195,13 @@ namespace memory_mgr
 				return offset_traits<offset_type>::invalid_offset;
 			}
 
-			mgr_pointer_type segment = get_segment(curr_segment);
+			mgr_pointer_type segment = get_segment(m_curr_segment);
 
 			offset_type offset = segment->allocate( size, std::nothrow_t() );
-			size_type seg_id = curr_segment + 1;
+			size_type seg_id = m_curr_segment + 1;
 
 			while ( offset == offset_traits<offset_type>::invalid_offset &&
-				seg_id != curr_segment )
+				seg_id != m_curr_segment )
 			{
 				if( seg_id >= num_segments )
 				{
@@ -222,7 +212,7 @@ namespace memory_mgr
 				offset = segment->allocate( size, std::nothrow_t() );
 				if( offset != offset_traits<offset_type>::invalid_offset )
 				{
-					curr_segment = seg_id;
+					m_curr_segment = seg_id;
 				}
 				else
 				{
@@ -235,7 +225,7 @@ namespace memory_mgr
 				OnNoMemoryOp();
 			}
 
-			return add_seg_id_to_offset( offset, curr_segment );
+			return add_seg_id_to_offset( offset, m_curr_segment );
 		}
 
 		/**
@@ -252,9 +242,9 @@ namespace memory_mgr
 			}
 			else
 			{
-				size_type seg_id = offset >> offset_bits;
+				size_type seg_id = offset >> m_offset_bits;
 				assert( seg_id < num_segments );
-				offset_type real_offset = offset & offset_mask;
+				offset_type real_offset = offset & m_offset_mask;
 
 				mgr_pointer_type seg = get_segment(seg_id);
 				char* base = seg->get_offset_base( real_offset );
@@ -266,22 +256,29 @@ namespace memory_mgr
 		   @add_comments
 		*/
 		inline char* get_ptr_base( const void*  ptr )
-		{
-			const char* p = detail::char_cast( ptr );
-			seg_bases_type::const_iterator fres = m_bases.lower_bound( detail::unconst_char( p ) );
-			if( (fres == m_bases.end()) || (fres != m_bases.begin() && fres->first != p) )
-			{
-				--fres;
-			}
-
-			if( in_segment( fres->first, p ) )
+		{	
+			seg_bases_type::const_iterator fres = find_segment( ptr );
+			if( fres != m_bases.end() )
 			{
 				return fres->first;
 			}
-			else
+			return 0;
+			
+		}
+
+		inline seg_bases_type::const_iterator find_segment( const void*  ptr )
+		{
+			const char* p = detail::char_cast( ptr );
+			seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
+			if( fres != m_bases.begin() )
 			{
-				return 0;
+				--fres;
+				if( in_segment( fres->first, p ) )
+				{
+					return fres;
+				}
 			}
+			return m_bases.end();
 		}
 
 		/**
@@ -295,9 +292,9 @@ namespace memory_mgr
 			}
 			else
 			{
-				size_type seg_id = offset >> offset_bits;
+				size_type seg_id = offset >> m_offset_bits;
 				assert( seg_id < num_segments );
-				offset_type real_offset = offset & offset_mask;
+				offset_type real_offset = offset & m_offset_mask;
 
 				return get_segment(seg_id)->offset_to_pointer( real_offset );
 			}
@@ -308,10 +305,12 @@ namespace memory_mgr
 		*/
 		inline offset_type pointer_to_offset( const void* ptr )
 		{
-			//assert( ptr >= m_offset_base && "Invalid pointer value");
-			//assert(ptr < ( m_offset_base + manager_traits<MemMgr>::memory_size ) && "Invalid pointer value" );
-			//return detail::diff( ptr, m_offset_base );
-			return 0;
+			seg_bases_type::const_iterator fres = find_segment( ptr );
+			if( fres != m_bases.end() )
+			{
+				return add_seg_id_to_offset( detail::diff( ptr, fres->first ), fres->second );
+			}
+			return offset_traits<offset_type>::invalid_offset;
 		}
 
 		/**
@@ -378,9 +377,13 @@ namespace memory_mgr
 				if( *pseg )
 				{
 					(*pseg)->clear();
+					//delete *pseg;
+					//*pseg = 0;
 				}
 				++pseg;
 			}
+			m_curr_segment = 0;
+			m_bases.clear();
 			//std::for_each( m_segments, m_segments + num_segments, std::mem_fun( &mgr_type::clear ) );
 		}
 	};

@@ -38,7 +38,7 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 //typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
 //typedef memory_mgr::size_tracking< memmgr_type > sz_pconv_track_mgr;
 typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
-typedef memory_mgr::segment_manager<heapmgr_type, 5> segmgr_type;
+typedef memory_mgr::segment_manager<heapmgr_type, 500> segmgr_type;
 
 
 bool test_get_offset_base()
@@ -62,7 +62,7 @@ bool test_get_offset_base()
 	size_t p5 = 0;
 	typedef std::vector<size_t> ptrs_vec;
 	ptrs_vec ptrs;
-	size_t alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments;
+	size_t alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1;
 	ptrs.reserve( alloc_chunks );
  	for( size_t i = 0; i < alloc_chunks && p5 != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
  	{
@@ -73,6 +73,7 @@ bool test_get_offset_base()
 	//std::random_shuffle( ptrs.begin(), ptrs.end() );
 
 	size_t i =0;
+	size_t count = ptrs.size();
 
 	for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 	{
@@ -83,6 +84,12 @@ bool test_get_offset_base()
 		if( vp_base != p_base )
 		{
 			TEST_FAILED_MSG( L"Invalid base" );
+		}
+
+		size_t off = segmgr.pointer_to_offset( vp ) ;
+		if( off != p )
+		{
+			TEST_FAILED_MSG( L"Invalid offset" );
 		}
 		++i;
 	}
@@ -120,6 +127,10 @@ bool test_get_offset_base()
 	//segmgr.get_offset_base( memory_size + 1 );
 	//segmgr.get_offset_base( memory_size * 3 + 5 );
 
+	for( size_t i = 0; i < alloc_chunks; ++i )
+	{
+		new int();
+	}
 	segmgr.clear();
 	return true;
 }
