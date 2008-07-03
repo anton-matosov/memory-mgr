@@ -199,8 +199,6 @@ namespace
 	{
 		typedef memory_mgr::manager_traits<shared_mgr>::offset_type offset_type;
 
-		
-
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
