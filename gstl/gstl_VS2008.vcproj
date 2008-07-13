@@ -156,6 +156,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\string"
+				>
+			</File>
+			<File
 				RelativePath=".\vector"
 				>
 			</File>
@@ -168,11 +172,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\char_traits.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\helpers.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\detail\pointer_traits.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\string.hpp"
 				>
 			</File>
 			<File

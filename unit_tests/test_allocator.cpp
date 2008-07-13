@@ -22,7 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
-#include "test_case.h"
+#include "test_case.hpp"
 #include <string>
 #include <vector>
 #include <map>

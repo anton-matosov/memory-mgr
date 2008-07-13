@@ -32,10 +32,41 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace gstl
 {
+	template<class T> 
 	struct pointer_traits
 	{
+	public:
+		typedef T									value_type;
+		typedef pointer_traits< value_type* >		self_type;
 
+		typedef value_type*								pointer;
+		typedef const value_type*						const_pointer;
+		typedef value_type&								reference;
+		typedef const value_type&						const_reference;
+
+		template<class Other>
+		struct rebind
+		{	// convert an pointer_traits<T> to an pointer_traits <Other>
+			typedef typename pointer_traits< Other > other;
+		};
+
+		static const_pointer null_ptr;
+
+		static inline bool is_null( const_pointer ptr )
+		{
+			return ptr == null_ptr;
+		}
 	};
+
+
+// 	template<class T> 
+// 	struct pointer_traits<T*>
+// 		:public pointer_traits<T>
+// 	{};
+
+
+	template<class T>
+	typename pointer_traits<T>::const_pointer pointer_traits<T>::null_ptr = 0;
 }
 
 #endif GSTL_POINTER_TRAITS_HEADER

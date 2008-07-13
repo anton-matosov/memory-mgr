@@ -21,23 +21,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef GSTL_VECTOR_HEADER
-#define GSTL_VECTOR_HEADER
+#ifndef GSTL_MAP_HEADER
+#define GSTL_MAP_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include <gstl/detail/allocator.hpp>
-
 namespace gstl
 {
-	template<class T, class Alloc = allocator<T> >
-	class vector
+	template<class T>
+	class map
 	{
-	public:
-		vector();
+
 	};
 }
 
-#endif GSTL_VECTOR_HEADER
+#endif //GSTL_MAP_HEADER
