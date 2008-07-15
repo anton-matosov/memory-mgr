@@ -27,20 +27,27 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <gstl/config/config.hpp>
 
 
-bool test_allocator();
-
+#include <cppunit/TestCaller.h>
+#include <cppunit/TestResult.h>
+#include <cppunit/ui/text/TestRunner.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 
 
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-	unit_tests_manager TestMgr;
+	//unit_tests_manager TestMgr;
 		
 	std::wcout << L"Unit tests for Generic STL library\n";
 	std::wcout << L"Exe path: " << gstl::osapi::get_executable_path().c_str() << L"\n";
 	std::wcout << L"Exe dir: " << gstl::osapi::get_exe_dir().c_str() << L"\n";
-	TestMgr.add_result( test_allocator(),		L"test_allocator" );
+	//TestMgr.add_result( test_allocator(),		L"test_allocator" );
 
-	TestMgr.print_results();
-	return std::cin.get();
+	CppUnit::TextUi::TestRunner runner;
+
+	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+	runner.addTest( registry.makeTest() );
+
+	return runner.run();
 }

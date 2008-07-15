@@ -21,58 +21,75 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
-#include "test_case.hpp"
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include <gstl/allocator>
-
+#include "test_common.hpp"
 
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, gstl::allocator<wchar_t> > string_type;
 template class std::basic_string<wchar_t, std::char_traits<wchar_t>, gstl::allocator<wchar_t> >;
 
+typedef std::vector<int > def_vector_type;
 typedef std::vector<int, gstl::allocator<int > > vector_type;
 template class std::vector<int, gstl::allocator<int > >;
 
 typedef std::map<int, int, std::less<int>,  gstl::allocator< std::pair<const int, int> > > map_type;
 template class std::map<int, int, std::less<int>,  gstl::allocator< std::pair<int, int> > >;
 
-bool unit_test()
+class AllocatorTest 
+	:public CppUnit::TestFixture
 {
-	return false;
-}
-
-bool std_containers_test()
-{
-	SUBTEST_START( L"std containers + custom allocator" );
-	{
-		const int items_count = 1000;
-		vector_type vec;
+	static const int items_count = 1000;
+	def_vector_type vec;
+public:
+	void setUp()
+	{  
 		vec.resize( items_count );
-		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
 		{
 			*it = rand() % items_count;
 		}
 		std::random_shuffle( vec.begin(), vec.end() );
-
- 		map_type map;
- 		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
- 		{
- 			map[ rand() % items_count ] = *it;
- 		}
 	}
-	return true;
-}
 
-bool test_allocator()
-{
-	TEST_START( L"allocator class" );
+	//////////////////////////////////////////////////////////////////////////
+	void test_vector()
+	{
+		vector_type new_vec;
+		int index = -1;
+		new_vec.resize( items_count );
+		CPPUNIT_ASSERT( new_vec.size() >= items_count );
+		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+		{
+			index = rand() % items_count;
+			CPPUNIT_ASSERT( index < items_count );
+			new_vec[ index ] = *it;
+			CPPUNIT_ASSERT( new_vec[ index ] == *it );
+		}
+	}
 
-	TEST_END( /*unit_test()
-		&&*/ std_containers_test()
-		);
+	void test_map()
+	{
+		map_type map;
+		int index = -1;
+		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+		{
+			index = rand() % items_count;
+			CPPUNIT_ASSERT( index < items_count );
+			map[ index ] = *it;
+			CPPUNIT_ASSERT( map[ index ] == *it );
+		}
+	}
 
-}
+	//////////////////////////////////////////////////////////////////////////
+	CPPUNIT_TEST_SUITE( AllocatorTest );
+	CPPUNIT_TEST( test_vector );
+	CPPUNIT_TEST( test_map );
+	CPPUNIT_TEST_SUITE_END();
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION( AllocatorTest );
+
 

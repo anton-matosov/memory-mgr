@@ -30,19 +30,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace gstl
 {
-	typedef void streamoff;
-	typedef void streampos;
-	typedef void mbstate_t;
-
+	//implementation 
 	template<class T>
 	struct char_traits
 	{
 		typedef T			char_type;
 		typedef char		char_type;
 		typedef int			int_type;
-		typedef streamoff	off_type;
-		typedef streampos	pos_type;
-		typedef mbstate_t	state_type;
+		typedef std::streamoff	off_type;
+		typedef std::streampos	pos_type;
+		typedef std::mbstate_t	state_type;
 		
 		static inline void assign( char_type& c1, const char_type& c2 )
 		{
@@ -106,6 +103,9 @@ namespace gstl
 
 		static inline char_type* move( char_type* s1, const char_type* s2, size_t n )
 		{
+			assert( s1 != 0 && "s1 is null" );
+			assert( s2 != 0 && "s2 is null" );
+
 			char_type* s = s1;
 			while( n-- )
 			{
@@ -121,6 +121,7 @@ namespace gstl
 
 		static inline char_type* assign( char_type* s, size_t n, char_type a )
 		{
+			assert( s != 0 && "s is null" );
 			char_type* s = s;
 			while( n-- )
 			{

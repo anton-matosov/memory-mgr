@@ -12,8 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EDEFA143-27DB-4085-AB78-106083482DB1} = {EDEFA143-27DB-4085-AB78-106083482DB1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gstl", "gstl\gstl_VS2008.vcproj", "{317AB518-3AB8-4F87-9977-E413EDA3F859}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cppunit", "cppunit\cppunit.vcproj", "{EDEFA143-27DB-4085-AB78-106083482DB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +34,10 @@ Global
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Debug|Win32.Build.0 = Debug|Win32
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.ActiveCfg = Release|Win32
 		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.Build.0 = Release|Win32
+		{EDEFA143-27DB-4085-AB78-106083482DB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EDEFA143-27DB-4085-AB78-106083482DB1}.Debug|Win32.Build.0 = Debug|Win32
+		{EDEFA143-27DB-4085-AB78-106083482DB1}.Release|Win32.ActiveCfg = Release|Win32
+		{EDEFA143-27DB-4085-AB78-106083482DB1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

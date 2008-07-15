@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(SolutionDir)"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\cppunit\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(SolutionDir)\gstl"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\cppunit\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="false"
@@ -181,19 +181,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_case.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\test_class.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\unit_tests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\unit_tests_manager.cpp"
 				>
 			</File>
 		</Filter>
@@ -203,11 +195,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\test_case.hpp"
+				RelativePath=".\test_class.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\test_class.hpp"
+				RelativePath=".\test_common.hpp"
 				>
 			</File>
 			<File
