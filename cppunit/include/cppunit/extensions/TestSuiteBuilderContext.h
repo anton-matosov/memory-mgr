@@ -88,6 +88,7 @@ protected:
   TestFixtureFactory &m_factory;
 
 private:
+	TestSuiteBuilderContextBase& operator=(const TestSuiteBuilderContextBase&);
   Properties m_properties;
 };
 
