@@ -38,7 +38,7 @@ template class std::vector<int, gstl::allocator<int > >;
 typedef std::map<int, int, std::less<int>,  gstl::allocator< std::pair<const int, int> > > map_type;
 template class std::map<int, int, std::less<int>,  gstl::allocator< std::pair<int, int> > >;
 
-class AllocatorTest 
+class allocator_test 
 	:public CppUnit::TestFixture
 {
 	static const int items_count = 1000;
@@ -84,12 +84,12 @@ public:
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	CPPUNIT_TEST_SUITE( AllocatorTest );
+	CPPUNIT_TEST_SUITE( allocator_test );
 	CPPUNIT_TEST( test_vector );
 	CPPUNIT_TEST( test_map );
 	CPPUNIT_TEST_SUITE_END();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( AllocatorTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( allocator_test );
 
 

@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #ifndef GSTL_TEMP_BUFFER_HEADER
 #define GSTL_TEMP_BUFFER_HEADER
 
-#include <assert.h>
+#include <gstl/detail/assert.hpp>
 #include <stdexcept>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -199,7 +199,7 @@ namespace gstl
 					throw multiple_allocation();
 				}
 
-				assert( count != 0 && "Invalid buffer size!" );
+				GSTL_ASSERT( count != 0 && "Invalid buffer size!" );
 				m_size = count;	
 
 				m_buffer = new item_type[ m_size ];

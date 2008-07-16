@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\cppunit\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;GSTL_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_char_traits.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_class.cpp"
 				>
 			</File>
@@ -200,10 +204,6 @@
 			</File>
 			<File
 				RelativePath=".\test_common.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\unit_tests_manager.hpp"
 				>
 			</File>
 		</Filter>

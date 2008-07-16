@@ -28,8 +28,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif 
 
-#include <assert.h>
-
 namespace gstl
 {
 	/**

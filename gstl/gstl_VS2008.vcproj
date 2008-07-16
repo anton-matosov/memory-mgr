@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\assert.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\char_traits.hpp"
 				>
 			</File>

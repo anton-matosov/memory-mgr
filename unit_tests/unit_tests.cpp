@@ -23,7 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <iostream>
 
-#include "unit_tests_manager.hpp"
 #include <gstl/config/config.hpp>
 
 
