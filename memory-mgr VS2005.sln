@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "examples", "examples\examples_VS2005.vcproj", "{6DBCA278-8A31-4C8B-A9A0-034FD2E7F05A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "managers", "managers\managers_VS2005.vcproj", "{A5A4FA81-5CCB-48AD-A6B3-CC8E4DABFA49}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "managers", "memory-mgr\memory-mgr_VS2005.vcproj", "{A5A4FA81-5CCB-48AD-A6B3-CC8E4DABFA49}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf_tests", "perf_tests\perf_tests_VS2005.vcproj", "{B0E8F5B0-58AC-4BBC-961B-E9239B5AFC4A}"
 EndProject
