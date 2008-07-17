@@ -188,8 +188,8 @@ namespace memory_mgr
 			{
 				if( ptr )
 				{
-					assert( ptr >= this->m_mgr.get_offset_base() && "Invalid pointer value");
-					assert( ptr < ( this->m_mgr.get_offset_base() + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
+					assert( ptr >= this->m_mgr.get_ptr_base(ptr) && "Invalid pointer value");
+					assert( ptr < ( this->m_mgr.get_ptr_base(ptr) + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
 
 					size_type *ps = detail::size_cast( ptr );
 					--ps;

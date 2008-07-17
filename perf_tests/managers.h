@@ -87,7 +87,7 @@ typedef memory_mgr::heap_segment
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::segment_manager
 < 
-	typedef memory_mgr::heap_segment
+	memory_mgr::heap_segment
 	<
 		memmgr_small_type
 	>
@@ -100,7 +100,7 @@ typedef memory_mgr::size_tracking
 <
 	memory_mgr::segment_manager
 	< 
-		typedef memory_mgr::heap_segment
+		memory_mgr::heap_segment
 		<
 			memmgr_small_type
 		>
@@ -113,7 +113,7 @@ typedef memory_mgr::pointer_convert
 <
 	memory_mgr::segment_manager
 	< 
-		typedef memory_mgr::heap_segment
+		memory_mgr::heap_segment
 		<
 			memmgr_small_type
 		>
@@ -128,7 +128,7 @@ typedef memory_mgr::size_tracking
 	< 
 		memory_mgr::segment_manager
 		< 
-			typedef memory_mgr::heap_segment
+			memory_mgr::heap_segment
 			<
 				memmgr_small_type
 			>
@@ -146,7 +146,7 @@ typedef memory_mgr::singleton_manager
 
 typedef memory_mgr::segment_manager
 < 
-	typedef memory_mgr::shared_segment
+	memory_mgr::shared_segment
 	<
 		memmgr_small_type
 	>
