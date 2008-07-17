@@ -31,6 +31,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/decorator_base.h>
 #include <assert.h>
 #include <functional>

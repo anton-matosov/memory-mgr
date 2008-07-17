@@ -65,7 +65,7 @@ bool test_alloc_dealloc()
 	SUBTEST_START( L"allocation/deallocation" );
 
 	typedef PtrType					ptr_type;
-	typedef std::vector< ptr_type >	ptrs_vec;
+	typedef std::vector< ptr_type >			ptrs_vec;
 
 	MemMgr segmgr;
 	ptrs_vec ptrs;
@@ -86,7 +86,7 @@ bool test_alloc_dealloc()
 
 	std::random_shuffle( ptrs.begin(), ptrs.end() );
 	
-	for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
+	for ( typename ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 	{
 		segmgr.deallocate( *it, chunk_size );
 	}
