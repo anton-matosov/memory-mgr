@@ -27,7 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <time.h>
 #include <fstream>
 #include <sstream>
-#include "config/config.h"
+#include <memory-mgr/config/config.h>
 
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )
 :m_bar( 0 )

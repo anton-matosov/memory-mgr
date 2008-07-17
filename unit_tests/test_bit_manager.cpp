@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include "test_case.h"
-#include "detail/bit_manager.h"
+#include <memory-mgr/detail/bit_manager.h>
 
 typedef unsigned char block_type;
 static const size_t bits_count = 32;

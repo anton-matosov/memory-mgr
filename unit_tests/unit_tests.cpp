@@ -22,12 +22,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
-#include "config/config.h"
-#include "memory_manager.h"
-#include "singleton_manager.h"
-#include "size_tracking.h"
-#include "heap_segment.h"
-#include "allocator.h"
+#include <memory-mgr/config/config.h>
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/size_tracking.h>
+#include <memory-mgr/heap_segment.h>
+#include <memory-mgr/allocator.h>
 
 #include "unit_tests_manager.h"
 

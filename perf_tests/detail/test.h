@@ -35,9 +35,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <algorithm>
 #include <limits>
 #include <iterator>
-#include "allocator.h"
-#include "detail/helpers.h"
-#include "detail/singleton.h"
+#include <memory-mgr/allocator.h>
+#include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/singleton.h>
 #include "../perf_timer.h"
 #include "../managers.h"
 

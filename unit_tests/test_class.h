@@ -28,11 +28,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "managed_base.h"
-#include "memory_manager.h"
-#include "heap_segment.h"
-#include "singleton_manager.h"
-#include "pointer_convert.h"
+#include <memory-mgr/managed_base.h>
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/heap_segment.h>
+#include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/pointer_convert.h>
 
 typedef memory_mgr::singleton_manager
 < 

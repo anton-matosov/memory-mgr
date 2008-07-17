@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "StdAfx.h"
 #include "test_case.h"
-#include "detail/static_bitset.h"
+#include <memory-mgr/detail/static_bitset.h>
 
 typedef unsigned char block_type;
 

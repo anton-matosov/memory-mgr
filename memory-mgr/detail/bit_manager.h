@@ -28,8 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "static_bitset.h"
-#include "detail/ptr_helpers.h"
+#include <memory-mgr/detail/static_bitset.h>
+#include <memory-mgr/detail/ptr_helpers.h>
 
 namespace memory_mgr
 {

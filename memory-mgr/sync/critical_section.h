@@ -21,35 +21,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_POINTER_TRATS_HEADER
-#define MGR_POINTER_TRATS_HEADER
+#ifndef MGR_CRITICAL_SECTION_HEADER
+#define MGR_CRITICAL_SECTION_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
+#include <memory-mgr/config/config.h>
+
 namespace memory_mgr
 {
-	namespace detail
+	namespace sync
 	{
-		class null_type
-		{};
-	}
-	//Base pointer traits class
- 	template<class PtrT>
- 	struct pointer_traits
- 	{
- 		typedef PtrT								poiner_type;
- 		typedef typename poiner_type::mgr_type		mgr_type;
- 
- 		static const poiner_type null_ptr;
- 	};
- 
- 	template< class PtrT >
- 	const typename pointer_traits< PtrT >::poiner_type pointer_traits< PtrT >::null_ptr = typename pointer_traits< PtrT >::poiner_type( detail::null_type() );
+		//-------------------------------------
+		class critical_section{
+		public:
+			inline critical_section()	{ osapi::initialize_critical_section	(&m_cs); }
+			inline ~critical_section()	{ osapi::delete_critical_section		(&m_cs); }
+			inline void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
+			inline void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
+		private:
+			mutable osapi::critical_section m_cs;
 
-		
-}
+			critical_section(const critical_section &);
+			critical_section & operator=(const critical_section &);
+		};
+
+	}//sync
 
 
-#endif// MGR_POINTER_TRATS_HEADER
+}//memory_mgr
+
+
+#endif// MGR_CRITICAL_SECTION_HEADER

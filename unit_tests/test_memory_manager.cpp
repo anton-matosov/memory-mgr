@@ -24,9 +24,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <vector>
 #include "test_case.h"
-#include "memory_manager.h"
-#include "heap_segment.h"
-#include "detail/ptr_helpers.h"
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/heap_segment.h>
+#include <memory-mgr/detail/ptr_helpers.h>
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;

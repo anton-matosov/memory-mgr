@@ -24,11 +24,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include "test_case.h"
-#include "memory_manager.h"
-#include "singleton_manager.h"
-#include "size_tracking.h"
-#include "heap_segment.h"
-#include "allocator.h"
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/size_tracking.h>
+#include <memory-mgr/heap_segment.h>
+#include <memory-mgr/allocator.h>
 #include <string>
 #include <vector>
 #include <map>

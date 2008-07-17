@@ -28,12 +28,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "detail/offset_traits.h"
-#include "detail/cmp_helper.h"
-#include "detail/static_assert.h"
-#include "pointer_convert.h"
-#include "manager_traits.h"
-#include "new.h"
+#include <memory-mgr/detail/offset_traits.h>
+#include <memory-mgr/detail/cmp_helper.h>
+#include <memory-mgr/detail/static_assert.h>
+#include <memory-mgr/pointer_convert.h>
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/new.h>
 
 namespace memory_mgr
 {	

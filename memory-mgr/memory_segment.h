@@ -28,9 +28,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "manager_traits.h"
-#include "manager_category.h"
-#include "segment_traits.h"
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/manager_category.h>
+#include <memory-mgr/segment_traits.h>
 
 namespace memory_mgr
 {	

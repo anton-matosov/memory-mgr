@@ -31,9 +31,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <limits>
 #include <ostream>
 #include <assert.h>
-#include "static_assert.h"
-#include "helpers.h"
-#include "type_manip.h"
+#include <memory-mgr/detail/static_assert.h>
+#include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/type_manip.h>
 
 namespace memory_mgr
 {

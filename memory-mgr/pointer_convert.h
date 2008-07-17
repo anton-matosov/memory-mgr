@@ -29,10 +29,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <vector>
-#include "detail/decorator_base.h"
-#include "detail/ptr_helpers.h"
-#include "manager_traits.h"
-#include "manager_category.h"
+#include <memory-mgr/detail/decorator_base.h>
+#include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/manager_category.h>
 
 
 namespace memory_mgr

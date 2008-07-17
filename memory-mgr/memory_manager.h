@@ -28,13 +28,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "detail/ptr_helpers.h"
-#include "detail/bit_manager.h"
-#include "sync/critical_section.h"
-#include "sync/locks.h"
-#include "detail/offset_traits.h"
-#include "manager_category.h"
-#include "detail/decorator_base.h"
+#include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/detail/bit_manager.h>
+#include <memory-mgr/sync/critical_section.h>
+#include <memory-mgr/sync/locks.h>
+#include <memory-mgr/detail/offset_traits.h>
+#include <memory-mgr/manager_category.h>
+#include <memory-mgr/detail/decorator_base.h>
 
 /**
    @brief Main namespace

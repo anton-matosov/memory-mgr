@@ -23,11 +23,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "StdAfx.h"
 #include "test_case.h"
-#include "segment_manager.h"
-#include "memory_manager.h"
-#include "pointer_convert.h"
-#include "size_tracking.h"
-#include "heap_segment.h"
+#include <memory-mgr/segment_manager.h>
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/pointer_convert.h>
+#include <memory-mgr/size_tracking.h>
+#include <memory-mgr/heap_segment.h>
 
 typedef unsigned char chunk_type;
 static const size_t chunk_size = 4;

@@ -24,9 +24,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #ifndef MGR_MANAGED_BASE_HEADER
 #define MGR_MANAGED_BASE_HEADER
 
-#include "manager_category.h"
-#include "detail/static_assert.h"
-#include "detail/ptr_helpers.h"
+#include <memory-mgr/manager_category.h>
+#include <memory-mgr/detail/static_assert.h>
+#include <memory-mgr/detail/ptr_helpers.h>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once

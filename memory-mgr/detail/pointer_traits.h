@@ -21,37 +21,53 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_CRITICAL_SECTION_HEADER
-#define MGR_CRITICAL_SECTION_HEADER
+#ifndef MGR_POINTER_TRATS_HEADER
+#define MGR_POINTER_TRATS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include "../config/config.h"
+#include <memory-mgr/offset_pointer.h>
 
 namespace memory_mgr
 {
-	namespace sync
+	namespace detail
 	{
-		//-------------------------------------
-		class critical_section{
-		public:
-			inline critical_section()	{ osapi::initialize_critical_section	(&m_cs); }
-			inline ~critical_section()	{ osapi::delete_critical_section		(&m_cs); }
-			inline void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
-			inline void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
-		private:
-			mutable osapi::critical_section m_cs;
+		class null_type
+		{};
+	}
+	//Base pointer traits class
+ 	template<class T>
+ 	struct pointer_traits
+ 	{
+		typedef T									value_type;
+		typedef pointer_traits< value_type* >		self_type;
 
-			critical_section(const critical_section &);
-			critical_section & operator=(const critical_section &);
+		typedef value_type*								pointer;
+		typedef const value_type*						const_pointer;
+		typedef value_type&								reference;
+		typedef const value_type&						const_reference;
+
+		template<class Other>
+		struct rebind
+		{	// convert an pointer_traits<T> to an pointer_traits <Other>
+			typedef typename pointer_traits< Other > other;
 		};
 
-	}//sync
+		static const_pointer null_ptr;
+
+		static inline bool is_null( const_pointer ptr )
+		{
+			return ptr == null_ptr;
+		}
+ 	};
+ 
+ 	template< class T >
+ 	typename pointer_traits<T>::const_pointer pointer_traits<T>::null_ptr = typename pointer_traits< PtrT >::poiner_type( detail::null_type() );
+
+		
+}
 
 
-}//memory_mgr
-
-
-#endif// MGR_CRITICAL_SECTION_HEADER
+#endif// MGR_POINTER_TRATS_HEADER

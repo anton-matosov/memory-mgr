@@ -28,10 +28,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "manager_traits.h"
-#include "manager_category.h"
-#include "detail/helpers.h"
-#include "detail/decorator_base.h"
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/manager_category.h>
+#include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/decorator_base.h>
 #include <assert.h>
 #include <functional>
 #include <vector>

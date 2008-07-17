@@ -30,11 +30,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <stdexcept>
 #include <sstream>
-#include "config/config.h"
-#include "detail/helpers.h"
-#include "memory_segment.h"
-#include "manager_traits.h"
-#include "segment_traits.h"
+#include <memory-mgr/config/config.h>
+#include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/memory_segment.h>
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/segment_traits.h>
 
 namespace memory_mgr
 {	

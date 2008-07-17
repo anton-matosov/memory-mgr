@@ -28,8 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "sync/locks.h"
-#include "sync/critical_section.h"
+#include <memory-mgr/sync/locks.h>
+#include <memory-mgr/sync/critical_section.h>
 
 namespace memory_mgr
 {

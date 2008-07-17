@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <iostream>
 #include "detail/test.h"
 #include "managers.h"
-#include "offset_pointer.h"
+#include <memory-mgr/offset_pointer.h>
 #include "test_templates.h"
 //#include <stdext/Memory.h>
 

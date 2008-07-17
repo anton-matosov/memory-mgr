@@ -39,7 +39,7 @@ without stopping it.
 #ifndef MGR_WIN_PERF_TIMER_HEADER
 #define MGR_WIN_PERF_TIMER_HEADER
 
-#include "config/config.h"
+#include <memory-mgr/config/config.h>
 
 #ifdef MGR_WINDOWS_PLATFORM
 

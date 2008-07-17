@@ -28,8 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "manager_traits.h"
-#include "detail/type_manip.h"
+#include <memory-mgr/manager_traits.h>
+#include <memory-mgr/detail/type_manip.h>
 
 namespace memory_mgr
 {

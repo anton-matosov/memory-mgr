@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "manager_category.h"
+#include <memory-mgr/manager_category.h>
 
 namespace memory_mgr
 {

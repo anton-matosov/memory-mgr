@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "config/config.h"
+#include <memory-mgr/config/config.h>
 
 #ifdef MGR_WINDOWS_PLATFORM
 #	include "detail/win_perf_timer.h"

@@ -21,50 +21,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_HEAP_SEGMENT_HEADER
-#define MGR_HEAP_SEGMENT_HEADER
+#ifndef MGR_CONFIG_HEADER
+#define MGR_CONFIG_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include "detail/types.h"
-#include "detail/ptr_helpers.h"
-#include "memory_segment.h"
-#include "manager_category.h"
-#include "manager_traits.h"
-#include "segment_traits.h"
-#include "detail/malloc_allocator.h"
+#if defined(linux) || defined(__linux) || defined(__linux__)
+// linux:
+#  define MGR_PLATFORM_CONFIG <memory-mgr/config/platform/linux.h>
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#	define MGR_PLATFORM_CONFIG <memory-mgr/config/platform/win32.h>
+#else 
+#	error "Unsupported platform. In future all the platforms will be supported."
+#endif
+
+#include MGR_PLATFORM_CONFIG
+
+#include <memory-mgr/detail/helpers.h>
 
 namespace memory_mgr
-{	
+{
 	/**
-	   @brief Heap segment for memory managers
-	   @tparam MemMgr - must support MemoryManagerConcept
+	   @brief OS specific API wrappers
 	*/
-	template< class MemMgr >	
-	class heap_segment 
-		: public memory_segment< detail::malloc_allocator, MemMgr >
-	{
-		typedef memory_segment< detail::malloc_allocator, MemMgr > base_type;
-	public:
-		 heap_segment( const size_t id = 0 )
-			 :base_type( id )
-		 {}
-	};
-
-	/**
-	   @brief memory_manager + heap_segment traits
-	*/
-	template< class MemMgr >
-	struct manager_traits< heap_segment< MemMgr > > 
-		: public manager_traits< memory_segment< detail::malloc_allocator, MemMgr > >
+	namespace osapi
 	{
 		/**
-		   @brief Memory manager class, that was decorated
+		   @brief Call this function to get path to folder from which executable was launched
+		   @return path to folder from which executable was launched
 		*/
-		typedef MemMgr base_manager_type;
-	};
+		static inline std::string get_exe_dir()
+		{
+			return helpers::get_parent_dir( get_executable_path() );
+		}
+	}
 }
 
-#endif// MGR_HEAP_SEGMENT_HEADER
+#endif// MGR_CONFIG_HEADER

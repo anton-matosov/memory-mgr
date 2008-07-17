@@ -28,15 +28,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include "memory_manager.h"
-#include "heap_segment.h"
-#include "shared_segment.h"
-#include "new.h"
-#include "size_tracking.h"
-#include "managed_base.h"
-#include "singleton_manager.h"
-#include "segment_manager.h"
-#include "sync/pseudo_sync.h"
+#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/heap_segment.h>
+#include <memory-mgr/shared_segment.h>
+#include <memory-mgr/new.h>
+#include <memory-mgr/size_tracking.h>
+#include <memory-mgr/managed_base.h>
+#include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/segment_manager.h>
+#include <memory-mgr/sync/pseudo_sync.h>
 
 typedef unsigned int chunk_type;
 static const size_t chunk_size = 4;
