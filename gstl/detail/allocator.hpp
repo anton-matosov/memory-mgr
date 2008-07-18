@@ -38,13 +38,13 @@ namespace gstl
 	{
 	public:
 		typedef T									value_type;
-		typedef pointer_traits<T>					traits_type;
+		typedef pointer_traits<T>					pointer_traits_type;
 		typedef allocator< value_type >				self_type;
 
-		typedef typename traits_type::pointer				pointer;
-		typedef typename traits_type::const_pointer			const_pointer;
-		typedef typename traits_type::reference				reference;
-		typedef typename traits_type::const_reference		const_reference;
+		typedef typename pointer_traits_type::pointer				pointer;
+		typedef typename pointer_traits_type::const_pointer			const_pointer;
+		typedef typename pointer_traits_type::reference				reference;
+		typedef typename pointer_traits_type::const_reference		const_reference;
 		
 		typedef size_t								size_type;
 		typedef ptrdiff_t							difference_type;
@@ -104,14 +104,14 @@ namespace gstl
 		// construct object at ptr with value val
 		inline void construct(pointer ptr, const_reference val)
 		{	
-			::new (&*ptr) value_type(val);
+			::new (ptr) value_type(val);
 		}
 
 		// destroy object at ptr
 		inline void destroy(pointer ptr)
 		{	
 			ptr;//VS 2008 warning
-			(&*ptr)->~value_type();
+			ptr->~value_type();
 		}
 
 		// estimate maximum array size

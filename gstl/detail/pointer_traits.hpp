@@ -37,7 +37,7 @@ namespace gstl
 	{
 	public:
 		typedef T									value_type;
-		typedef pointer_traits< value_type* >		self_type;
+		typedef pointer_traits< value_type >		self_type;
 
 		typedef value_type*								pointer;
 		typedef const value_type*						const_pointer;
@@ -50,7 +50,7 @@ namespace gstl
 			typedef typename pointer_traits< Other > other;
 		};
 
-		static const_pointer null_ptr;
+		static pointer null_ptr;
 
 		static inline bool is_null( const_pointer ptr )
 		{
@@ -66,7 +66,7 @@ namespace gstl
 
 
 	template<class T>
-	typename pointer_traits<T>::const_pointer pointer_traits<T>::null_ptr = 0;
+	typename pointer_traits<T>::pointer pointer_traits<T>::null_ptr = 0;
 }
 
 #endif GSTL_POINTER_TRAITS_HEADER

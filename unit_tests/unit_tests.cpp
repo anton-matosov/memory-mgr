@@ -32,7 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-
+#include <xstring>
 
 int main(int /*argc*/, char* /*argv*/[])
 {
