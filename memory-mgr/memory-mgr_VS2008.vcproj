@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\offset_allocator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\offset_pointer.h"
 				>
 			</File>

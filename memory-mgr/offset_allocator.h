@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ALLOCATOR_HEADER
-#define MGR_ALLOCATOR_HEADER
+#ifndef MGR_OFFSET_ALLOCATOR_HEADER
+#define MGR_OFFSET_ALLOCATOR_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -30,91 +30,99 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
+#include <memory-mgr/detail/pointer_traits.h>
 
 namespace memory_mgr
 {
 
 	template< class T,	class MemMgr >
-	class allocator
+	class offset_allocator
 	{
 	public:
 		typedef MemMgr								mgr_type;
 		typedef T									value_type;
-		typedef allocator< value_type, mgr_type >	self_type;
+		typedef offset_allocator< value_type, mgr_type >	self_type;
 
-		typedef value_type*								pointer;
-		typedef const value_type*						const_pointer;
-		typedef value_type&								reference;
-		typedef const value_type&						const_reference;
+		typedef pointer_traits<T, MemMgr>				pointer_traits_type;
+
+		typedef typename pointer_traits_type::pointer				pointer_type;
+		typedef typename pointer_traits_type::const_pointer			const_pointer_type;
+		typedef typename pointer_traits_type::reference				reference_type;
+		typedef typename pointer_traits_type::const_reference		const_reference_type;
+
+ 		typedef value_type*								pointer;
+ 		typedef const value_type*						const_pointer;
+ 		typedef value_type&								reference;
+ 		typedef const value_type&						const_reference;
 		
 		typedef typename manager_traits<mgr_type>::size_type	size_type;
 		typedef ptrdiff_t										difference_type;
 
 		template<class Other>
 		struct rebind
-		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename memory_mgr::allocator< Other, mgr_type > other;
+		{	// convert an offset_allocator<T> to an offset_allocator <Other>
+			typedef typename memory_mgr::offset_allocator< Other, mgr_type > other;
 		};
 
 		// return address of mutable val
-		inline pointer address( reference val ) const
+		inline pointer_type address( reference_type val ) const
 		{	
-			return pointer(&val);
+			return pointer_type(&val);
 		}
 
 		// return address of nonmutable val
-		inline const_pointer address( const_reference val ) const
+		inline const_pointer_type address( const_reference_type val ) const
 		{	
-			return const_pointer(&val);
+			return const_pointer_type(&val);
 		}
 
-		// construct default allocator (do nothing)
-		inline allocator()
+		// construct default offset_allocator (do nothing)
+		inline offset_allocator()
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
 				//(is_category_supported< mgr_type, size_tracking_tag >::value) &&
-				(is_category_supported< mgr_type, pointer_conversion_tag >::value) &&
+				//(is_category_supported< mgr_type, pointer_conversion_tag >::value) &&
 				(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
 
 		}
 
 		template<class other>
-		inline allocator( const allocator<other, mgr_type>& ) /*throw()*/
-		{	// construct from a related allocator (do nothing)
+		inline offset_allocator( const offset_allocator<other, mgr_type>& ) /*throw()*/
+		{	// construct from a related offset_allocator (do nothing)
 		}
 
 		template<class other>
-		inline self_type& operator=( const allocator<other, mgr_type>& )
-		{	// assign from a related allocator (do nothing)
+		inline self_type& operator=( const offset_allocator<other, mgr_type>& )
+		{	// assign from a related offset_allocator (do nothing)
 			return (*this);
 		}
 
 		// deallocate object at ptr, ignore size
-		inline void deallocate( pointer ptr, size_type count )
-		{
-			mgr_type::instance().deallocate( &*ptr, count * sizeof(value_type) );
+		inline void deallocate( pointer_type ptr, size_type size )
+		{	
+			mgr_type::instance().deallocate( get_offset( ptr ), size );
 		}
 
 		// allocate array of count elements
-		inline pointer allocate(size_type count)
+		inline pointer_type allocate(size_type count)
 		{	
-			return static_cast<pointer>( mgr_type::instance().allocate( count * sizeof(value_type) ) );
+			return pointer_type( mgr_type::instance().allocate( count * sizeof(value_type) ) );
 		}
 
 		// allocate array of count elements, ignore hint
-		inline pointer allocate(size_type count, const void *)
+		inline pointer_type allocate(size_type count, const void *)
 		{	
 			return (allocate(count));
 		}
 
 		// construct object at ptr with value val
-		inline void construct(pointer ptr, const_reference val)
+		inline void construct(pointer_type ptr, const_reference_type val)
 		{	
 			::new (&*ptr) value_type(val);
 		}
 
 		// destroy object at ptr
-		inline void destroy(pointer ptr)
+		inline void destroy(pointer_type ptr)
 		{	
 			ptr;//VS 2008 warning
 			(&*ptr)->~value_type();
@@ -129,21 +137,21 @@ namespace memory_mgr
 
 	};
 
-	// allocator TEMPLATE OPERATORS
+	// offset_allocator TEMPLATE OPERATORS
 	template<class T,
 	class U, class mem_mgr >
-	inline bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
-	{	// test for allocator equality (always true)
+	inline bool operator==(const offset_allocator<T, mem_mgr>&, const offset_allocator<U, mem_mgr>&) /*throw()*/
+	{	// test for offset_allocator equality (always true)
 		return true;
 	}
 
 	template<class T,
 	class U, class mem_mgr >
-	inline bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
-	{	// test for allocator inequality (always false)
+	inline bool operator!=(const offset_allocator<T, mem_mgr>&, const offset_allocator<U, mem_mgr>&) /*throw()*/
+	{	// test for offset_allocator inequality (always false)
 		return false;
 	}
 
 }
 
-#endif //MGR_ALLOCATOR_HEADER
+#endif //MGR_OFFSET_ALLOCATOR_HEADER

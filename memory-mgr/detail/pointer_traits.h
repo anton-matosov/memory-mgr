@@ -32,39 +32,35 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	namespace detail
-	{
-		class null_type
-		{};
-	}
-	//Base pointer traits class
- 	template<class T>
+	//Offset pointer traits class
+ 	template<class T, class MemMgr>
  	struct pointer_traits
  	{
+		typedef MemMgr								manager_type;
 		typedef T									value_type;
-		typedef pointer_traits< value_type* >		self_type;
+		typedef pointer_traits< value_type, manager_type >		self_type;
 
-		typedef value_type*								pointer;
-		typedef const value_type*						const_pointer;
-		typedef value_type&								reference;
-		typedef const value_type&						const_reference;
+		typedef				offset_pointer< value_type, manager_type >					pointer;
+		typedef				const offset_pointer< value_type, manager_type >			const_pointer;
+		typedef typename	offset_pointer< value_type, manager_type >::reference		reference;
+		typedef	typename	offset_pointer< value_type, manager_type >::const_reference	const_reference;
 
 		template<class Other>
 		struct rebind
 		{	// convert an pointer_traits<T> to an pointer_traits <Other>
-			typedef typename pointer_traits< Other > other;
+			typedef typename pointer_traits< Other, manager_type > other;
 		};
 
-		static const_pointer null_ptr;
+		static pointer null_ptr;
 
 		static inline bool is_null( const_pointer ptr )
 		{
-			return ptr == null_ptr;
+			return ptr.is_null();
 		}
  	};
  
- 	template< class T >
- 	typename pointer_traits<T>::const_pointer pointer_traits<T>::null_ptr = typename pointer_traits< PtrT >::poiner_type( detail::null_type() );
+ 	template< class T, class MemMgr >
+ 	typename pointer_traits<T,MemMgr>::pointer pointer_traits<T,MemMgr>::null_ptr = typename pointer_traits< T, MemMgr >::pointer();
 
 		
 }

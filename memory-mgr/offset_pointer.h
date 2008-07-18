@@ -52,11 +52,11 @@ namespace memory_mgr
 		typedef typename manager_traits::offset_type	offset_type;
 
 		typedef T					value_type;
-		typedef value_type*			pointer_type;
-		typedef const value_type*	const_pointer_type;
+		typedef value_type*			pointer;
+		typedef const value_type*	const_pointer;
 
-		typedef value_type&			reference_type;
-		typedef const value_type&	const_reference_type;
+		typedef value_type&			reference;
+		typedef const value_type&	const_reference;
 
 		typedef std::ptrdiff_t		difference_type;
 
@@ -77,7 +77,7 @@ namespace memory_mgr
 		{}
 
 		//Pointer constructor
-		inline offset_pointer( const_pointer_type p )
+		inline offset_pointer( const_pointer p )
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{
 			do_set_pointer(p);
@@ -100,42 +100,42 @@ namespace memory_mgr
 			return *this;
 		}
 
-		inline pointer_type operator->()
+		inline pointer operator->()
 		{
 			return get_pointer();
 		}
 
-		inline const_pointer_type operator->() const
+		inline const_pointer operator->() const
 		{
 			return get_pointer();
 		}
 
-		inline reference_type operator*()
+		inline reference operator*()
 		{
 			return *get_pointer();
 		}
 
-		inline const_reference_type operator*() const
+		inline const_reference operator*() const
 		{
 			return *get_pointer();
 		}
 
-		inline pointer_type operator&()
+		inline pointer operator&()
 		{
 			return get_pointer();
 		}
 
-		inline const_pointer_type operator&() const
+		inline const_pointer operator&() const
 		{
 			return get_pointer();
 		}
 
-		inline reference_type operator[](difference_type n)
+		inline reference operator[](difference_type n)
 		{
 			return *(get_pointer() + n);
 		}
 
-		inline const_reference_type operator[](difference_type n) const
+		inline const_reference operator[](difference_type n) const
 		{
 			return *(get_pointer() + n);
 		}
@@ -224,28 +224,28 @@ namespace memory_mgr
 
 		typedef pointer_convert<typename manager_traits::manager_type> converter;
 
-		inline pointer_type unconst_pointer( const_pointer_type ptr )
+		inline pointer unconst_pointer( const_pointer ptr )
 		{
-			return const_cast<pointer_type>( ptr );
+			return const_cast<pointer>( ptr );
 		}
 
-		inline pointer_type get_pointer()
+		inline pointer get_pointer()
 		{
 			return unconst_pointer( do_get_pointer() );
 		}
 
-		inline const_pointer_type get_pointer() const
+		inline const_pointer get_pointer() const
 		{
 			return do_get_pointer();
 		}
 
-		inline const_pointer_type do_get_pointer() const
+		inline const_pointer do_get_pointer() const
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
-			return static_cast<const_pointer_type>( detail::offset_to_pointer( m_offset, mgr_type::instance() ) );
+			return static_cast<const_pointer>( detail::offset_to_pointer( m_offset, mgr_type::instance() ) );
 		}
 
-		inline void do_set_pointer( const_pointer_type ptr )
+		inline void do_set_pointer( const_pointer ptr )
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
 			m_offset = detail::pointer_to_offset( ptr, mgr_type::instance() );
@@ -258,12 +258,12 @@ namespace memory_mgr
 			return ptr.m_offset;
 		}
 
-		friend inline pointer_type get_pointer( self_ref_type ptr )
+		friend inline pointer get_pointer( self_ref_type ptr )
 		{
 			return ptr.get_pointer();
 		}
 
-		friend inline const_pointer_type get_pointer( const_self_ref_type ptr )
+		friend inline const_pointer get_pointer( const_self_ref_type ptr )
 		{
 			return ptr.get_pointer();
 		}		

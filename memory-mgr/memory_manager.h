@@ -272,6 +272,10 @@ namespace memory_mgr
 		*/
 		inline void* offset_to_pointer( offset_type offset )
 		{
+			if( offset == offset_traits<offset_type>::invalid_offset )
+			{
+				return 0;
+			}
 			return detail::shift( m_offset_base, offset );
 		}
 
