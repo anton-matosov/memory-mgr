@@ -28,100 +28,132 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/pointer_convert.h>
 #include <memory-mgr/size_tracking.h>
 
-typedef unsigned char chunk_type;
-static const size_t chunk_size = 4;
-static const size_t memory_size = 256;
-
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
-
-typedef memory_mgr::size_tracking< pconv_type > sz_pconv_track_mgr;
-typedef memory_mgr::size_tracking< memmgr_type > sz_track_mgr;
-
-//template class memory_mgr::size_tracking< memmgr_type >;
-//template class memory_mgr::size_tracking< pconv_type >;
-
-template<class MgrType, class ptr_type>
-bool test_size_tracking_impl( const wchar_t* name )
+namespace
 {
-	typedef MgrType mgr_type;
-	SUBTEST_START( name );
-	std::vector<chunk_type> memory( memory_size );
-	mgr_type track_mgr( &*memory.begin() );
 
-	const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
-	ptr_type p1 = track_mgr.allocate( obj_size );
-	ptr_type p2 = track_mgr.allocate( obj_size );
-	ptr_type p3 = track_mgr.allocate( obj_size );
-	ptr_type p4 = track_mgr.allocate( obj_size );
-	ptr_type p5 = track_mgr.allocate( obj_size );
+	typedef unsigned char chunk_type;
+	const size_t chunk_size = 4;
+	const size_t memory_size = 256;
 
-	track_mgr.deallocate( p3 );
-	track_mgr.deallocate( p5 );
-	track_mgr.deallocate( p1 );
-	track_mgr.deallocate( p2 );
-	track_mgr.deallocate( p4 );
+	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+	typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
 
-	SUBTEST_END( track_mgr.free() );
+	typedef memory_mgr::size_tracking< pconv_type > sz_pconv_track_mgr;
+	typedef memory_mgr::size_tracking< memmgr_type > sz_track_mgr;
+
+	//template class memory_mgr::size_tracking< memmgr_type >;
+	//template class memory_mgr::size_tracking< pconv_type >;
+
+	template<class MgrType, class ptr_type>
+	bool test_size_tracking_impl( const wchar_t* name )
+	{
+		typedef MgrType mgr_type;
+		SUBTEST_START( name );
+		std::vector<chunk_type> memory( memory_size );
+		mgr_type track_mgr( &*memory.begin() );
+
+		const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
+		ptr_type p1 = track_mgr.allocate( obj_size );
+		ptr_type p2 = track_mgr.allocate( obj_size );
+		ptr_type p3 = track_mgr.allocate( obj_size );
+		ptr_type p4 = track_mgr.allocate( obj_size );
+		ptr_type p5 = track_mgr.allocate( obj_size );
+
+		track_mgr.deallocate( p3 );
+		track_mgr.deallocate( p5 );
+		track_mgr.deallocate( p1 );
+		track_mgr.deallocate( p2 );
+		track_mgr.deallocate( p4 );
+
+		SUBTEST_END( track_mgr.free() );
+	}
+
+	template<class MgrType, class ptr_type>
+	bool test_size_tracking_data( const wchar_t* name )
+	{
+		typedef MgrType mgr_type;
+		SUBTEST_START( name );
+		std::vector<chunk_type> memory( memory_size );
+		mgr_type track_mgr( &*memory.begin() );
+
+		const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
+		ptr_type p1 = track_mgr.allocate( obj_size );
+		char* c1 = memory_mgr::detail::char_cast( p1 );
+		*c1 = 1;
+
+		ptr_type p2 = track_mgr.allocate( obj_size );
+		char* c2 = memory_mgr::detail::char_cast( p2 );
+		*c2 = 2;
+
+
+		ptr_type p3 = track_mgr.allocate( obj_size );
+		char* c3 = memory_mgr::detail::char_cast( p3 );
+		*c3 = 3;
+
+		ptr_type p4 = track_mgr.allocate( obj_size );
+		char* c4 = memory_mgr::detail::char_cast( p4 );
+		*c4 = 4;
+
+		ptr_type p5 = track_mgr.allocate( obj_size );
+		char* c5 = memory_mgr::detail::char_cast( p5 );
+		*c5 = 5;
+
+		TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c3 == 3) && (*c4 == 4) && (*c5 == 5), L"allocated memory data is corrupted" );
+
+		track_mgr.deallocate( p3 );
+		TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c4 == 4) && (*c5 == 5), L"allocated memory data is corrupted" );
+
+		track_mgr.deallocate( p5 );
+		TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c4 == 4), L"allocated memory data is corrupted" );
+
+		track_mgr.deallocate( p1 );
+		TEST_CHECK_MSG( (*c2 == 2) && (*c4 == 4), L"allocated memory data is corrupted" );
+
+		track_mgr.deallocate( p2 );
+		TEST_CHECK_MSG( *c4 == 4, L"allocated memory data is corrupted" );
+
+		track_mgr.deallocate( p4 );
+
+		SUBTEST_END( track_mgr.free() );
+	}
+
+	bool test_null_ptr()
+	{
+		SUBTEST_START( L"deallocation of null ptr" );
+		std::vector<chunk_type> memory( memory_size );
+		sz_pconv_track_mgr mgr( &*memory.begin() );
+
+		mgr.deallocate( 0, 0 );
+
+		SUBTEST_SUCCEDED;
+	}
+
+	bool test_inv_offset()
+	{
+		SUBTEST_START( L"deallocation of null ptr" );
+		std::vector<chunk_type> memory( memory_size );
+		sz_track_mgr mgr( &*memory.begin() );
+
+		typedef memory_mgr::manager_traits<sz_track_mgr>::offset_type offset_type;
+
+		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+		mgr.deallocate( null_ptr, 0 );
+
+		SUBTEST_SUCCEDED;
+	}
+
 }
 
-template<class MgrType, class ptr_type>
-bool test_size_tracking_data( const wchar_t* name )
-{
-	typedef MgrType mgr_type;
-	SUBTEST_START( name );
-	std::vector<chunk_type> memory( memory_size );
-	mgr_type track_mgr( &*memory.begin() );
-
-	const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
-	ptr_type p1 = track_mgr.allocate( obj_size );
-	char* c1 = memory_mgr::detail::char_cast( p1 );
-	*c1 = 1;
-
-	ptr_type p2 = track_mgr.allocate( obj_size );
-	char* c2 = memory_mgr::detail::char_cast( p2 );
-	*c2 = 2;
-
-
-	ptr_type p3 = track_mgr.allocate( obj_size );
-	char* c3 = memory_mgr::detail::char_cast( p3 );
-	*c3 = 3;
-
-	ptr_type p4 = track_mgr.allocate( obj_size );
-	char* c4 = memory_mgr::detail::char_cast( p4 );
-	*c4 = 4;
-
-	ptr_type p5 = track_mgr.allocate( obj_size );
-	char* c5 = memory_mgr::detail::char_cast( p5 );
-	*c5 = 5;
-
-	TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c3 == 3) && (*c4 == 4) && (*c5 == 5), L"allocated memory data is corrupted" );
-
-	track_mgr.deallocate( p3 );
-	TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c4 == 4) && (*c5 == 5), L"allocated memory data is corrupted" );
-
-	track_mgr.deallocate( p5 );
-	TEST_CHECK_MSG( (*c1 == 1) && (*c2 == 2) && (*c4 == 4), L"allocated memory data is corrupted" );
-
-	track_mgr.deallocate( p1 );
-	TEST_CHECK_MSG( (*c2 == 2) && (*c4 == 4), L"allocated memory data is corrupted" );
-
-	track_mgr.deallocate( p2 );
-	TEST_CHECK_MSG( *c4 == 4, L"allocated memory data is corrupted" );
-
-	track_mgr.deallocate( p4 );
-
-	SUBTEST_END( track_mgr.free() );
-}
-	
 bool test_size_tracking()
 {
 	TEST_START( L"size_tracking" );
 
 	TEST_END( (test_size_tracking_impl<sz_pconv_track_mgr, void*>( L"with pointer_convert" ) )
 		&& (test_size_tracking_impl<sz_track_mgr, 
-		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"w/o pointer_convert" ) &&
-		test_size_tracking_data<sz_pconv_track_mgr, void*>( L"memory data validation" ))
-	);
+		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"w/o pointer_convert" )
+		&& test_size_tracking_data<sz_pconv_track_mgr, void*>( L"memory data validation" ))
+		&& test_null_ptr()
+		&& test_inv_offset()
+		);
 }
 

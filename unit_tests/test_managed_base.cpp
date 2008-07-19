@@ -25,6 +25,21 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "test_class.h"
 
+namespace
+{
+
+	bool test_null_ptr()
+	{
+		SUBTEST_START( L"deletion of null ptr" );
+		test_class* t1 = 0;
+
+		delete t1;
+		delete[] t1;
+
+		SUBTEST_SUCCEDED;
+	}
+}
+
 bool test_managed_base()
 {
 	TEST_START( L"managed_base" );
@@ -116,7 +131,7 @@ bool test_managed_base()
 		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
 	delete[] arr;
 
-	TEST_END( test_class::mem_mgr::instance().free() );
+	TEST_END( test_class::mem_mgr::instance().free() && test_null_ptr() );
 }
 
 

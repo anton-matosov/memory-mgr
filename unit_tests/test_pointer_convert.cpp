@@ -27,38 +27,62 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/pointer_convert.h>
 #include "test_class.h"
 
-typedef unsigned char chunk_type;
-static const size_t chunk_size = 4;
-static const size_t memory_size = 256;
-
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
-
-//template class memory_mgr::pointer_convert<memmgr_type>;
+namespace
+{
 
 
+	typedef unsigned char chunk_type;
+	const size_t chunk_size = 4;
+	const size_t memory_size = 256;
+
+	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+	typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
+
+	//template class memory_mgr::pointer_convert<memmgr_type>;
+
+
+
+	bool test_alloc_dealloc()
+	{
+		SUBTEST_START( L"pointer_convert" );
+		std::vector<chunk_type> memory( memory_size );
+		pconv_type mgr( &*memory.begin() );
+		const memmgr_type::size_type obj_size = 4;
+		void* p1 = mgr.allocate( obj_size );
+		void* p2 = mgr.allocate( obj_size );
+		void* p3 = mgr.allocate( obj_size );
+		void* p4 = mgr.allocate( obj_size );
+		void* p5 = mgr.allocate( obj_size );
+
+
+		mgr.deallocate( p2, obj_size );
+		mgr.deallocate( p3, obj_size );
+		mgr.deallocate( p1, obj_size );
+		mgr.deallocate( p4, obj_size );
+		mgr.deallocate( p5, obj_size );
+
+
+		SUBTEST_END( mgr.free() );
+	}
+
+	bool test_null_ptr()
+	{
+		SUBTEST_START( L"deallocation of null ptr" );
+		std::vector<chunk_type> memory( memory_size );
+		pconv_type mgr( &*memory.begin() );
+
+		mgr.deallocate( 0, 0 );
+
+		SUBTEST_SUCCEDED;
+	}
+}
 
 bool test_pointer_convert()
 {
-	TEST_START( L"pointer_convert" );
-	std::vector<chunk_type> memory( memory_size );
-	pconv_type mgr( &*memory.begin() );
-	const memmgr_type::size_type obj_size = 4;
-	void* p1 = mgr.allocate( obj_size );
-	void* p2 = mgr.allocate( obj_size );
-	void* p3 = mgr.allocate( obj_size );
-	void* p4 = mgr.allocate( obj_size );
-	void* p5 = mgr.allocate( obj_size );
+	TEST_START( L"pointer_convert decorator" );
 
-
-	mgr.deallocate( p2, obj_size );
-	mgr.deallocate( p3, obj_size );
-	mgr.deallocate( p1, obj_size );
-	mgr.deallocate( p4, obj_size );
-	mgr.deallocate( p5, obj_size );
-
-
-	TEST_END( mgr.free() );
+	TEST_END( test_alloc_dealloc()
+		&& test_null_ptr()
+		);
 }
-
 

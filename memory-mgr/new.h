@@ -312,10 +312,13 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 template<class T, class MemMgr>
 static inline void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
-	typedef MemMgr mgr_type;
-	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
-	return helper_type::delete_impl( p, mgr.m_mgr );
+		helper_type::delete_impl( p, mgr.m_mgr );
+	}
 }
 
 /**
@@ -327,10 +330,13 @@ static inline void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMg
 template<class T, class MemMgr>
 static inline void delete_array( T* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
-	typedef MemMgr mgr_type;
-	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
-	
-	return helper_type::delete_arr_impl( p, mgr.m_mgr );
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+		
+		helper_type::delete_arr_impl( p, mgr.m_mgr );
+	}
 }
 
 #endif //MGR_NEW_HEADER

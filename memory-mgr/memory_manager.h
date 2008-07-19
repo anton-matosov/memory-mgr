@@ -262,8 +262,11 @@ namespace memory_mgr
 		*/
  		inline void deallocate( const offset_type offset, size_type size )
  		{
-			lock l(*this);
- 			m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
+			if( offset != offset_traits<offset_type>::invalid_offset )
+			{
+				lock l(*this);
+ 				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
+			}
  		}
 
 
@@ -284,9 +287,13 @@ namespace memory_mgr
 		*/
 		inline offset_type pointer_to_offset( const void* ptr )
 		{
-			assert( ptr >= m_offset_base && "Invalid pointer value");
-			assert(ptr < ( m_offset_base + memory_size ) && "Invalid pointer value" );
-			return detail::diff( ptr, m_offset_base );
+			if( ptr )
+			{
+				assert( ptr >= m_offset_base && "Invalid pointer value");
+				assert(ptr < ( m_offset_base + memory_size ) && "Invalid pointer value" );
+				return detail::diff( ptr, m_offset_base );
+			}
+			return offset_traits<offset_type>::invalid_offset;
 		}
 
 		/**

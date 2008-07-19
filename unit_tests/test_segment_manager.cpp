@@ -29,123 +29,152 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/heap_segment.h>
 
-typedef unsigned char chunk_type;
-static const size_t chunk_size = 4;
-static const size_t memory_size = 1024;
-
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-
-typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
-typedef memory_mgr::segment_manager<heapmgr_type, 50> segmgr_type;
-
-typedef memory_mgr::pointer_convert<segmgr_type> pconv_segmgr_type;
-typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
-
-typedef memory_mgr::manager_traits<segmgr_type>::offset_type offset_type;
-
-
-enum
+namespace
 {
-	alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1
-};
 
-bool is_valid_ptr( offset_type p )
-{
-	return p != memory_mgr::offset_traits<size_t>::invalid_offset;
-}
+	typedef unsigned char chunk_type;
+	const size_t chunk_size = 4;
+	const size_t memory_size = 1024;
 
-bool is_valid_ptr( void* p )
-{
-	return p != 0;
-}
+	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-template< class MemMgr, class PtrType>
-bool test_alloc_dealloc()
-{
-	SUBTEST_START( L"allocation/deallocation" );
+	typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
+	typedef memory_mgr::segment_manager<heapmgr_type, 50> segmgr_type;
 
-	typedef PtrType					ptr_type;
-	typedef std::vector< ptr_type >			ptrs_vec;
+	typedef memory_mgr::pointer_convert<segmgr_type> pconv_segmgr_type;
+	typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
 
-	MemMgr segmgr;
-	ptrs_vec ptrs;
+	typedef memory_mgr::manager_traits<segmgr_type>::offset_type offset_type;
 
-	ptr_type p = 0;
 
-	ptrs.reserve( alloc_chunks );
-	for( size_t i = 0; i < alloc_chunks; ++i )
+	enum
 	{
-		p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
-		
-		ptrs.push_back( p );
-		if( !is_valid_ptr( p ) )
-		{
-			break;
-		}
+		alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1
+	};
+
+	bool is_valid_ptr( offset_type p )
+	{
+		return p != memory_mgr::offset_traits<size_t>::invalid_offset;
 	}
 
-	std::random_shuffle( ptrs.begin(), ptrs.end() );
-	
-	for ( typename ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
+	bool is_valid_ptr( void* p )
 	{
-		segmgr.deallocate( *it, chunk_size );
+		return p != 0;
 	}
 
-	SUBTEST_END( segmgr.free() );
-}
-
-bool test_offset_convertions()
-{
-	SUBTEST_START( L"get_offset_base" );
-	
-	
-	typedef std::vector< offset_type > ptrs_vec;
-
-	segmgr_type segmgr;
-
-	size_t p = 0;
-	ptrs_vec ptrs;
-	
-	ptrs.reserve( alloc_chunks );
- 	for( size_t i = 0; i < alloc_chunks && p != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
- 	{
-		p = segmgr.allocate( chunk_size, std::nothrow_t() );
-		ptrs.push_back( p );
- 	}
-
-	std::random_shuffle( ptrs.begin(), ptrs.end() );
-
-	for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
+	template< class MemMgr, class PtrType>
+	bool test_alloc_dealloc()
 	{
-		size_t p = *it;
-		void* p_base = segmgr.get_offset_base( p );
-		void* vp = segmgr.offset_to_pointer( p );
-		void* vp_base = segmgr.get_ptr_base( vp );
-		if( vp_base != p_base )
+		SUBTEST_START( L"allocation/deallocation" );
+
+		typedef PtrType					ptr_type;
+		typedef std::vector< ptr_type >			ptrs_vec;
+
+		MemMgr segmgr;
+		ptrs_vec ptrs;
+
+		ptr_type p = 0;
+
+		ptrs.reserve( alloc_chunks );
+		for( size_t i = 0; i < alloc_chunks; ++i )
 		{
-			TEST_FAILED_MSG( L"Invalid base" );
+			p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
+
+			ptrs.push_back( p );
+			if( !is_valid_ptr( p ) )
+			{
+				break;
+			}
 		}
 
-		size_t off = segmgr.pointer_to_offset( vp ) ;
-		if( off != p )
+		std::random_shuffle( ptrs.begin(), ptrs.end() );
+
+		for ( typename ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 		{
-			TEST_FAILED_MSG( L"Invalid offset" );
+			segmgr.deallocate( *it, chunk_size );
 		}
 
-		segmgr.deallocate( *it, chunk_size );
+		SUBTEST_END( segmgr.free() );
 	}
 
-	SUBTEST_END( segmgr.free() );
+	bool test_offset_convertions()
+	{
+		SUBTEST_START( L"get_offset_base" );
+
+
+		typedef std::vector< offset_type > ptrs_vec;
+
+		segmgr_type segmgr;
+
+		size_t p = 0;
+		ptrs_vec ptrs;
+
+		ptrs.reserve( alloc_chunks );
+		for( size_t i = 0; i < alloc_chunks && p != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
+		{
+			p = segmgr.allocate( chunk_size, std::nothrow_t() );
+			ptrs.push_back( p );
+		}
+
+		std::random_shuffle( ptrs.begin(), ptrs.end() );
+
+		for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
+		{
+			size_t p = *it;
+			void* p_base = segmgr.get_offset_base( p );
+			void* vp = segmgr.offset_to_pointer( p );
+			void* vp_base = segmgr.get_ptr_base( vp );
+			if( vp_base != p_base )
+			{
+				TEST_FAILED_MSG( L"Invalid base" );
+			}
+
+			size_t off = segmgr.pointer_to_offset( vp ) ;
+			if( off != p )
+			{
+				TEST_FAILED_MSG( L"Invalid offset" );
+			}
+
+			segmgr.deallocate( *it, chunk_size );
+		}
+
+		SUBTEST_END( segmgr.free() );
+	}
+
+	template<class MemMgr>
+	bool test_null_ptr()
+	{
+		SUBTEST_START( L"deallocation of null ptr" );
+		MemMgr mgr;
+
+		mgr.deallocate( 0, 0 );
+
+		SUBTEST_SUCCEDED;
+	}
+
+	bool test_inv_offset()
+	{
+		SUBTEST_START( L"deallocation of null ptr" );
+		segmgr_type mgr;
+
+		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+		mgr.deallocate( null_ptr, 0 );
+
+		SUBTEST_SUCCEDED;
+	}
 }
 
 bool test_segment_manager()
 {
 	TEST_START( L"test_segment_manager" );
 	TEST_END( (
-		test_alloc_dealloc<segmgr_type, offset_type>() &&
-		test_offset_convertions() &&
-		test_alloc_dealloc<pconv_segmgr_type, void*>() &&
-		test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
+		test_alloc_dealloc<segmgr_type, offset_type>()
+		&& test_offset_convertions()
+		&& test_alloc_dealloc<pconv_segmgr_type, void*>()
+		&& test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
+		&& test_inv_offset()
+		&& test_null_ptr<pconv_segmgr_type>()
+		&& test_null_ptr<sz_pconv_segmgr_type>()
 		)  );
 }
 
