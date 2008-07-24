@@ -45,7 +45,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;GSTL_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -183,10 +183,24 @@
 			<File
 				RelativePath=".\test_basic_string.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test_char_traits.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test_class.cpp"

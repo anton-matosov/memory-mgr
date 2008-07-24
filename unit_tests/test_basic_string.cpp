@@ -31,6 +31,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_allocator.h>
 
+#include <boost/mpl/list.hpp>
+
 typedef memory_mgr::heap_segment
 < 
 	memory_mgr::memory_manager<size_t, 4 * 1024, 4> 
@@ -52,40 +54,36 @@ typedef memory_mgr::singleton_manager
 	heap_mgr
 > off_alloc_mgr;
 
+typedef gstl::string gstl_string;
+
 typedef gstl::basic_string<char, gstl::char_traits<char>,
 	memory_mgr::allocator<char, ptr_alloc_mgr>, gstl::pointer_traits<char> > memory_mgr_string;
 
 typedef gstl::basic_string<char, gstl::char_traits<char>,
 	memory_mgr::offset_allocator<char, off_alloc_mgr> > memory_mgr_off_string;
 
-template<class StringType = gstl::string >
-class basic_string_test
-	:public CppUnit::TestFixture
+//template gstl::string;
+//template memory_mgr_string;
+//template memory_mgr_off_string;
+
+class basic_string_test_fixture
 {
-	typedef StringType string_type;
 public:
-
-	void test_construction()
-	{
-		string_type s;
-		CPPUNIT_ASSERT( s.data() != 0 );
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	CPPUNIT_TEST_SUITE( basic_string_test<string_type> );
- 	CPPUNIT_TEST( test_construction );
-// 	CPPUNIT_TEST( test_eq );
-// 	CPPUNIT_TEST( test_lt );
-// 	CPPUNIT_TEST( test_length );
-// 	CPPUNIT_TEST( test_compare );
-// 	CPPUNIT_TEST( test_find );
-// 	CPPUNIT_TEST( test_move );
-// 	CPPUNIT_TEST( test_assign_str );
-// 	CPPUNIT_TEST( test_eq_int_type );
-// 	CPPUNIT_TEST( test_not_eof );
-	CPPUNIT_TEST_SUITE_END();
+	static const size_t sz_null = 0;
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( basic_string_test<> );
-CPPUNIT_TEST_SUITE_REGISTRATION( basic_string_test<memory_mgr_string> );
-CPPUNIT_TEST_SUITE_REGISTRATION( basic_string_test<memory_mgr_off_string> );
+BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
+
+	typedef boost::mpl::list< gstl_string, memory_mgr_string, memory_mgr_off_string/**/> t_list;
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
+	{
+		//new char[10];
+		string_type s;
+		BOOST_CHECK( s.data() != 0 );
+		BOOST_CHECK_EQUAL( s.size(), sz_null );	
+	}
+	
+
+BOOST_AUTO_TEST_SUITE_END()
+

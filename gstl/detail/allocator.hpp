@@ -29,6 +29,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <gstl/detail/pointer_traits.hpp>
+// 
+// 
+// #ifdef _DEBUG
+// #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+// #define new DEBUG_NEW
+// #endif
 
 namespace gstl
 {

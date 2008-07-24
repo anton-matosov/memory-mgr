@@ -21,8 +21,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
+#ifndef GSTL_TEST_COMMON_HEADER
+#define GSTL_TEST_COMMON_HEADER
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_MAP_ALLOC_NEW
+
+
+//#define BOOST_TEST_NO_LIB
+#include <boost/test/test_tools.hpp>
+#include <boost/test/test_case_template.hpp>
+
+
+namespace ut = boost::unit_test;
+
+#endif //GSTL_TEST_COMMON_HEADER

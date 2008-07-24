@@ -31,21 +31,21 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, gstl::allocator<wchar_t> > string_type;
 template class std::basic_string<wchar_t, std::char_traits<wchar_t>, gstl::allocator<wchar_t> >;
 
-typedef std::vector<int > def_vector_type;
-typedef std::vector<int, gstl::allocator<int > > vector_type;
-template class std::vector<int, gstl::allocator<int > >;
+typedef std::vector<size_t > def_vector_type;
+typedef std::vector<size_t, gstl::allocator<size_t > > vector_type;
+template class std::vector<size_t, gstl::allocator<size_t > >;
 
-typedef std::map<int, int, std::less<int>,  gstl::allocator< std::pair<const int, int> > > map_type;
-template class std::map<int, int, std::less<int>,  gstl::allocator< std::pair<int, int> > >;
+typedef std::map<size_t, size_t, std::less<size_t>,  gstl::allocator< std::pair<const size_t, size_t> > > map_type;
+template class std::map<size_t, size_t, std::less<size_t>,  gstl::allocator< std::pair<size_t, size_t> > >;
 
-class allocator_test 
-	:public CppUnit::TestFixture
+class allocator_test_fixture
 {
-	static const int items_count = 1000;
+protected:
+	static const size_t items_count = 1000;
 	def_vector_type vec;
 public:
-	void setUp()
-	{  
+	allocator_test_fixture()
+	{
 		vec.resize( items_count );
 		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
 		{
@@ -53,43 +53,40 @@ public:
 		}
 		std::random_shuffle( vec.begin(), vec.end() );
 	}
-
-	//////////////////////////////////////////////////////////////////////////
-	void test_vector()
-	{
-		vector_type new_vec;
-		int index = -1;
-		new_vec.resize( items_count );
-		CPPUNIT_ASSERT( new_vec.size() >= items_count );
-		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-		{
-			index = rand() % items_count;
-			CPPUNIT_ASSERT( index < items_count );
-			new_vec[ index ] = *it;
-			CPPUNIT_ASSERT( new_vec[ index ] == *it );
-		}
-	}
-
-	void test_map()
-	{
-		map_type map;
-		int index = -1;
-		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-		{
-			index = rand() % items_count;
-			CPPUNIT_ASSERT( index < items_count );
-			map[ index ] = *it;
-			CPPUNIT_ASSERT( map[ index ] == *it );
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	CPPUNIT_TEST_SUITE( allocator_test );
-	CPPUNIT_TEST( test_vector );
-	CPPUNIT_TEST( test_map );
-	CPPUNIT_TEST_SUITE_END();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( allocator_test );
+BOOST_FIXTURE_TEST_SUITE( allocator_test, allocator_test_fixture )
+
+
+	BOOST_AUTO_TEST_CASE( test_vector )
+	{
+		vector_type new_vec;
+		size_t index = 0;
+		new_vec.resize( items_count );
+		BOOST_CHECK_GE( new_vec.size(), items_count );
+		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+		{
+			index = rand() % items_count;
+			BOOST_CHECK_LT( index, items_count );
+			new_vec[ index ] = *it;
+			BOOST_CHECK_EQUAL( new_vec[ index ], *it );
+		}
+	}
+
+	BOOST_AUTO_TEST_CASE( test_map )
+	{
+		map_type map;
+		size_t index = 0;
+		for( def_vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+		{
+			index = rand() % items_count;
+			BOOST_CHECK_LT( index, items_count );;
+			map[ index ] = *it;
+			BOOST_CHECK_EQUAL( map[ index ], *it );
+		}
+	}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 
 
