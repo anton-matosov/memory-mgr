@@ -94,7 +94,7 @@ namespace
 			segmgr.deallocate( *it, chunk_size );
 		}
 
-		SUBTEST_END( segmgr.free() );
+		SUBTEST_END( segmgr.is_free() );
 	}
 
 	bool test_offset_convertions()
@@ -138,7 +138,7 @@ namespace
 			segmgr.deallocate( *it, chunk_size );
 		}
 
-		SUBTEST_END( segmgr.free() );
+		SUBTEST_END( segmgr.is_free() );
 	}
 
 	template<class MemMgr>

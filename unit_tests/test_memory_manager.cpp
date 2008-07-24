@@ -60,7 +60,7 @@ namespace
 		mgr.deallocate( p2, obj_size );
 		mgr.deallocate( p4, obj_size );
 
-		SUBTEST_END( mgr.free() );
+		SUBTEST_END( mgr.is_free() );
 	}
 
 	bool test_out_of_memory_nothrow()

@@ -88,7 +88,7 @@ bool std_containers_test()
  			map[ rand() % items_count ] = *it;
  		}
 	}
-	SUBTEST_END( allocator_manager::instance().free() );
+	SUBTEST_END( allocator_manager::instance().is_free() );
 }
 
 bool test_allocator()

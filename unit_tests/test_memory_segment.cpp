@@ -55,7 +55,7 @@ bool test_memory_segment()
 	mgr.deallocate( p2, obj_size );
 	mgr.deallocate( p4, obj_size );
 
-	TEST_END( mgr.free() );
+	TEST_END( mgr.is_free() );
 }
 
 

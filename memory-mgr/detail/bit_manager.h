@@ -177,7 +177,7 @@ namespace memory_mgr
 				return this->m_bitset.empty();
 			}
 
-			inline bool free()
+			inline bool is_free()
 			{
 				return this->m_bitset.test( 0, num_bits );
 			}

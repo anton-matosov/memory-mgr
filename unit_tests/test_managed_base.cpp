@@ -131,7 +131,7 @@ bool test_managed_base()
 		(arr[5].get() == 105) , L"allocated memory data is corrupted" );
 	delete[] arr;
 
-	TEST_END( test_class::mem_mgr::instance().free() && test_null_ptr() );
+	TEST_END( test_class::mem_mgr::instance().is_free() && test_null_ptr() );
 }
 
 

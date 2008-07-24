@@ -65,7 +65,7 @@ namespace
 		track_mgr.deallocate( p2 );
 		track_mgr.deallocate( p4 );
 
-		SUBTEST_END( track_mgr.free() );
+		SUBTEST_END( track_mgr.is_free() );
 	}
 
 	template<class MgrType, class ptr_type>
@@ -114,7 +114,7 @@ namespace
 
 		track_mgr.deallocate( p4 );
 
-		SUBTEST_END( track_mgr.free() );
+		SUBTEST_END( track_mgr.is_free() );
 	}
 
 	bool test_null_ptr()

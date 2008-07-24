@@ -127,7 +127,7 @@ namespace
 		delete_( base_ptr4 );// points to derived_ptr2
 
 		delete_( ptr1 );
-		SUBTEST_END( ptr_mem_mgr::instance().free() );
+		SUBTEST_END( ptr_mem_mgr::instance().is_free() );
 	}
 
 	bool test_dereferencing()
@@ -159,7 +159,7 @@ namespace
 
 
 		delete_( ptr );// points to derived_ptr
-		SUBTEST_END( ptr_mem_mgr::instance().free() );
+		SUBTEST_END( ptr_mem_mgr::instance().is_free() );
 	}
 
 	bool test_operators()
@@ -290,7 +290,7 @@ namespace
 		TEST_CHECK( (ptr1 - ptr) == (ptr3 - ptr2) );
 
 		delete_array( ptr );// points to derived_ptr
-		SUBTEST_END( ptr_mem_mgr::instance().free() );
+		SUBTEST_END( ptr_mem_mgr::instance().is_free() );
 
 	}
 

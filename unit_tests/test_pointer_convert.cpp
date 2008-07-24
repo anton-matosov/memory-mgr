@@ -62,7 +62,7 @@ namespace
 		mgr.deallocate( p5, obj_size );
 
 
-		SUBTEST_END( mgr.free() );
+		SUBTEST_END( mgr.is_free() );
 	}
 
 	bool test_null_ptr()

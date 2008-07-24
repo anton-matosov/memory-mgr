@@ -102,9 +102,9 @@ namespace memory_mgr
 			   @retval true   no blocks are allocated by this manager
 			   @retval false  otherwise                                     
 			*/
-			inline bool free()
+			inline bool is_free()
 			{
-				return m_mgr.free();
+				return m_mgr.is_free();
 			}
 
 			/**
