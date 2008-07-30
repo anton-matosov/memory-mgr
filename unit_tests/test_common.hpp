@@ -35,4 +35,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace ut = boost::unit_test;
 
+#define STR_LEN( s ) ( ( sizeof( s ) / sizeof( char ) ) - 1 )
+
 #endif //GSTL_TEST_COMMON_HEADER

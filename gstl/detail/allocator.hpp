@@ -73,6 +73,18 @@ namespace gstl
 			return const_pointer(&val);
 		}
 
+		// return address of mutable val
+		inline pointer address( pointer val ) const
+		{	
+			return val;
+		}
+
+		// return address of nonmutable val
+		inline const_pointer address( const_pointer val ) const
+		{	
+			return val;
+		}
+
 		// construct default allocator (do nothing)
 		inline allocator()
 		{

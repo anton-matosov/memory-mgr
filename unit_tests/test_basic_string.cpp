@@ -75,13 +75,24 @@ public:
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
 	typedef boost::mpl::list< gstl_string, memory_mgr_string, memory_mgr_off_string/**/> t_list;
+		
+ 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
+ 	{
+ 		string_type s;
+ 		BOOST_CHECK( s.data() != 0 );
+ 		BOOST_CHECK_EQUAL( s.size(), sz_null );	
+ 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
+	
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign, string_type, t_list )
 	{
-		//new char[10];
 		string_type s;
 		BOOST_CHECK( s.data() != 0 );
-		BOOST_CHECK_EQUAL( s.size(), sz_null );	
+		BOOST_CHECK_EQUAL( s.size(), sz_null );
+		char str1[] = "Hello World!";
+		size_t len = STR_LEN( str1 );
+		s.assign( str1, str1 + len );
+		BOOST_CHECK_EQUAL( s.begin(), str1 );
 	}
 	
 

@@ -26,21 +26,20 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 typedef gstl::char_traits<char> traits_type;
 
-#define STR_LEN( s ) ( ( sizeof( s ) / sizeof( char ) ) - 1 )
 
 namespace
 {
 	const char ch = 'c';
 
-	const char* s1 = "Hello";
+	const char s1[] = "Hello";
 	const size_t s1_len = STR_LEN( s1 );
 	const char c1_exist = 'l';
 	const char c1_unexist = 'd';
 
-	const char* s2 = "HelLo"; //Lesser then s1
+	const char s2[] = "HelLo"; //Lesser then s1
 	const size_t s2_len = STR_LEN( s2 );
 
-	const char* s3 = "World";
+	const char s3[] = "World";
 	const size_t s3_len = STR_LEN( s3 );
 
 	const size_t max_len = 256;
@@ -127,35 +126,35 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 
 	BOOST_AUTO_TEST_CASE(test_move)
 	{
-		traits_type::move( m_s1, s1, s1_len );
-		traits_type::move( m_s2, s2, s2_len );
-		traits_type::move( m_s3, s3, s3_len );
+		traits_type::move( m_s1, s1, s1_len + 1 );
+		traits_type::move( m_s2, s2, s2_len + 1  );
+		traits_type::move( m_s3, s3, s3_len + 1  );
 
-		BOOST_CHECK( traits_type::compare( m_s1, s1, s1_len ) == 0 );
-		BOOST_CHECK( traits_type::compare( m_s2, s2, s2_len ) == 0 );
-		BOOST_CHECK( traits_type::compare( m_s3, s3, s3_len ) == 0 );
+		BOOST_CHECK_EQUAL( m_s1, s1 );
+		BOOST_CHECK_EQUAL( m_s2, s2 );
+		BOOST_CHECK_EQUAL( m_s3, s3 );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_copy)
 	{
-		traits_type::copy( m_s1, s1, s1_len );
-		traits_type::copy( m_s2, s2, s2_len );
-		traits_type::copy( m_s3, s3, s3_len );
+		traits_type::copy( m_s1, s1, s1_len + 1 );
+		traits_type::copy( m_s2, s2, s2_len + 1 );
+		traits_type::copy( m_s3, s3, s3_len + 1 );
 
-		BOOST_CHECK( traits_type::compare( m_s1, s1, s1_len ) == 0 );
-		BOOST_CHECK( traits_type::compare( m_s2, s2, s2_len ) == 0 );
-		BOOST_CHECK( traits_type::compare( m_s3, s3, s3_len ) == 0 );
+		BOOST_CHECK_EQUAL( m_s1, s1 );
+		BOOST_CHECK_EQUAL( m_s2, s2 );
+		BOOST_CHECK_EQUAL( m_s3, s3 );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_assign_str)
 	{
-		traits_type::assign( m_s1, m_c1, s1_len );
+		traits_type::assign( m_s1, s1_len, m_c1 );
 
-		size_t i = s1_len;
+		size_t i = s1_len - 1;
 		const traits_type::char_type* s = m_s1; 
 		while( i-- )
 		{
-			BOOST_CHECK( traits_type::eq( *s++, m_c1 ) == 0 );
+			BOOST_CHECK_EQUAL( *s++, m_c1 );
 		}
 	}
 

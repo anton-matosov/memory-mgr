@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\cppunit\include&quot;;&quot;E:\projects\memory-mgr\trunk&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;E:\projects\memory-mgr\trunk&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;GSTL_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\cppunit\include&quot;;&quot;E:\projects\memory-mgr\trunk&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)&quot;;&quot;E:\projects\memory-mgr\trunk&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="false"
@@ -183,24 +183,10 @@
 			<File
 				RelativePath=".\test_basic_string.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test_char_traits.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test_class.cpp"

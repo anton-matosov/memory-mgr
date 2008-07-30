@@ -84,8 +84,8 @@ namespace gstl
 			GSTL_ASSERT( s1 != 0 && "s1 is null" );
 			GSTL_ASSERT( s2 != 0 && "s2 is null" );
 
-			GSTL_ASSERT( n <= length( s1 ) && "n exceeds length of the first string (s1)" );
-			GSTL_ASSERT( n <= length( s2 ) && "n exceeds length of the second string (s2)" );
+			GSTL_ASSERT( n <= length( s1 ) + 1 && "n exceeds length of the first string (s1)" );
+			GSTL_ASSERT( n <= length( s2 ) + 1 && "n exceeds length of the second string (s2)" );
 
 			while( n-- )
 			{
@@ -127,7 +127,7 @@ namespace gstl
 		static inline const char_type* find( const char_type* s, size_t n, const char_type& a )
 		{
 			GSTL_ASSERT( s != 0 && "s is null" );
-			GSTL_ASSERT( n <= length( s ) && "n exceeds length of the string" );
+			GSTL_ASSERT( n <= length( s ) + 1 && "n exceeds length of the string" );
 			while( n-- )
 			{
 				if( eq( *++s, a ) )
@@ -147,12 +147,12 @@ namespace gstl
 		{
 			GSTL_ASSERT( dst != 0 && "dst is null" );
 			GSTL_ASSERT( src != 0 && "src is null" );
-			GSTL_ASSERT(  n <= length( src ) && "n exceeds length of the source string" );
+			GSTL_ASSERT(  n <= length( src ) + 1 && "n exceeds length of the source string" );
 
 			char_type* s = dst;
 			while( n-- )
 			{
-				assign( *++dst, *++src );
+				assign( *dst++, *src++ );
 			}
 			return s;
 		}
@@ -177,7 +177,7 @@ namespace gstl
 			char_type* str = s;
 			while( n-- )
 			{
-				assign( *++s, a );
+				assign( *s++, a );
 			}
 			return str;
 		}
