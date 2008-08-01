@@ -152,7 +152,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\functional"
+				>
+			</File>
+			<File
 				RelativePath=".\map"
+				>
+			</File>
+			<File
+				RelativePath=".\memory"
 				>
 			</File>
 			<File
@@ -161,6 +169,10 @@
 			</File>
 			<File
 				RelativePath=".\string"
+				>
+			</File>
+			<File
+				RelativePath=".\utility"
 				>
 			</File>
 			<File

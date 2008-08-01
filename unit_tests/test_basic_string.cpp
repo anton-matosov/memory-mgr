@@ -18,7 +18,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http://fsf.org/>
 
 
-Please feel free to contact me via e-mail: shikin@users.sourceforge.net
+Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 #include "test_common.hpp"
@@ -70,7 +70,11 @@ class basic_string_test_fixture
 {
 public:
 	static const size_t sz_null = 0;
+	static const char m_test_str[];
+	static const size_t m_test_str_len;
 };
+const char basic_string_test_fixture::m_test_str[] = "Hello World!";
+const size_t basic_string_test_fixture::m_test_str_len = STR_LEN( m_test_str );
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
@@ -89,10 +93,14 @@ BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 		string_type s;
 		BOOST_CHECK( s.data() != 0 );
 		BOOST_CHECK_EQUAL( s.size(), sz_null );
-		char str1[] = "Hello World!";
-		size_t len = STR_LEN( str1 );
-		s.assign( str1, str1 + len );
-		BOOST_CHECK_EQUAL( s.begin(), str1 );
+		
+
+		s.assign( m_test_str, m_test_str + m_test_str_len );
+		BOOST_CHECK_EQUAL( s.begin(), m_test_str );
+
+		string_type s2;
+		s2.assign( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s2.begin(), m_test_str );
 	}
 	
 

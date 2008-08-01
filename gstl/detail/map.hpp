@@ -18,7 +18,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http://fsf.org/>
 
 
-Please feel free to contact me via e-mail: shikin@users.sourceforge.net
+Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 #ifndef GSTL_MAP_HEADER
