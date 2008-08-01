@@ -22,24 +22,35 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 #include "stdafx.h"
-#include "test_class.hpp"
 
-test_class::test_class() :m_i(0)
+
+class utilities_test_fixture
 {
+public:
+};
 
-}
+BOOST_FIXTURE_TEST_SUITE( utilities_test, utilities_test_fixture )
 
-test_class::~test_class()
-{
-	m_i = 0;
-}
+	typedef boost::mpl::list< int, float, double > t_list;
 
-void test_class::set( int i )
-{
-	m_i = i;
-}
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_1, type, t_list )
+	{
+		
+	}
 
-int test_class::get()
-{
-	return m_i;
-}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_2, type, t_list )
+	{
+		
+	}
+
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+
+
+
+
+
+

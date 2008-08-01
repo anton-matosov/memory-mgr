@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 //#define BOOST_TEST_NO_LIB
 #include <boost/test/test_tools.hpp>
 #include <boost/test/test_case_template.hpp>
+#include <boost/mpl/list.hpp>
 
 
 namespace ut = boost::unit_test;

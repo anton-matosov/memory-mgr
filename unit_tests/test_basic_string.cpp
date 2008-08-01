@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#include "test_common.hpp"
+#include "stdafx.h"
 
 #include <gstl/detail/string.hpp>
 #include <memory-mgr/allocator.h>
@@ -31,7 +31,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_allocator.h>
 
-#include <boost/mpl/list.hpp>
 
 typedef memory_mgr::heap_segment
 < 

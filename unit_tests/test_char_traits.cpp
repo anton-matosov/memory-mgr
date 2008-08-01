@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#include "test_common.hpp"
+#include "stdafx.h"
 #include <gstl/detail/char_traits.hpp>
 
 typedef gstl::char_traits<char> traits_type;

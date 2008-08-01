@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\utility.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\vector.hpp"
 				>
 			</File>
