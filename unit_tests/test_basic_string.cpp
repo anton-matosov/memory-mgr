@@ -184,14 +184,16 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		BOOST_CHECK_EQUAL( *(cs.rend() - 1), first );
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_sizing, string_type, t_list )
+	//21.3.3 basic_string capacity
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_capacity, string_type, t_list )
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
 		char_type ch = 'x';
-		char_type ch_null = 0;
+		char_type ch_null = char_type();
 		size_t test_add_len = 10;
 		size_t test_len = m_test_str_len + test_add_len;
+		size_t test_len_x2 = test_len * 2;
 
 		string_type s( m_test_str, m_test_str_len );
 		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
@@ -206,13 +208,13 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		first size() elements are a copy of the original string designated by *this, and whose remaining
 		elements are all initialized to c.
 		*/
-		size_t s_len_2 = s.size() / 2;
+		size_t s_len_2 = s.size() / 2; /* 1 */
 		s.resize( s_len_2 );
 		BOOST_CHECK_EQUAL( char_traits::compare( s.c_str(), m_test_str, s_len_2 - 1 ), 0 );
 		BOOST_CHECK_EQUAL( s.size(), s_len_2 );
 		BOOST_CHECK_GE( s.capacity(), s_len_2 );
 		
-		string_type s2( m_test_str, m_test_str_len );
+		string_type s2( m_test_str, m_test_str_len ); /* 2 */
 		s2.resize( test_len, ch );
 		BOOST_CHECK_EQUAL( s2.size(), test_len );
 		BOOST_CHECK_GE( s2.capacity(), test_len );
@@ -231,27 +233,90 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		BOOST_CHECK_EQUAL( s4.size(), test_len );
 		BOOST_CHECK_GE( s4.capacity(), test_len );
 		test_compare_n_chars( s4.c_str(), ch_null, test_len );
-
 		
-
-
-		//resize/reserve Throws: length_error if n > max_size().
-		string_type st;
-		BOOST_CHECK_THROW( st.resize( st.max_size() + 1 ), std::length_error );
-		BOOST_CHECK_THROW( st.reserve( st.max_size() + 1 ), std::length_error );
-		BOOST_CHECK_THROW( st.resize( st.max_size() + 1, ch ), std::length_error );
-
+		s4.reserve( test_len_x2 );
+		BOOST_CHECK_GE( s4.capacity(), test_len_x2 );
 		/*
 		Calling reserve() with a res_arg argument less than capacity() is in effect a non-binding shrink
 		request. A call with res_arg <= size() is in effect a non-binding shrink-to-fit request.
 		*/
+		//Doesn't work for std::basic_string in VC9 (VS 2008) 
+		//s4.reserve();
+		//BOOST_CHECK_LT( s4.capacity(), test_len_x2 );
+		//BOOST_CHECK_GE( s4.capacity(), s4.size() );
+
+		//resize/reserve Throws: length_error if n > max_size().
+		//218)reserve() uses Allocator::allocate() which may throw an appropriate exception.
+		string_type st;
+		BOOST_CHECK_THROW( st.resize( st.max_size() + 1 ), std::length_error );
+		BOOST_CHECK_THROW( st.reserve( st.max_size() + 1 ), std::length_error );
+		BOOST_CHECK_THROW( st.resize( st.max_size() + 1, ch ), std::length_error );	
 	}
 
+	
+	//21.3.3 basic_string capacity
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, string_type, t_list )
+	{
+		string_type s( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
+
+		s.clear();
+		BOOST_CHECK_EQUAL( s.size(), sz_null );
+		BOOST_CHECK_GE( s.capacity(), sz_null );
+
+	}
+
+	//21.3.3 basic_string capacity
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, string_type, t_list )
 	{
 		string_type s;
 		BOOST_CHECK_EQUAL( s.size(), sz_null );
 		BOOST_CHECK( s.empty() );
+	}
+
+	//21.3.4 basic_string element access
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_access_ops, string_type, t_list )
+	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+		char_type ch_null = char_type();
+		size_t ch_id = m_test_str_len / 2;
+
+		string_type s( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
+
+		BOOST_CHECK_EQUAL( m_test_str[ch_id],  s.c_str()[ch_id] );
+		BOOST_CHECK_EQUAL( s[ch_id],  m_test_str[ch_id] );
+		
+		/*
+		Requires: pos < size()
+		Throws: out_of_range if pos >= size().
+		Returns: operator[](pos).
+		*/
+		BOOST_CHECK_EQUAL( s.at( ch_id ),  s[ch_id] );
+		BOOST_CHECK_THROW( s.at( s.size() ),  std::out_of_range );
+		BOOST_CHECK_THROW( s.at( s.size() + 1 ),  std::out_of_range );
+
+		string_type cs( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( cs.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( cs.size(), m_test_str_len );
+		BOOST_CHECK_GE( cs.capacity(), m_test_str_len );
+
+		BOOST_CHECK_EQUAL( m_test_str[ch_id],  cs.c_str()[ch_id] );
+		BOOST_CHECK_EQUAL( cs[ch_id],  m_test_str[ch_id] );
+		BOOST_CHECK_EQUAL( cs[cs.size()],  ch_null );
+		BOOST_CHECK_EQUAL( cs.at( ch_id ),  cs[ch_id] );
+		BOOST_CHECK_THROW( cs.at( s.size() ),  std::out_of_range );
+		BOOST_CHECK_THROW( cs.at( s.size() + 1 ),  std::out_of_range );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_append_operator, string_type, t_list )
+	{
+
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign, string_type, t_list )
