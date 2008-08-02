@@ -42,8 +42,8 @@ namespace memory_mgr
 
 		typedef				offset_pointer< value_type, manager_type >					pointer;
 		typedef				const offset_pointer< value_type, manager_type >			const_pointer;
-		typedef typename	offset_pointer< value_type, manager_type >::reference		reference;
-		typedef	typename	offset_pointer< value_type, manager_type >::const_reference	const_reference;
+		typedef typename	offset_pointer< value_type, manager_type >&					reference;
+		typedef	typename	const offset_pointer< value_type, manager_type >& 			const_reference;
 
 		template<class Other>
 		struct rebind

@@ -65,15 +65,15 @@ namespace memory_mgr
 		};
 
 		// return address of mutable val
-		inline pointer_type address( reference_type val ) const
+		inline pointer address( reference_type val ) const
 		{	
-			return pointer_type(&val);
+			return pointer(&*val);
 		}
 
 		// return address of nonmutable val
-		inline const_pointer_type address( const_reference_type val ) const
+		inline const_pointer address( const_reference_type val ) const
 		{	
-			return const_pointer_type(&val);
+			return const_pointer(&*val);
 		}
 
 		// construct default offset_allocator (do nothing)
