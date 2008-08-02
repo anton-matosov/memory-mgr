@@ -32,10 +32,40 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <boost/test/test_tools.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/bind.hpp>
 
 
 namespace ut = boost::unit_test;
 
 #define STR_LEN( s ) ( ( sizeof( s ) / sizeof( char ) ) - 1 )
+
+
+#define GSTL_TEST_CASE_TEMPLATE_TWO_LISTS( name, type_name1, type_name2, type_list_1, type_list_2 )	\
+template<class type_name1>																			\
+class auto_templ_test_impl##name																	\
+{																									\
+public:																								\
+	template<class type_name2>																		\
+	void operator()( const type_name2& /*v2*/ );													\
+};																									\
+																									\
+BOOST_AUTO_TEST_CASE_TEMPLATE( name, type_name1, type_list_1 )										\
+{																									\
+	boost::mpl::for_each<type_list_2>( auto_templ_test_impl##name<type_name1>() );					\
+}																									\
+																									\
+template<class type_name1>																			\
+	template<class type_name2>																		\
+	void auto_templ_test_impl##name<type_name1>::operator()( const type_name2& /*v2*/ )
+
+
+template<class CharT>
+void test_compare_n_chars( const CharT* str, CharT ch, size_t len )
+{
+	while( len-- && (*str == ch) )
+	{
+		BOOST_CHECK_EQUAL( *str++, ch );
+	}
+}
 
 #endif //GSTL_TEST_COMMON_HEADER

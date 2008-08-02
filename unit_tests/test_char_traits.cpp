@@ -149,13 +149,8 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 	BOOST_AUTO_TEST_CASE(test_assign_str)
 	{
 		traits_type::assign( m_s1, s1_len, m_c1 );
-
-		size_t i = s1_len - 1;
-		const traits_type::char_type* s = m_s1; 
-		while( i-- )
-		{
-			BOOST_CHECK_EQUAL( *s++, m_c1 );
-		}
+ 
+		test_compare_n_chars( m_s1, m_c1, s1_len );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_eq_int_type)

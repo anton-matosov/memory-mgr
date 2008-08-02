@@ -23,29 +23,80 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
+#include <gstl/utility>
 
 class utilities_test_fixture
 {
 public:
 };
 
-BOOST_FIXTURE_TEST_SUITE( utilities_test, utilities_test_fixture )
+namespace gstl
+{
 
-	typedef boost::mpl::list< int, float, double > t_list;
+	template <class T1, class T2, class StreamT>
+	StreamT& operator<<( StreamT& stream, const pair<T1, T2>& p )
+	{
+		stream << p.first;
+		stream << ' ';
+		stream << p.second;
+		return stream;
+	}
+}
+
+BOOST_FIXTURE_TEST_SUITE( utilities_test, utilities_test_fixture );
+
+typedef boost::mpl::list< int, float, double > t_list;
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_1, type, t_list )
 	{
 		
 	}
 
-
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_2, type, t_list )
+	GSTL_TEST_CASE_TEMPLATE_TWO_LISTS( test_pair, type_1, type_2, t_list, t_list  )
 	{
+		type_1 v11( 1 );
+		type_1 v12( 2 );
+		type_2 v21( 3 );
+		type_2 v22( 4 );
+		gstl::pair<type_1, type_2> pair1 = gstl::make_pair( v11, v21 );
+		gstl::pair<type_2, type_1> pair2 = gstl::make_pair( v21, v11 );
+		gstl::pair<type_1, type_1> pair3 = gstl::make_pair( v11, v12 );
+		gstl::pair<type_2, type_2> pair4 = gstl::make_pair( v21, v22 );
+
+		BOOST_CHECK_EQUAL( pair1.first, v11 );
+		BOOST_CHECK_EQUAL( pair1.second, v21 );
+
+
+		BOOST_CHECK_LT( v11, v12 );
+		BOOST_CHECK_LT( v21, v22 );
 		
+		BOOST_CHECK_EQUAL( pair1, pair1 );
+		BOOST_CHECK_EQUAL( pair2, pair2 );
+		BOOST_CHECK_EQUAL( pair1, pair1 );
+		BOOST_CHECK_EQUAL( pair1, pair1 );
+		BOOST_CHECK_EQUAL( pair1, pair1 );
+		BOOST_CHECK_EQUAL( pair1, pair1 );
 	}
+// 	template<class type_1>
+// 	class test_pair_impl
+// 	{
+// 	public:
+// 		template<class type_2>
+// 		void operator()( const type_2& /*v2*/ )
+// 		{
+// 			//TODO: implement test here
+// 
+// 
+// 		}
+// 	};
+// 
+// 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pair, type_1, t_list )
+// 	{
+// 		boost::mpl::for_each<t_list>( test_pair_impl<type_1>() );
+// 	}
 
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END();
 
 
 

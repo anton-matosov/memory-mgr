@@ -22,4 +22,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
+#include <iostream>
+#include <string>
+
 #include "test_common.hpp"

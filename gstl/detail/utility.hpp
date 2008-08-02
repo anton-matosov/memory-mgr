@@ -21,6 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
+#ifndef GSTL_UTILITY_HEADER
+#define GSTL_UTILITY_HEADER
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
+
 namespace gstl {
 	// 20.2.1, operators:
 	namespace rel_ops
@@ -74,6 +81,8 @@ namespace gstl {
 
 		template<class U, class V> 
 		pair( const pair<U, V> &p )
+			:first( p.first ),
+			second( p.second )
 		{}
 	};
 
@@ -119,4 +128,11 @@ namespace gstl {
 	{
 		return pair<T1, T2>( x, y );
 	}
+
 }
+
+
+
+
+#endif //GSTL_UTILITY_HEADER
+
