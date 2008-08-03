@@ -516,12 +516,118 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 				const basic_string<charT,traits,Allocator>& str);
 		Returns: insert(pos1,str,0,npos).
 		*/
+		string_type strorg = "This is test string for string calls";
+		string_type str;
+		/*
+		* In case of reallocation there is no auto reference problem
+		* so we reserve a big enough string to be sure to test this
+		* particular point.
+		*/
+		str.reserve(100);
+		str = strorg;
+
+		//test self insertion:
+		str.insert(10, str.c_str() + 5, 15);
+		BOOST_CHECK_EQUAL( str, "This is teis test string st string for string calls" );
+
+		str = strorg;
+		str.insert(15, str.c_str() + 5, 25);
+		BOOST_CHECK_EQUAL( str, "This is test stis test string for stringring for string calls" );
+
+		str = strorg;
+		str.insert(0, str.c_str() + str.size() - 4, 4);
+		BOOST_CHECK_EQUAL( str, "allsThis is test string for string calls" );
+
+		str = strorg;
+		str.insert(0, str.c_str() + str.size() / 2 - 1, str.size() / 2 + 1);
+		BOOST_CHECK_EQUAL( str, "ng for string callsThis is test string for string calls" );
+
+		str = strorg;
+		string_type::iterator b = str.begin();
+		string_type::const_iterator s = str.begin() + str.size() / 2 - 1;
+		string_type::const_iterator e = str.end();
+		str.insert( b, s, e );
+		BOOST_CHECK_EQUAL( str, "ng for string callsThis is test string for string calls" );
+
+		str = strorg;
+		str.insert(str.begin(), str.begin() + str.size() / 2 - 1, str.end());
+		BOOST_CHECK_EQUAL( str, "ng for string callsThis is test string for string calls" );
+
+
+		std::vector<int> int_vect;
+		//Just a compile time test:
+		str.insert(str.end(), int_vect.begin(), int_vect.end());
+
+
+		string_type str0;
+		str0.insert(str0.begin(), 5, '0');
+		BOOST_CHECK_EQUAL( str0, "00000" );
+
+		string_type str1;
+		{
+			string_type::size_type pos = 0, nb = 2;
+			str1.insert(pos, nb, '1');
+		}
+		BOOST_CHECK_EQUAL( str1, "11" );
+
+		str0.insert(0, str1);
+		BOOST_CHECK_EQUAL( str0, "1100000" );
+
+		/*
+		basic_string<charT,traits,Allocator>& insert(size_type pos1,
+			const basic_string<charT,traits,Allocator>& str, size_type pos2, size_type n);
+		2 Requires pos1 <= size() and pos2 <= str.size()
+		3 Throws: out_of_range if pos1 > size() or pos2 > str.size().
+		*/
+		string_type str2("2345");
+		str0.insert( str0.size(), str2, 1, 2 );
+		BOOST_CHECK_EQUAL( str0, "110000034" );
+		BOOST_CHECK_THROW( str0.insert( str0.size() + 1, str2, 1, 2 );, std::out_of_range );
+		BOOST_CHECK_THROW( str0.insert( str0.size(), str2, str2.size() + 1, 2 );, std::out_of_range );
+
+		str1.insert( str1.begin() + 1, 2, '2' );
+		BOOST_CHECK_EQUAL( str1, "1221" );
+
+		str1.insert( 2, "333333", 3 );
+		BOOST_CHECK_EQUAL( str1, "1233321" );
+
+		str1.insert( 4, "4444" );
+		BOOST_CHECK_EQUAL( str1, "12334444321" );
+
+		str1.insert( str1.begin() + 6, '5' );
+		BOOST_CHECK_EQUAL( str1, "123344544321" );
 	}
 
 	//21.3.5.5 basic_string::erase
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase, string_type, t_list )
 	{
+		string_type s( m_test_str );
+		
+		s.erase(s.begin() + 1, s.end() - 1); // Erase all but first and last.
 
+		BOOST_CHECK_EQUAL( s.size(), sz_two );
+		BOOST_CHECK_EQUAL( *s.c_str(), 'H' );
+		BOOST_CHECK_EQUAL( s[s.size() - 1], '!' );
+		
+		s.insert( 1, m_test_str );
+		s.erase( s.begin()); // Erase first element.
+		s.erase( s.end() - 1); // Erase last element.
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		s.clear(); // Erase all.
+		BOOST_CHECK( s.empty() );
+
+		s = m_test_str;
+		s.erase( 1, s.size() - 2 ); // Erase all but first and last.
+		BOOST_CHECK_EQUAL( s.size(), sz_two );
+		BOOST_CHECK_EQUAL( *s.c_str(), 'H' );
+		BOOST_CHECK_EQUAL( s[s.size() - 1], '!' );
+
+		s.erase(1);
+		BOOST_CHECK_EQUAL( s, "H" );
+
+		//basic_string<charT,traits,Allocator>& erase(size_type pos = 0, size_type n = npos);
+		//Throws: out_of_range if pos > size().
+		BOOST_CHECK_THROW( s.erase( s.size() + 1 ), std::out_of_range );
 	}
 
 	//21.3.5.6 basic_string::replace
