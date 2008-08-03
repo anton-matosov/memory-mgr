@@ -69,6 +69,16 @@ class basic_string_test_fixture
 public:
 	static const size_t sz_null = 0;
 	static const size_t sz_one = 1;
+	static const size_t sz_two = 2;
+	static const size_t sz_three = 3;
+	static const size_t sz_four = 4;
+	static const size_t sz_five = 5;
+	static const size_t sz_six = 6;
+	static const size_t sz_seven = 7;
+	static const size_t sz_eight = 8;
+	static const size_t sz_nine = 9;
+	static const size_t sz_ten = 10;
+
 	static const char m_test_str[];
 	static const char m_test_str2[];
 	static const size_t m_test_str_len;
@@ -518,6 +528,22 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_replace, string_type, t_list )
 	{
 
+		/*
+		basic_string<charT,traits,Allocator>&
+			replace(size_type pos1, size_type n1,
+				const basic_string<charT,traits,Allocator>& str);
+		Returns: replace(pos1, n1, str, 0, npos).
+		*/
+
+		/*
+		basic_string<charT,traits,Allocator>&
+			replace(size_type pos1, size_type n1,
+				const basic_string<charT,traits,Allocator>& str,
+					size_type pos2, size_type n2);
+		2 Requires: pos1 <= size() && pos2 <= str.size().
+		3 Throws: out_of_range if pos1 > size() or pos2 > str.size().
+		5 Throws: length_error if size() - xlen >= npos - rlen.
+		*/
 	}
 
 	//21.3.5.7 basic_string::copy
@@ -530,18 +556,19 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		char_type str[m_test_str_len];// = new char_type[m_test_str_len];
 
 		string_type s( m_test_str, m_test_str_len );
-		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
-		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
-		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
-
-		string_type s2( m_test_str, test_len );
+		string_type s2( m_test_str, test_len ); //== str
 #ifdef _MSC_VER
 #pragma warning(push)
 #endif
 //MSVC 9.0 C4996 Checked iterators
 #pragma warning (disable: 4996)
-		
+
+		//Throws: out_of_range if pos > size().
+		//TODO: uncomment. MSVC std::basic_string doesn't throw this exception
+		//BOOST_CHECK_THROW( s.copy( str, test_len + 1, 0 ), std::out_of_range );
+
 		s.copy( str, test_len, 0 );
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -556,14 +583,8 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, string_type, t_list )
 	{		
 		string_type s( m_test_str, m_test_str_len );
-		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
-		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
-		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
 
 		string_type s2( m_test_str2, m_test_str_len2 );
-		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str2 );
-		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len2 );
-		BOOST_CHECK_GE( s2.capacity(), m_test_str_len2 );
 
 		s.swap( s2 );
 		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
@@ -578,37 +599,92 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 	//21.3.6.1 basic_string::find
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find, string_type, t_list )
 	{
+		string_type s("one two three one two three");
+		BOOST_CHECK_EQUAL( s.find("one"), sz_null );
+		BOOST_CHECK_EQUAL( s.find('t'), sz_four );
+		BOOST_CHECK_EQUAL( s.find('t', 5), sz_eight );
+		
+		BOOST_CHECK_EQUAL( s.find("four"), string_type::npos );
+		BOOST_CHECK_EQUAL( s.find("one", string_type::npos), string_type::npos );
 
 	}
 
 	//21.3.6.2 basic_string::rfind
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_rfind, string_type, t_list )
 	{
+		string_type s("one two three one two three");
 
+		BOOST_CHECK_EQUAL( s.rfind("two"), size_t(18) );
+		BOOST_CHECK_EQUAL( s.rfind("two", 0), string_type::npos );
+		BOOST_CHECK_EQUAL( s.rfind("two", 11), sz_four );
+		BOOST_CHECK_EQUAL( s.rfind('w'), size_t(19) );
+
+		string_type test( "aba" );
+
+		BOOST_CHECK_EQUAL( test.rfind( "a", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 0, 1 ), sz_null );
+
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 0 ), sz_null );
 	}
 
 	//21.3.6.3 basic_string::find_first_of
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_of, string_type, t_list )
 	{
-
+		string_type s("one two three one two three");
+		BOOST_CHECK_EQUAL( s.find_first_of("abcde"), sz_two );
 	}
 
 	//21.3.6.4 basic_string::find_last_of
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_of, string_type, t_list )
 	{
+		string_type s( "one two three one two three" );
 
+		BOOST_CHECK_EQUAL( s.find_last_of( "abcde" ), size_t(26) );
+
+		string_type test( "aba" );
+
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 0, 1 ), sz_null );
+
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 0 ), sz_null );
 	}
 
 	//21.3.6.5 basic_string::find_first_not_of
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_not_of, string_type, t_list )
 	{
+		string_type s("one two three one two three");
 
+		BOOST_CHECK_EQUAL( s.find_first_not_of("enotw "), sz_nine );
 	}
 
 	//21.3.6.6 basic_string::find_last_not_of
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_not_of, string_type, t_list )
 	{
+		string_type s( "one two three one two three" );
 
+		BOOST_CHECK_EQUAL( s.find_last_not_of( "ehortw " ), size_t(15) );
+
+		string_type test( "aba" );
+
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 2, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 1, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 0, 1 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 0, 1 ), sz_null );
+
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 2 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 0 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 0 ), sz_null );
 	}
 
 	//21.3.6.7 basic_string::substr
@@ -620,9 +696,6 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		size_t test_len = m_test_str_len / 2;
 
 		string_type s( m_test_str, m_test_str_len );
-		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
-		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
-		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
 
 		string_type s2 = s.substr( 0, test_len );
 		string_type s3( m_test_str, test_len );
@@ -637,23 +710,151 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 	//21.3.6.8 basic_string::compare
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare, string_type, t_list )
 	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
 
+		size_t test_len = m_test_str_len / 2;
+
+		string_type s( m_test_str, m_test_str_len );
+		string_type s2( m_test_str, test_len );
+		string_type s3( m_test_str2, m_test_str_len2 );
+
+		/* int compare(const basic_string& str) const */
+		BOOST_CHECK_LT( s2.compare( s ), 0 );
+		BOOST_CHECK_EQUAL( s.compare( s ), 0 );
+		BOOST_CHECK_EQUAL( s2.compare( s2 ), 0 );
+		BOOST_CHECK_GT( s.compare( s2 ), 0 );
+
+		/* int compare(const charT *s) const */
+		BOOST_CHECK_LT( s2.compare( m_test_str ), 0 );
+		BOOST_CHECK_EQUAL( s.compare( m_test_str ), 0 );
+		BOOST_CHECK_EQUAL( s3.compare( m_test_str2 ), 0 );
+		BOOST_CHECK_GT( s.compare( m_test_str2 ), 0 );
+
+		/* int compare(size_type pos1, size_type n1, const basic_string<charT,traits,Allocator>& str) const; */
+		const char_type* test_str = m_test_str + 2;
+		string_type s4( test_str, 3 );
+		BOOST_CHECK_EQUAL( s.compare(2, 3, s4), 0 );
+		s4.assign( test_str, 2 );
+		BOOST_CHECK_GT( s.compare(2, 3, s4), 0 );
+		s4.assign( test_str, 4 );
+		BOOST_CHECK_LT( s.compare(2, 3, s4), 0 );
+
+		/* int compare(size_type pos1, size_type n1,
+						const basic_string<charT,traits,Allocator>& str,
+							size_type pos2, size_type n2) const;
+		*/
+		BOOST_CHECK_LT( s.compare(2, 3, s2, 2, 4), 0 );
+		BOOST_CHECK_EQUAL( s.compare(2, 3, s2, 2, 3), 0 );
+		BOOST_CHECK_GT( s.compare(2, 3, s2, 2, 2), 0 );
+
+		/* int compare(size_type pos, size_type n1, const charT *s, size_type n2) const; */
+		BOOST_CHECK_EQUAL( s.compare(2, 3, test_str, 3), 0 );
+		BOOST_CHECK_LT( s.compare(2, 3, test_str, 4), 0 );
+		BOOST_CHECK_GT( s.compare(2, 3, test_str, 2), 0 );
+
+		/*
+		int compare(const basic_string<charT,traits,Allocator>& str) const
+		1 Effects: Determines the effective length rlen of the strings to compare as the smallest of size() and
+		str.size(). The function then compares the two strings by calling
+		traits::compare(data(), str.data(), rlen).
+		2 Returns: the nonzero result if the result of the comparison is nonzero. Otherwise, returns a value as indicated
+		in Table 44:
+		size() < str.size() < 0
+		size() == str.size() 0
+		size() > str.size() > 0  
+		
+		//////////////////////////////////////////////////////////////////////////
+		int compare(size_type pos1, size_type n1,
+		const basic_string<charT,traits,Allocator>& str) const;
+		3 Returns:
+		basic_string<charT,traits,Allocator>(*this,pos1,n1).compare(
+		str) .
+
+		//////////////////////////////////////////////////////////////////////////
+		int compare(size_type pos1, size_type n1,
+		const basic_string<charT,traits,Allocator>& str,
+		size_type pos2, size_type n2) const;
+		4 Returns:
+		basic_string<charT,traits,Allocator>(*this,pos1,n1).compare(
+		basic_string<charT,traits,Allocator>(str,pos2,n2)) .
+
+		//////////////////////////////////////////////////////////////////////////
+		int compare(const charT *s) const;
+		5 Returns: this->compare(basic_string<charT,traits,Allocator>(s)).
+		int compare(size_type pos, size_type n1,
+		const charT *s) const;
+		6 Returns:
+		basic_string<charT,traits,Allocator>(*this,pos,n1).compare(
+		basic_string<charT,traits,Allocator>(s))
+
+		//////////////////////////////////////////////////////////////////////////
+		int compare(size_type pos, size_type n1,
+		const charT *s, size_type n2) const;
+		7 Returns:
+		basic_string<charT,traits,Allocator>(*this,pos,n1).compare(
+		basic_string<charT,traits,Allocator>(s,n2))
+
+		//////////////////////////////////////////////////////////////////////////
+		*/
 	}
 
 	//21.3.7 basic_string non-member functions
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_non_member_ops, string_type, t_list )
 	{
+		string_type s( m_test_str );
+		string_type s2( m_test_str2 );
+		string_type s3( m_test_str );
+		s3 += s2;
+
 		//21.3.7.1 operator+
+		string_type s4 = s + s2;
+		BOOST_CHECK_EQUAL( s3.c_str(), s4.c_str() );
+		BOOST_CHECK_EQUAL( s3.c_str(), (m_test_str + s2).c_str() );
+		BOOST_CHECK_EQUAL( s3.c_str(), (s + m_test_str2).c_str() );
+
 		//21.3.7.2 operator==
+		BOOST_CHECK_EQUAL( s3, s4 );
+		BOOST_CHECK_EQUAL( s, m_test_str );
+		BOOST_CHECK_EQUAL( m_test_str2, s2 );
+
 		//21.3.7.3 operator!=
+		BOOST_CHECK_NE( s3, s2 );
+		BOOST_CHECK_NE( m_test_str, s2 );
+		BOOST_CHECK_NE( s4, m_test_str2 );
+
 		//21.3.7.4 operator<
+		BOOST_CHECK_LT( s, s4 );
+		BOOST_CHECK_LT( m_test_str, s4 );
+		BOOST_CHECK_LT( s, s4.c_str() );
+
 		//21.3.7.5 operator>
+		BOOST_CHECK_GT( s4, s );
+		BOOST_CHECK_GT( s4.c_str(), s );
+		BOOST_CHECK_GT( s4, s.c_str() );
+
 		//21.3.7.6 operator<=
+		BOOST_CHECK_LE( s, s4 );
+		BOOST_CHECK_LE( s.c_str(), s4 );
+		BOOST_CHECK_LE( s, s4.c_str() );
+		BOOST_CHECK_LE( s3, s4 );
+		BOOST_CHECK_LE( s3.c_str(), s4 );
+		BOOST_CHECK_LE( s3, s4.c_str() );
+
 		//21.3.7.7 operator>=
+		BOOST_CHECK_GE( s4, s );
+		BOOST_CHECK_GE( s4.c_str(), s );
+		BOOST_CHECK_GE( s4, s.c_str() );
+		BOOST_CHECK_GE( s3, s4 );
+		BOOST_CHECK_GE( s3.c_str(), s4 );
+		BOOST_CHECK_GE( s3, s4.c_str() );
+
 		//21.3.7.8 swap
-		//
-		//
-		//
+		swap( s, s2 );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str2 );
+		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
+
+
 	}
 
 	//
