@@ -68,11 +68,16 @@ class basic_string_test_fixture
 {
 public:
 	static const size_t sz_null = 0;
+	static const size_t sz_one = 1;
 	static const char m_test_str[];
+	static const char m_test_str2[];
 	static const size_t m_test_str_len;
+	static const size_t m_test_str_len2;
 };
 const char basic_string_test_fixture::m_test_str[] = "Hello World!";
 const size_t basic_string_test_fixture::m_test_str_len = STR_LEN( m_test_str );
+const char basic_string_test_fixture::m_test_str2[] = "Goodbye!";
+const size_t basic_string_test_fixture::m_test_str_len2 = STR_LEN( m_test_str2 );
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
@@ -140,7 +145,6 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
 		char_type ch = 'x';
-		size_t sz_one = 1;
 
  
  		string_type s( m_test_str, m_test_str_len );
@@ -314,26 +318,349 @@ typedef boost::mpl::list< std::string/*, gstl_string, memory_mgr_string, memory_
 		BOOST_CHECK_THROW( cs.at( s.size() + 1 ),  std::out_of_range );
 	}
 
+	//21.3.5.1 basic_string::operator+=
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_append_operator, string_type, t_list )
 	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+		char_type ch = 'c';
 
+		size_t str_len_2 = m_test_str_len / 2;
+		string_type s( m_test_str, 0, str_len_2 );
+		string_type s2( m_test_str, str_len_2, string_type::npos );
+		
+		BOOST_CHECK_EQUAL( s.size(), str_len_2 );
+		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len - str_len_2 );
+		
+		string_type s3;
+		//basic_string<charT,traits,Allocator>&
+		//	operator+=(const basic_string<charT,traits,Allocator>& str);
+		s3 += s;
+		BOOST_CHECK_EQUAL( s3.size(), s.size() );
+		BOOST_CHECK_EQUAL( s3.c_str(), s.c_str() );
+
+		s3 += s2;
+		BOOST_CHECK_EQUAL( s3.size(), m_test_str_len );
+		BOOST_CHECK_EQUAL( s3.c_str(), m_test_str );
+
+		string_type s4;
+		//basic_string<charT,traits,Allocator>& operator+=(const charT* s);
+		s4 += m_test_str; 
+		BOOST_CHECK_EQUAL( s4.size(), m_test_str_len );
+		BOOST_CHECK_EQUAL( s4.c_str(), m_test_str );
+
+		string_type s5;
+		//basic_string<charT,traits,Allocator>& operator+=(charT c);
+		s5 += ch;
+		BOOST_CHECK_EQUAL( s5.size(), sz_one );
+		BOOST_CHECK_EQUAL( *s5.c_str(), ch );
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign, string_type, t_list )
+	//21.3.5.2 basic_string::append
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_append, string_type, t_list )
 	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+		char_type ch = 'x';
+		size_t test_len = 10;
+
 		string_type s;
 		BOOST_CHECK( s.data() != 0 );
 		BOOST_CHECK_EQUAL( s.size(), sz_null );
-		
 
-		s.assign( m_test_str, m_test_str + m_test_str_len );
-		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		string_type s2;
+		s2.append( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len );
+		BOOST_CHECK_GE( s2.capacity(), m_test_str_len );
+
+		//Throws: out_of_range if pos > str.size().
+		string_type se;
+		BOOST_CHECK_THROW( se.append(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
+		/*
+		Determines the effective length rlen of the string to append as the smaller of n and
+		str.size() - pos. The function then throws length_error if size() >= npos -
+		rlen.
+		*/
+		//TODO: implement this test case, don't know how to implement it
+		//BOOST_CHECK_THROW( se.append(s2, string_type::npos, string_type::npos ), std::length_error );
+
+		string_type s3;
+		s3.append( m_test_str );
+		BOOST_CHECK_EQUAL( s3.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s3.size(), m_test_str_len );
+		BOOST_CHECK_GE( s3.capacity(), m_test_str_len );
+
+		string_type s4;
+		s4.append( s2 );
+		BOOST_CHECK_EQUAL( s4.c_str(), s2.c_str() );
+		BOOST_CHECK_EQUAL( s4.size(), s2.size() );
+		BOOST_CHECK_GE( s4.capacity(), s2.size() );
+
+		size_t s2_len_2 = s2.size() / 2;
+		string_type s5;
+		s5.append( s2, 0, s2_len_2 );
+		BOOST_CHECK_EQUAL( char_traits::compare( s5.c_str(), s2.c_str(), s2_len_2 - 1 ), 0 );
+		BOOST_CHECK_EQUAL( s5.size(), s2_len_2 );
+		BOOST_CHECK_GE( s5.capacity(), s2_len_2 );
+
+		string_type s6;
+		s6.append( s2, s2_len_2, string_type::npos );
+		BOOST_CHECK_EQUAL( s6.c_str(), s2.c_str() + s2_len_2 );
+		BOOST_CHECK_EQUAL( s6.size(), s2_len_2 );
+		BOOST_CHECK_GE( s6.capacity(), s2_len_2 );
+
+
+		string_type s7;
+		s7.append( test_len, ch );
+		test_compare_n_chars( s7.c_str(), ch, test_len );
+		BOOST_CHECK_EQUAL( s7.size(), test_len );
+		BOOST_CHECK_GE( s7.capacity(), test_len );
+
+		string_type s8;
+		s8.append( s2.begin(), s2.end() );
+		BOOST_CHECK_EQUAL( s8.c_str(), s2.c_str() );
+		BOOST_CHECK_EQUAL( s8.size(), s2.size() );
+		BOOST_CHECK_GE( s8.capacity(), s2.size() );
+
+		string_type s9;
+		s9.append( (int)test_len, (int)ch );
+		test_compare_n_chars( s9.c_str(), ch, test_len );
+		BOOST_CHECK_EQUAL( s9.size(), test_len );
+		BOOST_CHECK_GE( s9.capacity(), test_len );
+	}
+
+	//21.3.5.3 basic_string::assign
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign, string_type, t_list )
+	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+		char_type ch = 'x';
+		size_t test_len = 10;
+
+		string_type s;
+		BOOST_CHECK( s.data() != 0 );
+		BOOST_CHECK_EQUAL( s.size(), sz_null );
 
 		string_type s2;
 		s2.assign( m_test_str, m_test_str_len );
 		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len );
+		BOOST_CHECK_GE( s2.capacity(), m_test_str_len );
+
+		//Throws: out_of_range if pos > str.size().
+		string_type se;
+		BOOST_CHECK_THROW( se.assign(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
+		
+		string_type s3;
+		s3.assign( m_test_str );
+		BOOST_CHECK_EQUAL( s3.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s3.size(), m_test_str_len );
+		BOOST_CHECK_GE( s3.capacity(), m_test_str_len );
+
+		string_type s4;
+		s4.assign( s2 );
+		BOOST_CHECK_EQUAL( s4.c_str(), s2.c_str() );
+		BOOST_CHECK_EQUAL( s4.size(), s2.size() );
+		BOOST_CHECK_GE( s4.capacity(), s2.size() );
+
+		size_t s2_len_2 = s2.size() / 2;
+		string_type s5;
+		s5.assign( s2, 0, s2_len_2 );
+		BOOST_CHECK_EQUAL( char_traits::compare( s5.c_str(), s2.c_str(), s2_len_2 - 1 ), 0 );
+		BOOST_CHECK_EQUAL( s5.size(), s2_len_2 );
+		BOOST_CHECK_GE( s5.capacity(), s2_len_2 );
+
+		string_type s6;
+		s6.assign( s2, s2_len_2, string_type::npos );
+		BOOST_CHECK_EQUAL( s6.c_str(), s2.c_str() + s2_len_2 );
+		BOOST_CHECK_EQUAL( s6.size(), s2_len_2 );
+		BOOST_CHECK_GE( s6.capacity(), s2_len_2 );
+
+
+		string_type s7;
+		s7.assign( test_len, ch );
+		test_compare_n_chars( s7.c_str(), ch, test_len );
+		BOOST_CHECK_EQUAL( s7.size(), test_len );
+		BOOST_CHECK_GE( s7.capacity(), test_len );
+
+		string_type s8;
+		s8.assign( s2.begin(), s2.end() );
+		BOOST_CHECK_EQUAL( s8.c_str(), s2.c_str() );
+		BOOST_CHECK_EQUAL( s8.size(), s2.size() );
+		BOOST_CHECK_GE( s8.capacity(), s2.size() );
+
+		string_type s9;
+		s9.assign( (int)test_len, (int)ch );
+		test_compare_n_chars( s9.c_str(), ch, test_len );
+		BOOST_CHECK_EQUAL( s9.size(), test_len );
+		BOOST_CHECK_GE( s9.capacity(), test_len );
+	}
+
+	//21.3.5.4 basic_string::insert
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_insert, string_type, t_list )
+	{
+		/*
+		basic_string<charT,traits,Allocator>&
+			insert(size_type pos1,
+				const basic_string<charT,traits,Allocator>& str);
+		Returns: insert(pos1,str,0,npos).
+		*/
+	}
+
+	//21.3.5.5 basic_string::erase
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase, string_type, t_list )
+	{
+
+	}
+
+	//21.3.5.6 basic_string::replace
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_replace, string_type, t_list )
+	{
+
+	}
+
+	//21.3.5.7 basic_string::copy
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy, string_type, t_list )
+	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+		
+		size_t test_len = m_test_str_len / 2;
+		char_type str[m_test_str_len];// = new char_type[m_test_str_len];
+
+		string_type s( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
+
+		string_type s2( m_test_str, test_len );
+#ifdef _MSC_VER
+#pragma warning(push)
+#endif
+//MSVC 9.0 C4996 Checked iterators
+#pragma warning (disable: 4996)
+		
+		s.copy( str, test_len, 0 );
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+		str[test_len] = 0;
+		BOOST_CHECK_EQUAL( char_traits::length( str ), test_len );
+		BOOST_CHECK_EQUAL( str, s2.c_str() );
+
 	}
 	
+	//21.3.5.8 basic_string::swap
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, string_type, t_list )
+	{		
+		string_type s( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
 
+		string_type s2( m_test_str2, m_test_str_len2 );
+		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str2 );
+		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len2 );
+		BOOST_CHECK_GE( s2.capacity(), m_test_str_len2 );
+
+		s.swap( s2 );
+		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len );
+		BOOST_CHECK_GE( s2.capacity(), m_test_str_len );
+
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str2 );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len2 );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len2 );
+	}
+
+	//21.3.6.1 basic_string::find
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.2 basic_string::rfind
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_rfind, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.3 basic_string::find_first_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_of, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.4 basic_string::find_last_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_of, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.5 basic_string::find_first_not_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_not_of, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.6 basic_string::find_last_not_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_not_of, string_type, t_list )
+	{
+
+	}
+
+	//21.3.6.7 basic_string::substr
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_substr, string_type, t_list )
+	{
+		typedef typename string_type::value_type char_type;
+		typedef gstl::char_traits< char_type > char_traits;
+
+		size_t test_len = m_test_str_len / 2;
+
+		string_type s( m_test_str, m_test_str_len );
+		BOOST_CHECK_EQUAL( s.c_str(), m_test_str );
+		BOOST_CHECK_EQUAL( s.size(), m_test_str_len );
+		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
+
+		string_type s2 = s.substr( 0, test_len );
+		string_type s3( m_test_str, test_len );
+		BOOST_CHECK_EQUAL( s2.c_str(), s3.c_str() );
+		BOOST_CHECK_EQUAL( s2.size(), test_len );
+		BOOST_CHECK_GE( s2.capacity(), test_len );
+
+		//Throws: out_of_range if pos > size()
+		BOOST_CHECK_THROW( s.substr( s.size() + 1 ), std::out_of_range );
+	}
+
+	//21.3.6.8 basic_string::compare
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare, string_type, t_list )
+	{
+
+	}
+
+	//21.3.7 basic_string non-member functions
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_non_member_ops, string_type, t_list )
+	{
+		//21.3.7.1 operator+
+		//21.3.7.2 operator==
+		//21.3.7.3 operator!=
+		//21.3.7.4 operator<
+		//21.3.7.5 operator>
+		//21.3.7.6 operator<=
+		//21.3.7.7 operator>=
+		//21.3.7.8 swap
+		//
+		//
+		//
+	}
+
+	//
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_, string_type, t_list )
+	{
+
+	}
 BOOST_AUTO_TEST_SUITE_END()
+
 
