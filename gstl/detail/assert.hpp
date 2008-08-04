@@ -30,10 +30,12 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <assert.h>
 
-#ifdef GSTL_DEBUG
-#	define GSTL_ASSERT( expression ) assert( expression )
-#else
-#	define GSTL_ASSERT( expression )
+#ifndef GSTL_ASSERT
+#	ifdef GSTL_DEBUG
+#		define GSTL_ASSERT( expression ) assert( expression )
+#	else
+#		define GSTL_ASSERT( expression )
+#	endif
 #endif
 
 #endif //GSTL_ASSERT_HEADER

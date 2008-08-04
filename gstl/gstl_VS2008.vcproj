@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\iterators.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\map.hpp"
 				>
 			</File>

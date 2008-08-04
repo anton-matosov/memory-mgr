@@ -28,7 +28,13 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-namespace gstl {
+namespace gstl 
+{
+
+#ifndef GSTL_DEBUG_RANGE
+#	define GSTL_DEBUG_RANGE( first, last )
+#endif //GSTL_DEBUG_RANGE
+
 	// 20.2.1, operators:
 	namespace rel_ops
 	{
@@ -129,6 +135,35 @@ namespace gstl {
 		return pair<T1, T2>( x, y );
 	}
 
+	template<class T>
+	static inline const T min( const T& v1, const T& v2 )
+	{
+		return gstl::min( v1, v2, std::less<T>() );
+	}
+
+	template<class T, class Pred>
+	static inline const T min( const T& v1, const T& v2, Pred pred )
+	{
+		return pred(v1, v2) ? v1 : v2;
+	}
+
+	template<class T>
+	static inline const T max( const T& v1, const T& v2 )
+	{
+		return gstl::max( v1, v2, std::less<T>() );
+	}
+
+	template<class T, class Pred>
+	static inline const T max( const T& v1, const T& v2, Pred pred )
+	{
+		return pred(v2, v1) ? v1 : v2;
+	}
+
+	template<class T1, class T2>
+	static inline const T1 floor( const T1 val, const T2 base )
+	{
+		return (val/base) * base + ( (val % base) ? base : 0 );
+	}
 }
 
 
