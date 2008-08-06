@@ -141,6 +141,61 @@ namespace gstl
 		}
 
 		/**
+		   @brief checks two sequences on overlapping
+		   @detail
+			------------------------------------------
+			|1)	[__1__] [__2__] == 0
+			|		or	
+			|	[__2__] [__1__] 
+			+-----------------------------------------
+			|2)	The the first sequence begins earlier or in the same position as the second
+			|	and ends later then second starts
+			|	[___1___]		== -1
+			|		[___2___]
+			|		or
+			|	[___1___]		
+			|	[___2_______]
+			|		or
+			|	[___1_______]	
+			|	[___2___]
+			+-----------------------------------------
+			|3)		[___1___]	== 1
+			|	[___2___]
+			|		or
+			|		[___1___]	
+			|	[___2_______]
+			------------------------------------------
+		   @retval -1 if the end of the first sequence overlaps with the beginning of the second
+		   @retval 0 if sequences don't overlap
+		   @retval 1 if the beginning of the first sequence overlaps with the end of the second
+		*/
+		static inline int check_overlap( const char_type* const first1, const char_type* const last1
+			, const char_type* const first2, const char_type* const last2 )
+		{
+			if( first1 <= first2 )
+			{//1) or 2)
+				if( last1 > first2 )
+				{
+					return -1;
+				}
+			}
+			else
+			{//possibly 3)
+				if( first1 < last2 )
+				{//case 3)
+					return 1;
+				}
+			}
+			//case 1)
+			return 0;
+		}
+
+		static inline int check_overlap( const char_type* s1, const char_type* s2, size_t n )
+		{
+			return check_overlap( s1, s1 + n, s2, s2 + n );
+		}
+
+		/**
 			@brief for each i in [0,n), performs
 				X::assign(s[i],p[i]). Copies correctly
 				even where the ranges [p, p+n) and [s, s+n) overlap. yields: s.
@@ -151,10 +206,24 @@ namespace gstl
 			GSTL_ASSERT( src != 0 && "src is null" );
 			//GSTL_ASSERT(  n <= length( src ) + 1 && "n exceeds length of the source string" );
 
+			int overlap = check_overlap( src, dst, n );
 			char_type* s = dst;
-			while( n-- )
-			{
-				assign( *dst++, *src++ );
+			if( overlap == -1 )
+			{//copy backward
+				const char_type* src_end = src + n;
+				char_type* dst_end = dst + n;
+				while( n-- )
+				{
+					assign( *--dst_end, *--src_end );
+				}
+			}
+			else
+			{//copy forward
+				while( n-- )
+				{
+					assign( *dst++, *src++ );
+				}
+
 			}
 			return s;
 		}

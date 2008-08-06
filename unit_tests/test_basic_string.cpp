@@ -562,7 +562,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string,
 
 		std::vector<int> int_vect;
 		//Just a compile time test:
-		str.insert(str.end(), int_vect.begin(), int_vect.end());
+		//str.insert(str.end(), int_vect.begin(), int_vect.end());
 
 
 		string_type str0;

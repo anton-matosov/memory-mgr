@@ -31,8 +31,10 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 //#define BOOST_TEST_NO_LIB
 #include <boost/test/test_tools.hpp>
 #include <boost/test/test_case_template.hpp>
+#include <boost/test/parameterized_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/bind.hpp>
+#include <boost/tuple/tuple.hpp>
 
 
 namespace ut = boost::unit_test;
@@ -58,6 +60,14 @@ template<class type_name1>																			\
 	template<class type_name2>																		\
 	void auto_templ_test_impl##name<type_name1>::operator()( const type_name2& /*v2*/ )
 
+
+#define GSTL_AUTO_PARAMS_TEST_CASE( test_name, function, begin, end )	\
+struct BOOST_AUTO_TC_UNIQUE_ID( test_name ) {};											\
+	BOOST_AUTO_TU_REGISTRAR( test_name )(												\
+	BOOST_PARAM_TEST_CASE( function, begin, end ) );	
+
+//#define GSTL_STATIC_ARR_END( arr )\
+//	template<class T, T[]
 
 template<class CharT>
 void test_compare_n_chars( const CharT* str, CharT ch, size_t len )

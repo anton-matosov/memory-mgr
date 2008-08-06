@@ -42,6 +42,9 @@ namespace
 	const char s3[] = "World";
 	const size_t s3_len = STR_LEN( s3 );
 
+	const char s4[] = "Goodb";
+	const size_t s4_len = STR_LEN( s4 );
+
 	const size_t max_len = 256;
 }
 
@@ -95,18 +98,31 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 		BOOST_CHECK( m_c1 < ch );
 		BOOST_CHECK( traits_type::lt( m_c1, ch ) );
 	}
-
-	BOOST_AUTO_TEST_CASE(test_compare)
+	typedef boost::tuple<const char*, size_t, const char*, size_t> test_compare_param_type;
+	test_compare_param_type params[] = {
+		boost::make_tuple( s1, s1_len, s2, s2_len ),
+		boost::make_tuple( s1, s1_len, s3, s3_len ),
+		boost::make_tuple( s1, s1_len, s4, s4_len ),
+		boost::make_tuple( s2, s2_len, s3, s3_len ),
+		boost::make_tuple( s2, s2_len, s4, s4_len ),
+		boost::make_tuple( s3, s3_len, s4, s4_len ),
+	};
+	void test_compare_impl( test_compare_param_type params )
 	{
-		BOOST_CHECK( s1_len == s3_len );
-		BOOST_CHECK_EQUAL( traits_type::compare( s1, s1, s1_len ), 0 );
-		BOOST_CHECK_LT( traits_type::compare( s1, s3, s1_len ), 0 );
-		BOOST_CHECK_GT( traits_type::compare( s3, s1, s1_len ), 0 );
+		const char *str1 = 0, *str2 = 0;
+		size_t size1 = 0, size2 = 0;
+		boost::tie( str1, size1, str2, size2 ) = params;
 
-		BOOST_CHECK_EQUAL( traits_type::compare( s1, s1, s1_len ), memcmp( s1, s1, s1_len ) );
-		BOOST_CHECK_EQUAL( traits_type::compare( s1, s3, s1_len ), memcmp( s1, s3, s1_len ) );
-		BOOST_CHECK_EQUAL( traits_type::compare( s3, s1, s1_len ), memcmp( s3, s1, s1_len ) );
+		BOOST_CHECK( size1 == size2 );
+		
+		BOOST_CHECK_EQUAL( traits_type::compare( str1, str1, size1 ), memcmp( str1, str1, size1 ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( str1, str2, size1 ), memcmp( str1, str2, size1 ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( str2, str1, size1 ), memcmp( str2, str1, size1 ) );
 	}
+
+	GSTL_AUTO_PARAMS_TEST_CASE( test_compare, test_compare_impl,
+		params, params + sizeof(params)/sizeof(test_compare_param_type) );
+
 
 	BOOST_AUTO_TEST_CASE(test_length)
 	{

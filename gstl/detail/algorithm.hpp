@@ -35,7 +35,7 @@ namespace gstl
 	{
 		for( ; first != last; ++first, ++dest )
 		{
-			*dest = *first;
+			*dest = /*static_cast<InputIt::value_type>*/( *first );
 		}
 		return dest;
 	}
