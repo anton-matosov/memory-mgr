@@ -84,12 +84,12 @@ namespace gstl
 			GSTL_ASSERT( s1 != 0 && "s1 is null" );
 			GSTL_ASSERT( s2 != 0 && "s2 is null" );
 
-			GSTL_ASSERT( n <= length( s1 ) + 1 && "n exceeds length of the first string (s1)" );
-			GSTL_ASSERT( n <= length( s2 ) + 1 && "n exceeds length of the second string (s2)" );
+			//GSTL_ASSERT( n <= length( s1 ) + 1 && "n exceeds length of the first string (s1)" );
+			//GSTL_ASSERT( n <= length( s2 ) + 1 && "n exceeds length of the second string (s2)" );
 
 			while( n-- )
 			{
-				if( !eq( *++s1, *++s2 ) )
+				if( !eq( *s1, *s2 ) )
 				{
 					if( lt( *s1, *s2 ) )
 					{
@@ -100,6 +100,8 @@ namespace gstl
 						return 1;
 					}
 				}
+				++s1;
+				++s2;
 			}
 			return 0;
 		}
@@ -127,7 +129,7 @@ namespace gstl
 		static inline const char_type* find( const char_type* s, size_t n, const char_type& a )
 		{
 			GSTL_ASSERT( s != 0 && "s is null" );
-			GSTL_ASSERT( n <= length( s ) + 1 && "n exceeds length of the string" );
+			//GSTL_ASSERT( n <= length( s ) + 1 && "n exceeds length of the string" );
 			while( n-- )
 			{
 				if( eq( *++s, a ) )
@@ -147,7 +149,7 @@ namespace gstl
 		{
 			GSTL_ASSERT( dst != 0 && "dst is null" );
 			GSTL_ASSERT( src != 0 && "src is null" );
-			GSTL_ASSERT(  n <= length( src ) + 1 && "n exceeds length of the source string" );
+			//GSTL_ASSERT(  n <= length( src ) + 1 && "n exceeds length of the source string" );
 
 			char_type* s = dst;
 			while( n-- )

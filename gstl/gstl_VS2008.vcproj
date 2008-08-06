@@ -184,6 +184,10 @@
 			Name="detail"
 			>
 			<File
+				RelativePath=".\detail\algorithm.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\allocator.hpp"
 				>
 			</File>

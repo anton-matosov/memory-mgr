@@ -98,10 +98,14 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 
 	BOOST_AUTO_TEST_CASE(test_compare)
 	{
-		BOOST_CHECK( s1_len == s2_len );
-		BOOST_CHECK( traits_type::compare( s1, s1, s1_len ) == 0 );
-		BOOST_CHECK( traits_type::compare( s1, s2, s1_len ) > 0 );
-		BOOST_CHECK( traits_type::compare( s2, s1, s1_len ) < 0 );
+		BOOST_CHECK( s1_len == s3_len );
+		BOOST_CHECK_EQUAL( traits_type::compare( s1, s1, s1_len ), 0 );
+		BOOST_CHECK_LT( traits_type::compare( s1, s3, s1_len ), 0 );
+		BOOST_CHECK_GT( traits_type::compare( s3, s1, s1_len ), 0 );
+
+		BOOST_CHECK_EQUAL( traits_type::compare( s1, s1, s1_len ), memcmp( s1, s1, s1_len ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( s1, s3, s1_len ), memcmp( s1, s3, s1_len ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( s3, s1, s1_len ), memcmp( s3, s1, s1_len ) );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_length)
