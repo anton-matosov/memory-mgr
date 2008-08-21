@@ -91,7 +91,7 @@ const size_t basic_string_test_fixture::m_test_str_len2 = STR_LEN( m_test_str2 )
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string, memory_mgr_off_string*/> t_list;
+typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*/, memory_mgr_string, memory_mgr_off_string/**/> t_list;
 		
  	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
  	{
@@ -639,6 +639,68 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string,
 	//21.3.5.6 basic_string::replace
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_replace, string_type, t_list )
 	{
+		//This test case is for the non template basic_string::replace method
+		const string_type v( "78" );
+		string_type s( "123456" );
+		string_type const& cs = s;
+
+		string_type::iterator i = s.begin() + 1;
+		s.replace(i, i + 3, v.begin(), v.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "17856" );
+
+		s = "123456";
+		i = s.begin() + 1;
+		s.replace(i, i + 1, v.begin(), v.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "1783456" );
+
+		s = "123456";
+		i = s.begin() + 1;
+		string_type::const_iterator ci = s.begin() + 1;
+		s.replace(i, i + 3, ci + 3, cs.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "15656" );
+
+		s = "123456";
+		i = s.begin() + 1;
+		ci = s.begin() + 1;
+		s.replace(i, i + 3, ci, ci + 2);
+		BOOST_CHECK_EQUAL( s.c_str(), "12356" );
+
+		s = "123456";
+		i = s.begin() + 1;
+		ci = s.begin() + 1;
+		s.replace(i, i + 3, ci + 1, cs.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "1345656" );
+
+		s = "123456";
+		s.replace(s.begin() + 4, s.end(), cs.begin(), cs.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "1234123456" );
+
+		//Tests for the template replace method.
+		s = "123456";
+		string_type::iterator b = s.begin() + 4;
+		string_type::iterator e = s.end();
+		string_type::const_iterator rb = s.begin();
+		string_type::const_iterator re = s.end();
+		s.replace(b, e, rb, re);
+		BOOST_CHECK_EQUAL( s.c_str(), "1234123456" );
+
+		s = "123456";
+		s.replace(s.begin() + 4, s.end(), s.begin(), s.end());
+		BOOST_CHECK_EQUAL( s.c_str(), "1234123456" );
+
+		string_type strorg("This is test string_type for string_type calls");
+		string_type str = strorg;
+		str.replace(5, 20, str.c_str(), 10);
+		BOOST_CHECK_EQUAL( str.c_str(), "This This is tefor string_type calls" );
+
+		str = strorg;
+		str.replace(5, 5, str.c_str(), 10);
+		BOOST_CHECK_EQUAL( str.c_str(), "This This is test string_type for string_type calls" );
+
+		std::vector<char> cvec;
+ 		cvec.push_back('I');
+ 		str.replace(str.begin(), str.begin() + 11, cvec.begin(), cvec.end());
+ 		BOOST_CHECK_EQUAL( str.c_str(), "Is test string_type for string_type calls" );
 
 		/*
 		basic_string<charT,traits,Allocator>&
@@ -914,7 +976,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string,
 	//21.3.7 basic_string non-member functions
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_non_member_ops, string_type, t_list )
 	{
-		/*
+		
 		string_type s( m_test_str );
 		string_type s2( m_test_str2 );
 		string_type s3( m_test_str );
@@ -931,6 +993,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string,
 		BOOST_CHECK_EQUAL( s, m_test_str );
 		BOOST_CHECK_EQUAL( m_test_str2, s2 );
 
+		
 		//21.3.7.3 operator!=
 		BOOST_CHECK_NE( s3, s2 );
 		BOOST_CHECK_NE( m_test_str, s2 );
@@ -967,7 +1030,6 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*, memory_mgr_string,
 		BOOST_CHECK_EQUAL( s.c_str(), m_test_str2 );
 		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
 
-		//*/
 	}
 
 	//
