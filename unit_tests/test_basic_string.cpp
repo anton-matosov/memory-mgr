@@ -91,7 +91,7 @@ const size_t basic_string_test_fixture::m_test_str_len2 = STR_LEN( m_test_str2 )
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*/, memory_mgr_string, memory_mgr_off_string/**/> t_list;
+typedef boost::mpl::list< /**/std::string/**/, gstl_string/**/, memory_mgr_string, memory_mgr_off_string/**/> t_list;
 		
  	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
  	{
@@ -701,23 +701,6 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*/, memory_mgr_string
  		cvec.push_back('I');
  		str.replace(str.begin(), str.begin() + 11, cvec.begin(), cvec.end());
  		BOOST_CHECK_EQUAL( str.c_str(), "Is test string_type for string_type calls" );
-
-		/*
-		basic_string<charT,traits,Allocator>&
-			replace(size_type pos1, size_type n1,
-				const basic_string<charT,traits,Allocator>& str);
-		Returns: replace(pos1, n1, str, 0, npos).
-		*/
-
-		/*
-		basic_string<charT,traits,Allocator>&
-			replace(size_type pos1, size_type n1,
-				const basic_string<charT,traits,Allocator>& str,
-					size_type pos2, size_type n2);
-		2 Requires: pos1 <= size() && pos2 <= str.size().
-		3 Throws: out_of_range if pos1 > size() or pos2 > str.size().
-		5 Throws: length_error if size() - xlen >= npos - rlen.
-		*/
 	}
 
 	//21.3.5.7 basic_string::copy
@@ -770,96 +753,122 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string/*/, memory_mgr_string
 		BOOST_CHECK_GE( s.capacity(), m_test_str_len2 );
 	}
 
-	////21.3.6.1 basic_string::find
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_find, string_type, t_list )
-	//{
-	//	string_type s("one two three one two three");
-	//	BOOST_CHECK_EQUAL( s.find("one"), sz_null );
-	//	BOOST_CHECK_EQUAL( s.find('t'), sz_four );
-	//	BOOST_CHECK_EQUAL( s.find('t', 5), sz_eight );
-	//	
-	//	BOOST_CHECK_EQUAL( s.find("four"), string_type::npos );
-	//	BOOST_CHECK_EQUAL( s.find("one", string_type::npos), string_type::npos );
+	//21.3.6.1 basic_string::find
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find, string_type, t_list )
+	{
+		string_type s("one two three one two three");
+		BOOST_CHECK_EQUAL( s.find("one"), sz_null );
+		BOOST_CHECK_EQUAL( s.find('t'), sz_four );
+		BOOST_CHECK_EQUAL( s.find('t', 5), sz_eight );
+		
+		BOOST_CHECK_EQUAL( s.find("four"), string_type::npos );
+		BOOST_CHECK_EQUAL( s.find("one", string_type::npos), string_type::npos );
 
-	//}
+	}
 
-	////21.3.6.2 basic_string::rfind
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_rfind, string_type, t_list )
-	//{
-	//	string_type s("one two three one two three");
+	//21.3.6.2 basic_string::rfind
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_rfind, string_type, t_list )
+	{
+		string_type s("one two three one two three");
+		//BOOST_CHECK_EQUAL( s.rfind("two", string_type::npos/2), string_type::npos );
+		BOOST_CHECK_EQUAL( s.rfind("two"), size_t(18) );
+		BOOST_CHECK_EQUAL( s.rfind("two", 0), string_type::npos );
+		BOOST_CHECK_EQUAL( s.rfind("two", 11), sz_four );
+		BOOST_CHECK_EQUAL( s.rfind('w'), size_t(19) );
 
-	//	BOOST_CHECK_EQUAL( s.rfind("two"), size_t(18) );
-	//	BOOST_CHECK_EQUAL( s.rfind("two", 0), string_type::npos );
-	//	BOOST_CHECK_EQUAL( s.rfind("two", 11), sz_four );
-	//	BOOST_CHECK_EQUAL( s.rfind('w'), size_t(19) );
+		string_type test( "aba" );
 
-	//	string_type test( "aba" );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 0, 1 ), sz_null );
 
-	//	BOOST_CHECK_EQUAL( test.rfind( "a", 2, 1 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.rfind( "a", 1, 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.rfind( "a", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 0 ), sz_null );
+	}
 
-	//	BOOST_CHECK_EQUAL( test.rfind( 'a', 2 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.rfind( 'a', 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.rfind( 'a', 0 ), sz_null );
-	//}
+	//21.3.6.3 basic_string::find_first_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_of, string_type, t_list )
+	{
+		string_type s("one two three one two three");
+		BOOST_CHECK_EQUAL( s.find_first_of("abcde"), sz_two );
 
-	////21.3.6.3 basic_string::find_first_of
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_of, string_type, t_list )
-	//{
-	//	string_type s("one two three one two three");
-	//	BOOST_CHECK_EQUAL( s.find_first_of("abcde"), sz_two );
-	//}
+		string_type test( "aba" );
 
-	////21.3.6.4 basic_string::find_last_of
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_of, string_type, t_list )
-	//{
-	//	string_type s( "one two three one two three" );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 1, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 0, 1 ), sz_null );
 
-	//	BOOST_CHECK_EQUAL( s.find_last_of( "abcde" ), size_t(26) );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 0 ), sz_null );
+	}
 
-	//	string_type test( "aba" );
+	//21.3.6.4 basic_string::find_last_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_of, string_type, t_list )
+	{
+		string_type s( "one two three one two three" );
 
-	//	BOOST_CHECK_EQUAL( test.find_last_of( "a", 2, 1 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.find_last_of( "a", 1, 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.find_last_of( "a", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( s.find_last_of( "abcde" ), size_t(26) );
 
-	//	BOOST_CHECK_EQUAL( test.find_last_of( 'a', 2 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.find_last_of( 'a', 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.find_last_of( 'a', 0 ), sz_null );
-	//}
+		string_type test( "aba" );
 
-	////21.3.6.5 basic_string::find_first_not_of
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_not_of, string_type, t_list )
-	//{
-	//	string_type s("one two three one two three");
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 0, 1 ), sz_null );
 
-	//	BOOST_CHECK_EQUAL( s.find_first_not_of("enotw "), sz_nine );
-	//}
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 0 ), sz_null );
+	}
 
-	////21.3.6.6 basic_string::find_last_not_of
-	//BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_not_of, string_type, t_list )
-	//{
-	//	string_type s( "one two three one two three" );
+	//21.3.6.5 basic_string::find_first_not_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_not_of, string_type, t_list )
+	{
+		string_type s("one two three one two three");
 
-	//	BOOST_CHECK_EQUAL( s.find_last_not_of( "ehortw " ), size_t(15) );
+		BOOST_CHECK_EQUAL( s.find_first_not_of("enotw "), sz_nine );
 
-	//	string_type test( "aba" );
+		string_type test( "aba" );
 
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 2, 1 ), sz_one );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 2, 1 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 1, 1 ), sz_one );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 1, 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 0, 1 ), string_type::npos );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 2, 1 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 1, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 1, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 0, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 0, 1 ), sz_null );
 
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 2 ), sz_one );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 2 ), sz_two );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 1 ), sz_one );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 1 ), sz_null );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 0 ), string_type::npos );
-	//	BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 0 ), sz_null );
-	//}
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 2 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 0 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 0 ), sz_null );
+	}
+
+	//21.3.6.6 basic_string::find_last_not_of
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_last_not_of, string_type, t_list )
+	{
+		string_type s( "one two three one two three" );
+
+		BOOST_CHECK_EQUAL( s.find_last_not_of( "ehortw " ), size_t(15) );
+
+		string_type test( "aba" );
+
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 2, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 2, 1 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 1, 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 0, 1 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 0, 1 ), sz_null );
+
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 2 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 2 ), sz_two );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 1 ), sz_one );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 0 ), string_type::npos );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 0 ), sz_null );
+	}
 
 	//21.3.6.7 basic_string::substr
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_substr, string_type, t_list )

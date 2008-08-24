@@ -132,10 +132,11 @@ namespace gstl
 			//GSTL_ASSERT( n <= length( s ) + 1 && "n exceeds length of the string" );
 			while( n-- )
 			{
-				if( eq( *++s, a ) )
+				if( eq( *s, a ) )
 				{
 					return s;
 				}
+				++s;
 			}
 			return 0;
 		}
