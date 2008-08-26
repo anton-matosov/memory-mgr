@@ -22,11 +22,12 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 #include "stdafx.h"
+#include <utility>
 #include "test_class.hpp"
 
 test_class::test_class() :m_i(0)
 {
-
+	std::min(1,2);
 }
 
 test_class::~test_class()

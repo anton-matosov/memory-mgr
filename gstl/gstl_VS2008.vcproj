@@ -204,7 +204,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail\iterators.hpp"
+				RelativePath=".\detail\iterator.hpp"
 				>
 			</File>
 			<File

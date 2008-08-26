@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/detail/iterator.hpp>
+
 namespace gstl 
 {
 
@@ -135,6 +137,10 @@ namespace gstl
 		return pair<T1, T2>( x, y );
 	}
 
+#pragma push_macro("min")
+#ifdef min
+#	undef min
+#endif
 	template<class T>
 	static inline const T min( const T& v1, const T& v2 )
 	{
@@ -147,6 +153,11 @@ namespace gstl
 		return pred(v1, v2) ? v1 : v2;
 	}
 
+#pragma pop_macro("min")
+#pragma push_macro("max")
+#ifdef max
+#	undef max
+#endif
 	template<class T>
 	static inline const T max( const T& v1, const T& v2 )
 	{
@@ -158,6 +169,8 @@ namespace gstl
 	{
 		return pred(v2, v1) ? v1 : v2;
 	}
+
+#pragma pop_macro("max")
 
 	template<class T1, class T2>
 	static inline const T1 floor( const T1 val, const T2 base )

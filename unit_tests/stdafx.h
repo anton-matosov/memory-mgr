@@ -25,4 +25,11 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <iostream>
 #include <string>
 
+#define BOOST_ALL_NO_LIB
+#ifdef max
+#	undef max
+#endif
+#ifdef min
+#	undef min
+#endif
 #include "test_common.hpp"

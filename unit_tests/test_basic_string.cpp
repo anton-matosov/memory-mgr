@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_allocator.h>
+#include <gstl/utility>
 
 typedef memory_mgr::heap_segment
 < 
@@ -91,7 +92,7 @@ const size_t basic_string_test_fixture::m_test_str_len2 = STR_LEN( m_test_str2 )
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< /**/std::string/**/, gstl_string/**/, memory_mgr_string, memory_mgr_off_string/**/> t_list;
+typedef boost::mpl::list< /**/std::string/**/, gstl_string/*/, memory_mgr_string, memory_mgr_off_string/**/> t_list;
 		
  	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
  	{
