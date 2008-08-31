@@ -77,24 +77,6 @@ typedef boost::mpl::list< int, float, double > t_list;
 		BOOST_CHECK_EQUAL( pair1, pair1 );
 		BOOST_CHECK_EQUAL( pair1, pair1 );
 	}
-// 	template<class type_1>
-// 	class test_pair_impl
-// 	{
-// 	public:
-// 		template<class type_2>
-// 		void operator()( const type_2& /*v2*/ )
-// 		{
-// 			//TODO: implement test here
-// 
-// 
-// 		}
-// 	};
-// 
-// 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pair, type_1, t_list )
-// 	{
-// 		boost::mpl::for_each<t_list>( test_pair_impl<type_1>() );
-// 	}
-
 
 BOOST_AUTO_TEST_SUITE_END();
 

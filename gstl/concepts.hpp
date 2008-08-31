@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_ALGORITHM_HEADER
-#define GSTL_ALGORITHM_HEADER
+#ifndef GSTL_CONCEPTS_HEADER
+#define GSTL_CONCEPTS_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -30,16 +30,10 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 namespace gstl
 {
-	template<class InputIt, class OutputIt>
-	OutputIt copy( InputIt first, InputIt last, OutputIt dest )
-	{
-		for( ; first != last; ++first, ++dest )
-		{
-			*dest = /*static_cast<InputIt::value_type>*/( *first );
-		}
-		return dest;
-	}
 
 }
 
-#endif //GSTL_ALGORITHM_HEADER
+
+
+
+#endif //GSTL_CONCEPTS_HEADER

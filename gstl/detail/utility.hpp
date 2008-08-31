@@ -28,7 +28,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <gstl/detail/iterator.hpp>
 
 namespace gstl 
 {

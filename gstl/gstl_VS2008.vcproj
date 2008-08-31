@@ -148,11 +148,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\algorithm"
+				>
+			</File>
+			<File
 				RelativePath=".\allocator"
 				>
 			</File>
 			<File
 				RelativePath=".\functional"
+				>
+			</File>
+			<File
+				RelativePath=".\iterator"
 				>
 			</File>
 			<File
@@ -197,6 +205,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\char_traits.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\concepts.hpp"
 				>
 			</File>
 			<File

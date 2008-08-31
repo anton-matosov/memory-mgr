@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_iterator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_utilities.cpp"
 				>
 			</File>

@@ -64,6 +64,10 @@ namespace gstl
 			size_t pos = file_path.find_last_of( "\\/" );
 			return file_path.substr( 0, (pos == -1 ? 0 : pos) );
 		}
+
+
+		template <class T> 
+		inline void unused_variable(T const&) {}
 	}//helpers
 
 }//gstl
