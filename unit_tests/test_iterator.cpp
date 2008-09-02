@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
+#include <deque>
 #include <gstl/iterator>
 #include <gstl/algorithm>
 #include <gstl/detail/helpers.hpp>
@@ -42,6 +43,23 @@ namespace boost
 		return stream;
 	}
 }
+
+//Instantiate iterator base templates
+template struct gstl::iterator<gstl::input_iterator_tag, int>;
+template struct gstl::iterator<gstl::input_iterator_tag, int*>;
+template struct gstl::iterator<gstl::input_iterator_tag, const int*>;
+template struct gstl::iterator<gstl::input_iterator_tag, int&>;
+template struct gstl::iterator<gstl::input_iterator_tag, const int&>;
+
+
+typedef gstl::iterator<gstl::input_iterator_tag, int>			int_iter_t;
+//typedef gstl::iterator<gstl::input_iterator_tag, int*>			int_ptr_iter_t;
+//typedef gstl::iterator<gstl::input_iterator_tag, const int*>	const_int_ptr_iter_t;
+
+template struct gstl::iterator_traits<int_iter_t>;
+template struct gstl::iterator_traits<int*>;
+template struct gstl::iterator_traits<const int*>;
+
 
 BOOST_FIXTURE_TEST_SUITE( iterator_test, iterator_test_fixture );
 
@@ -327,6 +345,32 @@ BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 	random_access_iterator_test(boost::make_reverse_iterator(const_rev_end), arr_len, array);
 
 	const_nonconst_iterator_test(i, ++j);
+}
+
+BOOST_AUTO_TEST_CASE( test_insert_iterators )
+{
+	typedef std::deque<int> int_deque_type;
+	template class gstl::back_insert_iterator<int_deque_type>;
+	template class gstl::front_insert_iterator<int_deque_type>;
+	template class gstl::insert_iterator<int_deque_type>;
+
+	typedef gstl::back_insert_iterator<int_deque_type>	back_insert_iterator;
+	typedef gstl::front_insert_iterator<int_deque_type>	front_insert_iterator;
+	typedef gstl::insert_iterator<int_deque_type>		insert_iterator;
+
+	int_deque_type int_deque;
+	back_insert_iterator back_iter = gstl::back_inserter( int_deque );
+	front_insert_iterator front_iter = gstl::front_inserter( int_deque );
+	insert_iterator insert_iter = gstl::inserter( int_deque, int_deque.begin() );
+}
+
+BOOST_AUTO_TEST_CASE( test_stream_iterator )
+{
+	//These instantiations produce CRT_SECURE warning messages (Tested on VC 9.0)
+	//template class gstl::istream_iterator<int>;
+	//template class gstl::istreambuf_iterator<char>;
+	//template class gstl::ostream_iterator<int>;
+	//template class gstl::ostreambuf_iterator<int>;
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator2, type, t_list )

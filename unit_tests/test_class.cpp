@@ -25,22 +25,20 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <utility>
 #include "test_class.hpp"
 
-test_class::test_class() :m_i(0)
-{
-	std::min(1,2);
-}
+test_class::test_class() :i_(0)
+{}
 
 test_class::~test_class()
 {
-	m_i = 0;
+	i_ = 0;
 }
 
 void test_class::set( int i )
 {
-	m_i = i;
+	i_ = i;
 }
 
 int test_class::get()
 {
-	return m_i;
+	return i_;
 }

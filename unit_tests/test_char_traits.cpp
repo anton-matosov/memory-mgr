@@ -51,27 +51,27 @@ namespace
 class char_traits_test_fixture
 {
 public:
-	char* m_s1;
-	char* m_s2;
-	char* m_s3;
-	char* m_s4;
-	char m_c1;
+	char* s1_;
+	char* s2_;
+	char* s3_;
+	char* s4_;
+	char c1_;
 
 	char_traits_test_fixture()
 	{
-		m_c1 = 'a';
-		m_s1 = new char[ max_len ];
-		m_s2 = new char[ max_len ];
-		m_s3 = new char[ max_len ];
-		m_s4 = new char[ max_len ];
+		c1_ = 'a';
+		s1_ = new char[ max_len ];
+		s2_ = new char[ max_len ];
+		s3_ = new char[ max_len ];
+		s4_ = new char[ max_len ];
 	}
 
 	~char_traits_test_fixture()
 	{
-		delete[] m_s1;
-		delete[] m_s2;
-		delete[] m_s3;
-		delete[] m_s4;
+		delete[] s1_;
+		delete[] s2_;
+		delete[] s3_;
+		delete[] s4_;
 	}
 };
 
@@ -80,23 +80,23 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 
 	BOOST_AUTO_TEST_CASE(test_assign)
 	{
-		traits_type::assign( m_c1, ch );
-		BOOST_CHECK_EQUAL( m_c1, ch );
+		traits_type::assign( c1_, ch );
+		BOOST_CHECK_EQUAL( c1_, ch );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_eq)
 	{
-		m_c1 = ch;
-		BOOST_CHECK( m_c1 == ch );
-		BOOST_CHECK( traits_type::eq( m_c1, ch ) );
+		c1_ = ch;
+		BOOST_CHECK( c1_ == ch );
+		BOOST_CHECK( traits_type::eq( c1_, ch ) );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_lt)
 	{
-		m_c1 = ch - 1;
+		c1_ = ch - 1;
 
-		BOOST_CHECK( m_c1 < ch );
-		BOOST_CHECK( traits_type::lt( m_c1, ch ) );
+		BOOST_CHECK( c1_ < ch );
+		BOOST_CHECK( traits_type::lt( c1_, ch ) );
 	}
 	typedef boost::tuple<const char*, size_t, const char*, size_t> test_compare_param_type;
 	test_compare_param_type params[] = {
@@ -146,40 +146,40 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 
 	BOOST_AUTO_TEST_CASE(test_move)
 	{
-		traits_type::move( m_s1, s1, s1_len + 1 );
-		traits_type::move( m_s2, s2, s2_len + 1  );
-		traits_type::move( m_s3, s3, s3_len + 1  );
+		traits_type::move( s1_, s1, s1_len + 1 );
+		traits_type::move( s2_, s2, s2_len + 1  );
+		traits_type::move( s3_, s3, s3_len + 1  );
 
-		BOOST_CHECK_EQUAL( m_s1, s1 );
-		BOOST_CHECK_EQUAL( m_s2, s2 );
-		BOOST_CHECK_EQUAL( m_s3, s3 );
+		BOOST_CHECK_EQUAL( s1_, s1 );
+		BOOST_CHECK_EQUAL( s2_, s2 );
+		BOOST_CHECK_EQUAL( s3_, s3 );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_copy)
 	{
-		traits_type::copy( m_s1, s1, s1_len + 1 );
-		traits_type::copy( m_s2, s2, s2_len + 1 );
-		traits_type::copy( m_s3, s3, s3_len + 1 );
+		traits_type::copy( s1_, s1, s1_len + 1 );
+		traits_type::copy( s2_, s2, s2_len + 1 );
+		traits_type::copy( s3_, s3, s3_len + 1 );
 
-		BOOST_CHECK_EQUAL( m_s1, s1 );
-		BOOST_CHECK_EQUAL( m_s2, s2 );
-		BOOST_CHECK_EQUAL( m_s3, s3 );
+		BOOST_CHECK_EQUAL( s1_, s1 );
+		BOOST_CHECK_EQUAL( s2_, s2 );
+		BOOST_CHECK_EQUAL( s3_, s3 );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_assign_str)
 	{
-		traits_type::assign( m_s1, s1_len, m_c1 );
+		traits_type::assign( s1_, s1_len, c1_ );
  
-		test_compare_n_chars( m_s1, m_c1, s1_len );
+		test_compare_n_chars( s1_, c1_, s1_len );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_eq_int_type)
 	{
-		m_c1 = ch;
-		BOOST_CHECK( m_c1 == ch );
-		BOOST_CHECK( traits_type::eq( m_c1, ch ) );
+		c1_ = ch;
+		BOOST_CHECK( c1_ == ch );
+		BOOST_CHECK( traits_type::eq( c1_, ch ) );
 
-		BOOST_CHECK( traits_type::eq_int_type( traits_type::to_int_type(m_c1),
+		BOOST_CHECK( traits_type::eq_int_type( traits_type::to_int_type(c1_),
 			traits_type::to_int_type(ch) ) );
 	}
 

@@ -34,9 +34,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 namespace gstl
 {
 	//FIXME: remove this declaration when real types will be declared
-	typedef void	streamoff;
-	typedef void	streampos;
-	typedef void	mbstate_t;
+	typedef std::streamoff	streamoff;
+	typedef std::streampos	streampos;
+	typedef std::mbstate_t	mbstate_t;
 
 	//implementation 
 	template<class T>

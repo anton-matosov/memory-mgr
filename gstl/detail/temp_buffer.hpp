@@ -72,7 +72,7 @@ namespace gstl
 			   @exception newer throws
 			*/
 			temp_buffer()
-				:m_buffer( 0 ), m_size( 0 )
+				:buffer_( 0 ), size_( 0 )
 			{}
 
 			/**
@@ -82,7 +82,7 @@ namespace gstl
 			   @exception newer throws		 
 			*/
 			temp_buffer( size_type count )
-				:m_buffer( 0 ), m_size( 0 )
+				:buffer_( 0 ), size_( 0 )
 			{
 				this->allocate( count );
 			}
@@ -93,7 +93,7 @@ namespace gstl
 			   @exception newer throws
 			*/
 			temp_buffer(const_self_ref_type buf)
-				:m_buffer( 0 ), m_size( 0 )
+				:buffer_( 0 ), size_( 0 )
 			{
 				*this = buf;
 			}
@@ -115,7 +115,7 @@ namespace gstl
 			*/
 			inline self_ref_type operator=(const_self_ref_type rhs)
 			{	
-				this->put( rhs.m_buffer, rhs.m_size );
+				this->put( rhs.buffer_, rhs.size_ );
 				return *this;
 			}
 
@@ -126,7 +126,7 @@ namespace gstl
 			*/
 			inline operator buffer_type()
 			{
-				return this->m_buffer;
+				return this->buffer_;
 			}
 
 			/**
@@ -136,7 +136,7 @@ namespace gstl
 			*/
 			inline buffer_type get()
 			{
-				return this->m_buffer;
+				return this->buffer_;
 			}
 
 			/**
@@ -146,7 +146,7 @@ namespace gstl
 			*/
 			inline size_type size()
 			{
-				return this->m_size * item_size;
+				return this->size_ * item_size;
 			}
 
 			/**
@@ -156,7 +156,7 @@ namespace gstl
 			*/
 			inline size_type count()
 			{
-				return this->m_size;
+				return this->size_;
 			}
 
 			/**
@@ -170,18 +170,18 @@ namespace gstl
 			{
 				if( array && count )
 				{
-					if( count > m_size )
+					if( count > size_ )
 					{
 						reallocate( count );
 					}
 					zero_buffer();
-					buffer_type tmp = m_buffer;
+					buffer_type tmp = buffer_;
 					while( count-- )
 					{
 						*tmp++ = *array++;
 					}
 
-					return m_buffer;
+					return buffer_;
 				}
 				return 0;
 			}
@@ -194,17 +194,17 @@ namespace gstl
 			*/
 			inline buffer_type allocate( size_type count )
 			{	
-				if(m_buffer) 
+				if(buffer_) 
 				{
 					throw multiple_allocation();
 				}
 
 				GSTL_ASSERT( count != 0 && "Invalid buffer size!" );
-				m_size = count;	
+				size_ = count;	
 
-				m_buffer = new item_type[ m_size ];
+				buffer_ = new item_type[ size_ ];
 				zero_buffer();
-				return m_buffer;
+				return buffer_;
 			}
 
 			/**
@@ -221,7 +221,7 @@ namespace gstl
 					return allocate( count );
 				}	
 
-				return m_buffer;
+				return buffer_;
 			}
 
 		private:
@@ -229,11 +229,11 @@ namespace gstl
 			/**
 			   @brief Pointer to memory buffer
 			*/
-			buffer_type	m_buffer;
+			buffer_type	buffer_;
 			/**
 			   @brief Size of memory buffer in elements
 			*/
-			size_type m_size;
+			size_type size_;
 
 			/**
 			   @brief Call this method to free memory buffer
@@ -241,11 +241,11 @@ namespace gstl
 			*/
 			inline void free_buffer()
 			{
-				if( m_buffer )
+				if( buffer_ )
 				{
-					delete[] m_buffer;
-					m_buffer = NULL;
-					m_size = 0;
+					delete[] buffer_;
+					buffer_ = NULL;
+					size_ = 0;
 				}
 			}
 
@@ -255,7 +255,7 @@ namespace gstl
 			*/
 			inline void zero_buffer()
 			{
-				std::fill( m_buffer, m_buffer + m_size, 0 );
+				std::fill( buffer_, buffer_ + size_, 0 );
 			}
 		};
 

@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 class test_class
 {
-	int m_i,m_i1,m_i2,m_i3,m_i4;
+	int i_;
 public:
 
 	test_class();

@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 /*
 Starts on page 541 C++ std 2003
+curr 556
 
 Table 71 - Relations among iterator categories
 +-------------------------------------------------------+
@@ -38,8 +39,10 @@ Table 71 - Relations among iterator categories
 +-------------------------------------------------------+
 */
 
+#include <gstl/detail/char_traits.hpp>
 #include <boost/concept_check.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_pointer.hpp>
+#include <boost/type_traits/add_reference.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/config.hpp>
 
@@ -111,8 +114,8 @@ namespace gstl
 #endif GSTL_HAS_FAR_PTR
 
 	template<class Category, class T, class Distance = ptrdiff_t,
-	class Pointer = typename boost::type_traits::add_pointer<T>::type,
-	class Reference = typename boost::type_traits::add_reference<T>type>
+	class Pointer = typename boost::add_pointer<T>::type,
+	class Reference = typename boost::add_reference<T>::type>
 	struct iterator
 	{
 		typedef T value_type;
@@ -197,6 +200,30 @@ namespace gstl
 		{
 			return last - first;
 		}
+
+		template <class Container>
+		class container_iterator_traits
+		{
+		public:
+			typedef iterator_traits<typename Container::iterator>	traits;
+
+			typedef typename traits::value_type				value_type;
+			typedef typename traits::difference_type		difference_type;
+			typedef typename traits::pointer				pointer;
+			typedef typename traits::reference				reference;
+			typedef typename traits::iterator_category		iterator_category;
+		};
+
+		template <class Container, class Category,
+		class Traits = container_iterator_traits<Container> >
+		class iterator_from_container_base
+			:public iterator<Category,
+			typename Traits::value_type,
+			typename Traits::difference_type,
+			typename Traits::pointer,
+			typename Traits::reference>
+		{
+		};
 	}
 
 	// 24.3.4, iterator operations:
@@ -218,44 +245,371 @@ namespace gstl
 	//template <class Iterator> class reverse_iterator;
 	using boost::reverse_iterator;
 
-	//////////////////////////////////////////////////////////////////////////
-	template <class Container> class back_insert_iterator;
-	template <class Container>
-	back_insert_iterator<Container> back_inserter(Container& x);
+	
 
 	//////////////////////////////////////////////////////////////////////////
-	template <class Container> class front_insert_iterator;
 	template <class Container>
-	front_insert_iterator<Container> front_inserter(Container& x);
+	class back_insert_iterator
+		:public detail::iterator_from_container_base<Container, output_iterator_tag>
+	{
+	public:
+		typedef Container									container_type;
+		typedef typename container_type::const_reference	const_reference;
+
+		typedef back_insert_iterator<container_type>		self_type;
+
+		explicit back_insert_iterator(container_type& x)
+			:container_( &x )
+		{}
+
+		self_type& operator=( const_reference value )
+		{
+			container_->push_back( value );
+			return *this;
+		}
+
+		self_type& operator*()
+		{
+			return *this;
+		}
+
+		self_type& operator++()
+		{
+			return *this;
+		}
+
+		self_type& operator++(int)
+		{
+			return *this;
+		}
+	protected:
+		Container* container_;
+	};
+
+	template <class Container>
+	back_insert_iterator<Container> back_inserter(Container& x)
+	{
+		return back_insert_iterator<Container>( x );
+	}
 
 	//////////////////////////////////////////////////////////////////////////
-	template <class Container> class insert_iterator;
+	template <class Container>
+	class front_insert_iterator 
+		:public detail::iterator_from_container_base<Container, output_iterator_tag>
+	{
+	public:
+		typedef Container									container_type;
+		typedef typename container_type::const_reference	const_reference;
+
+		typedef front_insert_iterator<container_type>		self_type;
+
+		explicit front_insert_iterator(container_type& x)
+			:container_( &x )
+		{}
+
+		self_type& operator=( const_reference value )
+		{
+			container_->push_front( value );
+			return *this;
+		}
+
+		self_type& operator*()
+		{
+			return *this;
+		}
+
+		self_type& operator++()
+		{
+			return *this;
+		}
+
+		self_type& operator++(int)
+		{
+			return *this;
+		}
+	protected:
+		Container* container_;
+	};
+
+	template <class Container>
+	front_insert_iterator<Container> front_inserter(Container& x)
+	{
+		return front_insert_iterator<Container>( x );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	template <class Container>
+	class insert_iterator
+		: public detail::iterator_from_container_base<Container, output_iterator_tag>
+	{
+	public:
+		typedef Container									container_type;
+		typedef typename container_type::iterator			iterator;
+		typedef typename container_type::const_reference	const_reference;
+
+		typedef insert_iterator<container_type>				self_type;
+
+		explicit insert_iterator( container_type& x, iterator i )
+			:container_( &x ),
+			iter_( i )
+		{}
+		
+		self_type& operator=( const_reference value )
+		{
+			iter_ = container_->insert( iter_, value );
+			++iter_;
+			return *this;
+		}
+
+		self_type& operator*()
+		{
+			return *this;
+		}
+
+		self_type& operator++()
+		{
+			return *this;
+		}
+
+		self_type& operator++(int)
+		{
+			return *this;
+		}
+	protected:
+		Container*	container_;
+		iterator	iter_;
+	};
+
 	template <class Container, class Iterator>
-	insert_iterator<Container> inserter(Container& x, Iterator i);
-
+	insert_iterator<Container> inserter(Container& x, Iterator i)
+	{
+		return insert_iterator<Container>( x, i );
+	}
+	//////////////////////////////////////////////////////////////////////////
 
 	// 24.5, stream iterators:
 	template <class T, class charT = char, class traits = char_traits<charT>,
 	class Distance = ptrdiff_t>
-	class istream_iterator;
-	template <class T, class charT, class traits, class Distance>
-	bool operator==(const istream_iterator<T,charT,traits,Distance>& x,
-		const istream_iterator<T,charT,traits,Distance>& y);
+	class istream_iterator:
+		public iterator<input_iterator_tag, T, Distance, const T*, const T&>
+	{
+		typedef iterator<input_iterator_tag, T, Distance, const T*, const T&> base_type;
+	public:
+		typedef typename base_type::value_type		value_type;
+		typedef charT								char_type;
+		typedef traits								traits_type;
+		typedef typename base_type::difference_type	difference_type;
+
+		typedef istream_iterator<T,charT,traits,Distance>	self_type;
+		//TODO: Replace by gstl::basic_istream when implemented
+		typedef std::basic_istream<char_type, traits_type> istream_type;
+
+		istream_iterator()
+			:in_stream_( 0 )
+		{}
+
+		istream_iterator( istream_type& s )
+			:in_stream_( &s )
+		{
+			//read initial value
+			++*this;
+		}
+
+		~istream_iterator()
+		{}
+
+		const T& operator*() const
+		{
+			if( at_the_end() )
+			{
+				//TODO: Implement library debugging
+				//iterator is not dereferencable
+			}
+			return value_;
+		}
+
+		const T* operator->() const
+		{
+			return &**this;
+		}
+
+		self_type& operator++()
+		{
+			if( !at_the_end() )
+			{
+				*in_stream_ >> value_;
+			}
+			
+			return *this;
+		}
+
+		self_type operator++(int)
+		{
+			self_type tmp = *this;
+			++*this;
+			return tmp;
+		}
+	private:
+		istream_type*	in_stream_; //exposition only
+		value_type		value_; //exposition only
+
+		bool at_the_end() const
+		{
+			if( !in_stream_ || !*in_stream_ )
+			{
+				//Guaranties that "Two end-of-stream iterators are always equal."
+				//and "An end-of-stream iterator is not equal to a non-end-ofstream iterator."
+				in_stream_ = 0;
+				return true;
+			}
+			return false;
+		}
+
+		template <class T, class charT, class traits, class Distance>
+		friend bool operator==(const istream_iterator<T,charT,traits,Distance>& x,
+			const istream_iterator<T,charT,traits,Distance>& y)
+		{
+			return x.in_stream_ == y.in_stream_;
+		}
+	};
+	
+
 	template <class T, class charT, class traits, class Distance>
 	bool operator!=(const istream_iterator<T,charT,traits,Distance>& x,
-		const istream_iterator<T,charT,traits,Distance>& y);
-	template <class T, class charT = char, class traits = char_traits<charT> >
-	class ostream_iterator;
+		const istream_iterator<T,charT,traits,Distance>& y)
+	{
+		return !(x == y);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	template<class charT, class traits = char_traits<charT> >
-	class istreambuf_iterator;
+	class istreambuf_iterator
+		: public iterator<input_iterator_tag, charT,
+		typename traits::off_type, charT*, charT&> {
+	public:
+		typedef charT									char_type;
+		typedef traits									traits_type;
+		typedef typename traits::int_type				int_type;
+		//TODO: Replace by gstl::basic_istream when implemented
+		typedef std::basic_streambuf<char_type, traits_type>	streambuf_type;
+		typedef std::basic_istream<char_type, traits_type>	istream_type;
+
+		class proxy // exposition only
+		{
+			char_type		keep_;
+			streambuf_type* sbuf_;
+			proxy( char_type c, streambuf_type* sbuf )
+				: keep_(c),
+				sbuf_(sbuf)
+			{}
+		public:
+			charT operator*() 
+			{ 
+				return keep_;
+			}
+		};
+	public:
+		istreambuf_iterator() throw();
+		istreambuf_iterator(istream_type& s) throw();
+		istreambuf_iterator(streambuf_type* s) throw();
+		istreambuf_iterator(const proxy& p) throw();
+		
+		char_type operator*() const
+		{
+			//if( at_the_end() )
+			{
+				//TODO: Implement library debugging
+				//iterator is not dereferencable
+			}
+			return ' ';
+		}
+
+		istreambuf_iterator& operator++()
+		{
+
+			return *this;
+		}
+
+// 		proxy operator++(int)
+// 		{
+// 
+// 			return proxy( ' ', sbuf_ );
+// 		}
+		bool equal(istreambuf_iterator& b) const;
+	private:
+		streambuf_type* sbuf_; //exposition only
+	};
+
 	template <class charT, class traits>
 	bool operator==(const istreambuf_iterator<charT,traits>& a,
 		const istreambuf_iterator<charT,traits>& b);
 	template <class charT, class traits>
 	bool operator!=(const istreambuf_iterator<charT,traits>& a,
 		const istreambuf_iterator<charT,traits>& b);
+
+	//////////////////////////////////////////////////////////////////////////
+	template <class T, class charT = char, class traits = char_traits<charT> >
+	class ostream_iterator
+		: public iterator<output_iterator_tag, T>
+	{
+		typedef iterator<output_iterator_tag, T>	base_type;
+	public:
+		typedef typename base_type::value_type		value_type;
+		typedef charT								char_type;
+		typedef traits								traits_type;
+		typedef typename base_type::difference_type	difference_type;
+		//TODO: Replace by gstl::basic_ostream when implemented
+		typedef std::basic_ostream<char_type, traits_type>	ostream_type;
+		typedef ostream_iterator<T,charT,traits>		self_type;
+
+		ostream_iterator( ostream_type& s, const char_type* delimiter = 0 )
+			:out_stream_( &s ),
+			delim_( delimiter )
+		{}
+
+		~ostream_iterator()
+		{}
+
+		self_type& operator=( const T& value )
+		{
+			*out_stream_ << value;
+			if( delim_ )
+			{
+				*out_stream_ << delim_;
+			}
+			//if( at_the_end() )
+			{
+				//TODO: Implement library debugging
+				//iterator is not dereferencable
+			}
+
+			return *this;
+		}
+		self_type& operator*()
+		{
+			return *this;
+		}
+
+		self_type& operator++()
+		{
+			return *this;
+		}
+
+		self_type& operator++(int)
+		{
+			return *this;
+		}
+	private:
+		ostream_type*		out_stream_;
+		const char_type*	delim_;
+	};
+
+	//////////////////////////////////////////////////////////////////////////
 	template <class charT, class traits = char_traits<charT> >
-	class ostreambuf_iterator;
+	class ostreambuf_iterator
+	{
+
+	};
 }
 
 #endif //GSTL_ITERATOR_HEADER
