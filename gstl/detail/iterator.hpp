@@ -422,6 +422,7 @@ namespace gstl
 		{
 			if( at_the_end() )
 			{
+				GSTL_ASSERT( !at_the_end() );
 				//TODO: Implement library debugging
 				//iterator is not dereferencable
 			}
@@ -459,7 +460,7 @@ namespace gstl
 			{
 				//Guaranties that "Two end-of-stream iterators are always equal."
 				//and "An end-of-stream iterator is not equal to a non-end-ofstream iterator."
-				in_stream_ = 0;
+				const_cast<self_type*>( this )->in_stream_ = 0;
 				return true;
 			}
 			return false;
@@ -492,60 +493,131 @@ namespace gstl
 		typedef typename traits::int_type				int_type;
 		//TODO: Replace by gstl::basic_istream when implemented
 		typedef std::basic_streambuf<char_type, traits_type>	streambuf_type;
-		typedef std::basic_istream<char_type, traits_type>	istream_type;
+		typedef std::basic_istream<char_type, traits_type>		istream_type;
+		typedef istreambuf_iterator								self_type;
 
-		class proxy // exposition only
-		{
-			char_type		keep_;
-			streambuf_type* sbuf_;
-			proxy( char_type c, streambuf_type* sbuf )
-				: keep_(c),
-				sbuf_(sbuf)
-			{}
-		public:
-			charT operator*() 
-			{ 
-				return keep_;
-			}
-		};
 	public:
-		istreambuf_iterator() throw();
-		istreambuf_iterator(istream_type& s) throw();
-		istreambuf_iterator(streambuf_type* s) throw();
-		istreambuf_iterator(const proxy& p) throw();
+		istreambuf_iterator() throw()
+			:sbuf_( 0 )
+		{}
+
+		istreambuf_iterator( istream_type& s ) throw()
+			:sbuf_( s.rdbuf() ),
+			valid_( false )
+		{}
+
+		istreambuf_iterator( streambuf_type* s ) throw()
+			:sbuf_( s ),
+			valid_( false )
+		{}
+
 		
 		char_type operator*() const
 		{
-			//if( at_the_end() )
+			read();
+			if( at_the_end() )
 			{
+				GSTL_ASSERT( !at_the_end() );
 				//TODO: Implement library debugging
 				//iterator is not dereferencable
 			}
 			return ' ';
 		}
 
-		istreambuf_iterator& operator++()
+		self_type& operator++()
 		{
-
+			next();
 			return *this;
 		}
 
-// 		proxy operator++(int)
-// 		{
-// 
-// 			return proxy( ' ', sbuf_ );
-// 		}
-		bool equal(istreambuf_iterator& b) const;
+ 		self_type operator++(int)
+ 		{
+			self_type tmp = *this;
+			++*this;
+			return tmp;
+ 		}
+
+		bool equal( istreambuf_iterator& rhs ) const
+		{
+			//Insure that iterators have valid values
+			read();
+			rhs.read();
+
+			//true if and only if both iterators are at end-of-stream,
+			//or neither is at end-of-stream, regardless
+			//of what streambuf object they use.
+			return ( at_the_end() && rhs.at_the_end() ) 
+				|| ( !at_the_end() && !rhs.at_the_end() );
+		}
 	private:
-		streambuf_type* sbuf_; //exposition only
+		///Traverse to the next char
+		void next()
+		{	
+			if( at_the_end() || traits_type::eq_int_type( traits_type::eof(),
+				sbuf_->sbumpc() ) )
+			{
+				end_reached();
+			}
+			else
+			{
+				//Invalidate, so next read will update value
+				valid_ = false;
+			}
+		}
+
+		void read() const
+		{
+			const_cast<self_type*>( this )->read();
+		}
+
+		///Read current char
+		void read()
+		{
+			if( !valid_ )
+			{
+				int_type tmp;
+				if( at_the_end() || traits_type::eq_int_type( traits_type::eof(),
+					tmp = sbuf_->sgetc() ) )
+				{
+					end_reached();
+				}
+				else
+				{
+					value_ = traits_type::to_char_type( tmp );
+					valid_ = true;
+				}
+			}
+		}
+
+		bool at_the_end() const
+		{
+			return sbuf_ == 0;
+		}
+
+		void end_reached()
+		{
+			sbuf_ = 0;
+			valid_ = true;
+		}
+
+		streambuf_type* sbuf_;
+		char_type		value_;
+		bool			valid_;
 	};
 
 	template <class charT, class traits>
-	bool operator==(const istreambuf_iterator<charT,traits>& a,
-		const istreambuf_iterator<charT,traits>& b);
+	bool operator==(const istreambuf_iterator<charT,traits>& lhs,
+		const istreambuf_iterator<charT,traits>& rhs)
+	{
+		return lhs.equal( rhs );
+	}
+
 	template <class charT, class traits>
-	bool operator!=(const istreambuf_iterator<charT,traits>& a,
-		const istreambuf_iterator<charT,traits>& b);
+	bool operator!=(const istreambuf_iterator<charT,traits>& lhs,
+		const istreambuf_iterator<charT,traits>& rhs)
+	{
+		return !( lhs == rhs );
+	}
 
 	//////////////////////////////////////////////////////////////////////////
 	template <class T, class charT = char, class traits = char_traits<charT> >
@@ -577,12 +649,7 @@ namespace gstl
 			{
 				*out_stream_ << delim_;
 			}
-			//if( at_the_end() )
-			{
-				//TODO: Implement library debugging
-				//iterator is not dereferencable
-			}
-
+			
 			return *this;
 		}
 		self_type& operator*()
@@ -606,9 +673,61 @@ namespace gstl
 
 	//////////////////////////////////////////////////////////////////////////
 	template <class charT, class traits = char_traits<charT> >
-	class ostreambuf_iterator
+	class ostreambuf_iterator:
+		public iterator<output_iterator_tag, charT>
 	{
+	public:
+		typedef charT											char_type;
+		typedef traits											traits_type;
+		//TODO: Replace by gstl::basic_ostream when implemented
+		typedef std::basic_streambuf<char_type, traits_type>	streambuf_type;
+		typedef std::basic_ostream<char_type, traits_type>		ostream_type;
 
+		ostreambuf_iterator( ostream_type& s ) throw()
+			:sbuf_( s.rdbuf() ),
+			fail_( false )
+		{
+			GSTL_ASSERT( sbuf_ != 0 );
+		}
+		ostreambuf_iterator( streambuf_type* s ) throw()
+			:sbuf_( s ),
+			fail_( false )
+		{
+			GSTL_ASSERT( sbuf_ != 0 );
+		}
+
+		ostreambuf_iterator& operator=( char_type c )
+		{
+			if( !failed() )
+			{
+				fail_ = traits_type::eq_int_type( sbuf_->sputc( c ), traits_type::eof() );
+			}
+			return *this;
+		}
+
+		ostreambuf_iterator& operator*()
+		{
+			return *this;
+		}
+
+		ostreambuf_iterator& operator++()
+		{
+			return *this;
+		}
+
+		ostreambuf_iterator& operator++(int)
+		{
+			return *this;
+		}
+
+
+		bool failed() const throw()
+		{
+			return fail_;
+		}
+	private:
+		streambuf_type* sbuf_;
+		bool fail_;
 	};
 }
 

@@ -364,13 +364,29 @@ BOOST_AUTO_TEST_CASE( test_insert_iterators )
 	insert_iterator insert_iter = gstl::inserter( int_deque, int_deque.begin() );
 }
 
-BOOST_AUTO_TEST_CASE( test_stream_iterator )
+BOOST_AUTO_TEST_CASE( test_stream_iterators )
 {
-	//These instantiations produce CRT_SECURE warning messages (Tested on VC 9.0)
-	//template class gstl::istream_iterator<int>;
-	//template class gstl::istreambuf_iterator<char>;
-	//template class gstl::ostream_iterator<int>;
-	//template class gstl::ostreambuf_iterator<int>;
+	//These instantiations produce CRT SECURE warning messages (Tested on VC 9.0)
+	template class gstl::istream_iterator<int>;
+	template class gstl::ostream_iterator<int>;
+	template class gstl::istreambuf_iterator<char>;
+	template class gstl::ostreambuf_iterator<char>;
+
+	std::basic_istringstream<char, gstl::char_traits<char> > istr;
+	std::basic_ostringstream<char, gstl::char_traits<char> > ostr;
+
+
+	typedef gstl::char_traits<char> traits;
+	gstl::istream_iterator<int, char, traits>	istream_iter( istr );
+	gstl::istreambuf_iterator<char, traits>		istreambuf_iter( istr );
+	gstl::istreambuf_iterator<char, traits>		istreambuf_iter2( istr.rdbuf() );
+	gstl::ostream_iterator<int, char, traits>	ostream_iter( ostr );
+	gstl::ostreambuf_iterator<char, traits>		ostreambuf_iter( ostr );
+	gstl::ostreambuf_iterator<char, traits>		ostreambuf_iter2( ostr.rdbuf() );
+
+
+
+
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator2, type, t_list )
