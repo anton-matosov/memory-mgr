@@ -32,18 +32,18 @@ namespace
 	const char ch = 'c';
 
 	const char s1[] = "Hello";
-	const size_t s1_len = STR_LEN( s1 );
+	const size_t s1_len = GSTL_STR_LEN( s1 );
 	const char c1_exist = 'l';
 	const char c1_unexist = 'd';
 
 	const char s2[] = "HelLo"; //Lesser then s1
-	const size_t s2_len = STR_LEN( s2 );
+	const size_t s2_len = GSTL_STR_LEN( s2 );
 
 	const char s3[] = "World";
-	const size_t s3_len = STR_LEN( s3 );
+	const size_t s3_len = GSTL_STR_LEN( s3 );
 
 	const char s4[] = "Goodb";
-	const size_t s4_len = STR_LEN( s4 );
+	const size_t s4_len = GSTL_STR_LEN( s4 );
 
 	const size_t max_len = 256;
 }

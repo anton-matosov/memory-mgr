@@ -199,6 +199,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\test_algorithm.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_allocator.cpp"
 				>
 			</File>

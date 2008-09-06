@@ -314,7 +314,7 @@ void const_nonconst_iterator_test(Iterator i, ConstIterator j)
 BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 {
 	char array[] = "only test array";
-	const size_t arr_len = STR_LEN( array ) + 1;
+	const size_t arr_len = GSTL_ARRAY_LEN( array, char );
 
 	typedef char* iter_t;
 	typedef const char* const_iter_t;

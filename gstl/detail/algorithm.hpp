@@ -31,27 +31,58 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/utility>
 #include <gstl/iterator>
 
+//#pragma warning(push)
+#pragma warning( disable:4100 )
+#include <boost/concept_check.hpp>
+
 namespace gstl
 {
 	// 25.1, non-modifying sequence operations:
 	template<class InputIterator, class Function>
-	Function for_each(InputIterator first, InputIterator last, Function f);
+	Function for_each(InputIterator first, InputIterator last, Function f)
+	{
+		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator> ));
+		for( ; first != last; ++first )
+		{
+			f( *first );
+		}
+		return f;
+	}
 	template<class InputIterator, class T>
 	InputIterator find(InputIterator first, InputIterator last,
-		const T& value);
+		const T& value)
+	{
+		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator> ));
+		BOOST_CONCEPT_ASSERT(( boost::EqualityComparable<T> ));
+
+		//Type T is EqualityComparable
+		for( ; first != last && !(*first == value); ++first )
+		{}
+		return first;
+	}
 	template<class InputIterator, class Predicate>
 	InputIterator find_if(InputIterator first, InputIterator last,
-		Predicate pred);
+		Predicate pred)
+	{
+		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator> ));
+		//Type T is EqualityComparable
+		for( ; first != last && !pred( *first ); ++first )
+		{}
+		return first;
+	}
+
 	template<class ForwardIterator1, class ForwardIterator2>
 	ForwardIterator1
 		find_end(ForwardIterator1 first1, ForwardIterator1 last1,
 		ForwardIterator2 first2, ForwardIterator2 last2);
+
 	template<class ForwardIterator1, class ForwardIterator2,
 	class BinaryPredicate>
 		ForwardIterator1
 		find_end(ForwardIterator1 first1, ForwardIterator1 last1,
 		ForwardIterator2 first2, ForwardIterator2 last2,
 		BinaryPredicate pred);
+
 	template<class ForwardIterator1, class ForwardIterator2>
 	ForwardIterator1
 		find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
@@ -457,4 +488,5 @@ namespace gstl
 		BidirectionalIterator last, Compare comp);
 }
 
+//#pragma warning(pop)
 #endif //GSTL_ALGORITHM_HEADER

@@ -39,7 +39,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 namespace ut = boost::unit_test;
 
-#define STR_LEN( s ) ( ( sizeof( s ) / sizeof( char ) ) - 1 )
+#define GSTL_ARRAY_LEN( arr, type ) ( sizeof( arr ) / sizeof( type ) )
+#define GSTL_STR_LEN( s ) ( GSTL_ARRAY_LEN( s, char ) - 1 )
 
 
 #define GSTL_TEST_CASE_TEMPLATE_TWO_LISTS( name, type_name1, type_name2, type_list_1, type_list_2 )	\

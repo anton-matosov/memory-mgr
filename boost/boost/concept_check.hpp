@@ -142,6 +142,7 @@ namespace boost
     }
    private:
     void const_constraints(const TT& b) {
+		b;
 #if !defined(_ITERATOR_) // back_insert_iterator broken for VC++ STL
       a = b;              // const required for argument to assignment
 #endif

@@ -86,9 +86,9 @@ public:
 	static const size_t m_test_str_len2;
 };
 const char basic_string_test_fixture::m_test_str[] = "Hello World!";
-const size_t basic_string_test_fixture::m_test_str_len = STR_LEN( m_test_str );
+const size_t basic_string_test_fixture::m_test_str_len = GSTL_STR_LEN( m_test_str );
 const char basic_string_test_fixture::m_test_str2[] = "Goodbye!";
-const size_t basic_string_test_fixture::m_test_str_len2 = STR_LEN( m_test_str2 );
+const size_t basic_string_test_fixture::m_test_str_len2 = GSTL_STR_LEN( m_test_str2 );
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
