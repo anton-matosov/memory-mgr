@@ -49,7 +49,7 @@ namespace
 
 	enum
 	{
-		alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments - 1
+		alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments
 	};
 
 	bool is_valid_ptr( offset_type p )

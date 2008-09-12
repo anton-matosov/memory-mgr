@@ -34,10 +34,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/decorator_base.h>
+#include <memory-mgr/detail/segment_storage.h>
 #include <assert.h>
 #include <functional>
-#include <vector>
-#include <map>
+#include <boost/bind.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace memory_mgr
 {
@@ -54,22 +55,21 @@ namespace memory_mgr
 		size_t SegmentsCount
 	>
 	class segment_manager
+		:private detail::segment_storage_map<MemMgr, SegmentsCount>
 	{
-		typedef MemMgr		mgr_type;
-		typedef mgr_type*	mgr_pointer_type;
-
+		typedef segment_storage_map<MemMgr, SegmentsCount> base_type;
 	public:
 		enum
 		{
-			num_segments = SegmentsCount,
-			segment_size = manager_traits<mgr_type>::memory_size,
-			allocable_memory = manager_traits<mgr_type>::allocable_memory
+			num_segments		= base_type::num_segments,
+			segment_size		= base_type::segment_size,
+			allocable_memory	= base_type::allocable_memory
 			//offset_mask,
 			//segment_mask
 		};
 	private:
-		typedef typename manager_traits<mgr_type>::size_type		size_type;
-		typedef typename manager_traits<mgr_type>::offset_type		offset_type;
+		typedef typename base_type::size_type		size_type;
+		typedef typename base_type::offset_type		offset_type;
 
 		typedef char* base_ptr_type;
 
@@ -87,56 +87,12 @@ namespace memory_mgr
 
 		size_type m_curr_segment;
 
-		typedef char*								seg_base_type;
-		typedef std::map<seg_base_type, size_t>		seg_bases_type;
-
-		mgr_pointer_type	m_segments[num_segments];
-		seg_bases_type		m_bases;
-
-		bool in_segment( const char* base, const char* ptr )
-		{
-			if ( ptr >= base )
-			{
-				if( (ptr - base) <= allocable_memory )
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-
-
-		inline mgr_pointer_type get_segment( size_type seg_id )
-		{
-			mgr_pointer_type segment = m_segments[seg_id];
-			if( !segment )
-			{
-				segment = m_segments[seg_id] = new mgr_type( seg_id );
-				m_bases[segment->get_offset_base()] = seg_id;
-			}
-			return segment;
-		}
-
 		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
 		{
 			return offset | (seg_id << m_offset_bits);
 		}
 
-		inline seg_bases_type::const_iterator find_segment( const void*  ptr )
-		{
-			const char* p = detail::char_cast( ptr );
-			seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
-			if( fres != m_bases.begin() )
-			{
-				--fres;
-				if( in_segment( fres->first, p ) )
-				{
-					return fres;
-				}
-			}
-			return m_bases.end();
-		}
+		
 	public:
 		segment_manager()
 			:m_curr_segment(0)
@@ -145,25 +101,10 @@ namespace memory_mgr
 			m_segment_mask = ~size_type(0) << m_offset_bits;
 			m_offset_mask = ~m_segment_mask;
 			//offset_bits( segment_size );
-			std::fill<mgr_pointer_type*,mgr_pointer_type>( m_segments, m_segments + num_segments, 0 );
 
 			//m_bases.reserve( num_segments );
 		}
 
-		~segment_manager()
-		{
-			mgr_pointer_type* pseg = m_segments;
-			mgr_pointer_type* end = m_segments + num_segments;
-			while( pseg != end )
-			{
-				if( *pseg )
-				{
-					delete *pseg;
-					*pseg = 0;
-				}
-				++pseg;
-			}
-		}
 
 		/**
 		   @brief Call this method to allocate memory block
@@ -213,13 +154,13 @@ namespace memory_mgr
 		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{
 			//If requested block size is greater than allocable memory size
-			if( size > manager_traits<mgr_type>::allocable_memory )
+			if( size > allocable_memory )
 			{
 				OnNoMemoryOp();
 				return offset_traits<offset_type>::invalid_offset;
 			}
 
-			mgr_pointer_type segment = get_segment(m_curr_segment);
+			segment_ptr_type segment = get_segment(m_curr_segment);
 
 			offset_type offset = segment->allocate( size, std::nothrow_t() );
 			size_type seg_id = m_curr_segment + 1;
@@ -270,7 +211,7 @@ namespace memory_mgr
 				assert( seg_id < num_segments );
 				offset_type real_offset = offset & m_offset_mask;
 
-				mgr_pointer_type seg = get_segment(seg_id);
+				segment_ptr_type seg = get_segment(seg_id);
 				char* base = seg->get_offset_base( real_offset );
 				return base;
 			}
@@ -281,8 +222,10 @@ namespace memory_mgr
 		*/
 		inline char* get_ptr_base( const void*  ptr )
 		{	
-			seg_bases_type::const_iterator fres = find_segment( ptr );
-			if( fres != m_bases.end() )
+			bool found = false;
+			seg_bases_type::const_iterator fres;
+			boost::tie( fres, found ) = find_segment( ptr );
+			if( found )
 			{
 				return fres->first;
 			}
@@ -314,8 +257,10 @@ namespace memory_mgr
 		*/
 		inline offset_type pointer_to_offset( const void* ptr )
 		{
-			seg_bases_type::const_iterator fres = find_segment( ptr );
-			if( fres != m_bases.end() )
+			bool found = false;
+			seg_bases_type::const_iterator fres;
+			boost::tie( fres, found ) = find_segment( ptr );
+			if( found )
 			{
 				return add_seg_id_to_offset( detail::diff( ptr, fres->first ), fres->second );
 			}
@@ -333,22 +278,7 @@ namespace memory_mgr
 		*/
 		inline bool empty()
 		{
-			bool result = true;
-			mgr_pointer_type* pseg = m_segments;
-			mgr_pointer_type* end = m_segments + num_segments;
-			while( pseg != end && result )
-			{
-				if( *pseg )
-				{
-					result &= (*pseg)->empty();
-				}
-				else
-				{
-					result = false;
-				}
-				++pseg;
-			}
-			return result;
+			return for_each_if( boost::bind( &segment_type::empty, _1 ) );
 		}
 
 		/**
@@ -359,18 +289,7 @@ namespace memory_mgr
 		*/
 		inline bool is_free()
 		{
-			bool result = true;
-			mgr_pointer_type* pseg = m_segments;
-			mgr_pointer_type* end = m_segments + num_segments;
-			while( pseg != end && result )
-			{
-				if( *pseg )
-				{
-					result &= (*pseg)->is_free();
-				}
-				++pseg;
-			}
-			return result;
+			return for_each_if( boost::bind( &segment_type::is_free, _1 ) );
 		}
 
 		/**
@@ -379,21 +298,11 @@ namespace memory_mgr
 		*/
 		inline void clear()
 		{
-			mgr_pointer_type* pseg = m_segments;
-			mgr_pointer_type* end = m_segments + num_segments;
-			while( pseg != end )
-			{
-				if( *pseg )
-				{
-					(*pseg)->clear();
-					//delete *pseg;
-					//*pseg = 0;
-				}
-				++pseg;
-			}
-			m_curr_segment = 0;
-			m_bases.clear();
-			//std::for_each( m_segments, m_segments + num_segments, std::mem_fun( &mgr_type::clear ) );
+			for_each( boost::bind( &segment_type::clear, _1 ) );
+ 			m_curr_segment = 0;
+			
+			//Delete all segments
+			delete_segments();
 		}
 	};
 

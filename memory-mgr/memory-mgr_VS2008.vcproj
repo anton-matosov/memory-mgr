@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\segment_storage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\singleton.h"
 				>
 			</File>
