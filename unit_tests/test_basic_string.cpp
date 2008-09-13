@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
-#include <gstl/detail/string.hpp>
+#include <gstl/detail/basic_string.hpp>
 #include <memory-mgr/allocator.h>
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/singleton_manager.h>

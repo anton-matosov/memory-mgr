@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\basic_string.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\char_traits.hpp"
 				>
 			</File>
@@ -225,10 +229,6 @@
 			</File>
 			<File
 				RelativePath=".\detail\pointer_traits.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\detail\string.hpp"
 				>
 			</File>
 			<File
