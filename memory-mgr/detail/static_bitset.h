@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/type_manip.h>
+#include <memory-mgr/detail/math.h>
 
 namespace memory_mgr
 {
@@ -515,7 +516,7 @@ namespace memory_mgr
 				return npos; // not found
 			}
 
-			return helpers::lowest_bit(this->m_bits[first_block]);
+			return math::lowest_bit(this->m_bits[first_block]);
 		}
 
 		inline size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
@@ -526,7 +527,7 @@ namespace memory_mgr
 			}
 			const block_type fore = this->m_bits[blk_ind] & ( higher_bit_mask(bit_ind) );
 
-			return fore ? helpers::lowest_bit(fore):
+			return fore ? math::lowest_bit(fore):
 				do_find_from( ++blk_ind );
 		}
 

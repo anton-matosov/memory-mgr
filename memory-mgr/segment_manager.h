@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/math.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/decorator_base.h>
@@ -76,7 +76,7 @@ namespace memory_mgr
 
 		size_type calc_offset_bits( size_type seg_size )
 		{
-			size_type log2 = helpers::integer_log2( seg_size );
+			size_type log2 = math::integer_log2( seg_size );
 			size_type extra = seg_size % log2;
 
 			return log2 + (extra ? 1 : 0);

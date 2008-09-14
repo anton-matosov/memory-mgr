@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\math.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\offset_traits.h"
 				>
 			</File>
