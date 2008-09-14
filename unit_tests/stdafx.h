@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <memory-mgr/config/config.h>
 
 
 #endif// MGR_STD_AFX_UNIT_HEADER

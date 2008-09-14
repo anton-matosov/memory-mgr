@@ -256,7 +256,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail\segment_storage.h"
+				RelativePath=".\detail\segment_storage_base.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\segment_storage_map.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\segment_storage_vector.h"
 				>
 			</File>
 			<File

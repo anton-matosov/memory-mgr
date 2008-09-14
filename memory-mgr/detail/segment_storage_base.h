@@ -27,11 +27,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
+
+
+#include <memory-mgr/config/config.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <vector>
-#include <map>
-#include <boost/utility.hpp>
+
 
 namespace memory_mgr
 {
@@ -49,10 +51,11 @@ namespace memory_mgr
 			typedef MemMgr			segment_type;
 			typedef segment_type*	segment_ptr_type;
 
-			typedef char*								seg_base_type;
+			typedef char*		seg_base_type;
 
 			typedef typename manager_traits<segment_type>::size_type		size_type;
 			typedef typename manager_traits<segment_type>::offset_type		offset_type;
+			typedef std::pair<seg_base_type, size_type>						segment_data_type;
 
 			enum
 			{
@@ -172,75 +175,14 @@ namespace memory_mgr
 				if( !segment )
 				{
 					segment = m_segments[seg_id] = new segment_type( seg_id );
+					on_new_segment_( segment, seg_id );
 				}
 				return segment;
 			}
-// 			segment_ptr_type get_segment( size_type seg_id ) const
-// 			{ 
-// 				return m_segments[seg_id];
-// 			}
-// 
-// 			void set_segment( segment_ptr_type val, size_type seg_id  ) 
-// 			{ 
-// 				m_segments[seg_id] = val;
-// 			}
+
+			boost::signal<void (segment_ptr_type, size_type)>	on_new_segment_;
 		};
 
-		template
-			<
-				class MemMgr,
-				size_t SegmentsCount
-			>
-		class segment_storage_map
-			:protected segment_storage_base<MemMgr, SegmentsCount>
-		{
-			typedef segment_storage_base<MemMgr, SegmentsCount> base_type;
-
-			typedef std::map<seg_base_type, size_t>		seg_bases_type;
-
-			seg_bases_type								m_bases;
-		public:
-			enum
-			{
-				num_segments		= base_type::num_segments,
-				segment_size		= base_type::segment_size,
-				allocable_memory	= base_type::allocable_memory
-				//offset_mask,
-				//segment_mask
-			};
-			typedef typename base_type::segment_ptr_type		segment_ptr_type;
-			typedef typename base_type::size_type		size_type;
-			typedef typename base_type::offset_type		offset_type;
-
-			inline segment_ptr_type get_segment( size_type seg_id )
-			{
-				segment_ptr_type segment = base_type::get_segment( seg_id );
-				m_bases[segment->get_offset_base()] = seg_id;
-				return segment;
-			}
-
-			inline std::pair<seg_bases_type::const_iterator, bool> find_segment( const void*  ptr )
-			{
-				const char* p = detail::char_cast( ptr );
-				seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
-				if( fres != m_bases.begin() )
-				{
-					--fres;
-					if( in_segment( fres->first, p ) )
-					{
-						return std::make_pair( fres, true );
-					}
-				}
-				return std::make_pair( m_bases.end(), false );
-			}
-
-			void delete_segments()
-			{
-				base_type::delete_segments();
-				m_bases.clear();
-			}
-			
-		};
 	}
 }
 

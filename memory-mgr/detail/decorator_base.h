@@ -122,7 +122,12 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to memory base address                               
 			*/
-			inline char* get_offset_base( const offset_type offset = 0 ) const
+			inline const char* get_offset_base( const offset_type offset = 0 ) const
+			{
+				return m_mgr.get_offset_base( offset );
+			}
+
+			inline char* get_offset_base( offset_type offset = 0 )
 			{
 				return m_mgr.get_offset_base( offset );
 			}
@@ -130,7 +135,12 @@ namespace memory_mgr
 			/**
 			   @add_comments
 			*/
-			inline char* get_ptr_base( const void* ptr )
+			inline const char* get_ptr_base( const void* ptr ) const
+			{
+				return m_mgr.get_ptr_base( ptr );
+			}
+
+			inline char* get_ptr_base( void* ptr )
 			{
 				return m_mgr.get_ptr_base( ptr );
 			}

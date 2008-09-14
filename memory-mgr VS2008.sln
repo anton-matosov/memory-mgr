@@ -16,8 +16,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "memory-mgr", "memory-mgr\memory-mgr_VS2008.vcproj", "{317AB518-3AB8-4F87-9977-E413EDA3F859}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf_tests", "perf_tests\perf_tests_VS2008.vcproj", "{58975002-C388-401F-B159-301B5DF09350}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1} = {0F57184A-DAE7-4759-B11C-75DC434E48B1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1} = {0F57184A-DAE7-4759-B11C-75DC434E48B1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost", "boost\boost.vcproj", "{0F57184A-DAE7-4759-B11C-75DC434E48B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +49,10 @@ Global
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Debug|Win32.Build.0 = Debug|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.ActiveCfg = Release|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.Build.0 = Release|Win32
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1}.Debug|Win32.Build.0 = Debug|Win32
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1}.Release|Win32.ActiveCfg = Release|Win32
+		{0F57184A-DAE7-4759-B11C-75DC434E48B1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

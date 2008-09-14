@@ -39,6 +39,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/detail/helpers.h>
 
+#define BOOST_ALL_NO_LIB
+#include <boost/utility.hpp>
+#include <boost/signals.hpp>
+#include <boost/bind.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/lambda/lambda.hpp>
+
 namespace memory_mgr
 {
 	/**

@@ -34,11 +34,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/segment_storage.h>
+#include <memory-mgr/detail/segment_storage_map.h>
+#include <memory-mgr/detail/segment_storage_vector.h>
 #include <assert.h>
 #include <functional>
-#include <boost/bind.hpp>
-#include <boost/tuple/tuple.hpp>
 
 namespace memory_mgr
 {
@@ -52,12 +51,13 @@ namespace memory_mgr
 	template
 	<
 		class MemMgr,
-		size_t SegmentsCount
+		size_t SegmentsCount,
+		template <class, size_t> class storage_policy = detail::segment_storage_vector
 	>
 	class segment_manager
-		:private detail::segment_storage_map<MemMgr, SegmentsCount>
+		:private storage_policy<MemMgr, SegmentsCount>
 	{
-		typedef segment_storage_map<MemMgr, SegmentsCount> base_type;
+		typedef storage_policy<MemMgr, SegmentsCount> base_type;
 	public:
 		enum
 		{
@@ -68,8 +68,9 @@ namespace memory_mgr
 			//segment_mask
 		};
 	private:
-		typedef typename base_type::size_type		size_type;
-		typedef typename base_type::offset_type		offset_type;
+		typedef typename base_type::size_type				size_type;
+		typedef typename base_type::offset_type				offset_type;
+		typedef typename base_type::segment_data_type		segment_data_type;
 
 		typedef char* base_ptr_type;
 
@@ -220,14 +221,14 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		inline char* get_ptr_base( const void*  ptr )
+		inline char* get_ptr_base( void*  ptr )
 		{	
 			bool found = false;
-			seg_bases_type::const_iterator fres;
-			boost::tie( fres, found ) = find_segment( ptr );
+			segment_data_type seg_data;
+			boost::tie( seg_data, found ) = find_segment( ptr );
 			if( found )
 			{
-				return fres->first;
+				return seg_data.first;
 			}
 			return 0;
 			
@@ -258,11 +259,11 @@ namespace memory_mgr
 		inline offset_type pointer_to_offset( const void* ptr )
 		{
 			bool found = false;
-			seg_bases_type::const_iterator fres;
-			boost::tie( fres, found ) = find_segment( ptr );
+			segment_data_type seg_data;
+			boost::tie( seg_data, found ) = find_segment( ptr );
 			if( found )
 			{
-				return add_seg_id_to_offset( detail::diff( ptr, fres->first ), fres->second );
+				return add_seg_id_to_offset( detail::diff( ptr, seg_data.first ), seg_data.second );
 			}
 			return offset_traits<offset_type>::invalid_offset;
 		}
