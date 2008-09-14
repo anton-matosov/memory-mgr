@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
+#include "stdafx.h"
 
 bool test_offset_pointer( const int /*op_repeat*/, const int /*per_alloc*/, const int /*test_repeat*/ )
 {

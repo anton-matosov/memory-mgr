@@ -139,14 +139,6 @@ namespace memory_mgr
 				enum { value = 0};
 			};
 
-			template<class T, T x>
-			struct int_log2_assert
-			{
-				int_log2_assert()
-				{
-					BOOST_STATIC_ASSERT( x > 0 );
-				}
-			};
 		} //helpers detail
 
 		// ---------
@@ -166,14 +158,11 @@ namespace memory_mgr
 		template<class T, T x>
 		struct int_log2
 		{
-			static detail::int_log2_assert<T, x> validator_;
+			BOOST_STATIC_ASSERT( x > 0 ); // PRE
 			enum { n = detail::max_pow2_less<std::numeric_limits<T>::digits, 4>::value };
 			enum { result = detail::int_log2_impl<
 				detail::int_log2_params<T, x, n, 0> >::result };
 		};
-
-		template<class T, T x>
-		detail::int_log2_assert<T, x> int_log2<T, x>::validator_;
 		
 
 		template <typename T>

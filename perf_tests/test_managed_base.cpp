@@ -21,10 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <iostream>
-#include "detail/test.h"
-#include "managers.h"
-#include "test_templates.h"
+#include "stdafx.h"
 
 namespace
 {

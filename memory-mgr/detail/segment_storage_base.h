@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <memory-mgr/config/config.h>
+#include <memory-mgr/detail/math.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <vector>
@@ -40,6 +41,17 @@ namespace memory_mgr
 
 	namespace detail
 	{
+		template<size_t seg_size>
+		struct calc_offset_bits
+		{
+			enum
+			{
+				log2	= math::int_log2<size_t, seg_size>::result,
+				extra	= seg_size % log2,
+				result	= log2 + (extra ? 1 : 0)			
+			};
+		};
+
 		template
 			<
 				class MemMgr,
@@ -51,24 +63,31 @@ namespace memory_mgr
 			typedef MemMgr			segment_type;
 			typedef segment_type*	segment_ptr_type;
 
-			typedef char*		seg_base_type;
+			typedef char*			seg_base_type;
 
 			typedef typename manager_traits<segment_type>::size_type		size_type;
 			typedef typename manager_traits<segment_type>::offset_type		offset_type;
 			typedef std::pair<seg_base_type, size_type>						segment_data_type;
+			typedef size_type												seg_id_type;
+
 
 			enum
 			{
-				num_segments = SegmentsCount,
-				segment_size = manager_traits<segment_type>::memory_size,
-				allocable_memory = manager_traits<segment_type>::allocable_memory
-				//offset_mask,
-				//segment_mask
+				num_segments		= SegmentsCount,
+				segment_size		= manager_traits<segment_type>::memory_size,
+				allocable_memory	= manager_traits<segment_type>::allocable_memory,
+
+				offset_bits			= calc_offset_bits< allocable_memory >::result,
+				segment_mask		= ~seg_id_type(0) << offset_bits,
+				offset_mask			= ~segment_mask
 			};
 
 
 		private:
+			//segments array
 			segment_ptr_type	m_segments[num_segments];
+
+
 			template<class Func>
 			class func_wrapper_base
 			{

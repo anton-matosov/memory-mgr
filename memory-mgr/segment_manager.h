@@ -63,48 +63,31 @@ namespace memory_mgr
 		{
 			num_segments		= base_type::num_segments,
 			segment_size		= base_type::segment_size,
-			allocable_memory	= base_type::allocable_memory
-			//offset_mask,
-			//segment_mask
+			allocable_memory	= base_type::allocable_memory,
+			offset_bits 		= base_type::offset_bits,
+			segment_mask 		= base_type::segment_mask,
+			offset_mask 		= base_type::offset_mask
 		};
 	private:
 		typedef typename base_type::size_type				size_type;
 		typedef typename base_type::offset_type				offset_type;
 		typedef typename base_type::segment_data_type		segment_data_type;
 
-		typedef char* base_ptr_type;
-
-		size_type calc_offset_bits( size_type seg_size )
-		{
-			size_type log2 = math::integer_log2( seg_size );
-			size_type extra = seg_size % log2;
-
-			return log2 + (extra ? 1 : 0);
-		}
-
-		size_type m_segment_mask;
-		size_type m_offset_mask;
-		size_type m_offset_bits;
-
 		size_type m_curr_segment;
 
-		inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
+		static inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
 		{
-			return offset | (seg_id << m_offset_bits);
+			return offset | (seg_id << offset_bits);
 		}
 
-		
+		static inline size_type seg_id_by_offset( offset_type offset )
+		{
+			return offset >> offset_bits;
+		}
 	public:
 		segment_manager()
 			:m_curr_segment(0)
-		{
-			m_offset_bits = calc_offset_bits( allocable_memory );
-			m_segment_mask = ~size_type(0) << m_offset_bits;
-			m_offset_mask = ~m_segment_mask;
-			//offset_bits( segment_size );
-
-			//m_bases.reserve( num_segments );
-		}
+		{}
 
 
 		/**
@@ -143,11 +126,7 @@ namespace memory_mgr
  		{
 			if( offset != offset_traits<offset_type>::invalid_offset )
 			{
-// 				size_type seg_id = offset >> m_offset_bits;
-// 				assert( seg_id < num_segments );
-// 				offset_type real_offset = offset & m_offset_mask;
-
-				get_segment( offset >> m_offset_bits )->deallocate( offset & m_offset_mask, size );
+				get_segment( seg_id_by_offset( offset ) )->deallocate( offset & offset_mask, size );
 			}
  		}
 
@@ -208,9 +187,9 @@ namespace memory_mgr
 			}
 			else
 			{
-				size_type seg_id = offset >> m_offset_bits;
+				size_type seg_id = seg_id_by_offset( offset );
 				assert( seg_id < num_segments );
-				offset_type real_offset = offset & m_offset_mask;
+				offset_type real_offset = offset & offset_mask;
 
 				segment_ptr_type seg = get_segment(seg_id);
 				char* base = seg->get_offset_base( real_offset );
@@ -245,9 +224,9 @@ namespace memory_mgr
 			}
 			else
 			{
-				size_type seg_id = offset >> m_offset_bits;
+				size_type seg_id = seg_id_by_offset( offset );
 				assert( seg_id < num_segments );
-				offset_type real_offset = offset & m_offset_mask;
+				offset_type real_offset = offset & offset_mask;
 
 				return get_segment(seg_id)->offset_to_pointer( real_offset );
 			}

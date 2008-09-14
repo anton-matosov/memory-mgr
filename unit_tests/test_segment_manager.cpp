@@ -142,6 +142,18 @@ namespace
 	}
 
 	template<class MemMgr>
+	bool test_clear()
+	{
+		SUBTEST_START( L"clear manager" );
+		MemMgr mgr;
+
+		mgr.allocate( chunk_size, std::nothrow_t() );
+		mgr.clear();
+
+		SUBTEST_END( mgr.is_free() );
+	}
+
+	template<class MemMgr>
 	bool test_null_ptr()
 	{
 		SUBTEST_START( L"deallocation of null ptr" );
@@ -149,7 +161,7 @@ namespace
 
 		mgr.deallocate( 0, 0 );
 
-		SUBTEST_SUCCEDED;
+		SUBTEST_END( mgr.is_free() );
 	}
 
 	bool test_inv_offset()
@@ -160,7 +172,7 @@ namespace
 		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
 		mgr.deallocate( null_ptr, 0 );
 
-		SUBTEST_SUCCEDED;
+		SUBTEST_END( mgr.is_free() );
 	}
 }
 
@@ -169,6 +181,7 @@ bool test_segment_manager()
 	TEST_START( L"test_segment_manager" );
 	TEST_END( (
 		test_alloc_dealloc<segmgr_type, offset_type>()
+		&& test_clear<sz_pconv_segmgr_type>()
 		&& test_offset_convertions()
 		&& test_alloc_dealloc<pconv_segmgr_type, void*>()
 		&& test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
