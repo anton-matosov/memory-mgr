@@ -66,7 +66,25 @@ namespace memory_mgr
 		static const offset_type	invalid_offset = static_cast< offset_type >(-1);
 	};
 
-	
+	/**
+	@brief Memory offset traits for size_t type
+	*/
+	template<class T>
+	struct offset_traits<T*>
+	{
+		/**
+		@brief type passed as template parameter
+		*/
+		typedef T*					offset_type;
+
+		/**
+		@brief Value that represents invalid offset, like NULL for pointers
+		*/
+		static const offset_type	invalid_offset;
+	};
+
+	template<class T>
+	const typename offset_traits<T*>::offset_type offset_traits<T*>::invalid_offset = 0;
 }
 
 

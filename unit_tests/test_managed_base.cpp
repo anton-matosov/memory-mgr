@@ -62,9 +62,10 @@ bool test_managed_base()
 	arr[3] = *t3;
 
 	test_class* t4 = new test_class();
+	// 	test_class* t5 = new( memory_mgr::object_name("hello") ) test_class();
 	t4->set( 104 );
 
-	arr[4] = *t4;
+ 	arr[4] = *t4;
 	
 	TEST_CHECK_MSG( (t1->get() == 101) && (t2->get() == 102) && (t3->get() == 103) && (t4->get() == 104), L"allocated memory data is corrupted" );
 	TEST_CHECK_MSG( (arr[0].get() == 100) &&

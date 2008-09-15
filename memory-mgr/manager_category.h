@@ -65,6 +65,7 @@ namespace memory_mgr
 	*/
 	struct memory_segment_tag{};
 
+	//////////////////////////////////////////////////////////////////////////
 	//Tags to categorize memory types
 
 	/**
@@ -82,7 +83,7 @@ namespace memory_mgr
 	*/
 	struct shared_memory_tag{};
 
-	
+	//////////////////////////////////////////////////////////////////////////
 	/**
 	   @brief Yes type, indicates success
 	*/

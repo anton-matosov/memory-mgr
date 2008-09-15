@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\named_objects.h"
+				>
+			</File>
+			<File
 				RelativePath=".\new.h"
 				>
 			</File>
@@ -241,6 +245,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\math.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\named_allocator.h"
 				>
 			</File>
 			<File

@@ -66,7 +66,7 @@ namespace memory_mgr
 		/**
 		   @brief Pointer to null terminated string that stores object's name
 		*/
-		const wchar_t* m_name;
+		const char* m_name;
 	public:
 		/**
 		   @brief Constructor 
@@ -75,7 +75,7 @@ namespace memory_mgr
 		   @warning Pointer, passed as name parameter, must 
 					be valid until the end of allocation operation.
 		*/
-		object_name( const wchar_t* name )
+		object_name( const char* name )
 			: m_name( name )
 		{}
 
@@ -87,7 +87,7 @@ namespace memory_mgr
 		  
 		   @return Pointer to null terminated string that stores object's name 
 		*/
-		const wchar_t* get_name()
+		const char* get_name() const
 		{
 			return m_name;
 		}
@@ -159,13 +159,14 @@ namespace memory_mgr
 		*/
 		static inline void* operator new( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
 		{
-			name;
 			/**
 			   @todo implement correct logic in this method
 			   mem_mgr::instance().allocate( size, name );
 			*/
-			STATIC_ASSERT( false, named_objects_not_supported );
-			return 0;
+			//STATIC_ASSERT( false, named_objects_not_supported );
+			STATIC_ASSERT( (is_category_supported< mem_mgr, named_objects_manager_tag>::value),		
+				Memory_manager_does_not_implement_named_objects_concept );
+			return mem_mgr::instance().allocate( size, name.get_name() );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -182,23 +183,19 @@ namespace memory_mgr
 		}
 
 		/**
-		   @brief Overloaded operator delete for named objects,
-					deallocates memory block in memory managed by mem_mgr
-		   @param p pointer to memory block
-		   @param size size of memory block that should be deallocated
-		   @param name name of the object that should be deallocated
-		   @exception newer  throws
-		   @remark all parameters are passed by compiler automatically
+		@brief Overloaded operator delete for named objects,
+		deallocates memory block in memory managed by mem_mgr
+
+		@param p pointer to memory block
+		@param size size of memory block that should be deallocated
+		@param name name of the object that should be deallocated
+		@exception newer  throws
+		@remark all parameters are passed by compiler automatically
 		*/
-		static inline void operator delete( void* p, size_t size, const object_name& name )
+		static inline void operator delete( void* p, const object_name& name )
 		{
-			p;
-			name;
-			/**
-			   @todo implement correct logic in this method
-			   mem_mgr::instance().deallocate( size, name );
-			*/
 			STATIC_ASSERT( false, named_objects_not_supported );
+			//mem_mgr::instance().deallocate( p, 0 );
 		}
 
 		//////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <vector>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/manager_traits.h>
@@ -54,13 +53,6 @@ namespace memory_mgr
 		   @see static_bitset::size_type
 		*/
  		typedef typename base_type::size_type			size_type;
-
-		/**
-		   @brief type that used to store memory offset
-		   @see memory_manager::offset_type
-		*/
- 		typedef typename base_type::offset_type			offset_type;
-
 
 		/**
 		   @brief Default constructor, creates memory manager 
@@ -130,7 +122,7 @@ namespace memory_mgr
 		/**
 		   @brief Memory manager class, that was decorated
 		*/
-		typedef MemMgr base_manager_type;
+		typedef MemMgr	base_manager_type;
 
 		/**
 		   @brief Add pointer_conversion_tag to manager_category

@@ -29,21 +29,26 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/managed_base.h>
+#include <memory-mgr/named_objects.h>
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/pointer_convert.h>
 
+
 typedef memory_mgr::singleton_manager
 < 
 	memory_mgr::heap_segment
 	< 
-		memory_mgr::pointer_convert
+		memory_mgr::named_objects
 		< 
-			memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-		> 
+			memory_mgr::pointer_convert
+			< 
+				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+			>
+		>
 	>
-> def_heap_mgr;
+>	def_heap_mgr;
 
 class test_class: public memory_mgr::managed_base< def_heap_mgr >
 {
