@@ -85,6 +85,7 @@ namespace memory_mgr
 		@see memory_manager::memory_segment                        
 		*/
 		inline named_objects()
+			:named_allocator( base_type::m_mgr )
 		{}
 
 		/**
@@ -95,13 +96,13 @@ namespace memory_mgr
 		@see memory_manager::memory_manager                        
 		*/
 		inline named_objects( void* segment_base )
-			:base_type( segment_base )
+			:base_type( segment_base ),
+			m_alloc( base_type::m_mgr )
 		{}
 
 		inline offset_type allocate( size_type size, const char* name )
 		{
-			string_type object_name = name;
-			offset_type offset = m_alloc.get_object(object_name );
+			offset_type offset = m_alloc.get_object( name );
 			if( offset ==  offset_traits<offset_type>::invalid_offset )
 			{
 				offset = this->m_mgr.allocate( size );

@@ -192,10 +192,11 @@ namespace memory_mgr
 		@exception newer  throws
 		@remark all parameters are passed by compiler automatically
 		*/
-		static inline void operator delete( void* p, const object_name& name )
+		static inline void operator delete( void* p, const object_name& /*name*/ )
 		{
-			STATIC_ASSERT( false, named_objects_not_supported );
-			//mem_mgr::instance().deallocate( p, 0 );
+			STATIC_ASSERT( (is_category_supported< mem_mgr, size_tracking_tag>::value),				
+				Memory_manager_does_not_implement_size_tracking_concept );
+			mem_mgr::instance().deallocate( p, 0 );
 		}
 
 		//////////////////////////////////////////////////////////////////////////

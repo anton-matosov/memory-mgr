@@ -224,6 +224,10 @@
 			Name="detail"
 			>
 			<File
+				RelativePath=".\detail\allocator_base.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\bit_manager.h"
 				>
 			</File>
@@ -245,6 +249,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\math.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\member_allocator_impl.h"
 				>
 			</File>
 			<File
@@ -281,6 +289,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\singleton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\singleton_allocator_impl.h"
 				>
 			</File>
 			<File

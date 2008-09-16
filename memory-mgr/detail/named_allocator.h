@@ -44,12 +44,13 @@ namespace memory_mgr
 		{
 			typedef MemMgr						mgr_type;
 			typedef OffsetT						offset_type;
-			//typedef allocator<char, mgr_type>	allocator_type;
-			typedef std::allocator<char>	allocator_type;
+			typedef member_allocator<char, mgr_type>	allocator_type;
+			//typedef std::allocator<char>		allocator_type;
 
-			typedef std::basic_string< char, std::char_traits<char>, allocator_type>				string_type;
-			typedef std::map< string_type, offset_type, std::less<string_type>, allocator_type>		map_type;
-			typedef std::pair< const string_type, offset_type >										map_item_type;
+			typedef std::basic_string< char, std::char_traits<char>, allocator_type>	string_type;
+			typedef std::less<string_type>												compare_type;
+			typedef std::map< string_type, offset_type, compare_type, allocator_type>	map_type;
+			typedef std::pair< const string_type, offset_type >							map_item_type;
 		};
 
 		template<class MemMgr, class TraitsT >
@@ -58,26 +59,42 @@ namespace memory_mgr
 			typedef MemMgr mgr_type;
 		public:
 			typedef TraitsT	traits_type;
+			typedef	typename traits_type::allocator_type	allocator_type;
 			typedef	typename traits_type::offset_type		offset_type;
 			typedef	typename traits_type::string_type		string_type;
 			typedef	typename traits_type::map_type			map_type;
+			typedef	typename traits_type::compare_type		compare_type;
 			typedef	typename traits_type::map_item_type		map_item_type;
+
+			named_allocator( mgr_type& mgr )
+				:m_alloc( &mgr ),
+				m_objects( compare_type(), m_alloc )
+			{
+
+			}
+
+			bool is_exists( const char* name )
+			{
+				return is_exists( string_type( name, m_alloc ) );
+			}
 
 			bool is_exists( const string_type& name )
 			{
 				return m_objects.find( name ) != m_objects.end();
 			}
 
-			void add_object( const string_type& name, const offset_type offset )
+			void add_object( const char* name, const offset_type offset )
 			{
-				assert( !is_exists( name ) );
-				m_objects[ name ] = offset;
+				string_type object_name( name, m_alloc );
+				assert( !is_exists( object_name ) );
+				m_objects[ object_name ] = offset;
 			}
 
-			const offset_type get_object( const string_type& name )
+			const offset_type get_object( const char* name )
 			{
+				string_type object_name( name, m_alloc );
 				offset_type offset = offset_traits<offset_type>::invalid_offset;
-				map_type::const_iterator fres = m_objects.find( name );
+				map_type::const_iterator fres = m_objects.find( object_name );
 				if( fres != m_objects.end() )
 				{
 					offset = fres->second;
@@ -85,9 +102,10 @@ namespace memory_mgr
 				return offset;
 			}
 
-			const void remove_object( const string_type& name )
+			const void remove_object( const char* name )
 			{
-				m_objects.erase( name );
+				string_type object_name( name, m_alloc );
+				m_objects.erase( object_name );
 			}
 
 			const void remove_object( const offset_type offset )
@@ -100,6 +118,7 @@ namespace memory_mgr
 				}
 			}
 		private:
+			allocator_type m_alloc;
 			map_type m_objects;
 
 			static bool less_second( const map_item_type& x, const map_item_type& y )

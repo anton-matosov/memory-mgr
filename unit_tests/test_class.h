@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/size_tracking.h>
 #include <memory-mgr/pointer_convert.h>
 
 
@@ -42,9 +43,12 @@ typedef memory_mgr::singleton_manager
 	< 
 		memory_mgr::named_objects
 		< 
-			memory_mgr::pointer_convert
+			memory_mgr::size_tracking
 			< 
-				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+				memory_mgr::pointer_convert
+				< 
+					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+				>
 			>
 		>
 	>

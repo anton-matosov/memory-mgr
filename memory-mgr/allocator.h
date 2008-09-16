@@ -30,131 +30,100 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
+#include <memory-mgr/detail/allocator_base.h>
+#include <memory-mgr/detail/member_allocator_impl.h>
+
+#include <memory-mgr/detail/singleton_allocator_impl.h>
 
 namespace memory_mgr
 {
 
 	template< class T,	class MemMgr >
 	class allocator
+		:public detail::allocator_base<T, MemMgr, detail::singleton_allocator_impl< MemMgr > >
 	{
 	public:
-		typedef MemMgr								mgr_type;
-		typedef T									value_type;
+		typedef detail::allocator_base<T, MemMgr, detail::singleton_allocator_impl< MemMgr > > base_type;
+
+		typedef typename base_type::mgr_type		mgr_type;
+		typedef typename base_type::value_type		value_type;
 		typedef allocator< value_type, mgr_type >	self_type;
 
-		typedef value_type*								pointer;
-		typedef const value_type*						const_pointer;
-		typedef value_type&								reference;
-		typedef const value_type&						const_reference;
-		
-		typedef typename manager_traits<mgr_type>::size_type	size_type;
-		typedef ptrdiff_t										difference_type;
-
-		template<class Other>
-		struct rebind
-		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename memory_mgr::allocator< Other, mgr_type > other;
-		};
-
-		// return address of mutable val
-		inline pointer address( reference val ) const
-		{	
-			return pointer(&val);
-		}
-
-		// return address of nonmutable val
-		inline const_pointer address( const_reference val ) const
-		{	
-			return const_pointer(&val);
-		}
-
-		// return address of mutable val
-		inline pointer address( pointer val ) const
-		{	
-			return val;
-		}
-
-		// return address of nonmutable val
-		inline const_pointer address( const_pointer val ) const
-		{	
-			return val;
-		}
+		typedef typename base_type::pointer				pointer;
+		typedef typename base_type::const_pointer		const_pointer;
+		typedef typename base_type::reference			reference;
+		typedef typename base_type::const_reference		const_reference;
+		typedef typename base_type::size_type			size_type;
+		typedef typename base_type::difference_type		difference_type;
 
 		// construct default allocator (do nothing)
 		inline allocator()
 		{
-			STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
-				//(is_category_supported< mgr_type, size_tracking_tag >::value) &&
-				(is_category_supported< mgr_type, pointer_conversion_tag >::value) &&
-				(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
+		}
 
+		template<class Other>
+		struct rebind
+		{	// convert an allocator<T> to an allocator <Other>
+			typedef typename allocator< Other, mgr_type > other;
+		};
+
+		template<class other>
+		inline allocator( const allocator<other, mgr_type>& rhs ) /*throw()*/
+			:base_type( rhs )
+		{	// construct from a related allocator
 		}
 
 		template<class other>
-		inline allocator( const allocator<other, mgr_type>& ) /*throw()*/
-		{	// construct from a related allocator (do nothing)
-		}
-
-		template<class other>
-		inline self_type& operator=( const allocator<other, mgr_type>& )
-		{	// assign from a related allocator (do nothing)
+		inline self_type& operator=( const allocator<other, mgr_type>& rhs )
+		{	// assign from a related allocator
+			base_type::operator =( rhs );
 			return (*this);
 		}
-
-		// deallocate object at ptr, ignore size
-		inline void deallocate( pointer ptr, size_type count )
-		{
-			mgr_type::instance().deallocate( &*ptr, count * sizeof(value_type) );
-		}
-
-		// allocate array of count elements
-		inline pointer allocate(size_type count)
-		{	
-			return static_cast<pointer>( mgr_type::instance().allocate( count * sizeof(value_type) ) );
-		}
-
-		// allocate array of count elements, ignore hint
-		inline pointer allocate(size_type count, const void *)
-		{	
-			return (allocate(count));
-		}
-
-		// construct object at ptr with value val
-		inline void construct(pointer ptr, const_reference val)
-		{	
-			::new (&*ptr) value_type(val);
-		}
-
-		// destroy object at ptr
-		inline void destroy(pointer ptr)
-		{	
-			ptr;//VS 2008 warning
-			(&*ptr)->~value_type();
-		}
-
-		// estimate maximum array size
-		inline size_type max_size() const 
-		{	
-			size_type count = manager_traits<mgr_type>::allocable_memory / sizeof( value_type );
-			return (0 < count ? count : 1);
-		}
-
 	};
 
-	// allocator TEMPLATE OPERATORS
-	template<class T,
-	class U, class mem_mgr >
-	inline bool operator==(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
-	{	// test for allocator equality (always true)
-		return true;
-	}
+	template< class T,	class MemMgr >
+	class member_allocator
+		:public detail::allocator_base<T, MemMgr, detail::member_allocator_impl< MemMgr > >
+	{
+	public:
+		typedef detail::allocator_base<T, MemMgr, detail::member_allocator_impl< MemMgr > > base_type;
 
-	template<class T,
-	class U, class mem_mgr >
-	inline bool operator!=(const allocator<T, mem_mgr>&, const allocator<U, mem_mgr>&) /*throw()*/
-	{	// test for allocator inequality (always false)
-		return false;
-	}
+		typedef typename base_type::mgr_type		mgr_type;
+		typedef typename base_type::value_type		value_type;
+		typedef member_allocator< value_type, mgr_type >	self_type;
+
+		typedef typename base_type::pointer				pointer;
+		typedef typename base_type::const_pointer		const_pointer;
+		typedef typename base_type::reference			reference;
+		typedef typename base_type::const_reference		const_reference;
+		typedef typename base_type::size_type			size_type;
+		typedef typename base_type::difference_type		difference_type;
+
+		// construct allocator from pointer to manager
+		inline member_allocator( mgr_type* mgr )
+			:base_type( mgr )
+		{
+		}
+
+		template<class Other>
+		struct rebind
+		{	// convert an allocator<T> to an allocator <Other>
+			typedef typename member_allocator< Other, mgr_type > other;
+		};
+
+		template<class other>
+		inline member_allocator( const member_allocator<other, mgr_type>& rhs ) /*throw()*/
+			:base_type( rhs )
+		{	// construct from a related allocator
+		}
+
+		template<class other>
+		inline self_type& operator=( const member_allocator<other, mgr_type>& rhs )
+		{	// assign from a related allocator
+			base_type::operator =( rhs );
+			return (*this);
+		}
+	};
 
 }
 
