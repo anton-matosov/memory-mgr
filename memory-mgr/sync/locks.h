@@ -44,6 +44,10 @@ namespace memory_mgr
 			pseudo_lockable()
 			{}
 
+			template< typename T >
+			pseudo_lockable( T )
+			{}
+
 			class lock
 			{
 			public:
@@ -74,6 +78,11 @@ namespace memory_mgr
 			friend class lock;
 
 			object_level_lockable()
+			{}
+
+			template< typename T >
+			object_level_lockable( T val )
+				:m_syncObj( val )
 			{}
 
 			class lock
