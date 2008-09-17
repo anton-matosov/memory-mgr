@@ -100,7 +100,7 @@ namespace memory_mgr
 		// deallocate object at ptr, ignore size
 		inline void deallocate( pointer_type ptr, size_type size )
 		{	
-			mgr_type::instance().deallocate( get_offset( ptr ), size );
+			mgr_type::instance().deallocate( get_offset_internal( ptr ), size );
 		}
 
 		// allocate array of count elements

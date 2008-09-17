@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="boost"
-	ProjectGUID="{0F57184A-DAE7-4759-B11C-75DC434E48B1}"
-	RootNamespace="boost"
+	Name="boost_test"
+	ProjectGUID="{947CCF66-6339-4725-BDDB-809FB66F85EF}"
+	RootNamespace="boost_test"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -155,7 +155,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\boost_src.cpp"
+				RelativePath=".\boost_test.cpp"
 				>
 			</File>
 		</Filter>
@@ -164,10 +164,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\signals.ipp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

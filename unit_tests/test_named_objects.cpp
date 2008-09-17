@@ -30,31 +30,48 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/offset_pointer.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/singleton_manager.h>
+#include <memory-mgr/detail/offset_traits.h>
 
-typedef 
-//memory_mgr::singleton_manager
-//< 
-	memory_mgr::named_objects
+typedef  memory_mgr::named_objects
+<
+	memory_mgr::size_tracking
 	<
-		memory_mgr::size_tracking
-		<
-			memory_mgr::pointer_convert
+		memory_mgr::pointer_convert
+		< 
+			memory_mgr::shared_segment
 			< 
-				memory_mgr::shared_segment
-				< 
-					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-				> 
-			>
+				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+			> 
 		>
 	>
-//> 
-name_sz_pt_heap_mgr_type;
+> name_sz_pt_shared_mgr_type;
 
-MGR_DECLARE_MANAGER_CLASS( name_sz_pt_heap_mgr, name_sz_pt_heap_mgr_type );
+typedef  memory_mgr::named_objects
+<
+	memory_mgr::pointer_convert
+	< 
+		memory_mgr::shared_segment
+		< 
+			memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+		> 
+	>
+> name_pt_shared_mgr_type;
+
+typedef  memory_mgr::named_objects
+<
+	memory_mgr::shared_segment
+	< 
+		memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+	>
+> name_shared_mgr_type;
+
+MGR_DECLARE_MANAGER_CLASS( name_sz_pt_shared_mgr, name_sz_pt_shared_mgr_type );
+MGR_DECLARE_MANAGER_CLASS( name_pt_shared_mgr, name_pt_shared_mgr_type );
+MGR_DECLARE_MANAGER_CLASS( name_shared_mgr, name_shared_mgr_type );
 
 BOOST_AUTO_TEST_SUITE( test_named_objects )
 
-typedef boost::mpl::list< name_sz_pt_heap_mgr > managers_list;
+typedef boost::mpl::list< name_sz_pt_shared_mgr, name_pt_shared_mgr/*, name_shared_mgr*/ > managers_list;
 
 namespace
 {
@@ -64,16 +81,16 @@ namespace
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 {
-	typedef mgr_type::offset_type offset_type;
+	typedef mgr_type::object_type object_type;
 	typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
-	const offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
+	const object_type inv_off = memory_mgr::offset_traits<object_type>::invalid_offset;
 	const size_type obj_size = 4;
 
 	mgr_type mgr1;
 	//BOOST_CHECK( mgr1.is_free() );
 
-	offset_type p1, p2, p11, p22;
+	object_type p1, p2, p11, p22;
 
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
 	p1 = mgr1.allocate( obj_size, name1 );

@@ -32,26 +32,48 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/named_allocator.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
+#include <memory-mgr/offset_pointer.h>
 #include <boost/mpl/if.hpp>
 
 
 namespace memory_mgr
 {	
+	namespace detail
+	{
+		template<bool toStdPointer> 
+		class object_converter
+		{};
+
+		template</*bool toStdPointer*/> 
+		class object_converter<true>
+		{
+		public:
+			template<class MemMgr>
+			static inline void* convert( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
+			{
+				return detail::offset_to_pointer( offset, mgr );
+			}
+		};
+
+		template</*bool toStdPointer*/> 
+		class object_converter<false>
+		{
+		public:
+			template<class MemMgr>
+			static inline typename manager_traits<MemMgr>::offset_type convert( typename manager_traits<MemMgr>::offset_type offset,
+				MemMgr&  )
+			{
+				return offset;
+			}
+		};
+	}
 	/**
 	@add_comment
 	*/
 	template
 	< 
 		class MemMgr,
-		class NamedAllocator = detail::named_allocator<MemMgr, 
-			detail::named_allocator_traits<MemMgr, 
-				typename boost::mpl::if_c< 
-					is_category_supported< MemMgr, pointer_conversion_tag>::value,
-					void*,
-					typename manager_traits<MemMgr>::offset_type>::type
-			>
-		>
-	
+		class NamedAllocatorTraits = detail::named_allocator_traits<MemMgr>	
 	>	
 	class named_objects
 		:public detail::decorator_base<MemMgr>
@@ -59,9 +81,14 @@ namespace memory_mgr
 		typedef detail::decorator_base<MemMgr> base_type;
 		//typedef MemMgr base_type;
 		typedef MemMgr mgr_type;
-		typedef NamedAllocator	named_allocator;
-		typedef typename named_allocator::string_type string_type;
-		named_allocator	m_alloc;
+		typedef NamedAllocatorTraits	named_allocator_traits;
+		typedef detail::named_allocator<MemMgr, named_allocator_traits>	named_allocator_type;
+
+		typedef typename named_allocator_type::string_type string_type;
+
+		named_allocator_type	m_alloc;
+
+		typedef detail::object_converter<is_category_supported< MemMgr, pointer_conversion_tag>::value> converter;
 	public:	
 		/**
 		@brief Type used to store size, commonly std::size_t
@@ -75,7 +102,11 @@ namespace memory_mgr
 		@see memory_manager::offset_type
 		*/
 		//typedef typename base_type::offset_type			offset_type;
-		typedef typename named_allocator::offset_type		offset_type;
+		typedef typename named_allocator_type::offset_type		offset_type;
+		typedef typename boost::mpl::if_c< 
+			is_category_supported< MemMgr, pointer_conversion_tag>::value,
+			void*,
+			typename manager_traits<MemMgr>::offset_type>::type		object_type;
 
 
 		/**
@@ -105,18 +136,18 @@ namespace memory_mgr
 			return m_alloc.is_exists( name );
 		}
 
-		inline offset_type allocate( size_type size, const char* name )
+		inline object_type allocate( size_type size, const char* name )
 		{
-			offset_type offset = m_alloc.get_object( name );
-			if( offset ==  offset_traits<offset_type>::invalid_offset )
+			object_type offset = converter::convert( m_alloc.get_object( name ), *this );
+			if( offset ==  offset_traits<object_type>::invalid_offset )
 			{
 				offset = this->m_mgr.allocate( size );
-				m_alloc.add_object( name, offset );
+				m_alloc.add_object( name, detail::to_offset( offset, *this ) );
 			}
 			return offset;
 		}
 
-		inline void deallocate( const offset_type p, size_type size, const char* name )
+		inline void deallocate( const object_type p, size_type size, const char* name )
 		{
 			m_alloc.remove_object( name );
 			this->m_mgr.deallocate( p, size );
@@ -127,7 +158,7 @@ namespace memory_mgr
  		@exception bad_alloc if manager went out of memory
  		@return pointer to allocated memory block
  		*/
- 		inline offset_type allocate( size_type size )
+ 		inline object_type allocate( size_type size )
  		{			
  			return this->m_mgr.allocate( size );
  		}
@@ -141,7 +172,7 @@ namespace memory_mgr
  		@exception newer  throws
  		@return pointer to allocated memory block         
  		*/
- 		inline offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+ 		inline object_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
  		{			
  			return this->m_mgr.allocate( size, nothrow );
  		}
@@ -152,9 +183,9 @@ namespace memory_mgr
  		@param size   size of memory block in bytes
  		@exception newer  throws
  		*/
- 		inline void deallocate( const offset_type p, size_type size = 0 )
+ 		inline void deallocate( const object_type p, size_type size = 0 )
  		{
-			m_alloc.remove_object( p );
+			m_alloc.remove_object( detail::to_offset( p, *this ) );
  			this->m_mgr.deallocate( p, size );
  		}
 	};
@@ -163,8 +194,8 @@ namespace memory_mgr
 	@brief memory_manager + pointer_convert traits
 	@details Adds pointer_conversion_tag to manager_category
 	*/
-	template< class MemMgr >
-	struct manager_traits< named_objects< MemMgr > > 
+	template< class MemMgr, class NamedAllocatorTraits >
+	struct manager_traits< named_objects< MemMgr, NamedAllocatorTraits > > 
 		: public manager_traits< MemMgr >
 	{
 		/**

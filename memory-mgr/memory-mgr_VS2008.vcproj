@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\params_binder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\pointer_convert.h"
 				>
 			</File>

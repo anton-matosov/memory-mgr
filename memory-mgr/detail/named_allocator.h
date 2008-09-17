@@ -33,17 +33,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/detail/ptr_helpers.h>
 
 
 namespace memory_mgr
 {
 	namespace detail
 	{
-		template<class MemMgr, class OffsetT>
+		template<class MemMgr>
 		struct named_allocator_traits
 		{
 			typedef MemMgr						mgr_type;
-			typedef OffsetT						offset_type;
+			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
 			typedef member_allocator<char, mgr_type>	allocator_type;
 			//typedef std::allocator<char>		allocator_type;
 
@@ -108,10 +109,11 @@ namespace memory_mgr
 				m_objects.erase( object_name );
 			}
 
-			const void remove_object( const offset_type offset )
+			const void remove_object( const offset_type ptr )
 			{
+				const offset_type offset = ptr;
 				map_type::iterator fres = std::find_if( m_objects.begin(), m_objects.end(), 
-					boost::bind( &map_item_type::second, boost::lambda::_1 ) == offset );
+					boost::bind( &equal_second_val<offset_type>, _1, offset ) );
 				if( fres != m_objects.end() )
 				{
 					m_objects.erase( fres );
@@ -124,6 +126,12 @@ namespace memory_mgr
 			static bool less_second( const map_item_type& x, const map_item_type& y )
 			{
 				return x.second < y.second;
+			}
+
+			template<class ValT>
+			static bool equal_second_val( const map_item_type& x, const ValT val )
+			{
+				return x.second == val;
 			}
 		};
 	}

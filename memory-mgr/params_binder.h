@@ -21,6 +21,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include "signals.ipp"
-#include <boost/test/included/unit_test_framework.hpp>
+#ifndef MGR_PARAMS_BINDER_HEADER
+#define MGR_PARAMS_BINDER_HEADER
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#	pragma once
+#endif
+
+namespace memory_mgr
+{
+#define MGR_BIND_PARAM_NAME( name ) name##_binded_param
+
+#define MGR_BIND_PARAM( name ) MGR_BIND_PARAM_NAME( name )<>
+
+#define MGR_DECLARE_BIND_PARAM( name, type, param_value )	\
+	template<class T = type>								\
+	struct MGR_BIND_PARAM_NAME( name ){ static T value; };		\
+	template<class T>										\
+	T MGR_BIND_PARAM_NAME( name )<T>::value = param_value;
+
+	template<class T, class Par1>
+	class params_binder
+		:public T
+	{
+		typedef T base_type;
+	public:
+		params_binder()
+			:base_type( Par1::value )
+		{
+
+		}
+	};
+}
+
+#endif //MGR_PARAMS_BINDER_HEADER

@@ -86,7 +86,7 @@ namespace memory_mgr
 		//Polymorph copy constructor
 		template < typename U >
 		inline offset_pointer( const offset_pointer< U, mgr_type >& ptr )
-			:m_offset( get_offset( ptr ) )
+			:m_offset( get_offset_internal( ptr ) )
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 		}
@@ -96,58 +96,58 @@ namespace memory_mgr
 		inline offset_pointer& operator=( const offset_pointer< U, mgr_type >& ptr )			
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
-			m_offset = get_offset( ptr );			
+			m_offset = get_offset_internal( ptr );			
 			return *this;
 		}
 
 		inline pointer operator->()
 		{
-			return get_pointer();
+			return get_pointer_internal();
 		}
 
 		inline const_pointer operator->() const
 		{
-			return get_pointer();
+			return get_pointer_internal();
 		}
 
 		inline reference operator*()
 		{
-			return *get_pointer();
+			return *get_pointer_internal();
 		}
 
 		inline const_reference operator*() const
 		{
-			return *get_pointer();
+			return *get_pointer_internal();
 		}
 
 		inline pointer operator&()
 		{
-			return get_pointer();
+			return get_pointer_internal();
 		}
 
 		inline const_pointer operator&() const
 		{
-			return get_pointer();
+			return get_pointer_internal();
 		}
 
 		inline reference operator[](difference_type n)
 		{
-			return *(get_pointer() + n);
+			return *(get_pointer_internal() + n);
 		}
 
 		inline const_reference operator[](difference_type n) const
 		{
-			return *(get_pointer() + n);
+			return *(get_pointer_internal() + n);
 		}
 
 // 		operator T* ()
 // 		{
-// 			return get_pointer();
+// 			return get_pointer_internal();
 // 		}
 // 
 // 		operator const T*() const
 // 		{
-// 			return get_pointer();
+// 			return get_pointer_internal();
 // 		}
 
 		bool is_null() const { return m_offset == offset_traits<offset_type>::invalid_offset; }
@@ -180,29 +180,29 @@ namespace memory_mgr
 
 		inline self_ref_type operator+=(difference_type n)
 		{
-			do_set_pointer( get_pointer() + n );
+			do_set_pointer( get_pointer_internal() + n );
 			return *this;
 		}
 
 		inline self_ref_type operator-=(difference_type n)
 		{
-			do_set_pointer( get_pointer() - n );
+			do_set_pointer( get_pointer_internal() - n );
 			return *this;
 		}
 
 		inline self_type operator+(difference_type n) const
 		{
-			return self_type( get_pointer() + n );
+			return self_type( get_pointer_internal() + n );
 		}
 
 		inline self_type operator-(difference_type n) const
 		{
-			return self_type( get_pointer() - n );
+			return self_type( get_pointer_internal() - n );
 		}
 
 		inline difference_type operator-( const self_type& ptr ) const
 		{
-			return get_pointer() - ptr.get_pointer();
+			return get_pointer_internal() - ptr.get_pointer_internal();
 		}
 		
 		inline bool operator==( const self_type& rhs ) const
@@ -229,12 +229,12 @@ namespace memory_mgr
 			return const_cast<pointer>( ptr );
 		}
 
-		inline pointer get_pointer()
+		inline pointer get_pointer_internal()
 		{
 			return unconst_pointer( do_get_pointer() );
 		}
 
-		inline const_pointer get_pointer() const
+		inline const_pointer get_pointer_internal() const
 		{
 			return do_get_pointer();
 		}
@@ -253,38 +253,38 @@ namespace memory_mgr
 
 	//friends:
 		//Call this method to get offset
-		friend inline const offset_type get_offset( const_self_ref_type ptr )
+		friend inline const offset_type get_offset_internal( const_self_ref_type ptr )
 		{
 			return ptr.m_offset;
 		}
 
-		friend inline pointer get_pointer( self_ref_type ptr )
+		friend inline pointer get_pointer_internal( self_ref_type ptr )
 		{
-			return ptr.get_pointer();
+			return ptr.get_pointer_internal();
 		}
 
-		friend inline const_pointer get_pointer( const_self_ref_type ptr )
+		friend inline const_pointer get_pointer_internal( const_self_ref_type ptr )
 		{
-			return ptr.get_pointer();
+			return ptr.get_pointer_internal();
 		}		
 	};
 
 	template< class T, class Mgr >
 	static inline offset_pointer<T, Mgr> operator+( typename offset_pointer<T, Mgr>::difference_type n, const offset_pointer<T, Mgr>& ptr )
 	{
-		return offset_pointer<T, Mgr>( get_pointer(ptr) + n );
+		return offset_pointer<T, Mgr>( get_pointer_internal(ptr) + n );
 	}
 	
 	template<class T, class Mgr>
 	static inline void delete_( offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class T, class Mgr>
 	static inline void delete_array( offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_array( get_pointer(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 }
 

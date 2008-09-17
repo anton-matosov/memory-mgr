@@ -82,9 +82,34 @@ namespace memory_mgr
 		}
 
 		template<class MemMgr>
+		static inline void* to_pointer( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
+		{
+			return mgr.offset_to_pointer( offset );
+		}
+
+		template<class MemMgr>
+		static inline void* to_pointer( const void* ptr, MemMgr& /*mgr*/ )
+		{
+			return ptr;
+		}
+
+		template<class MemMgr>
 		static inline typename manager_traits<MemMgr>::offset_type pointer_to_offset( const void* ptr, MemMgr& mgr )
 		{
 			return mgr.pointer_to_offset( ptr );
+		}
+
+		template<class MemMgr>
+		static inline typename manager_traits<MemMgr>::offset_type to_offset( const void* ptr, MemMgr& mgr )
+		{
+			return mgr.pointer_to_offset( ptr );
+		}
+
+		template<class MemMgr>
+		static inline typename manager_traits<MemMgr>::offset_type to_offset( typename manager_traits<MemMgr>::offset_type ptr,
+			MemMgr& /*mgr*/ )
+		{
+			return ptr;
 		}
 
 		static inline size_t* size_cast( void* p )
