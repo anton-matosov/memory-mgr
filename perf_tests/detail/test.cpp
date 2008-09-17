@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "test.h"
 
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )

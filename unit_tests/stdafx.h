@@ -28,6 +28,27 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_MAP_ALLOC_NEW
+
+
+#include <boost/test/test_tools.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/test/parameterized_test.hpp>
+#include <boost/mpl/list.hpp>
+
+static const size_t sz_null = 0;
+static const size_t sz_one = 1;
+static const size_t sz_two = 2;
+static const size_t sz_three = 3;
+static const size_t sz_four = 4;
+static const size_t sz_five = 5;
+static const size_t sz_six = 6;
+static const size_t sz_seven = 7;
+static const size_t sz_eight = 8;
+static const size_t sz_nine = 9;
+static const size_t sz_ten = 10;
+
 #include <iostream>
 #include <algorithm>
 #include <string>

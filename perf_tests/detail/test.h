@@ -39,7 +39,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/singleton.h>
 #include "../perf_timer.h"
-#include "../managers.h"
 
 typedef memory_mgr::singleton_manager
 < 

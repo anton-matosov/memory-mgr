@@ -27,7 +27,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_pointer.h>
 #include <memory-mgr/size_tracking.h>
-#include <memory-mgr/offset_pointer.h>
 
 #include "new.h"
 
