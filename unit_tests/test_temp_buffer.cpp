@@ -34,39 +34,39 @@ template class temp_buffer<char>;
 const char test_array[] = "Test array";
 const size_t test_array_len = sizeof( test_array )/sizeof( char );
 
+BOOST_AUTO_TEST_SUITE( test_temp_buffer )
 
-bool test_temp_buffer()
-{
-	TEST_START( L"temp_buffer" );
+	BOOST_AUTO_TEST_CASE( test_temp_buffer )
+	{
+		const char* null = 0;
+		char_buffer chbuf;
+		BOOST_CHECK( chbuf.get() == null );
 
-	TEST_PRINT( L"Testing default constructor" );
-	char_buffer chbuf;
-	TEST_CHECK( chbuf.get() == 0 );
+		chbuf.allocate( 100 );
+		BOOST_CHECK_NE( chbuf.get(), null );
+		BOOST_CHECK_EQUAL( chbuf.count(), 100U );
 
-	TEST_METHOD_PRINT( L"allocate()" );
-	chbuf.allocate( 100 );
-	TEST_CHECK( chbuf.count() == 100 );
+		char_buffer chbuf2( 200 );
+		BOOST_CHECK_NE( chbuf2.get(), null );
+		BOOST_CHECK_EQUAL( chbuf2.count(), 200U );
 
-	TEST_PRINT( L"Testing allocating constructor" );
-	char_buffer chbuf2( 200 );
-	TEST_CHECK( chbuf2.count() == 200 );
+		char_buffer chbuf3( chbuf );
+		BOOST_CHECK_NE( chbuf3.get(), null );
+		BOOST_CHECK_EQUAL( chbuf.count(), 100U );
 
-	TEST_PRINT( L"Testing copy constructor" );
-	char_buffer chbuf3( chbuf );
-	TEST_CHECK( chbuf.count() == 100 );
+		chbuf = chbuf2;
+		BOOST_CHECK_NE( chbuf.get(), null );
+		BOOST_CHECK_EQUAL( chbuf.count(), 200U );
+		BOOST_CHECK( chbuf.get() != chbuf2.get() );
 
-	TEST_OPERATOR_PRINT( L"=" );
-	chbuf = chbuf2;
-	TEST_CHECK( chbuf.count() == 200 && chbuf != chbuf2 );
+		chbuf.reallocate( 100 );
+		BOOST_CHECK_NE( chbuf.get(), null );
+		BOOST_CHECK_EQUAL( chbuf.count(), 100U );
+		BOOST_CHECK_EQUAL( chbuf2.count(), 200U );
 
-	TEST_METHOD_PRINT( L"reallocate()" );
-	chbuf.reallocate( 100 );
-	TEST_CHECK( chbuf.count() == 100 && chbuf2.count() == 200 );
-	
-	TEST_METHOD_PRINT( L"put()" );
-	chbuf.put( test_array, test_array_len );
-	TEST_CHECK( strcmp( chbuf, test_array ) == 0 );
+		chbuf.put( test_array, test_array_len );
+		BOOST_CHECK_EQUAL( strcmp( chbuf, test_array ), 0 );
+	}
 
-	return true;
-}
+BOOST_AUTO_TEST_SUITE_END();
 

@@ -39,127 +39,112 @@ class base_class2
 class derived_class: public base_class
 {};
 
-bool test_type_manip()
-{
-	TEST_START( L"types manipulation library" );
+BOOST_AUTO_TEST_SUITE( test_type_manip )
 
-	memory_mgr::type_manip::int2type<1>::value;
-	
-	//////////////////////////////////////////////////////////////////////////
-	// select<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing select<false, int, float>::result float_type" );
-	typedef memory_mgr::type_manip::select<false, int, float>::result float_type;
-	
-	TEST_PRINT( L"Testing select<true, int, float>::result int_type" );
-	typedef memory_mgr::type_manip::select<true, int, float>::result int_type;
+	BOOST_AUTO_TEST_CASE( test_type_manip )
+	{	
+		memory_mgr::type_manip::int2type<1>::value;
 
-	//////////////////////////////////////////////////////////////////////////
-	// is_same_type<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing is_same_type<int, int_type>" );
-	bool isame = memory_mgr::type_manip::is_same_type< int, int_type >::value;
-	TEST_CHECK( isame );
+		//////////////////////////////////////////////////////////////////////////
+		// select<>
+		//////////////////////////////////////////////////////////////////////////
+		
+		typedef memory_mgr::type_manip::select<false, int, float>::result float_type;		
+		typedef memory_mgr::type_manip::select<true, int, float>::result int_type;
 
-	TEST_PRINT( L"Testing is_same_type<float, float_type>" );
-	bool fsame = memory_mgr::type_manip::is_same_type< float, float_type >::value;
-	TEST_CHECK( fsame );
+		//////////////////////////////////////////////////////////////////////////
+		// is_same_type<>
+		//////////////////////////////////////////////////////////////////////////
+		
+		bool isame = memory_mgr::type_manip::is_same_type< int, int_type >::value;
+		BOOST_CHECK( isame );
 
-	TEST_PRINT( L"Testing is_same_type<int_type, float_type>" );
-	bool not_same = !memory_mgr::type_manip::is_same_type< int_type, float_type >::value;
-	TEST_CHECK( not_same );
+		
+		bool fsame = memory_mgr::type_manip::is_same_type< float, float_type >::value;
+		BOOST_CHECK( fsame );
 
-	//////////////////////////////////////////////////////////////////////////
-	// is_class<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing is_class< test_class >" );
-	bool test_class_isclass = memory_mgr::type_manip::is_class< test_class >::value;
-	TEST_CHECK( test_class_isclass );
+		
+		bool not_same = !memory_mgr::type_manip::is_same_type< int_type, float_type >::value;
+		BOOST_CHECK( not_same );
 
-	TEST_PRINT( L"Testing is_class< Struct >" );
-	bool struct_isclass = memory_mgr::type_manip::is_class< Struct >::value;
-	TEST_CHECK( struct_isclass );
+		//////////////////////////////////////////////////////////////////////////
+		// is_class<>
+		//////////////////////////////////////////////////////////////////////////
+		
+		bool test_class_isclass = memory_mgr::type_manip::is_class< test_class >::value;
+		BOOST_CHECK( test_class_isclass );
 
-	TEST_PRINT( L"Testing is_class< int >" );
-	bool int_isclass = memory_mgr::type_manip::is_class< int >::value;
-	TEST_CHECK( !int_isclass );
+		
+		bool struct_isclass = memory_mgr::type_manip::is_class< Struct >::value;
+		BOOST_CHECK( struct_isclass );
 
-	TEST_PRINT( L"Testing is_class< Union >" );
-	bool union_isclass = memory_mgr::type_manip::is_class< Union >::value;
-	TEST_CHECK( union_isclass );
-	
-	//////////////////////////////////////////////////////////////////////////
-	// is_convertible<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing is_convertible<int, long>" );
-	bool int_to_long = memory_mgr::type_manip::is_convertible<int, long>::exists;
-	TEST_CHECK( int_to_long );
+		
+		bool int_isclass = memory_mgr::type_manip::is_class< int >::value;
+		BOOST_CHECK( !int_isclass );
 
-	TEST_PRINT( L"Testing is_convertible<long, int>" );
-	bool long_to_int = memory_mgr::type_manip::is_convertible<long, int>::exists;
-	TEST_CHECK( long_to_int );
+		
+		bool union_isclass = memory_mgr::type_manip::is_class< Union >::value;
+		BOOST_CHECK( union_isclass );
 
-	TEST_PRINT( L"Testing is_convertible<base_class, derived_class>" );
-	bool base_to_der = memory_mgr::type_manip::is_convertible<base_class, derived_class>::exists;
-	TEST_CHECK( !base_to_der );
+		//////////////////////////////////////////////////////////////////////////
+		// is_convertible<>
+		//////////////////////////////////////////////////////////////////////////
+		
+		bool int_to_long = memory_mgr::type_manip::is_convertible<int, long>::exists;
+		BOOST_CHECK( int_to_long );
+		
+		bool long_to_int = memory_mgr::type_manip::is_convertible<long, int>::exists;
+		BOOST_CHECK( long_to_int );
+		
+		bool base_to_der = memory_mgr::type_manip::is_convertible<base_class, derived_class>::exists;
+		BOOST_CHECK( !base_to_der );
+		
+		bool der_to_base = memory_mgr::type_manip::is_convertible<derived_class, base_class>::exists;
+		BOOST_CHECK( der_to_base );
 
-	TEST_PRINT( L"Testing is_convertible<derived_class, base_class>" );
-	bool der_to_base = memory_mgr::type_manip::is_convertible<derived_class, base_class>::exists;
-	TEST_CHECK( der_to_base );
+		//////////////////////////////////////////////////////////////////////////
+		// super_subclass<>
+		//////////////////////////////////////////////////////////////////////////
+		
+		bool base_sub_der = memory_mgr::type_manip::super_subclass<base_class, derived_class>::value;
+		BOOST_CHECK( base_sub_der );
+		
+		bool der_sub_base = memory_mgr::type_manip::super_subclass<derived_class, base_class>::value;
+		BOOST_CHECK( !der_sub_base );
+		
+		bool der_sub_base2 = memory_mgr::type_manip::super_subclass<derived_class, base_class2>::value;
+		BOOST_CHECK( !der_sub_base2 );
+		
+		bool base_sub_base = memory_mgr::type_manip::super_subclass<base_class, base_class>::value;
+		BOOST_CHECK( base_sub_base );
 
-	//////////////////////////////////////////////////////////////////////////
-	// super_subclass<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing super_subclass<base_class, derived_class>" );
-	bool base_sub_der = memory_mgr::type_manip::super_subclass<base_class, derived_class>::value;
-	TEST_CHECK( base_sub_der );
+		bool base2_sub_base2 = memory_mgr::type_manip::super_subclass<base_class2, base_class2>::value;
+		BOOST_CHECK( base2_sub_base2 );
 
-	TEST_PRINT( L"Testing super_subclass<derived_class, base_class>" );
-	bool der_sub_base = memory_mgr::type_manip::super_subclass<derived_class, base_class>::value;
-	TEST_CHECK( !der_sub_base );
+		bool base2_sub_void = memory_mgr::type_manip::super_subclass<base_class2, void>::value;
+		BOOST_CHECK( !base2_sub_void );
 
-	TEST_PRINT( L"Testing super_subclass<derived_class, base_class2>" );
-	bool der_sub_base2 = memory_mgr::type_manip::super_subclass<derived_class, base_class2>::value;
-	TEST_CHECK( !der_sub_base2 );
-	
-	TEST_PRINT( L"Testing super_subclass<base_class, base_class>" );
-	bool base_sub_base = memory_mgr::type_manip::super_subclass<base_class, base_class>::value;
-	TEST_CHECK( base_sub_base );
+		//////////////////////////////////////////////////////////////////////////
+		// super_subclass_strict<>
+		//////////////////////////////////////////////////////////////////////////
+		bool base_sub_der_strict = memory_mgr::type_manip::super_subclass_strict<base_class, derived_class>::value;
+		BOOST_CHECK( base_sub_der_strict );
 
-	TEST_PRINT( L"Testing super_subclass<base_class2, base_class2>" );
-	bool base2_sub_base2 = memory_mgr::type_manip::super_subclass<base_class2, base_class2>::value;
-	TEST_CHECK( base2_sub_base2 );
+		bool der_sub_base_strict = memory_mgr::type_manip::super_subclass_strict<derived_class, base_class>::value;
+		BOOST_CHECK( !der_sub_base_strict );
 
-	TEST_PRINT( L"Testing super_subclass<base_class2, void*>" );
-	bool base2_sub_void = memory_mgr::type_manip::super_subclass<base_class2, void>::value;
-	TEST_CHECK( !base2_sub_void );
-	
-	//////////////////////////////////////////////////////////////////////////
-	// super_subclass_strict<>
-	//////////////////////////////////////////////////////////////////////////
-	TEST_PRINT( L"Testing super_subclass_strict<base_class, derived_class>" );
-	bool base_sub_der_strict = memory_mgr::type_manip::super_subclass_strict<base_class, derived_class>::value;
-	TEST_CHECK( base_sub_der_strict );
+		bool der_sub_base2_strict = memory_mgr::type_manip::super_subclass_strict<derived_class, base_class2>::value;
+		BOOST_CHECK( !der_sub_base2_strict );
 
-	TEST_PRINT( L"Testing super_subclass_strict<derived_class, base_class>" );
-	bool der_sub_base_strict = memory_mgr::type_manip::super_subclass_strict<derived_class, base_class>::value;
-	TEST_CHECK( !der_sub_base_strict );
+		bool base_sub_base_strict = memory_mgr::type_manip::super_subclass_strict<base_class, base_class>::value;
+		BOOST_CHECK( !base_sub_base_strict );
+		
+		bool base2_sub_base2_strict = memory_mgr::type_manip::super_subclass_strict<base_class2, base_class2>::value;
+		BOOST_CHECK( !base2_sub_base2_strict );
+		
+		bool base2_sub_void_strict = memory_mgr::type_manip::super_subclass_strict<base_class2, void>::value;
+		BOOST_CHECK( !base2_sub_void_strict );
+	}
 
-	TEST_PRINT( L"Testing super_subclass_strict<derived_class, base_class2>" );
-	bool der_sub_base2_strict = memory_mgr::type_manip::super_subclass_strict<derived_class, base_class2>::value;
-	TEST_CHECK( !der_sub_base2_strict );
+BOOST_AUTO_TEST_SUITE_END();
 
-	TEST_PRINT( L"Testing super_subclass_strict<base_class, base_class>" );
-	bool base_sub_base_strict = memory_mgr::type_manip::super_subclass_strict<base_class, base_class>::value;
-	TEST_CHECK( !base_sub_base_strict );
-
-	TEST_PRINT( L"Testing super_subclass_strict<base_class2, base_class2>" );
-	bool base2_sub_base2_strict = memory_mgr::type_manip::super_subclass_strict<base_class2, base_class2>::value;
-	TEST_CHECK( !base2_sub_base2_strict );
-
-	TEST_PRINT( L"Testing super_subclass_strict<base_class2, void*>" );
-	bool base2_sub_void_strict = memory_mgr::type_manip::super_subclass_strict<base_class2, void>::value;
-	TEST_CHECK( !base2_sub_void_strict );
-
-	return true;						 
-}

@@ -69,35 +69,66 @@ bool unit_test()
 	return false;
 }
 
-bool std_containers_test()
-{
-	SUBTEST_START( L"std containers + custom allocator" );
-	{
-		const int items_count = 1000;
-		vector_type vec;
-		vec.resize( items_count );
-		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-		{
-			*it = rand() % items_count;
-		}
-		std::random_shuffle( vec.begin(), vec.end() );
 
- 		map_type map;
- 		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
- 		{
- 			map[ rand() % items_count ] = *it;
- 		}
+BOOST_AUTO_TEST_SUITE( test_allocator )
+
+	BOOST_AUTO_TEST_CASE( unit_test )
+	{	
 	}
-	SUBTEST_END( allocator_manager::instance().is_free() );
-}
 
-bool test_allocator()
-{
-	TEST_START( L"allocator class" );
+	BOOST_AUTO_TEST_CASE( std_containers_test )
+	{
+		{
+			const int items_count = 1000;
+			vector_type vec;
+			vec.resize( items_count );
+			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+			{
+				*it = rand() % items_count;
+			}
+			std::random_shuffle( vec.begin(), vec.end() );
 
-	TEST_END( /*unit_test()
-		&&*/ std_containers_test()
-		);
+			map_type map;
+			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+			{
+				map[ rand() % items_count ] = *it;
+			}
+		}
+		BOOST_CHECK( allocator_manager::instance().is_free() );
+	}
 
-}
+BOOST_AUTO_TEST_SUITE_END()
+
+// 
+// bool std_containers_test()
+// {
+// 	SUBTEST_START( L"std containers + custom allocator" );
+// 	{
+// 		const int items_count = 1000;
+// 		vector_type vec;
+// 		vec.resize( items_count );
+// 		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+// 		{
+// 			*it = rand() % items_count;
+// 		}
+// 		std::random_shuffle( vec.begin(), vec.end() );
+// 
+//  		map_type map;
+//  		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+//  		{
+//  			map[ rand() % items_count ] = *it;
+//  		}
+// 	}
+// 	SUBTEST_END( allocator_manager::instance().is_free() );
+// }
+// 
+// bool test_allocator()
+// {
+// 	TEST_START( L"allocator class" );
+// 
+// 	TEST_END( /*unit_test()
+// 		&&*/ std_containers_test()
+// 		);
+// 
+// }
 

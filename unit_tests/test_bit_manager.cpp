@@ -30,40 +30,32 @@ typedef unsigned char block_type;
 static const size_t bits_count = 32;
 typedef memory_mgr::detail::bit_manager<block_type, bits_count> bit_manager;
 typedef bit_manager::size_type ptr_type;
-bool test_bit_manager()
-{
-	TEST_START( L"bit_manager" );
-	bit_manager bitmgr;
 
-	TEST_METHOD_PRINT( L"allocate(0)" );
-	ptr_type p0 = bitmgr.allocate(0);
-	std::wcout << bitmgr << L'\n';
-	TEST_CHECK(  p0 == bit_manager::npos );
+BOOST_AUTO_TEST_SUITE( test_bit_manager )
 
-	TEST_METHOD_PRINT( L"allocate(1)" );
-	ptr_type p1 = bitmgr.allocate(1);
-	std::wcout << bitmgr << L'\n';
-	TEST_CHECK(  p1 == 0 );
+	BOOST_AUTO_TEST_CASE( test_bit_manager )
+	{	
+		bit_manager bitmgr;
 
-	TEST_METHOD_PRINT( L"allocate(18)" );
-	ptr_type p2 = bitmgr.allocate(18);
-	std::wcout << bitmgr << L'\n';
-	TEST_CHECK(  p2 == 1 );
+		ptr_type p0 = bitmgr.allocate(0);
+		BOOST_CHECK_EQUAL(  p0, bit_manager::npos );
 
-	TEST_METHOD_PRINT( L"deallocate(p2, 18)" );
-	bitmgr.deallocate(p2, 18);
-	std::wcout << bitmgr << L'\n';
-	p2 = bitmgr.allocate(1);
-	TEST_CHECK(  p2 == 1 );
-	bitmgr.deallocate(p2, 1);
-	
-	TEST_METHOD_PRINT( L"deallocate(p1, 1)" );
-	bitmgr.deallocate(p1, 1);
-	std::wcout << bitmgr << L'\n';
-	p1 = bitmgr.allocate(1);
-	TEST_CHECK(  p1 == 0 );
-	bitmgr.deallocate(p1, 1);
+		ptr_type p1 = bitmgr.allocate(1);
+		BOOST_CHECK_EQUAL(  p1, 0U );
 
+		ptr_type p2 = bitmgr.allocate(18);
+		BOOST_CHECK_EQUAL(  p2, 1U );
+		bitmgr.deallocate(p2, 18);
 
-	return true;
-}
+		p2 = bitmgr.allocate(1);
+		BOOST_CHECK_EQUAL(  p2, 1U );
+		bitmgr.deallocate(p2, 1);
+
+		bitmgr.deallocate(p1, 1);
+		p1 = bitmgr.allocate(1);
+		BOOST_CHECK_EQUAL(  p1, 0U );
+		bitmgr.deallocate(p1, 1);
+	}
+
+BOOST_AUTO_TEST_SUITE_END();
+

@@ -207,6 +207,11 @@ namespace memory_mgr
 
 				return mgr.deallocate( ptr_n_count.first );
 			}
+
+			static inline void delete_arr_impl( void* p, mgr_type& mgr )
+			{
+				return mgr.deallocate( p );
+			}
 		};
 	
 
@@ -381,6 +386,90 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
 	return helper_type::new_impl( size, mgr.m_mgr, name.get_name() );
+}
+
+//////////////////////////////////////////////////////////////////////////
+/**
+@brief Overloaded operator delete, deallocates memory block in memory managed by mem_mgr
+@param p pointer to memory block
+@param size size of memory block that should be deallocated
+@exception newer throws
+@remark all parameters are passed by compiler automatically
+*/
+template<class MemMgr>
+static inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+{
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+		helper_type::delete_impl( p, mgr.m_mgr );
+	}
+}
+
+/**
+@brief Overloaded operator delete for named objects,
+deallocates memory block in memory managed by mem_mgr
+
+@param p pointer to memory block
+@param size size of memory block that should be deallocated
+@param name name of the object that should be deallocated
+@exception newer  throws
+@remark all parameters are passed by compiler automatically
+*/
+template<class MemMgr>
+static inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
+{
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+		helper_type::delete_impl( p, mgr.m_mgr );
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+/**
+@brief Overloaded operator delete[], deallocates memory block in memory managed by mem_mgr
+@param p pointer to memory block
+@param size size of memory block that should be deallocated
+@exception newer throws
+@remark all parameters are passed by compiler automatically
+*/
+template<class MemMgr>
+static inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+{
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+		helper_type::delete_arr_impl( p, mgr.m_mgr );
+	}
+}
+
+/**
+@brief Overloaded operator delete[] for named objects,
+deallocates memory block in memory managed by mem_mgr
+
+@param p pointer to memory block
+@param size size of memory block that should be deallocated
+@param name name of the object that should be deallocated
+@exception newer  throws
+@remark all parameters are passed by compiler automatically
+*/
+template<class MemMgr>
+static inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
+{
+	if( p )
+	{
+		typedef MemMgr mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+		helper_type::delete_arr_impl( p, mgr.m_mgr );
+	}
 }
 
 /**

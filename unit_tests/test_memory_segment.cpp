@@ -35,19 +35,36 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_
 template class memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type >;
 
 typedef memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type > segmmgr_type;
-typedef memmgr_type::offset_type offset_type;
 
-bool test_memory_segment()
+
+BOOST_AUTO_TEST_SUITE( test_memory_segment )
+
+typedef boost::mpl::list< segmmgr_type > managers_list;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 {
-	TEST_START( L"memory_segment, heap" );
-	segmmgr_type mgr;
+	typedef memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
+	typedef memory_mgr::manager_traits<mgr_type>::size_type		size_type;
 
-	const memmgr_type::size_type obj_size = 4;
+	const offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
+	const size_type obj_size = 4;
+
+	mgr_type mgr;
+	BOOST_CHECK( mgr.is_free() );
+
+	
 	offset_type p1 = mgr.allocate( obj_size );
 	offset_type p2 = mgr.allocate( obj_size );
 	offset_type p3 = mgr.allocate( obj_size );
 	offset_type p4 = mgr.allocate( obj_size );
 	offset_type p5 = mgr.allocate( obj_size );
+
+
+	BOOST_CHECK_NE( p1, inv_off );
+	BOOST_CHECK_NE( p2, inv_off );
+	BOOST_CHECK_NE( p3, inv_off );
+	BOOST_CHECK_NE( p4, inv_off );
+	BOOST_CHECK_NE( p5, inv_off );
 
 	mgr.deallocate( p3, obj_size );
 	mgr.deallocate( p5, obj_size );
@@ -55,7 +72,11 @@ bool test_memory_segment()
 	mgr.deallocate( p2, obj_size );
 	mgr.deallocate( p4, obj_size );
 
-	TEST_END( mgr.is_free() );
+	BOOST_CHECK( mgr.is_free() );
 }
+
+
+BOOST_AUTO_TEST_SUITE_END();
+
 
 
