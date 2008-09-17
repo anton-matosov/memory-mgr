@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_MANAGED_BASE_HEADER
 
 #include <memory-mgr/manager_category.h>
+#include <memory-mgr/new.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
@@ -58,40 +59,7 @@ namespace memory_mgr
 		}
 	}
 
-	/**
-	   @brief Helper class, used to pass object's name to new/new[] operators
-	*/
-	class object_name			
-	{	
-		/**
-		   @brief Pointer to null terminated string that stores object's name
-		*/
-		const char* m_name;
-	public:
-		/**
-		   @brief Constructor 
-		   @param name Pointer to null terminated string that stores object's name
-
-		   @warning Pointer, passed as name parameter, must 
-					be valid until the end of allocation operation.
-		*/
-		object_name( const char* name )
-			: m_name( name )
-		{}
-
-
-		/**
-		   @brief Call this method to get stored name
-		  
-		   @exception newer throws
-		  
-		   @return Pointer to null terminated string that stores object's name 
-		*/
-		const char* get_name() const
-		{
-			return m_name;
-		}
-	};
+	
 
 	/**
 	   @brief 

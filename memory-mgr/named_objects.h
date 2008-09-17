@@ -85,7 +85,7 @@ namespace memory_mgr
 		@see memory_manager::memory_segment                        
 		*/
 		inline named_objects()
-			:named_allocator( base_type::m_mgr )
+			:m_alloc( base_type::m_mgr )
 		{}
 
 		/**
@@ -99,6 +99,11 @@ namespace memory_mgr
 			:base_type( segment_base ),
 			m_alloc( base_type::m_mgr )
 		{}
+
+		bool is_exists( const char* name )
+		{
+			return m_alloc.is_exists( name );
+		}
 
 		inline offset_type allocate( size_type size, const char* name )
 		{
@@ -147,7 +152,7 @@ namespace memory_mgr
  		@param size   size of memory block in bytes
  		@exception newer  throws
  		*/
- 		inline void deallocate( const offset_type p, size_type size )
+ 		inline void deallocate( const offset_type p, size_type size = 0 )
  		{
 			m_alloc.remove_object( p );
  			this->m_mgr.deallocate( p, size );

@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/manager_category.h>
+#include <memory-mgr/detail/static_assert.h>
 
 namespace memory_mgr
 {
@@ -50,7 +51,16 @@ namespace memory_mgr
 			   @brief Bomb-method for global new, generates compile time error if called
 			*/
 			typedef MemMgr mgr_type;
-			static inline void* new_impl( size_t size, mgr_type& mgr )
+			static inline void* new_impl( size_t /*size*/, mgr_type& /*mgr*/ )
+			{
+				STATIC_ASSERT( false, Invalid_manager_type )
+			}
+
+			/**
+			@brief Bomb-method for global new for named objects, generates compile time error if called
+			*/
+			typedef MemMgr mgr_type;
+			static inline void* new_impl( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
@@ -58,7 +68,7 @@ namespace memory_mgr
 			/**
 			   @brief Bomb-method for global delete_, generates compile time error if called
 			*/
-			static inline void delete_impl( void* p, mgr_type& mgr )
+			static inline void delete_impl( void* /*p*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
@@ -66,7 +76,7 @@ namespace memory_mgr
 			/**
 			   @brief Bomb-method for global delete_arr, generates compile time error if called
 			*/
-			static inline void delete_arr_impl( void* p, mgr_type& mgr )
+			static inline void delete_arr_impl( void* /*p*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}			
@@ -81,6 +91,7 @@ namespace memory_mgr
 		struct new_helpers<MemMgr, yes_type,
 			yes_type>
 		{
+			typedef MemMgr mgr_type;
 			/**
 			   @brief Implementation of global operators new/new[]
 			   @details allocates size bytes in memory managed by mgr
@@ -89,10 +100,24 @@ namespace memory_mgr
 			   @exception bad_alloc if manager went out of memory
 			   @return pointer to allocated memory block  
 			*/
-			typedef MemMgr mgr_type;
 			static inline void* new_impl( size_t size, mgr_type& mgr )
 			{
 				return mgr.allocate( size );
+			}
+
+			/**
+			@brief Implementation of global operators new/new[]
+			@details allocates size bytes in memory managed by mgr
+			@param size size of memory block in bytes
+			@param mgr memory manager that will be used for memory allocation
+			@exception bad_alloc if manager went out of memory
+			@return pointer to allocated memory block  
+			*/
+			static inline void* new_impl( size_t size, mgr_type& mgr, const char* name )
+			{
+				STATIC_ASSERT( (is_category_supported< mgr_type, named_objects_manager_tag>::value),		
+					Memory_manager_does_not_implement_named_objects_concept );
+				return mgr.allocate( size, name );
 			}
 
 			/**
@@ -246,8 +271,10 @@ namespace memory_mgr
 			mem_mgr_helper( mgr_type& mgr )
 				:m_mgr( mgr )
 			{
-				STATIC_ASSERT( pointer_conv_check::value && size_tracking_check::value, 
-					Invalid_manager_type );
+				STATIC_ASSERT( pointer_conv_check::value, 
+					Memory_manager_does_not_implement_pointer_convertion_concept );
+				STATIC_ASSERT( size_tracking_check::value, 
+					Memory_manager_does_not_implement_size_tracking_concept );
 			}
 		};
 
@@ -266,6 +293,41 @@ namespace memory_mgr
 	{
 		typedef MemMgr mgr_type;
 		return detail::mem_mgr_helper<mgr_type>( mgr );
+	};
+
+	/**
+	@brief Helper class, used to pass object's name to new/new[] operators
+	*/
+	class object_name			
+	{	
+		/**
+		@brief Pointer to null terminated string that stores object's name
+		*/
+		const char* m_name;
+	public:
+		/**
+		@brief Constructor 
+		@param name Pointer to null terminated string that stores object's name
+
+		@warning Pointer, passed as name parameter, must 
+		be valid until the end of allocation operation.
+		*/
+		object_name( const char* name )
+			: m_name( name )
+		{}
+
+
+		/**
+		@brief Call this method to get stored name
+
+		@exception newer throws
+
+		@return Pointer to null terminated string that stores object's name 
+		*/
+		const char* get_name() const
+		{
+			return m_name;
+		}
 	};
 }
 
@@ -286,6 +348,15 @@ inline void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper
 	return helper_type::new_impl( size, mgr.m_mgr );
 }
 
+template<class MemMgr>
+inline void* operator new( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& name )
+{
+	typedef MemMgr mgr_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+	return helper_type::new_impl( size, mgr.m_mgr, name.get_name() );
+}
+
 /**
    @brief Overloaded operator new[], allocates memory block in memory managed by mem_mgr
    @param size size of memory block required to store array,
@@ -301,6 +372,15 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
 	return helper_type::new_impl( size, mgr.m_mgr );
+}
+
+template<class MemMgr>
+inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& name )
+{
+	typedef MemMgr mgr_type;
+	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
+	return helper_type::new_impl( size, mgr.m_mgr, name.get_name() );
 }
 
 /**
