@@ -22,3 +22,5 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "signals.ipp"
+#include <boost/test/included/unit_test_framework.hpp>
+
