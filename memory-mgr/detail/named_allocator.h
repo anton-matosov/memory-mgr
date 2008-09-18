@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/new.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
@@ -68,10 +69,17 @@ namespace memory_mgr
 			typedef	typename traits_type::map_item_type		map_item_type;
 
 			named_allocator( mgr_type& mgr )
-				:m_alloc( &mgr ),
-				m_objects( compare_type(), m_alloc )
+				:m_alloc( &mgr )
 			{
-
+				if( mgr.is_free() )
+				{
+					m_objects = new( mem_mgr(mgr) ) map_type( compare_type(), m_alloc );
+				}
+				else
+				{
+					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
+						is_category_supported< MemMgr, size_tracking_tag>::value ? 4 : 0, mgr ) );
+				}
 			}
 
 			bool is_exists( const char* name )
@@ -81,22 +89,22 @@ namespace memory_mgr
 
 			bool is_exists( const string_type& name )
 			{
-				return m_objects.find( name ) != m_objects.end();
+				return m_objects->find( name ) != m_objects->end();
 			}
 
 			void add_object( const char* name, const offset_type offset )
 			{
 				string_type object_name( name, m_alloc );
 				assert( !is_exists( object_name ) );
-				m_objects[ object_name ] = offset;
+				(*m_objects)[ object_name ] = offset;
 			}
 
 			const offset_type get_object( const char* name )
 			{
 				string_type object_name( name, m_alloc );
 				offset_type offset = offset_traits<offset_type>::invalid_offset;
-				map_type::const_iterator fres = m_objects.find( object_name );
-				if( fres != m_objects.end() )
+				map_type::const_iterator fres = m_objects->find( object_name );
+				if( fres != m_objects->end() )
 				{
 					offset = fres->second;
 				}
@@ -106,22 +114,22 @@ namespace memory_mgr
 			const void remove_object( const char* name )
 			{
 				string_type object_name( name, m_alloc );
-				m_objects.erase( object_name );
+				m_objects->erase( object_name );
 			}
 
 			const void remove_object( const offset_type ptr )
 			{
 				const offset_type offset = ptr;
-				map_type::iterator fres = std::find_if( m_objects.begin(), m_objects.end(), 
+				map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
 					boost::bind( &equal_second_val<offset_type>, _1, offset ) );
-				if( fres != m_objects.end() )
+				if( fres != m_objects->end() )
 				{
-					m_objects.erase( fres );
+					m_objects->erase( fres );
 				}
 			}
 		private:
 			allocator_type m_alloc;
-			map_type m_objects;
+			map_type* m_objects;
 
 			static bool less_second( const map_item_type& x, const map_item_type& y )
 			{

@@ -125,7 +125,7 @@ namespace memory_mgr
 			*/
 			enum
 			{			
-				bits_per_block	= std::numeric_limits<block_type>::digits,
+				bits_per_block	= sizeof(block_type) * 8,
 				num_bits		= BitsCount,
 				num_blocks		= detail::calc_num_blocks<num_bits, bits_per_block>::result,
 				max_bits		= num_blocks * bits_per_block,

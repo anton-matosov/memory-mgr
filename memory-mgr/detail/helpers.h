@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif 
 
 #include <assert.h>
-#include <boost/static_assert.hpp>
 
 namespace memory_mgr
 {

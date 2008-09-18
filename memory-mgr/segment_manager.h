@@ -87,7 +87,9 @@ namespace memory_mgr
 	public:
 		segment_manager()
 			:m_curr_segment(0)
-		{}
+		{
+			get_segment( m_curr_segment );
+		}
 
 
 		/**

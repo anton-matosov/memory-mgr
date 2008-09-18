@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <vector>
 #include "test_case.h"
+#include "common_manager_tests.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/detail/ptr_helpers.h>
@@ -40,11 +41,13 @@ namespace
 	//template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size >;
 
 	typedef memmgr_type::offset_type offset_type;
+}
 
 
-	bool test_alloc_dealloc()
-	{
-		SUBTEST_START( L"allocation/deallocation" );
+BOOST_AUTO_TEST_SUITE( test_memory_manager )
+
+	BOOST_AUTO_TEST_CASE( test_alloc_dealloc )
+	{	
 		std::vector<chunk_type> memory( memory_size );
 		memmgr_type mgr( &*memory.begin() );
 		const memmgr_type::size_type obj_size = 4;
@@ -60,12 +63,22 @@ namespace
 		mgr.deallocate( p2, obj_size );
 		mgr.deallocate( p4, obj_size );
 
-		SUBTEST_END( mgr.is_free() );
+		BOOST_CHECK( mgr.is_free() );
 	}
 
-	bool test_out_of_memory_nothrow()
+	BOOST_AUTO_TEST_CASE( test_out_of_memory )
+	{	
+		std::vector<chunk_type> memory( memory_size );
+		memmgr_type mgr( &*memory.begin() );
+
+		size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
+		
+		mgr.allocate( allocable_memory );
+		BOOST_CHECK_THROW( mgr.allocate( allocable_memory ), std::bad_alloc );
+	}
+
+	BOOST_AUTO_TEST_CASE( test_out_of_memory_nothrow )
 	{
-		SUBTEST_START( L"out of memory case (nothrow version)" );
 		std::vector<chunk_type> memory( memory_size );
 		memmgr_type mgr( &*memory.begin() );
 
@@ -73,71 +86,38 @@ namespace
 		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
 		try
 		{
-			TEST_PRINT( "Allocating memory block bigger than avaliable memory" );
+			
 			offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
-			TEST_CHECK( p_inval1 == null_ptr );
+			BOOST_CHECK( p_inval1 == null_ptr );
 
-			TEST_PRINT( "Allocating all memory" );
+			
 			offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
-			TEST_CHECK( p_valid != null_ptr );
+			BOOST_CHECK( p_valid != null_ptr );
 
-			TEST_PRINT( "Allocating one more byte" );
+			
 			offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
-			TEST_CHECK( p_inval2 == null_ptr );
+			BOOST_CHECK( p_inval2 == null_ptr );
 
-			SUBTEST_END( p_valid != null_ptr
+			BOOST_CHECK( p_valid != null_ptr
 				&& p_inval1 == null_ptr
 				&& p_inval2 == null_ptr );
 		}
 		catch( std::bad_alloc& )
 		{
-			SUBTEST_FAILED;	
+			BOOST_ERROR( "exception thrown by no_throw() method" );	
 		}
-
-	}
-
-	bool test_out_of_memory()
-	{
-		SUBTEST_START( L"out of memory case" );
-		std::vector<chunk_type> memory( memory_size );
-		memmgr_type mgr( &*memory.begin() );
-
-		size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
-		try
-		{
-			mgr.allocate( allocable_memory );
-			mgr.allocate( allocable_memory );
-		}
-		catch( std::bad_alloc& )
-		{
-			SUBTEST_SUCCEDED;
-		}
-		SUBTEST_FAILED;	
-	}
-
-	bool test_null_ptr()
-	{
-		SUBTEST_START( L"deallocation of null ptr" );
-		std::vector<chunk_type> memory( memory_size );
-		memmgr_type mgr( &*memory.begin() );
-
-		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-		mgr.deallocate( null_ptr, 0 );
-
-		SUBTEST_SUCCEDED;
 	}
 
 
-	/*
-	Bug: #1987919: chunks number and available memory calculated incorrectly 
+	BOOST_AUTO_TEST_CASE( test_size_calculation )
+	{	
+		/*
+		Bug: #1987919: chunks number and available memory calculated incorrectly 
 
-	chunks number and available memory calculated incorrectly, so memory
-	manager can allocate block to memory that is out of memory segment, using
-	of this block can bring access violation error and/or memory corruption
-	*/
-	bool test_size_calculation()
-	{
-		SUBTEST_START( L"size calculation" );
+		chunks number and available memory calculated incorrectly, so memory
+		manager can allocate block to memory that is out of memory segment, using
+		of this block can bring access violation error and/or memory corruption
+		*/
 		std::vector<chunk_type> memory( memory_size );
 		memmgr_type mgr( &*memory.begin() );
 
@@ -152,28 +132,28 @@ namespace
 				void* p = memory_mgr::detail::offset_to_pointer( ptr, mgr );
 				if( p >= upper_bound )
 				{
-					TEST_FAILED;
+					BOOST_ERROR( "returned pointer is out of upper segment bound" );	
 				}
 
 			}
 		}
 		catch( std::bad_alloc& )
 		{
-			SUBTEST_SUCCEDED;
-		}	
-		SUBTEST_SUCCEDED;	
+		}
 	}
-}
 
-bool test_memory_manager()
-{
-	TEST_START( L"memory managers" );
 
-	TEST_END( test_alloc_dealloc()
-		&& test_out_of_memory()
-		&& test_out_of_memory_nothrow()
-		&& test_size_calculation()
-		&& test_null_ptr()
-		);
+	BOOST_AUTO_TEST_CASE( test_null_ptr )
+	{
+		std::vector<chunk_type> memory( memory_size );
+		memmgr_type mgr( &*memory.begin() );
 
-}
+		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+
+		BOOST_CHECKPOINT( "before deallocation of null ptr" );
+		mgr.deallocate( null_ptr, 0 );
+		BOOST_CHECKPOINT( "after deallocation of null ptr" );
+	}
+
+BOOST_AUTO_TEST_SUITE_END();
+

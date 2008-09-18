@@ -47,6 +47,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/if.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/static_assert.hpp>
 
 namespace memory_mgr
 {

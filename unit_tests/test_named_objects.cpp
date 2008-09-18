@@ -27,6 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/named_objects.h>
 #include <memory-mgr/shared_segment.h>
+#include <memory-mgr/segment_manager.h>
 #include <memory-mgr/offset_pointer.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/singleton_manager.h>
@@ -38,10 +39,14 @@ typedef  memory_mgr::named_objects
 	<
 		memory_mgr::pointer_convert
 		< 
-			memory_mgr::shared_segment
-			< 
-				memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-			> 
+			memory_mgr::segment_manager
+			<
+				memory_mgr::shared_segment
+				< 
+					memory_mgr::memory_manager<size_t, 1024, 4> 
+				>,
+				2
+			>
 		>
 	>
 > name_sz_pt_shared_mgr_type;
@@ -71,7 +76,7 @@ MGR_DECLARE_MANAGER_CLASS( name_shared_mgr, name_shared_mgr_type );
 
 BOOST_AUTO_TEST_SUITE( test_named_objects )
 
-typedef boost::mpl::list< name_sz_pt_shared_mgr, name_pt_shared_mgr/*, name_shared_mgr*/ > managers_list;
+typedef boost::mpl::list< name_sz_pt_shared_mgr/*, name_pt_shared_mgr, name_shared_mgr*/ > managers_list;
 
 namespace
 {
@@ -97,26 +102,32 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	BOOST_CHECK_NE( p1, inv_off );
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
 	
+
+	mgr_type mgr2;
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
-	p2 = mgr1.allocate( obj_size, name2 );
+	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
+	p2 = mgr2.allocate( obj_size, name2 );
 	BOOST_CHECK_NE( p2, inv_off );
+	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
 
-	p11 = mgr1.allocate( obj_size, name1 );
+	p11 = mgr2.allocate( obj_size, name1 );
 	BOOST_CHECK_NE( p11, inv_off );
 
 	p22 = mgr1.allocate( obj_size, name2 );
 	BOOST_CHECK_NE( p22, inv_off );
 
-	BOOST_CHECK_EQUAL( p1, p11 );
-	BOOST_CHECK_EQUAL( p2, p22 );
+	//BOOST_CHECK_EQUAL( p1, p11 );
+	//BOOST_CHECK_EQUAL( p2, p22 );
 	BOOST_CHECK_NE( p1, p22 );
 	BOOST_CHECK_NE( p2, p11 );
 
-	mgr1.deallocate( p11, obj_size );
+	mgr2.deallocate( p11, obj_size );
+	BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
 	mgr1.deallocate( p22, obj_size );
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
+	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
 
 	//BOOST_CHECK( mgr1.is_free() );
 }

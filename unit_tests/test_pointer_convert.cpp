@@ -37,14 +37,12 @@ namespace
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 	typedef memory_mgr::pointer_convert<memmgr_type> pconv_type;
+}
 
-	//template class memory_mgr::pointer_convert<memmgr_type>;
+BOOST_AUTO_TEST_SUITE( test_pointer_convert )
 
-
-
-	bool test_alloc_dealloc()
-	{
-		SUBTEST_START( L"pointer_convert" );
+	BOOST_AUTO_TEST_CASE( test_alloc_dealloc )
+	{	
 		std::vector<chunk_type> memory( memory_size );
 		pconv_type mgr( &*memory.begin() );
 		const memmgr_type::size_type obj_size = 4;
@@ -54,35 +52,25 @@ namespace
 		void* p4 = mgr.allocate( obj_size );
 		void* p5 = mgr.allocate( obj_size );
 
-
 		mgr.deallocate( p2, obj_size );
 		mgr.deallocate( p3, obj_size );
 		mgr.deallocate( p1, obj_size );
 		mgr.deallocate( p4, obj_size );
 		mgr.deallocate( p5, obj_size );
-
-
-		SUBTEST_END( mgr.is_free() );
 	}
 
-	bool test_null_ptr()
+	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
-		SUBTEST_START( L"deallocation of null ptr" );
 		std::vector<chunk_type> memory( memory_size );
 		pconv_type mgr( &*memory.begin() );
 
+		BOOST_CHECKPOINT( "before deallocation of null ptr" );
 		mgr.deallocate( 0, 0 );
+		BOOST_CHECKPOINT( "after deallocation of null ptr" );
 
-		SUBTEST_SUCCEDED;
+		BOOST_CHECK( mgr.is_free() );
 	}
-}
 
-bool test_pointer_convert()
-{
-	TEST_START( L"pointer_convert decorator" );
 
-	TEST_END( test_alloc_dealloc()
-		&& test_null_ptr()
-		);
-}
+BOOST_AUTO_TEST_SUITE_END();
 

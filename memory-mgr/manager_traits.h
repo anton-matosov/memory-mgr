@@ -53,10 +53,10 @@ namespace memory_mgr
 		typedef typename manager_type::manager_category		manager_category;
 
 		/**
-		   @brief memory block pointer type
-		   @see static_bitset::block_ptr_type
+			@brief memory block type
+			@see static_bitset::block_type
 		*/
-		typedef typename manager_type::block_ptr_type		block_ptr_type;		
+		typedef typename manager_type::block_type			block_type;		
 		
 		/**
 		   @brief Type used to store size, commonly std::size_t

@@ -25,10 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include <memory-mgr/detail/static_bitset.h>
 
-typedef unsigned char _block_type;
-
-static const size_t _bits_count = 32;
-typedef memory_mgr::static_bitset<_block_type, _bits_count, memory_mgr::static_array> bitset_uchar_32_type;
+typedef memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array> bitset_uchar_32_type;
 
 typedef boost::mpl::list< bitset_uchar_32_type > bitsets_list;
 

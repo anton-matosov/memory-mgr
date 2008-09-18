@@ -64,12 +64,6 @@ allocator_manager> > map_type;
 template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
 allocator_manager> >;
 
-bool unit_test()
-{
-	return false;
-}
-
-
 BOOST_AUTO_TEST_SUITE( test_allocator )
 
 	BOOST_AUTO_TEST_CASE( unit_test )
@@ -99,36 +93,5 @@ BOOST_AUTO_TEST_SUITE( test_allocator )
 
 BOOST_AUTO_TEST_SUITE_END()
 
-// 
-// bool std_containers_test()
-// {
-// 	SUBTEST_START( L"std containers + custom allocator" );
-// 	{
-// 		const int items_count = 1000;
-// 		vector_type vec;
-// 		vec.resize( items_count );
-// 		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-// 		{
-// 			*it = rand() % items_count;
-// 		}
-// 		std::random_shuffle( vec.begin(), vec.end() );
-// 
-//  		map_type map;
-//  		for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-//  		{
-//  			map[ rand() % items_count ] = *it;
-//  		}
-// 	}
-// 	SUBTEST_END( allocator_manager::instance().is_free() );
-// }
-// 
-// bool test_allocator()
-// {
-// 	TEST_START( L"allocator class" );
-// 
-// 	TEST_END( /*unit_test()
-// 		&&*/ std_containers_test()
-// 		);
-// 
-// }
+
 

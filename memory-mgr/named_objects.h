@@ -33,7 +33,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/offset_pointer.h>
-#include <boost/mpl/if.hpp>
 
 
 namespace memory_mgr

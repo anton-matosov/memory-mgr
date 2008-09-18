@@ -143,17 +143,18 @@ namespace
 	}
 
 }
+BOOST_AUTO_TEST_SUITE( test_size_tracking )
 
-bool test_size_tracking()
-{
-	TEST_START( L"size_tracking" );
+	BOOST_AUTO_TEST_CASE( test_size_tracking )
+	{
+		BOOST_CHECK( (test_size_tracking_impl<sz_pconv_track_mgr, void*>( L"with pointer_convert" ) )
+			&& (test_size_tracking_impl<sz_track_mgr, 
+			memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"w/o pointer_convert" )
+			&& test_size_tracking_data<sz_pconv_track_mgr, void*>( L"memory data validation" ))
+			&& test_null_ptr()
+			&& test_inv_offset()
+			);
+	}
 
-	TEST_END( (test_size_tracking_impl<sz_pconv_track_mgr, void*>( L"with pointer_convert" ) )
-		&& (test_size_tracking_impl<sz_track_mgr, 
-		memory_mgr::manager_traits<sz_track_mgr>::offset_type >( L"w/o pointer_convert" )
-		&& test_size_tracking_data<sz_pconv_track_mgr, void*>( L"memory data validation" ))
-		&& test_null_ptr()
-		&& test_inv_offset()
-		);
-}
+BOOST_AUTO_TEST_SUITE_END();
 

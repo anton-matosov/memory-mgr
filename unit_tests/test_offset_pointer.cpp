@@ -38,18 +38,18 @@ namespace
 
 
 	typedef memory_mgr::singleton_manager
-		< 
+	< 
 		memory_mgr::size_tracking
 		<
-		memory_mgr::pointer_convert
-		< 
-		memory_mgr::heap_segment
-		< 
-		memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-		> 
+			memory_mgr::pointer_convert
+			< 
+				memory_mgr::heap_segment
+				< 
+					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+				> 
+			>
 		>
-		>
-		> sz_heap_mgr;
+	> sz_heap_mgr;
 
 	typedef sz_heap_mgr ptr_mem_mgr;
 
@@ -307,19 +307,19 @@ namespace
 
 }
 
+BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 
-bool test_offset_pointer()
-{
-	int* pi = ::new( mem_mgr(sz_heap_mgr::instance()) ) int;
-	delete_( pi, mem_mgr(sz_heap_mgr::instance() ) );
+	BOOST_AUTO_TEST_CASE( test_offset_pointer )
+	{
+		int* pi = ::new( mem_mgr(sz_heap_mgr::instance()) ) int;
+		delete_( pi, mem_mgr(sz_heap_mgr::instance() ) );
 
-	TEST_START( L"offset_pointer" );
-	
-	TEST_END( test_construction()
-		&&		test_dereferencing() 
-		&&		test_operators() 
-		&&		test_null_ptr<builtin_ptr>()
-		&&		test_null_ptr<base_class_ptr>()
-		&&		test_null_ptr<derived_class_ptr>()
-		);
-}
+		BOOST_CHECK( test_construction()
+			&&		test_dereferencing() 
+			&&		test_operators() 
+			&&		test_null_ptr<builtin_ptr>()
+			&&		test_null_ptr<base_class_ptr>()
+			&&		test_null_ptr<derived_class_ptr>()
+			);
+	}
+BOOST_AUTO_TEST_SUITE_END();

@@ -176,20 +176,22 @@ namespace
 	}
 }
 
-bool test_segment_manager()
-{
-	TEST_START( L"test_segment_manager" );
-	TEST_END( (
-		test_alloc_dealloc<segmgr_type, offset_type>()
-		&& test_clear<sz_pconv_segmgr_type>()
-		&& test_offset_convertions()
-		&& test_alloc_dealloc<pconv_segmgr_type, void*>()
-		&& test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
-		&& test_inv_offset()
-		&& test_null_ptr<pconv_segmgr_type>()
-		&& test_null_ptr<sz_pconv_segmgr_type>()
-		)  );
-}
+BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
+	BOOST_AUTO_TEST_CASE( test_segment_manager )
+	{
+		BOOST_CHECK( (
+			test_alloc_dealloc<segmgr_type, offset_type>()
+			&& test_clear<sz_pconv_segmgr_type>()
+			&& test_offset_convertions()
+			&& test_alloc_dealloc<pconv_segmgr_type, void*>()
+			&& test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
+			&& test_inv_offset()
+			&& test_null_ptr<pconv_segmgr_type>()
+			&& test_null_ptr<sz_pconv_segmgr_type>()
+			)  );
+	}
+
+BOOST_AUTO_TEST_SUITE_END();
 
 

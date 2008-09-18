@@ -179,6 +179,12 @@ namespace memory_mgr
 		typedef memory_manager_tag							manager_category;
 
 		/**
+			@brief memory block type
+			@see static_bitset::block_type
+		*/
+		typedef typename bitmgr_type::block_type			block_type;
+
+		/**
 		   @brief memory block pointer type
 		   @see static_bitset::block_ptr_type
 		*/
