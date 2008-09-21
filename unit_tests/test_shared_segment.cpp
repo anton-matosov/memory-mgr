@@ -77,6 +77,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( shared_segment_alloc_dealloc, mgr_type, managers_
 		p5 = mgr3.allocate( obj_size );
 		BOOST_CHECK_NE( p5, inv_off );
 
+		test::check_pointers( p1, p2, p3, p4, p5 );
 		mgr2.deallocate( p3, obj_size );
 		mgr3.deallocate( p1, obj_size );
 	}
@@ -88,61 +89,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( shared_segment_alloc_dealloc, mgr_type, managers_
 }
 
 BOOST_AUTO_TEST_SUITE_END();
-// 
-// bool test_shared_segment()
-// {
-// 	TEST_START( L"shared_segment" );
-// 	TEST_PRINT( L"Creating shared_memory_manager" );
-// 	shared_mgr_type mgr;
-// 	TEST_CHECK( mgr.is_free() );
-// 
-// 	offset_type p1, p2, p3, p4, p5;
-// 	offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
-// 	const memmgr_type::size_type obj_size = 4;
-// 	{
-// 		TEST_PRINT( L"Creating second shared_memory_manager" );
-// 		shared_mgr_type mgr2;
-// 		TEST_CHECK( mgr2.is_free() );
-//  		
-// 		TEST_PRINT( L"Allocating p1 using second manager" );
-// 		p1 = mgr2.allocate( obj_size );
-// 		TEST_CHECK( p1 != inv_off );
-// 
-// 		TEST_PRINT( L"Allocating p2 using second manager" );
-//  		p2 = mgr2.allocate( obj_size );
-// 		TEST_CHECK( p2 != inv_off && p1 != p2 );
-// 
-// 		TEST_PRINT( L"Creating third shared_memory_manager" );
-// 		shared_mgr_type mgr3;
-// 		TEST_CHECK( !mgr3.is_free() );
-// 
-// 		TEST_PRINT( L"Allocating p3 using third manager" );
-//  		p3 = mgr3.allocate( obj_size );
-// 		TEST_CHECK( p3 != inv_off );
-// 
-// 		TEST_PRINT( L"Allocating p4 using third manager" );
-//  		p4 = mgr3.allocate( obj_size );
-// 		TEST_CHECK( p4 != inv_off );
-// 
-// 		TEST_PRINT( L"Allocating p5 using third manager" );
-//  		p5 = mgr3.allocate( obj_size );
-// 		TEST_CHECK( p5 != inv_off );
-// 
-// 		TEST_PRINT( L"Deallocating p3 using second manager" );
-// 		mgr2.deallocate( p3, obj_size );
-// 
-// 		TEST_PRINT( L"Deallocating p1 using third manager" );
-// 		mgr3.deallocate( p1, obj_size );
-// 	}
-// 
-// 	TEST_PRINT( L"Deallocating p2 using first manager" );
-// 	mgr.deallocate( p2, obj_size );
-// 	
-// 	TEST_PRINT( L"Deallocating p4 using first manager" );
-// 	mgr.deallocate( p4, obj_size );
-// 	
-// 	TEST_PRINT( L"Deallocating p5 using first manager" );
-// 	mgr.deallocate( p5, obj_size );
-//  	
-// 	TEST_END( mgr.is_free() );
-// }
+
+
+

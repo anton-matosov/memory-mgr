@@ -92,6 +92,39 @@ namespace memory_mgr
 			yes_type>
 		{
 			typedef MemMgr mgr_type;
+
+
+
+			template<class T>
+			static inline void construct( T* p )
+			{
+				new( p ) T();
+			}
+
+			template<class T>
+			static inline void construct( T* p, size_t count )
+			{
+				for( size_t i = 0; i < count; ++i )
+				{
+					construct( p + i );
+				}
+			}
+
+			template<class T>
+			static inline void destroy( T* p )
+			{
+				p->~T();
+			}
+
+			template<class T>
+			static inline void destroy( T* p, size_t count )
+			{
+				for( size_t i = 0; i < count; ++i )
+				{
+					destroy( p + i );
+				}
+			}
+
 			/**
 			   @brief Implementation of global operators new/new[]
 			   @details allocates size bytes in memory managed by mgr
@@ -200,10 +233,7 @@ namespace memory_mgr
 						type_manip::is_class< T >::value //VC8
 					>::get_ptr_and_count(p);
 
-				for( size_t i = 0; i < ptr_n_count.second; ++i )
-				{
-					p[i].~T();
-				}
+				destroy( p, ptr_n_count.second );
 
 				return mgr.deallocate( ptr_n_count.first );
 			}
@@ -332,6 +362,34 @@ namespace memory_mgr
 		const char* get_name() const
 		{
 			return m_name;
+		}
+	};
+
+// 	template<class T>
+// 	class new_
+// 	{};
+
+	template<class T, class MemMgr>
+	class new_
+	{
+		typedef T				object_type;
+		typedef object_type*	object_pointer_type;
+		typedef MemMgr	mgr_type;
+		object_pointer_type m_object;
+	public:
+		new_(  )
+		{
+			typedef typename memory_mgr::detail::mem_mgr_helper<
+			typename manager_traits< mgr_type >::base_manager_type >::new_helper_type helper_type;
+
+			m_object = static_cast<object_pointer_type>( 
+				helper_type::new_impl( sizeof( object_type ), mgr_type::instance() ) );
+			helper_type::construct( m_object );
+		}
+
+		operator object_pointer_type()
+		{
+			return m_object;
 		}
 	};
 }

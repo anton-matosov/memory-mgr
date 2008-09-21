@@ -30,6 +30,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	//Forward declaration
+	template<class MemMgr> 
+	class block_id_converter;
+
 	/**
 	   @brief memory_manager traits
 	   @details all associated types and constants are accessible using this type
@@ -56,7 +60,7 @@ namespace memory_mgr
 			@brief memory block type
 			@see static_bitset::block_type
 		*/
-		typedef typename manager_type::block_type			block_type;		
+		typedef typename manager_type::chunk_type			chunk_type;		
 		
 		/**
 		   @brief Type used to store size, commonly std::size_t
@@ -75,6 +79,15 @@ namespace memory_mgr
 		*/
 		typedef typename manager_type::offset_type			offset_type;
 
+		/**
+		@brief	memory block id type
+		@detail objects of this type identify memory blocks
+		e.g. objects of this type are retured by allocate method
+		*/
+		typedef typename manager_type::block_id_type		block_id_type;
+
+		typedef block_id_converter<manager_type>			block_id_converter_type;
+
 		enum
 		{
 			chunk_size			= manager_type::chunk_size		/**< size of memory chunk*/,
@@ -84,6 +97,22 @@ namespace memory_mgr
 			allocable_memory	= manager_type::allocable_memory /**< size of memory that can be allocated*/,
 			allocable_chunks	= manager_type::allocable_chunks
 		};
+	};
+
+	/**
+	@brief Converter class which should be used to convert objects of block_id_type
+	*/
+	template<class MemMgr> 
+	class block_id_converter
+	{
+	public:
+		typedef		MemMgr		mgr_type;
+		typedef	typename manager_traits<mgr_type>::block_id_type	block_id_type;
+
+		static inline block_id_type	to_block_id( block_id_type id, mgr_type& /*mgr*/ )
+		{
+			return id;
+		}
 	};
 }
 

@@ -24,7 +24,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <vector>
 #include "test_case.h"
-#include "common_manager_tests.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/detail/ptr_helpers.h>
@@ -56,6 +55,8 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 		offset_type p3 = mgr.allocate( obj_size );
 		offset_type p4 = mgr.allocate( obj_size );
 		offset_type p5 = mgr.allocate( obj_size );
+
+		test::check_pointers( p1, p2, p3, p4, p5 );
 
 		mgr.deallocate( p3, obj_size );
 		mgr.deallocate( p5, obj_size );
@@ -142,17 +143,27 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 		}
 	}
 
+	BOOST_AUTO_TEST_CASE( test_data_validness )
+	{
+		enum{ mem_size = 64 * 1024 };
+		test::test_data_validness< memory_mgr::memory_manager<chunk_type, mem_size, chunk_size > >();
+	}
 
 	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
-		std::vector<chunk_type> memory( memory_size );
-		memmgr_type mgr( &*memory.begin() );
-
-		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-
-		BOOST_CHECKPOINT( "before deallocation of null ptr" );
-		mgr.deallocate( null_ptr, 0 );
-		BOOST_CHECKPOINT( "after deallocation of null ptr" );
+		test::test_null_pointer_dealloc<memmgr_type>();
+// 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
+// 		typedef traits_type::offset_type					offset_type;
+// 		typedef traits_type::chunk_type						chunk_type;
+// 
+// 		std::vector<chunk_type> memory( traits_type::memory_size );
+// 		memmgr_type mgr( &*memory.begin() );
+// 
+// 		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+// 
+// 		BOOST_CHECKPOINT( "before deallocation of null ptr" );
+// 		mgr.deallocate( null_ptr, 0 );
+// 		BOOST_CHECKPOINT( "after deallocation of null ptr" );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

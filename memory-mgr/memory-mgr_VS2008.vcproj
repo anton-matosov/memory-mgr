@@ -152,6 +152,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\block_id_converter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\heap_segment.h"
 				>
 			</File>

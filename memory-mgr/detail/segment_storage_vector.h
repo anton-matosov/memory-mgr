@@ -64,16 +64,18 @@ namespace memory_mgr
 			typedef typename base_type::offset_type				offset_type;
 
 			segment_storage_vector()
-			{
-				this->on_new_segment_.connect( boost::bind( &segment_storage_vector::add_segment_base, this, _1, _2 ) );
-			}
+			{}
 
 			static bool less_first( const segment_data_type& x, const segment_data_type& y )
 			{
 				return x.first < y.first;
 			}
 
-			inline void add_segment_base( segment_ptr_type segment, size_type seg_id )
+			/**
+			@add_comments
+			@todo get rid of runtime polymorphism
+			*/
+			void on_new_segment( segment_ptr_type segment, size_type seg_id )
 			{
 				m_bases.push_back( segment_data_type(segment->get_offset_base(), seg_id ) );
 				std::sort( m_bases.begin(), m_bases.end(), &less_first );

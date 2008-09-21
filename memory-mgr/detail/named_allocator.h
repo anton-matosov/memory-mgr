@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <string>
+#include <functional>
 #include <map>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
@@ -121,7 +122,7 @@ namespace memory_mgr
 			{
 				const offset_type offset = ptr;
 				map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
-					boost::bind( &equal_second_val<offset_type>, _1, offset ) );
+					std::bind2nd( std::ptr_fun( &equal_second_val<offset_type> ), offset ) );
 				if( fres != m_objects->end() )
 				{
 					m_objects->erase( fres );
@@ -137,7 +138,7 @@ namespace memory_mgr
 			}
 
 			template<class ValT>
-			static bool equal_second_val( const map_item_type& x, const ValT val )
+			static bool equal_second_val( const map_item_type x, const ValT val )
 			{
 				return x.second == val;
 			}

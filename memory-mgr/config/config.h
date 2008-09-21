@@ -41,13 +41,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #define BOOST_ALL_NO_LIB
 #include <boost/utility.hpp>
-#include <boost/signals.hpp>
-#include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/if.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/static_assert.hpp>
 
 namespace memory_mgr

@@ -41,6 +41,9 @@ namespace memory_mgr
 
 	namespace detail
 	{
+		/**
+		@add_comments
+		*/
 		template<size_t seg_size>
 		struct calc_offset_bits
 		{
@@ -52,6 +55,9 @@ namespace memory_mgr
 			};
 		};
 
+		/**
+		@add_comments
+		*/
 		template
 			<
 				class MemMgr,
@@ -82,12 +88,16 @@ namespace memory_mgr
 				offset_mask			= ~segment_mask
 			};
 
-
+			//typedef void (*on_new_segment_fn_type)(segment_ptr_type, size_type);
+			
 		private:
 			//segments array
 			segment_ptr_type	m_segments[num_segments];
 
 
+			/**
+			@add_comments
+			*/
 			template<class Func>
 			class func_wrapper_base
 			{
@@ -99,6 +109,9 @@ namespace memory_mgr
 				{}
 			};
 
+			/**
+			@add_comments
+			*/
 			template<class Func>
 			class if_not_null
 				:public func_wrapper_base<Func>
@@ -118,6 +131,9 @@ namespace memory_mgr
 				}
 			};
 
+			/**
+			@add_comments
+			*/
 			template<class Func>
 			class if_not_null_and_res
 				:public func_wrapper_base<Func>
@@ -140,6 +156,9 @@ namespace memory_mgr
 				}
 			};
 
+			/**
+			@add_comments
+			*/
 			static inline void delete_segment( segment_ptr_type& segment )
 			{
 				delete segment;
@@ -147,21 +166,33 @@ namespace memory_mgr
 			}
 		public:
 
+			/**
+			@add_comments
+			*/
 			segment_storage_base()
 			{
 				std::fill<segment_ptr_type*,segment_ptr_type>( m_segments, m_segments + num_segments, 0 );
 			}
 
+			/**
+			@add_comments
+			*/
 			~segment_storage_base()
 			{
 				delete_segments();
 			}
 
+			/**
+			@add_comments
+			*/
 			void delete_segments()
 			{
-				for_each( boost::bind( delete_segment, _1 ) );
+				for_each( delete_segment );
 			}
 
+			/**
+			@add_comments
+			*/
 			bool in_segment( const char* base, const char* ptr )
 			{
 				if ( ptr >= base )
@@ -174,12 +205,18 @@ namespace memory_mgr
 				return false;
 			}
 
+			/**
+			@add_comments
+			*/
 			template<class Func>
 			void for_each( Func func )
 			{
 				std::for_each( m_segments, m_segments + num_segments, if_not_null<Func>(func) );
 			}
 
+			/**
+			@add_comments
+			*/
 			template<class Func>
 			bool for_each_if( Func func )
 			{
@@ -188,18 +225,28 @@ namespace memory_mgr
 			}
 
 
+			/**
+			@add_comments
+			*/
 			inline segment_ptr_type get_segment( size_type seg_id )
 			{
 				segment_ptr_type segment = m_segments[seg_id];
 				if( !segment )
 				{
 					segment = m_segments[seg_id] = new segment_type( seg_id );
-					on_new_segment_( segment, seg_id );
+					on_new_segment( segment, seg_id );
 				}
 				return segment;
 			}
 
-			boost::signal<void (segment_ptr_type, size_type)>	on_new_segment_;
+			/**
+			@add_comments
+			@todo get rid of runtime polymorphism
+			*/
+			virtual void on_new_segment( segment_ptr_type, size_type )
+			{
+
+			}
 		};
 
 	}

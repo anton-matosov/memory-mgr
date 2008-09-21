@@ -53,7 +53,15 @@ namespace memory_mgr
 			   @brief Type used to store size, commonly std::size_t
 			   @see static_bitset::size_type
 			*/
-			typedef typename base_type::size_type size_type;
+			typedef typename base_type::size_type			size_type;
+
+
+			/**
+			@brief	memory block id type
+			@see	@see memory_manager::block_id_type
+			*/
+			typedef typename base_type::block_id_type		block_id_type;
+
 			/**
 			   @brief Size of auxiliary data required to store size
 			*/
@@ -152,12 +160,18 @@ namespace memory_mgr
 			typedef typename impl_base_type::size_type			size_type;
 
 			/**
+			@brief	memory block id type
+			@see	@see memory_manager::block_id_type
+			*/
+			typedef typename impl_base_type::block_id_type		block_id_type;
+			
+			/**
 			  @brief Call this method to allocate memory block
 			  @param size size of memory block in bytes
 			  @exception bad_alloc if manager went out of memory
 			  @return pointer to allocated memory block
 			*/
-			inline void* allocate( size_type size )
+			inline block_id_type allocate( size_type size )
 			{			
 				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size ), size );
@@ -172,7 +186,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to allocated memory block         
 			*/
-			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			inline block_id_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
 				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size, nothrow ), size );
@@ -184,7 +198,7 @@ namespace memory_mgr
 			   @param size   this value is ignored
 			   @exception newer  throws
 			*/
-			inline void deallocate( void* ptr, size_type /*size*/ = 0)
+			inline void deallocate( block_id_type ptr, size_type /*size*/ = 0)
 			{
 				if( ptr )
 				{
@@ -204,10 +218,10 @@ namespace memory_mgr
 		template< class MemMgr >
 		class size_tracking_impl<
 			MemMgr,
-			no_type /* PointerConverterConcept not supported*/ >
+			no_type /* PointerConverterConcept is not supported*/ >
 			: public size_tracking_impl< 
 				pointer_convert< MemMgr >,
-				yes_type /* PointerConverterConcept supported*/
+				yes_type /* PointerConverterConcept is supported*/
 			>
 		{
 			/**
@@ -253,7 +267,7 @@ namespace memory_mgr
 			   @see static_bitset::size_type
 			*/
 			typedef typename impl_base_type::size_type				size_type;
-
+			
 			/**
 			   @brief type that used to store memory offset
 			   @see memory_manager::offset_type
@@ -261,12 +275,18 @@ namespace memory_mgr
 			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
 
 			/**
+			@brief	memory block id type
+			@see	@see memory_manager::block_id_type
+			*/
+			typedef offset_type										block_id_type;
+
+			/**
 			   @brief Call this method to allocate memory block
 			   @param size size of memory block in bytes
 			   @exception bad_alloc if manager went out of memory
 			   @return offset in bytes from memory base address.
 			*/
-			inline offset_type allocate( size_type size )
+			inline block_id_type allocate( size_type size )
 			{	
 				//Just calls allocate method of size tracking implementation that supports PointerConverterConcept
 				//and converts returned pointer to offset
@@ -282,7 +302,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return offset in bytes from memory base address.          
 			*/
-			inline offset_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			inline block_id_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{		
 				//Calls allocate method of size tracking implementation that supports PointerConverterConcept
 				//and converts returned pointer to offset
@@ -295,7 +315,7 @@ namespace memory_mgr
 			   @param size   this value is ignored
 			   @exception newer  throws
 			*/
-			inline void deallocate( const offset_type offset, size_type /*size*/ = 0 )
+			inline void deallocate( const block_id_type offset, size_type /*size*/ = 0 )
 			{
 				//Converts passed offset into pointer and calls deallocate method
 				//of size tracking implementation that supports PointerConverterConcept

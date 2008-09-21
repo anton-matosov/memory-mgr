@@ -64,11 +64,13 @@ namespace memory_mgr
 			typedef typename base_type::segment_data_type		segment_data_type;
 
 			segment_storage_map()
-			{
-				this->on_new_segment_.connect( boost::bind( &segment_storage_map::add_segment_base, this, _1, _2 ) );
-			}
+			{}
 
-			inline void add_segment_base( segment_ptr_type segment, size_type seg_id )
+			/**
+			@add_comments
+			@todo get rid of runtime polymorphism
+			*/
+			void on_new_segment( segment_ptr_type segment, size_type seg_id )
 			{
 				m_bases[segment->get_offset_base()] = seg_id;
 			}

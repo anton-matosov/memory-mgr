@@ -81,6 +81,13 @@ namespace memory_mgr
 			*/
 			typedef typename manager_traits<mgr_type>::offset_type		offset_type;
 
+
+			/**
+			@brief	memory block id type
+			@see	@see memory_manager::block_id_type
+			*/
+			typedef typename manager_traits<mgr_type>::block_id_type	block_id_type;
+
 			/**
 			   @brief Call this method to know is there available memory in
 				manager

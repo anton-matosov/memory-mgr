@@ -46,10 +46,10 @@ namespace memory_mgr
 		};
 
 		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = custom_array };
-		template< class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
+		template< class ChunkType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
-			typedef static_bitset< BlockType, BitsCount, array_type(memoryCtrl) > bitset_t;
+			typedef static_bitset< ChunkType, BitsCount, array_type(memoryCtrl) > bitset_t;
 			/**
 			   @brief constants
 			*/
@@ -63,13 +63,13 @@ namespace memory_mgr
 			   @brief memory block type
 			   @see static_bitset::block_type
 			*/
-			typedef typename bitset_t::block_type			block_type;
+			typedef typename bitset_t::block_type			chunk_type;
 
 			/**
 			   @brief memory block pointer type
 			   @see static_bitset::block_ptr_type
 			*/
-			typedef typename bitset_t::block_ptr_type		block_ptr_type;
+			typedef typename bitset_t::block_ptr_type		chunk_ptr_type;
 
 			/**
 			  @brief Type used to store size, commonly std::size_t
@@ -112,7 +112,7 @@ namespace memory_mgr
 
 			   @exception newer throws
 			*/
-			bit_manager( block_ptr_type ptr )
+			bit_manager( chunk_ptr_type ptr )
 				:m_is_init( detail::size_cast( ptr ) ),
 				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
 				 m_bit_hint( 0 )
@@ -204,15 +204,15 @@ namespace memory_mgr
 				return detail::block_index<bitset_t::bits_per_block>(pos);
 			}
 
-			static inline block_ptr_type block_ptr_cast( void* ptr )
+			static inline chunk_ptr_type block_ptr_cast( void* ptr )
 			{
-				return static_cast<block_ptr_type>( ptr );
+				return static_cast<chunk_ptr_type>( ptr );
 			}
 		};
 
-		template< class Ch, class Tr, class BlockType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
+		template< class Ch, class Tr, class ChunkType, size_t BitsCount, bitMgrMemCtrl memoryCtrl >
 		static inline std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr,
-			const bit_manager<BlockType, BitsCount, memoryCtrl>& b )
+			const bit_manager<ChunkType, BitsCount, memoryCtrl>& b )
 		{
 			return b.print( ostr );
 		}

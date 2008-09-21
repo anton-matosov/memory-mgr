@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/offset_pointer.h>
+#include <memory-mgr/block_id_converter.h>
 
 
 namespace memory_mgr
@@ -87,7 +88,9 @@ namespace memory_mgr
 
 		named_allocator_type	m_alloc;
 
-		typedef detail::object_converter<is_category_supported< MemMgr, pointer_conversion_tag>::value> converter;
+		//typedef detail::object_converter<is_category_supported< MemMgr, pointer_conversion_tag>::value> converter;
+		//typedef block_id_converter<mgr_type> converter;
+		typedef typename manager_traits<MemMgr>::block_id_converter_type	converter;
 	public:	
 		/**
 		@brief Type used to store size, commonly std::size_t
@@ -100,12 +103,9 @@ namespace memory_mgr
 		@brief type that used to store memory offset
 		@see memory_manager::offset_type
 		*/
-		//typedef typename base_type::offset_type			offset_type;
 		typedef typename named_allocator_type::offset_type		offset_type;
-		typedef typename boost::mpl::if_c< 
-			is_category_supported< MemMgr, pointer_conversion_tag>::value,
-			void*,
-			typename manager_traits<MemMgr>::offset_type>::type		object_type;
+
+		typedef typename manager_traits<MemMgr>::block_id_type	block_id_type;
 
 
 		/**
@@ -135,10 +135,10 @@ namespace memory_mgr
 			return m_alloc.is_exists( name );
 		}
 
-		inline object_type allocate( size_type size, const char* name )
+		inline block_id_type allocate( size_type size, const char* name )
 		{
-			object_type offset = converter::convert( m_alloc.get_object( name ), *this );
-			if( offset ==  offset_traits<object_type>::invalid_offset )
+			block_id_type offset = converter::to_block_id( m_alloc.get_object( name ), *this );
+			if( offset ==  offset_traits<block_id_type>::invalid_offset )
 			{
 				offset = this->m_mgr.allocate( size );
 				m_alloc.add_object( name, detail::to_offset( offset, *this ) );
@@ -146,7 +146,7 @@ namespace memory_mgr
 			return offset;
 		}
 
-		inline void deallocate( const object_type p, size_type size, const char* name )
+		inline void deallocate( const block_id_type p, size_type size, const char* name )
 		{
 			m_alloc.remove_object( name );
 			this->m_mgr.deallocate( p, size );
@@ -157,7 +157,7 @@ namespace memory_mgr
  		@exception bad_alloc if manager went out of memory
  		@return pointer to allocated memory block
  		*/
- 		inline object_type allocate( size_type size )
+ 		inline block_id_type allocate( size_type size )
  		{			
  			return this->m_mgr.allocate( size );
  		}
@@ -171,7 +171,7 @@ namespace memory_mgr
  		@exception newer  throws
  		@return pointer to allocated memory block         
  		*/
- 		inline object_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+ 		inline block_id_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
  		{			
  			return this->m_mgr.allocate( size, nothrow );
  		}
@@ -182,7 +182,7 @@ namespace memory_mgr
  		@param size   size of memory block in bytes
  		@exception newer  throws
  		*/
- 		inline void deallocate( const object_type p, size_type size = 0 )
+ 		inline void deallocate( const block_id_type p, size_type size = 0 )
  		{
 			m_alloc.remove_object( detail::to_offset( p, *this ) );
  			this->m_mgr.deallocate( p, size );

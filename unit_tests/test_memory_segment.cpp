@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	typedef memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
 	typedef memory_mgr::manager_traits<mgr_type>::size_type		size_type;
 
-	const offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
 	const size_type obj_size = 4;
 
 	mgr_type mgr;
@@ -60,11 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	offset_type p5 = mgr.allocate( obj_size );
 
 
-	BOOST_CHECK_NE( p1, inv_off );
-	BOOST_CHECK_NE( p2, inv_off );
-	BOOST_CHECK_NE( p3, inv_off );
-	BOOST_CHECK_NE( p4, inv_off );
-	BOOST_CHECK_NE( p5, inv_off );
+	test::check_pointers( p1, p2, p3, p4, p5 );
 
 	mgr.deallocate( p3, obj_size );
 	mgr.deallocate( p5, obj_size );

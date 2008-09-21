@@ -21,42 +21,34 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_STD_AFX_UNIT_HEADER
-#define MGR_STD_AFX_UNIT_HEADER
+#ifndef MGR_BLOCK_ID_CONVERTER_HEADER
+#define MGR_BLOCK_ID_CONVERTER_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#define _CRTDBG_MAP_ALLOC
-//#define _CRTDBG_MAP_ALLOC_NEW
+#include <memory-mgr/manager_traits.h>
 
 
-#include <boost/test/test_tools.hpp>
-#include <boost/test/test_case_template.hpp>
-#include <boost/test/parameterized_test.hpp>
-#include <boost/mpl/list.hpp>
+namespace memory_mgr
+{	
+// 	/**
+// 	   @brief Converter class which should be used to convert objects of block_id_type
+// 	*/
+// 	template<class MemMgr> 
+// 	class block_id_converter
+// 	{
+// 	public:
+// 		typedef		MemMgr		mgr_type;
+// 		typedef	typename manager_traits<mgr_type>::block_id_type	block_id_type;
+// 
+// 		block_id_type	to_block_id( block_id_type id, mgr_type& /*mgr*/ )
+// 		{
+// 			return id;
+// 		}
+// 	};
 
-static const size_t sz_null = 0;
-static const size_t sz_one = 1;
-static const size_t sz_two = 2;
-static const size_t sz_three = 3;
-static const size_t sz_four = 4;
-static const size_t sz_five = 5;
-static const size_t sz_six = 6;
-static const size_t sz_seven = 7;
-static const size_t sz_eight = 8;
-static const size_t sz_nine = 9;
-static const size_t sz_ten = 10;
+}
 
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <map>
-#include <vector>
-#include <memory-mgr/config/config.h>
-#include "common_manager_tests.h"
-
-
-#endif// MGR_STD_AFX_UNIT_HEADER
-
+#endif //MGR_BLOCK_ID_CONVERTER_HEADER

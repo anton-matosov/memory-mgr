@@ -25,22 +25,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_case.h"
 #include "test_class.h"
 
-namespace
-{
+BOOST_AUTO_TEST_SUITE( test_managed_base )
 
-	bool test_null_ptr()
+	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
-		SUBTEST_START( L"deletion of null ptr" );
 		test_class* t1 = 0;
 
 		delete t1;
 		delete[] t1;
-
-		SUBTEST_SUCCEDED;
 	}
-}
-
-BOOST_AUTO_TEST_SUITE( test_managed_base )
 
 	BOOST_AUTO_TEST_CASE( test_managed_base )
 	{
@@ -136,7 +129,7 @@ BOOST_AUTO_TEST_SUITE( test_managed_base )
 		delete[] arr;
 
 		//test_class::mem_mgr::instance().clear();
-		BOOST_CHECK( /*test_class::mem_mgr::instance().is_free() &&*/ test_null_ptr() );
+		//BOOST_CHECK( test_class::mem_mgr::instance().is_free() );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

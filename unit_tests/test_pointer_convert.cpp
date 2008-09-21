@@ -52,6 +52,8 @@ BOOST_AUTO_TEST_SUITE( test_pointer_convert )
 		void* p4 = mgr.allocate( obj_size );
 		void* p5 = mgr.allocate( obj_size );
 
+		test::check_pointers( p1, p2, p3, p4, p5 );
+
 		mgr.deallocate( p2, obj_size );
 		mgr.deallocate( p3, obj_size );
 		mgr.deallocate( p1, obj_size );

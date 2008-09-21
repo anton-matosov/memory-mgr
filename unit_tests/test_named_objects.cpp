@@ -86,16 +86,17 @@ namespace
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 {
-	typedef mgr_type::object_type object_type;
+	//typedef mgr_type::object_type object_type;
+	typedef memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
 	typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
-	const object_type inv_off = memory_mgr::offset_traits<object_type>::invalid_offset;
+	const block_id_type inv_off = memory_mgr::offset_traits<block_id_type>::invalid_offset;
 	const size_type obj_size = 4;
 
 	mgr_type mgr1;
 	//BOOST_CHECK( mgr1.is_free() );
 
-	object_type p1, p2, p11, p22;
+	block_id_type p1, p2, p11, p22;
 
 	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
 	p1 = mgr1.allocate( obj_size, name1 );

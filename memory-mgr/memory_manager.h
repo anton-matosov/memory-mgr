@@ -43,7 +43,7 @@ namespace memory_mgr
 {
 	template
 	<
-		class  BlockType, 
+		class  ChunkType, 
 		size_t MemorySize,
 		size_t ChunkSize
 	>
@@ -56,7 +56,7 @@ namespace memory_mgr
 			num_chunks  = memory_size / chunk_size
 		};
 
-		typedef detail::bit_manager<BlockType, num_chunks, detail::mcNone> bitmgr_type;
+		typedef detail::bit_manager<ChunkType, num_chunks, detail::mcNone> bitmgr_type;
 
 		enum
 		{
@@ -67,7 +67,7 @@ namespace memory_mgr
 			allocable_chunks = num_chunks - used_chunks,
 		};
 
-		typedef detail::bit_manager<BlockType, allocable_chunks, detail::mcNone> allocable_bitmgr_type;
+		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcNone> allocable_bitmgr_type;
 
 		enum
 		{
@@ -75,7 +75,7 @@ namespace memory_mgr
 			lost_memory_tmp = used_memory - required_memory,
 			lost_memory		= lost_memory_tmp > 0 ? lost_memory_tmp : 0
 		};
-		typedef allocable_memory_calc<BlockType, lost_memory, chunk_size> lost_calc;
+		typedef allocable_memory_calc<ChunkType, lost_memory, chunk_size> lost_calc;
 
 		enum
 		{
@@ -87,9 +87,9 @@ namespace memory_mgr
 		};
 	};
 
-	template<class BlockType,
+	template<class ChunkType,
 		size_t ChunkSize>
-	struct allocable_memory_calc< BlockType, 0, ChunkSize >
+	struct allocable_memory_calc< ChunkType, 0, ChunkSize >
 	{
 		enum
 		{
@@ -101,7 +101,7 @@ namespace memory_mgr
 
 	/**
 	   @brief Encapsulates work with memory
-	   @tparam BlockType   integral type, that will be used in
+	   @tparam ChunkType   integral type, that will be used in
 	                      static_bitset
 	   @tparam MemorySize  memory size in bytes which will be
 	                      available to manager
@@ -114,7 +114,7 @@ namespace memory_mgr
 	*/
 	template
 	<
-		class BlockType, 
+		class ChunkType, 
 		size_t MemorySize,
  		size_t ChunkSize,
 		class OffsetType = size_t,
@@ -122,7 +122,7 @@ namespace memory_mgr
 	>
 	class memory_manager : protected sync::object_level_lockable<SyncObj>
 	{
-		typedef memory_mgr::allocable_memory_calc<BlockType, MemorySize, ChunkSize> calc_type;
+		typedef memory_mgr::allocable_memory_calc<ChunkType, MemorySize, ChunkSize> calc_type;
 
 		template<class Mgr>
 		friend class decorator_base;
@@ -137,7 +137,7 @@ namespace memory_mgr
 			num_chunks			= memory_size / chunk_size /**< number of memory chunks that can be allocated*/,
 			memory_overhead		= 0				/**< memory overhead per allocated memory block in bytes*/,
 			allocable_memory	= calc_type::result_allocable_memory /**< size of memory that can be allocated*/,
-			allocable_chunks = calc_type::result_allocable_chunks
+			allocable_chunks	= calc_type::result_allocable_chunks
 		};
 		
 	private:	
@@ -150,7 +150,7 @@ namespace memory_mgr
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
-		typedef detail::bit_manager<BlockType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
+		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
 
 		/**
 		   @brief Bit Manager used to store information about allocated
@@ -182,13 +182,13 @@ namespace memory_mgr
 			@brief memory block type
 			@see static_bitset::block_type
 		*/
-		typedef typename bitmgr_type::block_type			block_type;
+		typedef typename bitmgr_type::chunk_type			chunk_type;
 
 		/**
 		   @brief memory block pointer type
 		   @see static_bitset::block_ptr_type
 		*/
-		typedef typename bitmgr_type::block_ptr_type		block_ptr_type;
+		typedef typename bitmgr_type::chunk_ptr_type		chunk_ptr_type;
 
 		/**
 		   @brief Type used to store size, commonly std::size_t
@@ -201,11 +201,18 @@ namespace memory_mgr
 		   parameter                                               
 		*/
 		typedef SyncObj										sync_object_type;
+		
 		/**
 		   @brief memory offset type passed as template parameter
 		*/
 		typedef OffsetType									offset_type;
 		
+		/**
+		@brief	memory block id type
+		@detail objects of this type identify memory blocks
+		e.g. objects of this type are retured by allocate method
+		*/
+		typedef offset_type									block_id_type;
 
 		/**
 		   @brief Default constructor, declared only to
@@ -228,7 +235,7 @@ namespace memory_mgr
 							segment must be zeroed                   
 		*/
 		explicit memory_manager( void* segment_base )
-			:m_bitmgr( static_cast< block_ptr_type >( segment_base ) ),
+			:m_bitmgr( static_cast< chunk_ptr_type >( segment_base ) ),
 			m_segment_base( segment_base )
 		{
 			m_offset_base = detail::char_cast( detail::shift( segment_base, bitmgr_type::memory_usage ) );

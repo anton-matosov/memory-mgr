@@ -84,7 +84,54 @@ namespace memory_mgr
 		{
 			return offset >> offset_bits;
 		}
+
+
+		template< class OnNoMemory >
+		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
+		{
+			//If requested block size is greater than allocable memory size
+			if( size > allocable_memory )
+			{
+				OnNoMemoryOp();
+				return offset_traits<offset_type>::invalid_offset;
+			}
+
+			segment_ptr_type segment = get_segment(m_curr_segment);
+
+			offset_type offset = segment->allocate( size, std::nothrow_t() );
+			size_type seg_id = m_curr_segment + 1;
+
+			while ( offset == offset_traits<offset_type>::invalid_offset &&
+				seg_id != m_curr_segment )
+			{
+				if( seg_id >= num_segments )
+				{
+					seg_id = 0;
+				}
+
+				segment = get_segment(seg_id);
+				offset = segment->allocate( size, std::nothrow_t() );
+				if( offset != offset_traits<offset_type>::invalid_offset )
+				{
+					m_curr_segment = seg_id;
+				}
+				else
+				{
+					++seg_id;
+				}
+			}
+
+			if( offset == offset_traits<offset_type>::invalid_offset )
+			{
+				OnNoMemoryOp();
+			}
+
+			return add_seg_id_to_offset( offset, m_curr_segment );
+		}
 	public:
+		/**
+		@brief default constructor, creates segment with id==0
+		*/
 		segment_manager()
 			:m_curr_segment(0)
 		{
@@ -132,48 +179,6 @@ namespace memory_mgr
 			}
  		}
 
-		template< class OnNoMemory >
-		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
-		{
-			//If requested block size is greater than allocable memory size
-			if( size > allocable_memory )
-			{
-				OnNoMemoryOp();
-				return offset_traits<offset_type>::invalid_offset;
-			}
-
-			segment_ptr_type segment = get_segment(m_curr_segment);
-
-			offset_type offset = segment->allocate( size, std::nothrow_t() );
-			size_type seg_id = m_curr_segment + 1;
-
-			while ( offset == offset_traits<offset_type>::invalid_offset &&
-				seg_id != m_curr_segment )
-			{
-				if( seg_id >= num_segments )
-				{
-					seg_id = 0;
-				}
-
-				segment = get_segment(seg_id);
-				offset = segment->allocate( size, std::nothrow_t() );
-				if( offset != offset_traits<offset_type>::invalid_offset )
-				{
-					m_curr_segment = seg_id;
-				}
-				else
-				{
-					++seg_id;
-				}
-			}
-
-			if( offset == offset_traits<offset_type>::invalid_offset )
-			{
-				OnNoMemoryOp();
-			}
-
-			return add_seg_id_to_offset( offset, m_curr_segment );
-		}
 
 		/**
 		   @brief Call this method to get memory base address from which offset
@@ -260,7 +265,7 @@ namespace memory_mgr
 		*/
 		inline bool empty()
 		{
-			return for_each_if( boost::bind( &segment_type::empty, _1 ) );
+			return for_each_if( std::mem_fun( &segment_type::empty ) );
 		}
 
 		/**
@@ -271,7 +276,7 @@ namespace memory_mgr
 		*/
 		inline bool is_free()
 		{
-			return for_each_if( boost::bind( &segment_type::is_free, _1 ) );
+			return for_each_if( std::mem_fun( &segment_type::is_free ) );
 		}
 
 		/**
@@ -280,7 +285,7 @@ namespace memory_mgr
 		*/
 		inline void clear()
 		{
-			for_each( boost::bind( &segment_type::clear, _1 ) );
+			for_each( std::mem_fun( &segment_type::clear ) );
  			m_curr_segment = 0;
 			
 			//Delete all segments
