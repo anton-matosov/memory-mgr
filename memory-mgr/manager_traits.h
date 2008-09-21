@@ -92,10 +92,11 @@ namespace memory_mgr
 		{
 			chunk_size			= manager_type::chunk_size		/**< size of memory chunk*/,
 			memory_size			= manager_type::memory_size		/**< memory size in bytes available to manager*/,
-			num_chunks			= manager_type::num_chunks		/**< number of memory chunks that can be allocated*/,
+			num_chunks			= manager_type::num_chunks		/**< number of memory chunks managed by memory manager*/,
 			memory_overhead		= manager_type::memory_overhead /**< memory overhead per allocated memory block in bytes*/,
 			allocable_memory	= manager_type::allocable_memory /**< size of memory that can be allocated*/,
-			allocable_chunks	= manager_type::allocable_chunks
+			allocable_chunks	= manager_type::allocable_chunks /**< number of memory chunks that can be allocated*/,
+			num_segments		= 1 /**< maximum number of segments managed by this manager*/
 		};
 	};
 
@@ -109,9 +110,16 @@ namespace memory_mgr
 		typedef		MemMgr		mgr_type;
 		typedef	typename manager_traits<mgr_type>::block_id_type	block_id_type;
 
-		static inline block_id_type	to_block_id( block_id_type id, mgr_type& /*mgr*/ )
+		template<class MgrT>
+		static inline block_id_type	to_block_id( block_id_type id, MgrT& /*mgr*/ )
 		{
 			return id;
+		}
+		
+		template<class MgrT>
+		static inline block_id_type	to_block_id( void* id, MgrT& mgr )
+		{
+			return detail::to_offset( id, mgr );
 		}
 	};
 }

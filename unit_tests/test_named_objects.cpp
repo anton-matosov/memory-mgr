@@ -76,62 +76,65 @@ MGR_DECLARE_MANAGER_CLASS( name_shared_mgr, name_shared_mgr_type );
 
 BOOST_AUTO_TEST_SUITE( test_named_objects )
 
-typedef boost::mpl::list< name_sz_pt_shared_mgr/*, name_pt_shared_mgr, name_shared_mgr*/ > managers_list;
+	typedef boost::mpl::list< name_sz_pt_shared_mgr, name_pt_shared_mgr, name_shared_mgr > managers_list;
 
-namespace
-{
 	const char* name1 = "name1";
 	const char* name2 = "name2";
-}
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
-{
-	//typedef mgr_type::object_type object_type;
-	typedef memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
-	typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
-	const block_id_type inv_off = memory_mgr::offset_traits<block_id_type>::invalid_offset;
-	const size_type obj_size = 4;
+	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
+	{
+		//typedef mgr_type::object_type object_type;
+		typedef memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
+		typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
-	mgr_type mgr1;
-	//BOOST_CHECK( mgr1.is_free() );
+		const block_id_type inv_off = memory_mgr::offset_traits<block_id_type>::invalid_offset;
+		const size_type obj_size = 4;
 
-	block_id_type p1, p2, p11, p22;
+		mgr_type mgr1;
+		//BOOST_CHECK( mgr1.is_free() );
 
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
-	p1 = mgr1.allocate( obj_size, name1 );
-	BOOST_CHECK_NE( p1, inv_off );
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
-	
+		block_id_type p1, p2, p11, p22;
 
-	mgr_type mgr2;
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
-	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
-	p2 = mgr2.allocate( obj_size, name2 );
-	BOOST_CHECK_NE( p2, inv_off );
-	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
+		p1 = mgr1.allocate( obj_size, name1 );
+		BOOST_CHECK_NE( p1, inv_off );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
+		
 
-	p11 = mgr2.allocate( obj_size, name1 );
-	BOOST_CHECK_NE( p11, inv_off );
+		mgr_type mgr2;
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
+		p2 = mgr2.allocate( obj_size, name2 );
+		BOOST_CHECK_NE( p2, inv_off );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
 
-	p22 = mgr1.allocate( obj_size, name2 );
-	BOOST_CHECK_NE( p22, inv_off );
+		p11 = mgr2.allocate( obj_size, name1 );
+		BOOST_CHECK_NE( p11, inv_off );
 
-	//BOOST_CHECK_EQUAL( p1, p11 );
-	//BOOST_CHECK_EQUAL( p2, p22 );
-	BOOST_CHECK_NE( p1, p22 );
-	BOOST_CHECK_NE( p2, p11 );
+		p22 = mgr1.allocate( obj_size, name2 );
+		BOOST_CHECK_NE( p22, inv_off );
 
-	mgr2.deallocate( p11, obj_size );
-	BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
-	mgr1.deallocate( p22, obj_size );
-	BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
-	BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
+		//BOOST_CHECK_EQUAL( p1, p11 );
+		//BOOST_CHECK_EQUAL( p2, p22 );
+		BOOST_CHECK_NE( p1, p22 );
+		BOOST_CHECK_NE( p2, p11 );
 
-	//BOOST_CHECK( mgr1.is_free() );
-}
+		mgr2.deallocate( p11, obj_size );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
+		mgr1.deallocate( p22, obj_size );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
+
+		//BOOST_CHECK( mgr1.is_free() );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
+	{
+		test::test_null_pointer_dealloc_seg<mgr_type>();
+	}
 
 // BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, managers_list )
 // {

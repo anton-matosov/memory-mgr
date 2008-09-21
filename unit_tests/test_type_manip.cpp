@@ -24,7 +24,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include <memory-mgr/detail/type_manip.h>
-#include "test_case.h"
 #include "test_class.h"
 
 struct Struct{};

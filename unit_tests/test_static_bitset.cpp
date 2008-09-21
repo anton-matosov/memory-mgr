@@ -22,7 +22,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "test_case.h"
 #include <memory-mgr/detail/static_bitset.h>
 
 typedef memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array> bitset_uchar_32_type;

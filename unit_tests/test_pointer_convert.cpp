@@ -22,15 +22,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "test_case.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/pointer_convert.h>
 #include "test_class.h"
 
 namespace
 {
-
-
 	typedef unsigned char chunk_type;
 	const size_t chunk_size = 4;
 	const size_t memory_size = 256;
@@ -63,16 +60,8 @@ BOOST_AUTO_TEST_SUITE( test_pointer_convert )
 
 	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
-		std::vector<chunk_type> memory( memory_size );
-		pconv_type mgr( &*memory.begin() );
-
-		BOOST_CHECKPOINT( "before deallocation of null ptr" );
-		mgr.deallocate( 0, 0 );
-		BOOST_CHECKPOINT( "after deallocation of null ptr" );
-
-		BOOST_CHECK( mgr.is_free() );
+		test::test_null_pointer_dealloc<pconv_type>();
 	}
-
 
 BOOST_AUTO_TEST_SUITE_END();
 

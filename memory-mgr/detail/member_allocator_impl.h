@@ -39,27 +39,28 @@ namespace memory_mgr
 		class member_allocator_impl
 		{
 		public:
-			typedef MemMgr								mgr_type;
-			typedef typename manager_traits<mgr_type>::size_type	size_type;
+			typedef MemMgr												mgr_type;
+			typedef manager_traits<mgr_type>							traits_type;
+			typedef typename traits_type::size_type						size_type;
+			typedef typename traits_type::block_id_converter_type		converter;
 
 			inline member_allocator_impl( mgr_type* mgr )
 				:m_mgr( mgr )
 			{
-				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
-					//(is_category_supported< mgr_type, size_tracking_tag >::value) &&
-					(is_category_supported< mgr_type, pointer_conversion_tag >::value), Invalid_memory_manager_class );
+ 				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value)
+					, invalid_memory_manager_class );
 
-			}
-
-			inline void deallocate( void* ptr, size_type size )
-			{
-				m_mgr->deallocate( ptr, size );
 			}
 
 			// allocate array of count elements
 			inline void* allocate(size_type size)
 			{	
-				return m_mgr->allocate( size );
+				return to_pointer<void>( m_mgr->allocate( size ), *m_mgr );
+			}
+
+			inline void deallocate( void* ptr, size_type size )
+			{
+				m_mgr->deallocate( converter::to_block_id( ptr, *m_mgr ), size );
 			}
 
 			bool equal( const member_allocator_impl& rhs ) const /*throw()*/

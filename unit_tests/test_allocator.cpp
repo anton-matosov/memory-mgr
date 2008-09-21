@@ -23,7 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include "stdafx.h"
-#include "test_case.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/size_tracking.h>
@@ -49,22 +48,28 @@ typedef memory_mgr::singleton_manager
 
 MGR_DECLARE_MANAGER_CLASS(allocator_manager, alloc_mgr);
 
-typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-allocator_manager> > string_type;
-template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-allocator_manager> >;
-
-typedef std::vector<int, memory_mgr::allocator<int, 
-allocator_manager> > vector_type;
-template class std::vector<int, memory_mgr::allocator<int, 
-allocator_manager> >;
-
-typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<const int, int>, 
-allocator_manager> > map_type;
-template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
-allocator_manager> >;
-
 BOOST_AUTO_TEST_SUITE( test_allocator )
+
+
+	//////////////////////////////////////////////////////////////////////////
+	typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+					allocator_manager> > string_type;
+
+	template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+					allocator_manager> >;
+
+	//////////////////////////////////////////////////////////////////////////
+	typedef std::vector<int, memory_mgr::allocator<int, 
+	allocator_manager> > vector_type;
+
+	template class std::vector<int, memory_mgr::allocator<int, allocator_manager> >;
+
+	//////////////////////////////////////////////////////////////////////////
+	typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<const int, int>, 
+		allocator_manager> > map_type;
+
+	template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
+		allocator_manager> >;
 
 	BOOST_AUTO_TEST_CASE( unit_test )
 	{	

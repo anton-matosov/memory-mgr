@@ -22,7 +22,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "test_case.h"
 #include "test_class.h"
 
 BOOST_AUTO_TEST_SUITE( test_managed_base )

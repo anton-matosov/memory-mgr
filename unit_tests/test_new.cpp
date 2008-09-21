@@ -37,19 +37,16 @@ memory_mgr::singleton_manager
 
 MGR_DECLARE_MANAGER_CLASS( sing_name_seg_heap_pt_mgg, sing_name_seg_heap_pt_mgr_type );
 
-typedef int builtin_type;
 
+BOOST_AUTO_TEST_SUITE( test_new )
 
-namespace
-{
 	const char* name1 = "name1";
 	const char* name2 = "name2";
 
 	const char* name1_arr = "name1 arr";
 	const char* name2_arr = "name2 arr";
-}
 
-BOOST_AUTO_TEST_SUITE( test_new )
+	typedef int builtin_type;
 
 	typedef boost::mpl::list< sing_name_seg_heap_pt_mgg > managers_list;
 
@@ -168,6 +165,20 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		delete_( ptr2, mem_mgr<mgr_type>() );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
+	{
+		int* null_ptr = 0;
+
+		BOOST_CHECKPOINT( "before deletion of null ptr" );
+		delete_( null_ptr, mem_mgr<mgr_type>() );
+		BOOST_CHECKPOINT( "after deletion of null ptr" );
+
+
+		BOOST_CHECKPOINT( "before deletion of null array" );
+		delete_array( null_ptr, mem_mgr<mgr_type>() );
+		BOOST_CHECKPOINT( "after deletion of null array" );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

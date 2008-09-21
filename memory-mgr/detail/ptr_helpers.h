@@ -30,6 +30,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <assert.h>
 #include <memory-mgr/manager_traits.h>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 namespace memory_mgr
 {
@@ -82,13 +84,23 @@ namespace memory_mgr
 		}
 
 		template<class T, class MemMgr>
-		static inline T* to_pointer( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
+		static inline typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
+			to_pointer( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
 		{
-			return static_cast<T*>( mgr.offset_to_pointer( offset ) );
+			return static_cast<typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*>(
+				mgr.offset_to_pointer( offset ) );
 		}
 
 		template<class T, class MemMgr>
-		static inline T* to_pointer( const T* ptr, MemMgr& /*mgr*/ )
+		static inline typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
+			to_pointer( typename boost::remove_pointer< typename boost::remove_const<T>::type >::type* ptr, MemMgr& /*mgr*/ )
+		{
+			return ptr;
+		}
+
+		template<class T, class MemMgr>
+		static inline const typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
+			to_pointer( const typename boost::remove_pointer< typename boost::remove_const<T>::type >::type* ptr, MemMgr& /*mgr*/ )
 		{
 			return ptr;
 		}

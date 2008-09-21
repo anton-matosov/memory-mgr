@@ -43,6 +43,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <boost/utility.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 namespace memory_mgr
 {

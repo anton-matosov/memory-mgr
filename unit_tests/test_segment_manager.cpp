@@ -22,15 +22,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "test_case.h"
 #include <memory-mgr/segment_manager.h>
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/pointer_convert.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/heap_segment.h>
 
-namespace
-{
+BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
 	typedef unsigned char chunk_type;
 	const size_t chunk_size = 4;
@@ -44,73 +42,91 @@ namespace
 	typedef memory_mgr::pointer_convert<segmgr_type> pconv_segmgr_type;
 	typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
 
-	typedef memory_mgr::manager_traits<segmgr_type>::offset_type offset_type;
 
-
-	enum
+	template<class T>
+	bool is_valid_ptr( T p )
 	{
-		alloc_chunks = memory_mgr::manager_traits<segmgr_type>::allocable_chunks * segmgr_type::num_segments
-	};
+		return p != memory_mgr::offset_traits<T>::invalid_offset;
+	}
+	typedef boost::mpl::list< segmgr_type, pconv_segmgr_type, sz_pconv_segmgr_type > managers_list;
 
-	bool is_valid_ptr( offset_type p )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, mgr_type, managers_list )
 	{
-		return p != memory_mgr::offset_traits<size_t>::invalid_offset;
+		mgr_type mgr;
+
+		BOOST_CHECKPOINT( "Allocating one object" );
+		mgr.allocate( chunk_size, std::nothrow_t() );
+		
+		BOOST_CHECKPOINT( "Clear memory" );
+		mgr.clear();
+
+		BOOST_CHECK( mgr.is_free() );
 	}
 
-	bool is_valid_ptr( void* p )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_alloc_dealloc, mgr_type, managers_list )
 	{
-		return p != 0;
-	}
+		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
+		typedef traits_type::block_id_type					block_id_type;
+		enum
+		{
+			allocable_chunks = traits_type::allocable_chunks 
+			/ (traits_type::memory_overhead ? traits_type::memory_overhead : 1 )
+		};
 
-	template< class MemMgr, class PtrType>
-	bool test_alloc_dealloc()
-	{
-		SUBTEST_START( L"allocation/deallocation" );
+		typedef std::vector< block_id_type >			ptrs_vec;
 
-		typedef PtrType					ptr_type;
-		typedef std::vector< ptr_type >			ptrs_vec;
-
-		MemMgr segmgr;
+		mgr_type segmgr;
 		ptrs_vec ptrs;
 
-		ptr_type p = 0;
-
-		ptrs.reserve( alloc_chunks );
-		for( size_t i = 0; i < alloc_chunks; ++i )
+		block_id_type p = 0;
+		
+		ptrs.reserve( allocable_chunks );
+		BOOST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
+		for( size_t i = 0; i < allocable_chunks; ++i )
 		{
 			p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
 
 			ptrs.push_back( p );
 			if( !is_valid_ptr( p ) )
 			{
+				BOOST_ERROR( "Allocation failed" );
 				break;
 			}
 		}
 
 		std::random_shuffle( ptrs.begin(), ptrs.end() );
 
+		BOOST_CHECKPOINT( "Dellocating all objects" );
 		for ( typename ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 		{
 			segmgr.deallocate( *it, chunk_size );
 		}
 
-		SUBTEST_END( segmgr.is_free() );
+		BOOST_CHECK( segmgr.is_free() );
 	}
 
-	bool test_offset_convertions()
+	BOOST_AUTO_TEST_CASE( test_offset_convertions )
 	{
-		SUBTEST_START( L"get_offset_base" );
+		typedef segmgr_type								mgr_type;
+		typedef memory_mgr::manager_traits<mgr_type>	traits_type;
+		typedef traits_type::offset_type				offset_type;
+		typedef traits_type::chunk_type					chunk_type;
+		typedef traits_type::block_id_type				block_id_type;
+		enum
+		{
+			allocable_chunks = memory_mgr::manager_traits<mgr_type>::allocable_chunks
+		};
 
+		typedef std::vector< block_id_type > ptrs_vec;
 
-		typedef std::vector< offset_type > ptrs_vec;
+		mgr_type segmgr;
 
-		segmgr_type segmgr;
-
-		size_t p = 0;
+		block_id_type p = 0;
 		ptrs_vec ptrs;
 
-		ptrs.reserve( alloc_chunks );
-		for( size_t i = 0; i < alloc_chunks && p != memory_mgr::offset_traits<size_t>::invalid_offset; ++i )
+		ptrs.reserve( allocable_chunks );
+		BOOST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
+		for( size_t i = 0; i < allocable_chunks && is_valid_ptr( p ); ++i )
 		{
 			p = segmgr.allocate( chunk_size, std::nothrow_t() );
 			ptrs.push_back( p );
@@ -120,84 +136,31 @@ namespace
 
 		for ( ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 		{
-			size_t p = *it;
+			block_id_type p = *it;
 			void* p_base = segmgr.get_offset_base( p );
 			void* vp = segmgr.offset_to_pointer( p );
 			void* vp_base = segmgr.get_ptr_base( vp );
-			if( vp_base != p_base )
-			{
-				TEST_FAILED_MSG( L"Invalid base" );
-			}
+			BOOST_CHECK_EQUAL( vp_base, p_base );
 
-			size_t off = segmgr.pointer_to_offset( vp ) ;
-			if( off != p )
-			{
-				TEST_FAILED_MSG( L"Invalid offset" );
-			}
+			size_t off = segmgr.pointer_to_offset( vp );
+			BOOST_CHECK_EQUAL( off, p );
 
 			segmgr.deallocate( *it, chunk_size );
 		}
 
-		SUBTEST_END( segmgr.is_free() );
+		BOOST_CHECK( segmgr.is_free() );
+	
 	}
-
-	template<class MemMgr>
-	bool test_clear()
-	{
-		SUBTEST_START( L"clear manager" );
-		MemMgr mgr;
-
-		mgr.allocate( chunk_size, std::nothrow_t() );
-		mgr.clear();
-
-		SUBTEST_END( mgr.is_free() );
-	}
-
-	template<class MemMgr>
-	bool test_null_ptr()
-	{
-		SUBTEST_START( L"deallocation of null ptr" );
-		MemMgr mgr;
-
-		mgr.deallocate( 0, 0 );
-
-		SUBTEST_END( mgr.is_free() );
-	}
-
-	bool test_inv_offset()
-	{
-		SUBTEST_START( L"deallocation of null ptr" );
-		segmgr_type mgr;
-
-		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-		mgr.deallocate( null_ptr, 0 );
-
-		SUBTEST_END( mgr.is_free() );
-	}
-}
-
-BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
 	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
-		test::test_null_pointer_dealloc<pconv_segmgr_type>();
-		test::test_null_pointer_dealloc<sz_pconv_segmgr_type>();
+		test::test_null_pointer_dealloc_seg<pconv_segmgr_type>();
+		test::test_null_pointer_dealloc_seg<sz_pconv_segmgr_type>();
 	}
 
 	BOOST_AUTO_TEST_CASE( test_inv_offset )
 	{
-		test::test_null_pointer_dealloc<segmgr_type>();
-	}
-
-	BOOST_AUTO_TEST_CASE( test_segment_manager )
-	{
-// 		BOOST_CHECK( (
-// 			test_alloc_dealloc<segmgr_type, offset_type>()
-// 			&& test_clear<sz_pconv_segmgr_type>()
-// 			&& test_offset_convertions()
-// 			&& test_alloc_dealloc<pconv_segmgr_type, void*>()
-// 			&& test_alloc_dealloc<sz_pconv_segmgr_type, void*>()
-// 			)  );
+		test::test_null_pointer_dealloc_seg<segmgr_type>();
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

@@ -22,55 +22,58 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include "test_case.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 
-typedef unsigned char chunk_type;
-static const size_t chunk_size = 4;
-static const size_t memory_size = 256;
-
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-
-template class memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type >;
-
-typedef memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type > segmmgr_type;
 
 
 BOOST_AUTO_TEST_SUITE( test_memory_segment )
 
-typedef boost::mpl::list< segmmgr_type > managers_list;
+	typedef unsigned char chunk_type;
+	static const size_t chunk_size = 4;
+	static const size_t memory_size = 256;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
-{
-	typedef memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
-	typedef memory_mgr::manager_traits<mgr_type>::size_type		size_type;
+	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-	const size_type obj_size = 4;
+	template class memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type >;
 
-	mgr_type mgr;
-	BOOST_CHECK( mgr.is_free() );
+	typedef memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type > segmmgr_type;
 
-	
-	offset_type p1 = mgr.allocate( obj_size );
-	offset_type p2 = mgr.allocate( obj_size );
-	offset_type p3 = mgr.allocate( obj_size );
-	offset_type p4 = mgr.allocate( obj_size );
-	offset_type p5 = mgr.allocate( obj_size );
+	typedef boost::mpl::list< segmmgr_type > managers_list;
 
+	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
+	{
+		typedef memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
+		typedef memory_mgr::manager_traits<mgr_type>::size_type		size_type;
 
-	test::check_pointers( p1, p2, p3, p4, p5 );
+		const size_type obj_size = 4;
 
-	mgr.deallocate( p3, obj_size );
-	mgr.deallocate( p5, obj_size );
-	mgr.deallocate( p1, obj_size );
-	mgr.deallocate( p2, obj_size );
-	mgr.deallocate( p4, obj_size );
+		mgr_type mgr;
+		BOOST_CHECK( mgr.is_free() );
 
-	BOOST_CHECK( mgr.is_free() );
-}
+		
+		offset_type p1 = mgr.allocate( obj_size );
+		offset_type p2 = mgr.allocate( obj_size );
+		offset_type p3 = mgr.allocate( obj_size );
+		offset_type p4 = mgr.allocate( obj_size );
+		offset_type p5 = mgr.allocate( obj_size );
 
 
+		test::check_pointers( p1, p2, p3, p4, p5 );
+
+		mgr.deallocate( p3, obj_size );
+		mgr.deallocate( p5, obj_size );
+		mgr.deallocate( p1, obj_size );
+		mgr.deallocate( p2, obj_size );
+		mgr.deallocate( p4, obj_size );
+
+		BOOST_CHECK( mgr.is_free() );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
+	{
+		test::test_null_pointer_dealloc_seg<mgr_type>();
+	}
 BOOST_AUTO_TEST_SUITE_END();
 
 

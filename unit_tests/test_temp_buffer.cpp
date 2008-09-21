@@ -23,7 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "StdAfx.h"
 #include <stdio.h>
-#include "test_case.h"
 #include <memory-mgr/detail/temp_buffer.h>
 
 using memory_mgr::detail::char_buffer;

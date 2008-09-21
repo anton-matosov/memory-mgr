@@ -34,7 +34,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator.h>
-#include <memory-mgr/new.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
@@ -74,7 +73,10 @@ namespace memory_mgr
 			{
 				if( mgr.is_free() )
 				{
-					m_objects = new( mem_mgr(mgr) ) map_type( compare_type(), m_alloc );
+					typedef allocator_type::rebind<map_type>::other map_alloc_type;
+					map_alloc_type map_alloc( &mgr );
+					m_objects = map_alloc.allocate( 1 );
+					new( m_objects ) map_type( compare_type(), m_alloc );
 				}
 				else
 				{

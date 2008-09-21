@@ -301,6 +301,11 @@ namespace memory_mgr
 	struct manager_traits< segment_manager< MemMgr, SegCount > > 
 		: public manager_traits< MemMgr >
 	{
+		enum
+		{
+			num_segments		= SegCount /**< maximum number of segments managed by this manager*/,
+			allocable_chunks	= manager_traits< MemMgr >::allocable_chunks * num_segments
+		};
 	};
 }
 

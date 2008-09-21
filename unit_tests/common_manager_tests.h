@@ -30,33 +30,48 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/allocator.h>
 
 namespace test
 {
-	template<class MemMgr>
-	void test_data_validness()
+// 	class mgr_allocator
+// 	{
+// 	public:
+// 		inline void deallocate( void* ptr, size_type size )
+// 		{
+// 			m_mgr->deallocate( ptr, size );
+// 		}
+// 
+// 		// allocate array of count elements
+// 		inline void* allocate(size_type size)
+// 		{	
+// 			return m_mgr->allocate( size );
+// 		}
+// 	};
+
+	template<class MemMgr, class Allocator>
+	void test_data_validness_impl()
 	{
 		enum{ minimum_memory_size = 64 * 1024 };
 		typedef MemMgr										mgr_type;
 		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
 		typedef traits_type::offset_type					offset_type;
-		typedef traits_type::chunk_type						block_type;
+		typedef traits_type::chunk_type						chunk_type;
+		typedef Allocator::rebind<int>::other				allocator;
 
 		STATIC_ASSERT( traits_type::memory_size >= minimum_memory_size, memory_size_is_too_low );
 
-		std::vector<block_type> memory( traits_type::memory_size );
+		std::vector<chunk_type> memory( traits_type::memory_size );
 		mgr_type mgr( &*memory.begin() );
-		// 	typedef typename boost::mpl::if_c< 
-		// 		is_category_supported< MemMgr, pointer_conversion_tag>::value,
-		// 		void*,
-		// 		typename manager_traits<MemMgr>::offset_type>::type objects_type;
-
+		allocator alloc( &mgr );
+		
 		typedef std::map<int*, int> ptrval_map_type;
 		ptrval_map_type real_vals;
 
 		for( int i = 0; i < 1000; ++i )
 		{
-			int* p = memory_mgr::detail::to_pointer<int>( mgr.allocate( sizeof(int) ), mgr );
+			//int* p = memory_mgr::detail::to_pointer<int>( mgr.allocate( sizeof(int) ), mgr );
+			int *p = alloc.allocate(1);
 			BOOST_CHECK( p != 0 );
 			int val = rand();
 			*p = val;
@@ -67,8 +82,21 @@ namespace test
 		for( ptrval_map_type::const_iterator it = real_vals.begin(); it != real_vals.end(); ++it )
 		{
 			BOOST_CHECK_EQUAL( *it->first, it->second );
-			mgr.deallocate( memory_mgr::detail::to_offset( it->first, mgr ), sizeof(int) );
+			//mgr.deallocate( memory_mgr::detail::to_offset( it->first, mgr ), sizeof(int) );
+			alloc.deallocate( it->first, 1 );
 		}
+	}
+
+	template<class MemMgr>
+	void test_data_validness()
+	{
+		test_data_validness_impl<MemMgr, memory_mgr::member_allocator<int, MemMgr> >();
+	}
+
+	template<class MemMgr>
+	void test_data_validness_singleton()
+	{
+		test_data_validness_impl<MemMgr, memory_mgr::allocator<int, MemMgr> >();
 	}
 
 	//Test pointers on validness
@@ -90,43 +118,40 @@ namespace test
 	}
 
 	template<class MemMgr>
-	void test_null_pointer_dealloc()
+	void test_null_pointer_dealloc_impl( MemMgr& mgr )
 	{
-		typedef memmgr_type	MemMgr;
+		typedef MemMgr memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef traits_type::offset_type					offset_type;
-		typedef traits_type::chunk_type						block_type;
+		typedef traits_type::block_id_type					block_id_type;
 
-		std::vector<block_type> memory( traits_type::memory_size );
-		memmgr_type mgr( &*memory.begin() );
-
-		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+		block_id_type null_ptr = memory_mgr::offset_traits<block_id_type>::invalid_offset;
 
 		BOOST_CHECKPOINT( "before deallocation of null ptr" );
 		mgr.deallocate( null_ptr, 0 );
 		BOOST_CHECKPOINT( "after deallocation of null ptr" );
 	}
+
+	template<class MemMgr>
+	void test_null_pointer_dealloc_seg()
+	{
+		MemMgr mgr;
+		test_null_pointer_dealloc_impl( mgr );
+	}
+
+
+	template<class MemMgr>
+	void test_null_pointer_dealloc()
+	{
+		typedef MemMgr memmgr_type;
+		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
+		typedef traits_type::chunk_type						chunk_type;
+
+		std::vector<chunk_type> memory( traits_type::memory_size );
+		memmgr_type mgr( &*memory.begin() );
+		test_null_pointer_dealloc_impl( mgr );
+	}
 };
 
-// template<class MemMgr, class OffsetT = typename boost::mpl::if_c< 
-// 		is_category_supported< MemMgr, pointer_conversion_tag>::value,
-// 		void*,
-// 		typename manager_traits<MemMgr>::offset_type>::type>
-// void test_null_ptr()
-// {
-// 	typedef MemMgr	memmgr_type;
-// 	typedef typename memory_mgr::manager_traits<memmgr_type>::chunk_type	chunk_type;
-// 	typedef typename memory_mgr::manager_traits<memmgr_type>::offset_type	offset_type;
-// 
-// 	std::vector<chunk_type> memory( memory_mgr::manager_traits<memmgr_type>::memory_size );
-// 	memmgr_type mgr( &*memory.begin() );
-// 
-// 	offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-// 
-// 	BOOST_CHECKPOINT( "before deallocation of null ptr" );
-// 	mgr.deallocate( null_ptr, 0 );
-// 	BOOST_CHECKPOINT( "after deallocation of null ptr" );
-// }
 
 #endif //MGR_COMMON_MANAGER_TESTS_HEADER
 

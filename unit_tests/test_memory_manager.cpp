@@ -23,27 +23,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "StdAfx.h"
 #include <vector>
-#include "test_case.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
-namespace
-{
+BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
 	typedef unsigned char chunk_type;
 	const size_t chunk_size = 4;
 	const size_t memory_size = 256;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-
-	//template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size >;
-
 	typedef memmgr_type::offset_type offset_type;
-}
-
-
-BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
 	BOOST_AUTO_TEST_CASE( test_alloc_dealloc )
 	{	
@@ -85,28 +76,20 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
 		size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
 		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-		try
-		{
-			
-			offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
-			BOOST_CHECK( p_inval1 == null_ptr );
+					
+		offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
+		BOOST_CHECK( p_inval1 == null_ptr );
+		
+		offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
+		BOOST_CHECK( p_valid != null_ptr );
+		
+		offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
+		BOOST_CHECK( p_inval2 == null_ptr );
 
-			
-			offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
-			BOOST_CHECK( p_valid != null_ptr );
-
-			
-			offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
-			BOOST_CHECK( p_inval2 == null_ptr );
-
-			BOOST_CHECK( p_valid != null_ptr
-				&& p_inval1 == null_ptr
-				&& p_inval2 == null_ptr );
-		}
-		catch( std::bad_alloc& )
-		{
-			BOOST_ERROR( "exception thrown by no_throw() method" );	
-		}
+		BOOST_CHECK( p_valid != null_ptr
+			&& p_inval1 == null_ptr
+			&& p_inval2 == null_ptr );
+		
 	}
 
 
@@ -131,11 +114,7 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 			{
 				ptr = mgr.allocate( memory_mgr::manager_traits< memmgr_type >::chunk_size );
 				void* p = memory_mgr::detail::offset_to_pointer( ptr, mgr );
-				if( p >= upper_bound )
-				{
-					BOOST_ERROR( "returned pointer is out of upper segment bound" );	
-				}
-
+				BOOST_CHECK_MESSAGE( p < upper_bound, "returned pointer is out of upper segment bound" );
 			}
 		}
 		catch( std::bad_alloc& )
@@ -152,18 +131,6 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
 		test::test_null_pointer_dealloc<memmgr_type>();
-// 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-// 		typedef traits_type::offset_type					offset_type;
-// 		typedef traits_type::chunk_type						chunk_type;
-// 
-// 		std::vector<chunk_type> memory( traits_type::memory_size );
-// 		memmgr_type mgr( &*memory.begin() );
-// 
-// 		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
-// 
-// 		BOOST_CHECKPOINT( "before deallocation of null ptr" );
-// 		mgr.deallocate( null_ptr, 0 );
-// 		BOOST_CHECKPOINT( "after deallocation of null ptr" );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();
