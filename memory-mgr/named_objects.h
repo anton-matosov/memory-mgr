@@ -38,35 +38,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	namespace detail
-	{
-		template<bool toStdPointer> 
-		class object_converter
-		{};
-
-		template</*bool toStdPointer*/> 
-		class object_converter<true>
-		{
-		public:
-			template<class MemMgr>
-			static inline void* convert( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
-			{
-				return detail::offset_to_pointer( offset, mgr );
-			}
-		};
-
-		template</*bool toStdPointer*/> 
-		class object_converter<false>
-		{
-		public:
-			template<class MemMgr>
-			static inline typename manager_traits<MemMgr>::offset_type convert( typename manager_traits<MemMgr>::offset_type offset,
-				MemMgr&  )
-			{
-				return offset;
-			}
-		};
-	}
 	/**
 	@add_comment
 	*/
@@ -78,20 +49,19 @@ namespace memory_mgr
 	class named_objects
 		:public detail::decorator_base<MemMgr>
 	{
-		typedef detail::decorator_base<MemMgr> base_type;
-		//typedef MemMgr base_type;
-		typedef MemMgr mgr_type;
-		typedef NamedAllocatorTraits	named_allocator_traits;
-		typedef detail::named_allocator<MemMgr, named_allocator_traits>	named_allocator_type;
+		typedef detail::decorator_base<MemMgr>								base_type;
 
-		typedef typename named_allocator_type::string_type string_type;
+		typedef MemMgr														mgr_type;
+		typedef NamedAllocatorTraits										named_allocator_traits;
+		typedef detail::named_allocator<MemMgr, named_allocator_traits>		named_allocator_type;
+
+		typedef typename named_allocator_type::string_type					string_type;
 
 		named_allocator_type	m_alloc;
 
-		//typedef detail::object_converter<is_category_supported< MemMgr, pointer_conversion_tag>::value> converter;
-		//typedef block_id_converter<mgr_type> converter;
 		typedef typename manager_traits<MemMgr>::block_id_converter_type	converter;
-	public:	
+
+	public:
 		/**
 		@brief Type used to store size, commonly std::size_t
 		@see static_bitset::size_type
@@ -106,7 +76,17 @@ namespace memory_mgr
 		typedef typename named_allocator_type::offset_type		offset_type;
 
 		typedef typename manager_traits<MemMgr>::block_id_type	block_id_type;
+	
+		/**
+		@brief Type of synchronization object passed as template
+		parameter                                               
+		*/
+		typedef typename base_type::sync_object_type		sync_object_type;
 
+		/**
+		@brief lock type, used for synchronization
+		*/
+		typedef typename base_type::lock_type				lock_type;
 
 		/**
 		@brief Default constructor, creates memory manager 
@@ -132,11 +112,13 @@ namespace memory_mgr
 
 		bool is_exists( const char* name )
 		{
+			lock_type lock( get_lockable() );
 			return m_alloc.is_exists( name );
 		}
 
 		inline block_id_type allocate( size_type size, const char* name )
 		{
+			lock_type lock( get_lockable() );
 			block_id_type offset = converter::to_block_id( m_alloc.get_object( name ), *this );
 			if( offset ==  offset_traits<block_id_type>::invalid_offset )
 			{
@@ -148,6 +130,7 @@ namespace memory_mgr
 
 		inline void deallocate( const block_id_type p, size_type size, const char* name )
 		{
+			lock_type lock( get_lockable() );
 			m_alloc.remove_object( name );
 			this->m_mgr.deallocate( p, size );
 		}

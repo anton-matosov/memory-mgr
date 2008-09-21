@@ -89,6 +89,22 @@ namespace memory_mgr
 			typedef typename manager_traits<mgr_type>::block_id_type	block_id_type;
 
 			/**
+			@brief Type of synchronization object passed as template
+			parameter                                               
+			*/
+			typedef typename manager_traits<mgr_type>::sync_object_type		sync_object_type;
+
+			/**
+			@brief lockable type, used for synchronization
+			*/
+			typedef typename manager_traits<mgr_type>::lockable_type		lockable_type;
+
+			/**
+			@brief lock type, used for synchronization
+			*/
+			typedef typename manager_traits<mgr_type>::lock_type			lock_type;
+
+			/**
 			   @brief Call this method to know is there available memory in
 				manager
 
@@ -160,6 +176,11 @@ namespace memory_mgr
 			inline offset_type pointer_to_offset( const void* ptr )
 			{
 				return m_mgr.pointer_to_offset( ptr );
+			}
+
+			inline lockable_type& get_lockable()
+			{
+				return m_mgr.get_lockable();
 			}
 		};
 

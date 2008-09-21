@@ -76,6 +76,21 @@ namespace memory_mgr
 			typedef std::pair<seg_base_type, size_type>						segment_data_type;
 			typedef size_type												seg_id_type;
 
+			/**
+			@brief Type of synchronization object passed as template
+			parameter                                               
+			*/
+			typedef typename manager_traits<segment_type>::sync_object_type		sync_object_type;
+
+			/**
+			@brief lockable type, used for synchronization
+			*/
+			typedef typename manager_traits<segment_type>::lockable_type		lockable_type;
+
+			/**
+			@brief lock type, used for synchronization
+			*/
+			typedef typename manager_traits<segment_type>::lock_type			lock_type;
 
 			enum
 			{

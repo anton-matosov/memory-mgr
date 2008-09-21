@@ -59,6 +59,24 @@ namespace memory_mgr
 	{
 		typedef storage_policy<MemMgr, SegmentsCount> base_type;
 	public:
+
+		/**
+		@brief Type of synchronization object passed as template
+		parameter                                               
+		*/
+		typedef typename base_type::sync_object_type	sync_object_type;
+
+		/**
+		@brief lockable type, used for synchronization
+		*/
+		typedef typename base_type::lockable_type		lockable_type;
+
+		/**
+		@brief lock type, used for synchronization
+		*/
+		typedef typename base_type::lock_type			lock_type;
+
+
 		enum
 		{
 			num_segments		= base_type::num_segments,
@@ -74,6 +92,7 @@ namespace memory_mgr
 		typedef typename base_type::segment_data_type		segment_data_type;
 
 		size_type m_curr_segment;
+		lockable_type	m_lockable;
 
 		static inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
 		{
@@ -98,6 +117,7 @@ namespace memory_mgr
 
 			segment_ptr_type segment = get_segment(m_curr_segment);
 
+			lock_type lock( get_lockable() );
 			offset_type offset = segment->allocate( size, std::nothrow_t() );
 			size_type seg_id = m_curr_segment + 1;
 
@@ -175,6 +195,7 @@ namespace memory_mgr
  		{
 			if( offset != offset_traits<offset_type>::invalid_offset )
 			{
+				lock_type lock( get_lockable() );
 				get_segment( seg_id_by_offset( offset ) )->deallocate( offset & offset_mask, size );
 			}
  		}
@@ -265,6 +286,7 @@ namespace memory_mgr
 		*/
 		inline bool empty()
 		{
+			lock_type lock( get_lockable() );
 			return for_each_if( std::mem_fun( &segment_type::empty ) );
 		}
 
@@ -276,6 +298,7 @@ namespace memory_mgr
 		*/
 		inline bool is_free()
 		{
+			lock_type lock( get_lockable() );
 			return for_each_if( std::mem_fun( &segment_type::is_free ) );
 		}
 
@@ -285,11 +308,17 @@ namespace memory_mgr
 		*/
 		inline void clear()
 		{
+			lock_type lock( get_lockable() );
 			for_each( std::mem_fun( &segment_type::clear ) );
  			m_curr_segment = 0;
 			
 			//Delete all segments
 			delete_segments();
+		}
+
+		inline lockable_type& get_lockable()
+		{
+			return m_lockable;
 		}
 	};
 

@@ -82,7 +82,7 @@ namespace memory_mgr
 
 			template< typename T >
 			object_level_lockable( T val )
-				:m_syncObj( val )
+				:m_sync_object( val )
 			{}
 
 			class lock
@@ -91,12 +91,12 @@ namespace memory_mgr
 				lock( const object_level_lockable &c ) 
 					: m_lackable(c)
 				{ 
-					m_lackable.m_syncObj.Enter();
+					m_lackable.m_sync_object.Enter();
 				};
 
 				~lock()
 				{ 
-					m_lackable.m_syncObj.Leave();
+					m_lackable.m_sync_object.Leave();
 				};
 
 			private:
@@ -105,8 +105,9 @@ namespace memory_mgr
 				lock(const lock &c);
 				lock& operator=(const lock &c);
 			};
+			typedef		lock	lock_type;
 		private:
-			mutable SyncObjT m_syncObj;
+			mutable SyncObjT m_sync_object;
 			object_level_lockable( const object_level_lockable& );
 			object_level_lockable& operator=( const object_level_lockable& );
 		};
@@ -115,7 +116,7 @@ namespace memory_mgr
 		template <class SyncObjT>
 		class class_level_lockable
 		{
-			static SyncObjT sm_syncObj;
+			static SyncObjT sm_sync_object;
 
 		public:
 			//class lock;
@@ -128,18 +129,18 @@ namespace memory_mgr
 			public:
 				lock()
 				{
-					sm_syncObj.Enter();
+					sm_sync_object.Enter();
 				}
 
 				~lock()
 				{
-					sm_syncObj.Leave();
+					sm_sync_object.Leave();
 				}
 			};
 		};
 
 		template <class SyncObjT>
-		SyncObjT class_level_lockable<SyncObjT>::sm_syncObj;
+		SyncObjT class_level_lockable<SyncObjT>::sm_sync_object;
 
 	}//sync
 

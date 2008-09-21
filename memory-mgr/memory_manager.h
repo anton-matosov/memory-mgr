@@ -120,7 +120,7 @@ namespace memory_mgr
 		class OffsetType = size_t,
 		class SyncObj = sync::critical_section
 	>
-	class memory_manager : protected sync::object_level_lockable<SyncObj>
+	class memory_manager
 	{
 		typedef memory_mgr::allocable_memory_calc<ChunkType, MemorySize, ChunkSize> calc_type;
 
@@ -142,32 +142,12 @@ namespace memory_mgr
 		
 	private:	
 
-		/**
-		   @brief lock type, used for synchronization
-		*/
-		typedef typename sync::object_level_lockable<SyncObj>::lock lock;
 		
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
 		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
 
-		/**
-		   @brief Bit Manager used to store information about allocated
-		   memory chunks                                               
-		*/
-		bitmgr_type m_bitmgr;
-
-		/**
-		   @brief Pointer to memory base address from which offset is
-					calculated                                                
-		*/
-		char* m_offset_base;
-		
-		/**
-		   @brief Pointer to memory segment base address                                                
-		*/
-		void* m_segment_base;
 	public:
 		/**
 		   @brief Type of this
@@ -201,7 +181,17 @@ namespace memory_mgr
 		   parameter                                               
 		*/
 		typedef SyncObj										sync_object_type;
-		
+
+		/**
+		@brief lockable type, used for synchronization
+		*/
+		typedef typename sync::object_level_lockable<sync_object_type> lockable_type;
+
+		/**
+		@brief lock type, used for synchronization
+		*/
+		typedef typename lockable_type::lock_type			lock_type;
+
 		/**
 		   @brief memory offset type passed as template parameter
 		*/
@@ -277,7 +267,7 @@ namespace memory_mgr
  		{
 			if( offset != offset_traits<offset_type>::invalid_offset )
 			{
-				lock l(*this);
+				lock_type lock( get_lockable() );
  				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
 			}
  		}
@@ -369,7 +359,6 @@ namespace memory_mgr
 			return m_offset_base;
 		}
 
-
 		/**
 		   @add_comments
 		*/
@@ -381,6 +370,11 @@ namespace memory_mgr
 		inline char* get_ptr_base( void* /*ptr*/ ) const
 		{
 			return m_offset_base;
+		}
+
+		inline lockable_type& get_lockable()
+		{
+			return m_lockable;
 		}
 	private:
 		/**
@@ -425,9 +419,6 @@ namespace memory_mgr
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
 
-		
-
-
 		/**
 		   @brief Call this method to allocate memory block
 		   @return offset in bytes from memory base address.
@@ -439,7 +430,7 @@ namespace memory_mgr
 		template< class OnNoMemory >
 		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{
-			lock l(*this);
+			lock_type lock( get_lockable() );
 			size_type chunk_ind = m_bitmgr.allocate( chunks_required( size ) );
 			if( chunk_ind == bitmgr_type::npos )
 			{
@@ -448,6 +439,25 @@ namespace memory_mgr
 			}
 			return calc_offset( chunk_ind );
 		}
+
+		/**
+		@brief Bit Manager used to store information about allocated
+		memory chunks                                               
+		*/
+		bitmgr_type m_bitmgr;
+
+		/**
+		@brief Pointer to memory base address from which offset is
+		calculated                                                
+		*/
+		char* m_offset_base;
+
+		/**
+		@brief Pointer to memory segment base address                                                
+		*/
+		void* m_segment_base;
+
+		lockable_type m_lockable;
 	};	
 
 /**

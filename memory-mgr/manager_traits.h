@@ -86,7 +86,26 @@ namespace memory_mgr
 		*/
 		typedef typename manager_type::block_id_type		block_id_type;
 
+		/**
+		   @add_comments
+		*/
 		typedef block_id_converter<manager_type>			block_id_converter_type;
+
+		/**
+		@brief Type of synchronization object passed as template
+		parameter                                               
+		*/
+		typedef typename manager_type::sync_object_type		sync_object_type;
+
+		/**
+		@brief lockable type, used for synchronization
+		*/
+		typedef typename manager_type::lockable_type		lockable_type;
+
+		/**
+		@brief lock type, used for synchronization
+		*/
+		typedef typename manager_type::lock_type			lock_type;
 
 		enum
 		{
@@ -109,13 +128,17 @@ namespace memory_mgr
 	public:
 		typedef		MemMgr		mgr_type;
 		typedef	typename manager_traits<mgr_type>::block_id_type	block_id_type;
-
+		/**
+		@add_comments
+		*/
 		template<class MgrT>
 		static inline block_id_type	to_block_id( block_id_type id, MgrT& /*mgr*/ )
 		{
 			return id;
 		}
-		
+		/**
+		@add_comments
+		*/
 		template<class MgrT>
 		static inline block_id_type	to_block_id( void* id, MgrT& mgr )
 		{
