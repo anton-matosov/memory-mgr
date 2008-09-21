@@ -59,7 +59,6 @@ namespace memory_mgr
 			/**
 			@brief Bomb-method for global new for named objects, generates compile time error if called
 			*/
-			typedef MemMgr mgr_type;
 			static inline void* new_impl( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
@@ -455,7 +454,7 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 @remark all parameters are passed by compiler automatically
 */
 template<class MemMgr>
-static inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	if( p )
 	{
@@ -477,7 +476,7 @@ deallocates memory block in memory managed by mem_mgr
 @remark all parameters are passed by compiler automatically
 */
 template<class MemMgr>
-static inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
+inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
 {
 	if( p )
 	{
@@ -497,7 +496,7 @@ static inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_h
 @remark all parameters are passed by compiler automatically
 */
 template<class MemMgr>
-static inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
+inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr )
 {
 	if( p )
 	{
@@ -519,7 +518,7 @@ deallocates memory block in memory managed by mem_mgr
 @remark all parameters are passed by compiler automatically
 */
 template<class MemMgr>
-static inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
+inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr, const memory_mgr::object_name& /*name*/ )
 {
 	if( p )
 	{

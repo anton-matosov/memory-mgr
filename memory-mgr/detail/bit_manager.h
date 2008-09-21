@@ -88,7 +88,11 @@ namespace memory_mgr
 				num_bits = BitsCount /**< number of bits available for allocations*/
 			};
 
-			const static size_type npos = bitset_t::npos;
+			enum
+			{
+				npos = bitset_t::npos
+			};
+			//const static size_type npos = bitset_t::npos;
 
 			/**
 			   @brief Default constructor, initializes bit manager

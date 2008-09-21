@@ -19,10 +19,10 @@
   <kdevautoproject>
     <general>
       <activetarget>unit_tests/unit_tests</activetarget>
-      <useconfiguration>optimized</useconfiguration>
+      <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>perf_tests/perf_tests</mainprogram>
+      <mainprogram>unit_tests/unit_tests</mainprogram>
       <terminal>true</terminal>
       <directoryradio>build</directoryradio>
       <customdirectory>/</customdirectory>

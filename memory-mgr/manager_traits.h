@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+
 namespace memory_mgr
 {
 	//Forward declaration
@@ -68,12 +69,6 @@ namespace memory_mgr
 		*/
 		typedef typename manager_type::size_type			size_type;
 		
-		/**
-		   @brief Type of synchronization object passed as template
-		   parameter                                               
-		*/
-		typedef typename manager_type::sync_object_type		sync_object_type;
-
 		/**
 		   @brief memory offset type passed as template parameter
 		*/
@@ -119,32 +114,6 @@ namespace memory_mgr
 		};
 	};
 
-	/**
-	@brief Converter class which should be used to convert objects of block_id_type
-	*/
-	template<class MemMgr> 
-	class block_id_converter
-	{
-	public:
-		typedef		MemMgr		mgr_type;
-		typedef	typename manager_traits<mgr_type>::block_id_type	block_id_type;
-		/**
-		@add_comments
-		*/
-		template<class MgrT>
-		static inline block_id_type	to_block_id( block_id_type id, MgrT& /*mgr*/ )
-		{
-			return id;
-		}
-		/**
-		@add_comments
-		*/
-		template<class MgrT>
-		static inline block_id_type	to_block_id( void* id, MgrT& mgr )
-		{
-			return detail::to_offset( id, mgr );
-		}
-	};
 }
 
 #endif //MGR_MANAGER_TRAITS_HEADER

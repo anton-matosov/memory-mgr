@@ -276,7 +276,7 @@ namespace memory_mgr
 		   @brief invalid index value (null pos)
 		*/
 		const static size_type npos = ~size_type(0);
-
+		
 		/**
 		   @brief compile time computed constants
 		*/

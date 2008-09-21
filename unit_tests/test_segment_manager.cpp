@@ -65,8 +65,8 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_alloc_dealloc, mgr_type, managers_list )
 	{
-		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
-		typedef traits_type::block_id_type					block_id_type;
+		typedef typename memory_mgr::manager_traits<mgr_type>		traits_type;
+		typedef typename traits_type::block_id_type					block_id_type;
 		enum
 		{
 			allocable_chunks = traits_type::allocable_chunks 

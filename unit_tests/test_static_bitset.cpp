@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 	BOOST_AUTO_TEST_CASE_TEMPLATE( static_bitset, bitset_type, bitsets_list )
 	{
 		bitset_type bitset;
-		const bitset_type::size_type bits_count = bitset_type::num_bits;
+		const typename bitset_type::size_type bits_count = bitset_type::num_bits;
 		bitset.reset();
 
 		BOOST_CHECK_EQUAL( bitset.size(), bits_count );
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 		bitset.set(6,5);
 		BOOST_CHECK_EQUAL(  bitset.test(6,5), true );
 
-		bitset_type::size_type pos = bitset.find_first();
+		typename bitset_type::size_type pos = bitset.find_first();
 		BOOST_CHECK_EQUAL(  pos, sz_null );
 
 		pos = bitset.find_next(pos);

@@ -26,16 +26,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_pointer.h>
 #include <memory-mgr/size_tracking.h>
+#include <memory-mgr/new.h>
 
-#include "new.h"
 
 namespace
 {
-
-	typedef int builtin_type;
-
-
-
 	typedef memory_mgr::singleton_manager
 	< 
 		memory_mgr::size_tracking
@@ -49,13 +44,17 @@ namespace
 			>
 		>
 	> sz_heap_mgr;
+
+
 }
 
 MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, sz_heap_mgr );
 
-BOOST_AUTO_TEST_SUITE( test_offset_pointer )
-	
-class BaseTestClass 
+namespace
+{
+	typedef int builtin_type;
+
+	class BaseTestClass 
 		:public memory_mgr::managed_base<ptr_mem_mgr>
 	{
 		int i_;
@@ -81,14 +80,18 @@ class BaseTestClass
 			i2_(i + 1)
 		{}
 	};
+}
 
+template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
+
+BOOST_AUTO_TEST_SUITE( test_offset_pointer )
+	
 	typedef memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr > builtin_ptr;
 	typedef memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr > base_class_ptr;
 	typedef memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr > derived_class_ptr;
 
-	template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
-	template class memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr >;
-	template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
 	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr > pointer_types;
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, ptr_type, pointer_types )

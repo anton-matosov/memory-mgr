@@ -85,8 +85,8 @@ BOOST_AUTO_TEST_SUITE( test_named_objects )
 	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	{
 		//typedef mgr_type::object_type object_type;
-		typedef memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
-		typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
+		typedef typename memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
+		typedef typename memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
 		const block_id_type inv_off = memory_mgr::offset_traits<block_id_type>::invalid_offset;
 		const size_type obj_size = 4;

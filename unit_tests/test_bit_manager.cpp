@@ -25,19 +25,20 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "stdafx.h"
 #include <memory-mgr/detail/bit_manager.h>
 
+typedef unsigned char block_type;
+static const size_t bits_count = 32;
+typedef memory_mgr::detail::bit_manager<block_type, bits_count> bit_manager;
+typedef bit_manager::size_type ptr_type;
+
 BOOST_AUTO_TEST_SUITE( test_bit_manager )
 
-	typedef unsigned char block_type;
-	static const size_t bits_count = 32;
-	typedef memory_mgr::detail::bit_manager<block_type, bits_count> bit_manager;
-	typedef bit_manager::size_type ptr_type;
 
 	BOOST_AUTO_TEST_CASE( test_bit_manager )
 	{	
 		bit_manager bitmgr;
 
 		ptr_type p0 = bitmgr.allocate(0);
-		BOOST_CHECK_EQUAL(  p0, bit_manager::npos );
+		BOOST_CHECK_EQUAL(  p0, size_t( bit_manager::npos ) );
 
 		ptr_type p1 = bitmgr.allocate(1);
 		BOOST_CHECK_EQUAL(  p1, 0U );

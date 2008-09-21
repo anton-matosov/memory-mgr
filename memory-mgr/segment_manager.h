@@ -58,6 +58,11 @@ namespace memory_mgr
 		:private storage_policy<MemMgr, SegmentsCount>
 	{
 		typedef storage_policy<MemMgr, SegmentsCount> base_type;
+		typedef typename base_type::size_type					size_type;
+		typedef typename base_type::offset_type					offset_type;
+		typedef typename base_type::segment_data_type			segment_data_type;
+		typedef typename base_type::segment_ptr_type			segment_ptr_type;
+		typedef typename base_type::segment_type				segment_type;
 	public:
 
 		/**
@@ -76,7 +81,6 @@ namespace memory_mgr
 		*/
 		typedef typename base_type::lock_type			lock_type;
 
-
 		enum
 		{
 			num_segments		= base_type::num_segments,
@@ -86,11 +90,7 @@ namespace memory_mgr
 			segment_mask 		= base_type::segment_mask,
 			offset_mask 		= base_type::offset_mask
 		};
-	private:
-		typedef typename base_type::size_type				size_type;
-		typedef typename base_type::offset_type				offset_type;
-		typedef typename base_type::segment_data_type		segment_data_type;
-
+	private:	
 		size_type m_curr_segment;
 		lockable_type	m_lockable;
 
@@ -232,7 +232,7 @@ namespace memory_mgr
 		{	
 			bool found = false;
 			segment_data_type seg_data;
-			boost::tie( seg_data, found ) = find_segment( ptr );
+			boost::tie( seg_data, found ) = this->find_segment( ptr );
 			if( found )
 			{
 				return seg_data.first;
@@ -252,11 +252,11 @@ namespace memory_mgr
 			}
 			else
 			{
-				size_type seg_id = seg_id_by_offset( offset );
+				size_type seg_id = this->seg_id_by_offset( offset );
 				assert( seg_id < num_segments );
 				offset_type real_offset = offset & offset_mask;
 
-				return get_segment(seg_id)->offset_to_pointer( real_offset );
+				return this->get_segment(seg_id)->offset_to_pointer( real_offset );
 			}
 		}
 
@@ -267,10 +267,10 @@ namespace memory_mgr
 		{
 			bool found = false;
 			segment_data_type seg_data;
-			boost::tie( seg_data, found ) = find_segment( ptr );
+			boost::tie( seg_data, found ) = this->find_segment( ptr );
 			if( found )
 			{
-				return add_seg_id_to_offset( detail::diff( ptr, seg_data.first ), seg_data.second );
+				return this->add_seg_id_to_offset( detail::diff( ptr, seg_data.first ), seg_data.second );
 			}
 			return offset_traits<offset_type>::invalid_offset;
 		}
@@ -286,8 +286,8 @@ namespace memory_mgr
 		*/
 		inline bool empty()
 		{
-			lock_type lock( get_lockable() );
-			return for_each_if( std::mem_fun( &segment_type::empty ) );
+			lock_type lock( this->get_lockable() );
+			return this->for_each_if( std::mem_fun( &segment_type::empty ) );
 		}
 
 		/**
@@ -298,8 +298,8 @@ namespace memory_mgr
 		*/
 		inline bool is_free()
 		{
-			lock_type lock( get_lockable() );
-			return for_each_if( std::mem_fun( &segment_type::is_free ) );
+			lock_type lock( this->get_lockable() );
+			return this->for_each_if( std::mem_fun( &segment_type::is_free ) );
 		}
 
 		/**
@@ -308,12 +308,12 @@ namespace memory_mgr
 		*/
 		inline void clear()
 		{
-			lock_type lock( get_lockable() );
-			for_each( std::mem_fun( &segment_type::clear ) );
+			lock_type lock( this->get_lockable() );
+			this->for_each( std::mem_fun( &segment_type::clear ) );
  			m_curr_segment = 0;
 			
 			//Delete all segments
-			delete_segments();
+			this->delete_segments();
 		}
 
 		inline lockable_type& get_lockable()

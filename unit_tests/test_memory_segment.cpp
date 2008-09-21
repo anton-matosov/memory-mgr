@@ -26,7 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 
 
-
 BOOST_AUTO_TEST_SUITE( test_memory_segment )
 
 	typedef unsigned char chunk_type;
@@ -35,7 +34,6 @@ BOOST_AUTO_TEST_SUITE( test_memory_segment )
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
-	template class memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type >;
 
 	typedef memory_mgr::memory_segment< memory_mgr::detail::malloc_allocator, memmgr_type > segmmgr_type;
 
@@ -43,8 +41,8 @@ BOOST_AUTO_TEST_SUITE( test_memory_segment )
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	{
-		typedef memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
-		typedef memory_mgr::manager_traits<mgr_type>::size_type		size_type;
+		typedef typename memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
+		typedef typename memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
 		const size_type obj_size = 4;
 

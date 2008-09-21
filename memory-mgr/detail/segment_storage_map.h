@@ -44,11 +44,12 @@ namespace memory_mgr
 		class segment_storage_map
 			:protected segment_storage_base<MemMgr, SegmentsCount>
 		{
-			typedef segment_storage_base<MemMgr, SegmentsCount> base_type;
+			typedef segment_storage_base<MemMgr, SegmentsCount> 	base_type;
+			typedef typename base_type::seg_base_type		seg_base_type;
 
-			typedef std::map<seg_base_type, size_t>		seg_bases_type;
+			typedef std::map<seg_base_type, size_t>			seg_bases_type;
 
-			seg_bases_type								m_bases;
+			seg_bases_type						m_bases;
 		public:
 			enum
 			{
@@ -59,8 +60,8 @@ namespace memory_mgr
 				//segment_mask
 			};
 			typedef typename base_type::segment_ptr_type		segment_ptr_type;
-			typedef typename base_type::size_type				size_type;
-			typedef typename base_type::offset_type				offset_type;
+			typedef typename base_type::size_type			size_type;
+			typedef typename base_type::offset_type			offset_type;
 			typedef typename base_type::segment_data_type		segment_data_type;
 
 			segment_storage_map()
@@ -78,7 +79,7 @@ namespace memory_mgr
 			inline std::pair<segment_data_type, bool> find_segment( const void* ptr )
 			{
 				const char* p = detail::char_cast( ptr );
-				seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
+				typename seg_bases_type::const_iterator fres = m_bases.upper_bound( detail::unconst_char( p ) );
 				if( fres != m_bases.begin() )
 				{
 					--fres;
@@ -102,3 +103,4 @@ namespace memory_mgr
 }
 
 #endif //MGR_SEGMENT_STORAGE_MAP_HEADER
+

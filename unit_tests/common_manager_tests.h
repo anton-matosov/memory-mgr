@@ -52,14 +52,13 @@ namespace test
 	template<class MemMgr, class Allocator>
 	void test_data_validness_impl()
 	{
-		enum{ minimum_memory_size = 64 * 1024 };
 		typedef MemMgr										mgr_type;
 		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
-		typedef traits_type::offset_type					offset_type;
-		typedef traits_type::chunk_type						chunk_type;
-		typedef Allocator::rebind<int>::other				allocator;
+		typedef typename traits_type::offset_type			offset_type;
+		typedef typename traits_type::chunk_type			chunk_type;
+		typedef typename Allocator::template rebind<int>::other		allocator;
 
-		STATIC_ASSERT( traits_type::memory_size >= minimum_memory_size, memory_size_is_too_low );
+		STATIC_ASSERT( traits_type::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_low );
 
 		std::vector<chunk_type> memory( traits_type::memory_size );
 		mgr_type mgr( &*memory.begin() );
@@ -122,7 +121,7 @@ namespace test
 	{
 		typedef MemMgr memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef traits_type::block_id_type					block_id_type;
+		typedef typename traits_type::block_id_type					block_id_type;
 
 		block_id_type null_ptr = memory_mgr::offset_traits<block_id_type>::invalid_offset;
 
@@ -144,7 +143,7 @@ namespace test
 	{
 		typedef MemMgr memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef traits_type::chunk_type						chunk_type;
+		typedef typename traits_type::chunk_type		chunk_type;
 
 		std::vector<chunk_type> memory( traits_type::memory_size );
 		memmgr_type mgr( &*memory.begin() );

@@ -25,16 +25,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/shared_segment.h>
 
-
-BOOST_AUTO_TEST_SUITE( test_shared_segment )
-
+namespace
+{
 	typedef unsigned char chunk_type;
 	static const size_t chunk_size = 4;
 	static const size_t memory_size = 256;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+}
 
-	template class memory_mgr::shared_segment< memmgr_type >;
+template class memory_mgr::shared_segment< memmgr_type >;
+
+BOOST_AUTO_TEST_SUITE( test_shared_segment )
 
 	MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
 
@@ -44,8 +46,9 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( shared_segment_alloc_dealloc, mgr_type, managers_list )
 	{
-		typedef mgr_type::offset_type offset_type;
-		typedef memory_mgr::manager_traits<mgr_type>::size_type	size_type;
+		typedef memory_mgr::manager_traits<mgr_type> 	traits_type;
+		typedef typename traits_type::offset_type 	offset_type;
+		typedef typename traits_type::size_type		size_type;
 
 		const offset_type inv_off = memory_mgr::offset_traits<offset_type>::invalid_offset;
 		const size_type obj_size = 4;

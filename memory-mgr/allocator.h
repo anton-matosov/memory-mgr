@@ -64,7 +64,7 @@ namespace memory_mgr
 		template<class Other>
 		struct rebind
 		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename allocator< Other, mgr_type > other;
+			typedef allocator< Other, mgr_type > other;
 		};
 
 		template<class other>
@@ -80,6 +80,8 @@ namespace memory_mgr
 			return (*this);
 		}
 	};
+
+	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator );
 
 	template< class T,	class MemMgr >
 	class member_allocator
@@ -100,7 +102,7 @@ namespace memory_mgr
 		typedef typename base_type::difference_type		difference_type;
 
 		// construct allocator from pointer to manager
-		inline member_allocator( mgr_type* mgr )
+		inline member_allocator( mgr_type* mgr = 0 )
 			:base_type( mgr )
 		{
 		}
@@ -108,7 +110,7 @@ namespace memory_mgr
 		template<class Other>
 		struct rebind
 		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename member_allocator< Other, mgr_type > other;
+			typedef member_allocator< Other, mgr_type > other;
 		};
 
 		template<class other>
@@ -125,6 +127,7 @@ namespace memory_mgr
 		}
 	};
 
+	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( member_allocator );
 }
 
 #endif //MGR_ALLOCATOR_HEADER

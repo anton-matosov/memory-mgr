@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
+#include <memory-mgr/block_id_converter.h>
 
 namespace memory_mgr
 {
@@ -44,7 +45,7 @@ namespace memory_mgr
 			typedef typename traits_type::size_type						size_type;
 			typedef typename traits_type::block_id_converter_type		converter;
 
-			inline member_allocator_impl( mgr_type* mgr )
+			inline member_allocator_impl( mgr_type* mgr = 0 )
 				:m_mgr( mgr )
 			{
  				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value)
@@ -55,11 +56,13 @@ namespace memory_mgr
 			// allocate array of count elements
 			inline void* allocate(size_type size)
 			{	
+				assert( m_mgr );
 				return to_pointer<void>( m_mgr->allocate( size ), *m_mgr );
 			}
 
 			inline void deallocate( void* ptr, size_type size )
 			{
+				assert( m_mgr );
 				m_mgr->deallocate( converter::to_block_id( ptr, *m_mgr ), size );
 			}
 
@@ -75,3 +78,4 @@ namespace memory_mgr
 }
 
 #endif //MGR_MEMBER_ALLOCATOR_IMPL_HEADER
+

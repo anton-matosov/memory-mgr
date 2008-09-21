@@ -73,7 +73,7 @@ namespace memory_mgr
 			{
 				if( mgr.is_free() )
 				{
-					typedef allocator_type::rebind<map_type>::other map_alloc_type;
+					typedef typename allocator_type::template rebind<map_type>::other map_alloc_type;
 					map_alloc_type map_alloc( &mgr );
 					m_objects = map_alloc.allocate( 1 );
 					new( m_objects ) map_type( compare_type(), m_alloc );
@@ -106,7 +106,7 @@ namespace memory_mgr
 			{
 				string_type object_name( name, m_alloc );
 				offset_type offset = offset_traits<offset_type>::invalid_offset;
-				map_type::const_iterator fres = m_objects->find( object_name );
+				typename map_type::const_iterator fres = m_objects->find( object_name );
 				if( fres != m_objects->end() )
 				{
 					offset = fres->second;
@@ -123,7 +123,7 @@ namespace memory_mgr
 			const void remove_object( const offset_type ptr )
 			{
 				const offset_type offset = ptr;
-				map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
+				typename map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
 					std::bind2nd( std::ptr_fun( &equal_second_val<offset_type> ), offset ) );
 				if( fres != m_objects->end() )
 				{

@@ -149,24 +149,24 @@ namespace memory_mgr
 			}
 		};
 
-		// allocator TEMPLATE OPERATORS
-		template<class T,
-		class U, class mem_mgr, class impl_type >
-			inline bool operator==(const allocator_base<T, mem_mgr, impl_type>& lhs, const allocator_base<U, mem_mgr, impl_type>& rhs) /*throw()*/
-		{	// test for allocator equality (always true)
-			return lhs.equal( rhs );
-		}
-
-		template<class T,
-		class U, class mem_mgr, class impl_type >
-			inline bool operator!=(const allocator_base<T, mem_mgr, impl_type>& lhs, const allocator_base<U, mem_mgr, impl_type>& rhs) /*throw()*/
-		{	// test for allocator inequality (always false)
-			return std::rel_ops::operator !=( lhs, rhs );
-		}
-
-
 	}
 
 }
+						
+#define MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator_type )			\
+		/*allocator TEMPLATE OPERATORS*/								\
+		template<class T, class U, class mem_mgr >						\
+		inline bool operator==(const allocator_type<T, mem_mgr>& lhs,	\
+					const allocator_type<U, mem_mgr>& rhs) /*throw()*/	\
+		{	/*test for allocator equality (always true)*/				\
+			return lhs.equal( rhs );									\
+		}																\
+																		\
+		template<class T, class U, class mem_mgr >						\
+		inline bool operator!=(const allocator_type<T, mem_mgr>& lhs,	\
+			const allocator_type<U, mem_mgr>& rhs) /*throw()*/			\
+		{	/*test for allocator inequality (always false)*/			\
+			return std::rel_ops::operator !=( lhs, rhs );				\
+		}
 
 #endif //MGR_ALLOCATOR_BASE_HEADER

@@ -112,13 +112,13 @@ namespace memory_mgr
 
 		bool is_exists( const char* name )
 		{
-			lock_type lock( get_lockable() );
+			lock_type lock( this->get_lockable() );
 			return m_alloc.is_exists( name );
 		}
 
 		inline block_id_type allocate( size_type size, const char* name )
 		{
-			lock_type lock( get_lockable() );
+			lock_type lock( this->get_lockable() );
 			block_id_type offset = converter::to_block_id( m_alloc.get_object( name ), *this );
 			if( offset ==  offset_traits<block_id_type>::invalid_offset )
 			{
@@ -130,7 +130,7 @@ namespace memory_mgr
 
 		inline void deallocate( const block_id_type p, size_type size, const char* name )
 		{
-			lock_type lock( get_lockable() );
+			lock_type lock( this->get_lockable() );
 			m_alloc.remove_object( name );
 			this->m_mgr.deallocate( p, size );
 		}

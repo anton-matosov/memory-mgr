@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/perf_tests \
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/perf_tests -I$(top_srcdir)/boost \
 	-I$(top_srcdir)/managers
 METASOURCES = AUTO
 noinst_HEADERS = posix_perf_timer.h win_perf_timer.h posix_perf_timer.h \

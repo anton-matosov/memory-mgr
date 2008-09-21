@@ -85,7 +85,7 @@ namespace memory_mgr
 			{
 				const char* p = detail::char_cast( ptr );
 				segment_data_type sp = segment_data_type( detail::unconst_char( p ), 0 );
-				seg_bases_type::const_iterator fres = 
+				typename seg_bases_type::const_iterator fres = 
 					std::upper_bound( m_bases.begin(), m_bases.end(), sp, &less_first );
  				if( fres != m_bases.begin() )
  				{
@@ -112,3 +112,4 @@ namespace memory_mgr
 
 
 #endif //MGR_SEGMENT_STORAGE_VECTOR_HEADER
+
