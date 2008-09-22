@@ -80,7 +80,15 @@ namespace memory_mgr
 
 		static inline file_handle_t create_file_mapping( const std::string& name, ulong access, ulong low_size, ulong high_size = 0, LPSECURITY_ATTRIBUTES file_mapping_attributes = 0, file_handle_t hFile = INVALID_HANDLE_VALUE )
 		{
-			return CreateFileMappingA( hFile, file_mapping_attributes, access, high_size, low_size, name.c_str() );
+			SECURITY_ATTRIBUTES sa;
+			SECURITY_DESCRIPTOR sd;
+			InitializeSecurityDescriptor(&sd,SECURITY_DESCRIPTOR_REVISION);
+			SetSecurityDescriptorDacl(&sd, true, NULL, false);
+
+			sa.lpSecurityDescriptor = &sd;
+			sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+			sa.bInheritHandle = FALSE;
+			return CreateFileMappingA( hFile, file_mapping_attributes ? file_mapping_attributes : &sa, access, high_size, low_size, name.c_str() );
 		}
 
 		static inline file_handle_t create_file_mapping( const std::string& name,
