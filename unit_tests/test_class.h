@@ -68,4 +68,33 @@ public:
 	int get();
 };
 
+typedef int builtin_type;
+
+class base_test_class 
+	:public memory_mgr::managed_base<def_heap_mgr>
+{
+	int i_;
+public:
+	base_test_class( int i = 0 )
+		:i_(i)
+	{}
+
+	virtual ~base_test_class()
+	{}
+
+	int Get() const { return i_; }
+	void Set( int i ){ i_ = i; }
+};
+
+class derived_test_class 
+	: public base_test_class
+{
+	int i2_;
+public:
+	derived_test_class( int i = 0 )
+		:base_test_class(i),
+		i2_(i + 1)
+	{}
+};
+
 #endif //MGR_TEST_CLASS_UNIT_HEADER

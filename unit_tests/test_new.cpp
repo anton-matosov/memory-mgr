@@ -22,6 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
+#include "test_class.h"
 #include "managers.h"
 #include <memory-mgr/new.h>
 #include <memory-mgr/named_objects.h>
@@ -53,7 +54,28 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, managers_list )
 	{
-		//int* p = memory_mgr::new_<int, mgr_type>();
+		typename memory_mgr::manager_traits< mgr_type >::base_manager_type& mgr = mgr_type::instance();
+		using memory_mgr::new_;
+		using memory_mgr::mem_mgr;
+
+		int* p1 = new_<int>( mgr );
+		int* p2 = new_<int>( mgr )( 2 );
+
+		int* p3 = new_<int, mgr_type>();
+		int* p4 = new_<int, mgr_type>( 4 );
+
+		int* p5 = new( mem_mgr(mgr) ) int( 5 ); 
+
+		test::check_pointers( p1, p2, p3, p4, p5 );
+
+		delete_( p1, mem_mgr(mgr) );
+		delete_( p2, mgr );
+		delete_( p3, mem_mgr<mgr_type>() );
+		delete_<mgr_type>( p4 );
+		delete_( p5, mgr );
+
+		base_test_class* p6 = new_<derived_test_class>( mgr )( 5 );
+		delete_( p6, mem_mgr(mgr) );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )

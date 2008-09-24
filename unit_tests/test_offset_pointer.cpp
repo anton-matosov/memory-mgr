@@ -50,47 +50,15 @@ namespace
 
 MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, sz_heap_mgr );
 
-namespace
-{
-	typedef int builtin_type;
-
-	class BaseTestClass 
-		:public memory_mgr::managed_base<ptr_mem_mgr>
-	{
-		int i_;
-	public:
-		BaseTestClass( int i = 0 )
-			:i_(i)
-		{}
-
-		virtual ~BaseTestClass()
-		{}
-
-		int Get() const { return i_; }
-		void Set( int i ){ i_ = i; }
-	};
-
-	class DerivedTestClass 
-		: public BaseTestClass
-	{
-		int i2_;
-	public:
-		DerivedTestClass( int i = 0 )
-			:BaseTestClass(i),
-			i2_(i + 1)
-		{}
-	};
-}
-
 template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
-template class memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr >;
-template class memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr >;
 
 BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	
 	typedef memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr > builtin_ptr;
-	typedef memory_mgr::offset_pointer< BaseTestClass, ptr_mem_mgr > base_class_ptr;
-	typedef memory_mgr::offset_pointer< DerivedTestClass, ptr_mem_mgr > derived_class_ptr;
+	typedef memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr > base_class_ptr;
+	typedef memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr > derived_class_ptr;
 
 	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr > pointer_types;
 
@@ -110,7 +78,7 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 
 	BOOST_AUTO_TEST_CASE( test_dereferencing )
 	{
-		derived_class_ptr dptr( new DerivedTestClass() );
+		derived_class_ptr dptr( new derived_test_class() );
 		base_class_ptr ptr = dptr;
 		const base_class_ptr cptr = dptr;
 
@@ -142,10 +110,10 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 BOOST_AUTO_TEST_CASE( test_construction )
 {
 	//TEST_PRINT( L"Creating DerivedTestClass()" );
-	derived_class_ptr derived_ptr( new DerivedTestClass() );
+	derived_class_ptr derived_ptr( new derived_test_class() );
 
 	//TEST_PRINT( L"Creating DerivedTestClass(1)" );
-	derived_class_ptr derived_ptr2( new DerivedTestClass(1) );
+	derived_class_ptr derived_ptr2( new derived_test_class(1) );
 
 	//TEST_PRINT( L"Creating builtin_type()" );
 	builtin_ptr ptr1( new( mem_mgr<ptr_mem_mgr>() ) builtin_type() );

@@ -49,14 +49,15 @@ namespace test
 // 		}
 // 	};
 
-	template<class MemMgr, class Allocator>
+	template<class MemMgr, class ValueType, class Allocator>
 	void test_data_validness_impl()
 	{
 		typedef MemMgr										mgr_type;
+		typedef ValueType									value_type;
 		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
 		typedef typename traits_type::offset_type			offset_type;
 		typedef typename traits_type::chunk_type			chunk_type;
-		typedef typename Allocator::template rebind<int>::other		allocator;
+		typedef typename Allocator::template rebind<value_type>::other		allocator;
 
 		STATIC_ASSERT( traits_type::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_low );
 
@@ -64,15 +65,15 @@ namespace test
 		mgr_type mgr( &*memory.begin() );
 		allocator alloc( &mgr );
 		
-		typedef std::map<int*, int> ptrval_map_type;
+		typedef std::map<value_type*, value_type> ptrval_map_type;
 		ptrval_map_type real_vals;
 
 		for( int i = 0; i < 1000; ++i )
 		{
 			//int* p = memory_mgr::detail::to_pointer<int>( mgr.allocate( sizeof(int) ), mgr );
-			int *p = alloc.allocate(1);
+			value_type *p = alloc.allocate(1);
 			BOOST_CHECK( p != 0 );
-			int val = rand();
+			value_type val = static_cast<value_type>( rand() );
 			*p = val;
 			BOOST_CHECK( real_vals.find( p ) == real_vals.end() );
 			real_vals[p] = val;
@@ -86,29 +87,43 @@ namespace test
 		}
 	}
 
+	template<class MemMgr, class ValueType>
+	void test_data_validness_type()
+	{
+		test_data_validness_impl<MemMgr, ValueType, memory_mgr::member_allocator<int, MemMgr> >();
+	}
+
 	template<class MemMgr>
 	void test_data_validness()
 	{
-		test_data_validness_impl<MemMgr, memory_mgr::member_allocator<int, MemMgr> >();
+		test_data_validness_impl<MemMgr, bool, memory_mgr::member_allocator<int, MemMgr> >();
+		test_data_validness_impl<MemMgr, int, memory_mgr::member_allocator<int, MemMgr> >();
 	}
 
 	template<class MemMgr>
 	void test_data_validness_singleton()
 	{
-		test_data_validness_impl<MemMgr, memory_mgr::allocator<int, MemMgr> >();
+		test_data_validness_impl<MemMgr, int, memory_mgr::allocator<int, MemMgr> >();
+	}
+
+
+	template<class T>
+	bool is_valid_ptr( T p )
+	{
+		const T inv_off = memory_mgr::offset_traits<T>::invalid_offset;
+		BOOST_CHECK_NE( p, inv_off );
+		return p != inv_off;
 	}
 
 	//Test pointers on validness
-	template<class T>
-	void check_pointers( T p1, T p2, T p3, T p4, T p5 )
+	template<class T1, class T2, class T3, class T4, class T5>
+	void check_pointers( T1 p1, T2 p2, T3 p3, T4 p4, T5 p5 )
 	{
-		const T inv_off = memory_mgr::offset_traits<T>::invalid_offset;
-
-		BOOST_CHECK_NE( p1, inv_off );
-		BOOST_CHECK_NE( p2, inv_off );
-		BOOST_CHECK_NE( p3, inv_off );
-		BOOST_CHECK_NE( p4, inv_off );
-		BOOST_CHECK_NE( p5, inv_off );
+		is_valid_ptr( p1 );
+		is_valid_ptr( p2 );
+		is_valid_ptr( p3 );
+		is_valid_ptr( p4 );
+		is_valid_ptr( p5 );
 
 		BOOST_CHECK_NE( p1, p2 );
 		BOOST_CHECK_NE( p2, p3 );

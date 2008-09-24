@@ -369,28 +369,79 @@ namespace memory_mgr
 // 	{};
 
 	template<class T, class MemMgr>
-	class new_
+	class new_c
 	{
+		typedef MemMgr			mgr_type;
 		typedef T				object_type;
 		typedef object_type*	object_pointer_type;
-		typedef MemMgr	mgr_type;
+		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+
 		object_pointer_type m_object;
+		bool				m_constructed;
 	public:
-		new_(  )
+		new_c( const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr  )
+			:m_constructed( false )
 		{
-			typedef typename memory_mgr::detail::mem_mgr_helper<
-			typename manager_traits< mgr_type >::base_manager_type >::new_helper_type helper_type;
 
 			m_object = static_cast<object_pointer_type>( 
-				helper_type::new_impl( sizeof( object_type ), mgr_type::instance() ) );
-			helper_type::construct( m_object );
+				helper_type::new_impl( sizeof( object_type ), mgr.m_mgr ) );
 		}
 
 		operator object_pointer_type()
 		{
+			if( !m_constructed )
+			{
+				new( m_object ) object_type();
+				m_constructed = true;
+			}
+			return m_object;
+		}
+
+		object_pointer_type operator()()
+		{
+			return *this;
+		}
+
+		template<class T1>
+		object_pointer_type operator()( T1 v1 )
+		{
+			if( !m_constructed )
+			{
+				new( (void*)m_object ) object_type( v1 );
+				m_constructed = true;
+			}
+			return m_object;
+		}
+
+		template<class T1, class T2>
+		object_pointer_type operator()( T1 v1, T2 v2 )
+		{
+			if( !m_constructed )
+			{
+				new( (void*)m_object ) object_type( v1, v2 );
+				m_constructed = true;
+			}
 			return m_object;
 		}
 	};
+
+	template<class T, class MemMgr>
+	new_c<T, MemMgr> new_( MemMgr& mgr )
+	{
+		return new_c<T, MemMgr>( mem_mgr( mgr ) );
+	}
+
+	template<class T, class SingMemMgr>
+	new_c<T, typename manager_traits< SingMemMgr >::base_manager_type> new_()
+	{
+		return new_c<T, typename manager_traits< SingMemMgr >::base_manager_type>( mem_mgr<SingMemMgr>() );
+	}
+
+	template<class T, class SingMemMgr, class T1>
+	T* new_( T1 v1 )
+	{
+		return new_c<T, typename manager_traits< SingMemMgr >::base_manager_type>( mem_mgr<SingMemMgr>() )( v1 );
+	}
 }
 
 /**
@@ -433,7 +484,7 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
-	return helper_type::new_impl( size, mgr.m_mgr );
+	return helper_type::new_impl( size + sizeof( size_t ), mgr.m_mgr );
 }
 
 template<class MemMgr>
@@ -442,7 +493,7 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_help
 	typedef MemMgr mgr_type;
 	typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
 
-	return helper_type::new_impl( size, mgr.m_mgr, name.get_name() );
+	return helper_type::new_impl( size + sizeof( size_t ), mgr.m_mgr, name.get_name() );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -545,6 +596,19 @@ static inline void delete_( T* p, const memory_mgr::detail::mem_mgr_helper<MemMg
 
 		helper_type::delete_impl( p, mgr.m_mgr );
 	}
+}
+
+
+template<class T, class MemMgr>
+static inline void delete_( T* p, MemMgr& mgr )
+{
+	delete_( p, memory_mgr::mem_mgr(mgr) );
+}
+
+template<class MemMgr, class T>
+static inline void delete_( T* p )
+{
+	delete_( p, memory_mgr::mem_mgr<MemMgr>() );
 }
 
 /**

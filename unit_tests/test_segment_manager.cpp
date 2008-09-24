@@ -43,11 +43,6 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 	typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
 
 
-	template<class T>
-	bool is_valid_ptr( T p )
-	{
-		return p != memory_mgr::offset_traits<T>::invalid_offset;
-	}
 	typedef boost::mpl::list< segmgr_type, pconv_segmgr_type, sz_pconv_segmgr_type > managers_list;
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, mgr_type, managers_list )
@@ -87,7 +82,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 			p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
 
 			ptrs.push_back( p );
-			if( !is_valid_ptr( p ) )
+			if( !test::is_valid_ptr( p ) )
 			{
 				BOOST_ERROR( "Allocation failed" );
 				break;
@@ -126,7 +121,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
 		ptrs.reserve( allocable_chunks );
 		BOOST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
-		for( size_t i = 0; i < allocable_chunks && is_valid_ptr( p ); ++i )
+		for( size_t i = 0; i < allocable_chunks && test::is_valid_ptr( p ); ++i )
 		{
 			p = segmgr.allocate( chunk_size, std::nothrow_t() );
 			ptrs.push_back( p );
