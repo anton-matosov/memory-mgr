@@ -29,26 +29,26 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/new.h>
 
 
-namespace
-{
-	typedef memory_mgr::singleton_manager
-	< 
-		memory_mgr::size_tracking
-		<
-			memory_mgr::pointer_convert
-			< 
-				memory_mgr::heap_segment
-				< 
-					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-				> 
-			>
-		>
-	> sz_heap_mgr;
+// namespace
+// {
+// 	typedef memory_mgr::singleton_manager
+// 	< 
+// 		memory_mgr::size_tracking
+// 		<
+// 			memory_mgr::pointer_convert
+// 			< 
+// 				memory_mgr::heap_segment
+// 				< 
+// 					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+// 				> 
+// 			>
+// 		>
+// 	> sz_heap_mgr;
+// 
+// 
+// }
 
-
-}
-
-MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, sz_heap_mgr );
+MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
 template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
 template class memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr >;
@@ -104,48 +104,48 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 
 
 		delete_( ptr );// points to derived_ptr
-		BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
+		//BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
 	}
 
-BOOST_AUTO_TEST_CASE( test_construction )
-{
-	//TEST_PRINT( L"Creating DerivedTestClass()" );
-	derived_class_ptr derived_ptr( new derived_test_class() );
+	BOOST_AUTO_TEST_CASE( test_construction )
+	{
+		//TEST_PRINT( L"Creating DerivedTestClass()" );
+		derived_class_ptr derived_ptr( new derived_test_class() );
 
-	//TEST_PRINT( L"Creating DerivedTestClass(1)" );
-	derived_class_ptr derived_ptr2( new derived_test_class(1) );
+		//TEST_PRINT( L"Creating DerivedTestClass(1)" );
+		derived_class_ptr derived_ptr2( new derived_test_class(1) );
 
-	//TEST_PRINT( L"Creating builtin_type()" );
-	builtin_ptr ptr1( new( mem_mgr<ptr_mem_mgr>() ) builtin_type() );
+		//TEST_PRINT( L"Creating builtin_type()" );
+		builtin_ptr ptr1( new( mem_mgr<ptr_mem_mgr>() ) builtin_type() );
 
-	//TEST_PRINT( L"Constructing base_ptr from derived_ptr" );
-	base_class_ptr base_ptr( derived_ptr );
-	base_class_ptr base_ptr2;
+		//TEST_PRINT( L"Constructing base_ptr from derived_ptr" );
+		base_class_ptr base_ptr( derived_ptr );
+		base_class_ptr base_ptr2;
 
-	BOOST_CHECK_MESSAGE( derived_ptr != derived_ptr2, L"Pointers are the same" );
+		BOOST_CHECK_MESSAGE( derived_ptr != derived_ptr2, L"Pointers are the same" );
 
-	////TEST_OPERATOR_PRINT( L"=, base_ptr2 = base_ptr" );
-	base_ptr2 = base_ptr;
-	BOOST_CHECK( base_ptr2 == base_ptr );
+		////TEST_OPERATOR_PRINT( L"=, base_ptr2 = base_ptr" );
+		base_ptr2 = base_ptr;
+		BOOST_CHECK( base_ptr2 == base_ptr );
 
-	base_class_ptr base_ptr3;
+		base_class_ptr base_ptr3;
 
-	////TEST_OPERATOR_PRINT( L"=, base_ptr3 = base_ptr2" );
-	base_ptr3 = base_ptr2;
-	BOOST_CHECK( base_ptr2 == base_ptr3 );
+		////TEST_OPERATOR_PRINT( L"=, base_ptr3 = base_ptr2" );
+		base_ptr3 = base_ptr2;
+		BOOST_CHECK( base_ptr2 == base_ptr3 );
 
-	base_class_ptr base_ptr4;
+		base_class_ptr base_ptr4;
 
-	////TEST_OPERATOR_PRINT( L"=, base_ptr4 = base_ptr2" );
-	base_ptr4 = derived_ptr2;
-	BOOST_CHECK( base_ptr4 == derived_ptr2  );
+		////TEST_OPERATOR_PRINT( L"=, base_ptr4 = base_ptr2" );
+		base_ptr4 = derived_ptr2;
+		BOOST_CHECK( base_ptr4 == derived_ptr2  );
 
-	delete_( base_ptr );// points to derived_ptr
-	delete_( base_ptr4 );// points to derived_ptr2
+		delete_( base_ptr );// points to derived_ptr
+		delete_( base_ptr4 );// points to derived_ptr2
 
-	delete_( ptr1 );
-	BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
-}
+		delete_( ptr1 );
+		//BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
+	}
 
 
 	BOOST_AUTO_TEST_CASE( test_operators )
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE( test_construction )
 		BOOST_CHECK( (ptr1 - ptr) == (ptr3 - ptr2) );
 
 		delete_array( ptr );// points to derived_ptr
-		BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
+		//BOOST_CHECK( ptr_mem_mgr::instance().is_free() );
 
 	}
 BOOST_AUTO_TEST_SUITE_END();

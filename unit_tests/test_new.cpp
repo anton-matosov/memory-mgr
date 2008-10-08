@@ -58,10 +58,10 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		using memory_mgr::new_;
 		using memory_mgr::mem_mgr;
 
-		int* p1 = new_<int>( mgr );
+		int* p1 = new_<int>( mgr )();
 		int* p2 = new_<int>( mgr )( 2 );
 
-		int* p3 = new_<int, mgr_type>();
+		int* p3 = new_<int, mgr_type>()();
 		int* p4 = new_<int, mgr_type>( 4 );
 
 		int* p5 = new( mem_mgr(mgr) ) int( 5 ); 
@@ -76,6 +76,10 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		base_test_class* p6 = new_<derived_test_class>( mgr )( 5 );
 		delete_( p6, mem_mgr(mgr) );
+
+
+		derived_test_class* arr1 = new_<derived_test_class>( mgr )[ 15 ];
+		delete_array( arr1, mem_mgr(mgr) );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )

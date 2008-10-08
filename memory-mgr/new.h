@@ -198,6 +198,8 @@ namespace memory_mgr
 
 			/**
 			   @brief Delete helper class for arrays of non class objects
+			   @note Makes an assumption on the implementation of the size_tracking decorator
+			   retrieves the size of memory block from the address right before acquired pointer
 			*/
 			template<class T>
 			struct delete_helper<T, false>
@@ -375,51 +377,64 @@ namespace memory_mgr
 		typedef T				object_type;
 		typedef object_type*	object_pointer_type;
 		typedef typename memory_mgr::detail::mem_mgr_helper<mgr_type>::new_helper_type helper_type;
+		typedef typename manager_traits<mgr_type>::size_type	size_type;
 
 		object_pointer_type m_object;
-		bool				m_constructed;
+		mgr_type*			m_mgr;
 	public:
 		new_c( const memory_mgr::detail::mem_mgr_helper<MemMgr>& mgr  )
-			:m_constructed( false )
+			:m_object( 0 ),
+			m_mgr( &mgr.m_mgr )
 		{
 
-			m_object = static_cast<object_pointer_type>( 
-				helper_type::new_impl( sizeof( object_type ), mgr.m_mgr ) );
 		}
 
-		operator object_pointer_type()
+		void allocate( size_type n = 1 )
 		{
-			if( !m_constructed )
-			{
-				new( m_object ) object_type();
-				m_constructed = true;
-			}
-			return m_object;
+			m_object = static_cast<object_pointer_type>( 
+				helper_type::new_impl( sizeof( object_type ) * n, *m_mgr ) );
 		}
 
 		object_pointer_type operator()()
 		{
-			return *this;
+			if( !m_object )
+			{
+				allocate();
+				new( m_object ) object_type();
+			}
+			return m_object;
 		}
 
 		template<class T1>
 		object_pointer_type operator()( T1 v1 )
 		{
-			if( !m_constructed )
+			if( !m_object )
 			{
-				new( (void*)m_object ) object_type( v1 );
-				m_constructed = true;
+				allocate();
+				new( m_object ) object_type( v1 );
 			}
 			return m_object;
 		}
 
+
 		template<class T1, class T2>
 		object_pointer_type operator()( T1 v1, T2 v2 )
 		{
-			if( !m_constructed )
+			if( !m_object )
 			{
-				new( (void*)m_object ) object_type( v1, v2 );
-				m_constructed = true;
+				allocate();
+				new( m_object ) object_type( v1, v2 );
+			}
+			return m_object;
+		}
+
+		object_pointer_type operator[]( size_t n )
+		{
+			if( !m_object )
+			{
+				allocate( n );
+				//new( m_object ) object_type[ n ];
+				helper_type::construct( m_object, n );
 			}
 			return m_object;
 		}

@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 
 	typedef memory_mgr::heap_segment<memmgr_type> heapmgr_type;
-	typedef memory_mgr::segment_manager<heapmgr_type, 50> segmgr_type;
+	typedef memory_mgr::segment_manager<heapmgr_type, 5> segmgr_type;
 
 	typedef memory_mgr::pointer_convert<segmgr_type> pconv_segmgr_type;
 	typedef memory_mgr::size_tracking< pconv_segmgr_type > sz_pconv_segmgr_type;
