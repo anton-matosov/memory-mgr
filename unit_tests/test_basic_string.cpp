@@ -55,6 +55,7 @@ typedef memory_mgr::singleton_manager
 
 typedef gstl::string gstl_string;
 
+//String with custom allocator and explicit passing of pointer traits
 typedef gstl::basic_string<char, gstl::char_traits<char>,
 	memory_mgr::allocator<char, ptr_alloc_mgr>, gstl::pointer_traits<char> > memory_mgr_string;
 
