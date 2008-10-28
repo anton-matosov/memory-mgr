@@ -122,7 +122,7 @@ namespace memory_mgr
 
 	/**
 	@brief Converter class which should be used to convert objects of block_id_type
-	@detail template specialization for pointer convert decorator
+	@details template specialization for pointer convert decorator
 	*/
 	template<class MemMgr> 
 	class block_id_converter< pointer_convert< MemMgr > > 

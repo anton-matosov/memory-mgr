@@ -199,7 +199,7 @@ namespace memory_mgr
 		
 		/**
 		@brief	memory block id type
-		@detail objects of this type identify memory blocks
+		@details objects of this type identify memory blocks
 		e.g. objects of this type are retured by allocate method
 		*/
 		typedef offset_type									block_id_type;

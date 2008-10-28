@@ -276,7 +276,7 @@ namespace memory_mgr
 		   @brief invalid index value (null pos)
 		*/
 		const static size_type npos = ~size_type(0);
-		
+
 		/**
 		   @brief compile time computed constants
 		*/
@@ -453,6 +453,26 @@ namespace memory_mgr
 		{
 			//Is there at least one block with bit set to 1
 			return find_first_block(0) >= num_blocks;
+		}
+
+		template<class StreamT>
+		friend StreamT& operator<<( StreamT& stream, const self_type& bitset )
+		{
+			for( int i = 0; i < self_type::num_blocks; ++i )
+			{
+				stream << bitset.m_bits[i];
+			}
+			return stream;
+		}
+
+		template<class StreamT>
+		friend StreamT& operator>>( StreamT& stream, self_ref_type bitset )
+		{
+			for( int i = 0; i < self_type::num_blocks; ++i )
+			{
+				stream >> bitset.m_bits[i];
+			}
+			return stream;
 		}
 
 	private:

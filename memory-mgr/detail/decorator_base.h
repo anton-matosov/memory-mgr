@@ -140,10 +140,11 @@ namespace memory_mgr
 			}
 
 			/**
-			   @brief Call this method to get memory base address from which offset
+			   @brief Call this method to get memory segment base address from which offset
 			   is calculated
+			   @param	offset	offset for which base address is required
 			   @exception newer  throws
-			   @return pointer to memory base address                               
+			   @return base address of the memory segment for specified offset
 			*/
 			inline const char* get_offset_base( const offset_type offset = 0 ) const
 			{
@@ -156,7 +157,13 @@ namespace memory_mgr
 			}
 
 			/**
-			   @add_comments
+			   @brief Call this method to get memory segment base address
+			   @detail to which pointer belongs
+			  
+			   @param	ptr	pointer in the memory segment which base address is requested
+			   @exception newer throws
+			  
+			   @return base address of the memory segment for specified offset
 			*/
 			inline const char* get_ptr_base( const void* ptr ) const
 			{
@@ -168,16 +175,39 @@ namespace memory_mgr
 				return m_mgr.get_ptr_base( ptr );
 			}
 
+			/**
+			   @brief Call this method to convert offset to pointer
+			  
+			   @param	offset	offset which should be converted to pointer
+			   @exception newer throws
+			  
+			   @return pointer to the memory location to which offset points to
+			*/
 			inline void* offset_to_pointer( offset_type offset )
 			{
 				return m_mgr.offset_to_pointer( offset );
 			}
 
+			/**
+			   @brief Call this method to 
+			  
+			   @param	ptr	(parameter description)
+			   @exception newer throws
+			  
+			   @return (description of return value) 
+			*/
 			inline offset_type pointer_to_offset( const void* ptr )
 			{
 				return m_mgr.pointer_to_offset( ptr );
 			}
 
+			/**
+			   @brief Call this method to get synchronization object
+			   @detail used to synchronize operations with managed memory 
+			   @exception newer throws
+			  
+			   @return reference to sync object
+			*/
 			inline lockable_type& get_lockable()
 			{
 				return m_mgr.get_lockable();

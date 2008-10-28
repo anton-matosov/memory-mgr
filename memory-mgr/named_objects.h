@@ -39,7 +39,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {	
 	/**
-	@add_comment
+	   @brief Named objects decorator for
+	   @details 
+	*/
+	/**
+		@brief Named objects decorator for memory manager.
+		@details These decorator extends functionality of memory manger
+				by adding methods to allocate/deallocate named objects
+		@tparam MemMgr  memory_manager class, with or w/o decorators,
+					must support MemoryManagerConcept.
+	                If PointerConverter is not applied then allocation/deallocation
+					operations will work faster
+		@todo Implement support for named objects in shared memory
 	*/
 	template
 	< 
