@@ -90,6 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot; --result_code=no"
 			/>
 		</Configuration>
 		<Configuration

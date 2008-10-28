@@ -126,6 +126,7 @@ namespace gstl
 	};
 
 #define GSTL_ITER_CAT( IterT ) typename iterator_traits<IterT>::iterator_category()
+#define GSTL_ITER_VALUE_TYPE( IterT ) typename iterator_traits<IterT>::value_type
 
 	namespace detail
 	{
@@ -178,20 +179,6 @@ namespace gstl
 				++dist;
 			}
 			return dist;
-		}
-
-		template <class ForwardIterator>
-		typename iterator_traits<ForwardIterator>::difference_type
-			distance(ForwardIterator first, ForwardIterator last, forward_iterator_tag)
-		{
-			return distance( first, last, input_iterator_tag );
-		}
-
-		template <class BidirectionalIterator>
-		typename iterator_traits<BidirectionalIterator>::difference_type
-			distance(BidirectionalIterator first, BidirectionalIterator last, bidirectional_iterator_tag)
-		{
-			return distance( first, last, input_iterator_tag );
 		}
 
 		template <class RandIterator>

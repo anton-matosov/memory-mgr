@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "stdafx.h"
 
 #include <deque>
+#include <boost/foreach.hpp>
 #include <gstl/iterator>
 #include <gstl/algorithm>
 #include <gstl/detail/helpers.hpp>
@@ -311,10 +312,87 @@ void const_nonconst_iterator_test(Iterator i, ConstIterator j)
 	BOOST_CHECK_EQUAL(i, k);
 }
 
+BOOST_AUTO_TEST_CASE( test_advance )
+{
+	typedef std::vector<int> int_vec_type;
+	int_vec_type int_vec( 10 );
+	int_vec_type::iterator iv = int_vec.begin();
+	int_vec_type::iterator iv2 = iv;
+	int_vec_type::iterator iv3 = iv;
+
+	gstl::advance( iv, 5 );
+	BOOST_CHECK_EQUAL( *iv, int_vec[5] );
+
+	gstl::advance( iv2, 2 );
+	BOOST_CHECK_EQUAL( *iv2, int_vec[2] );
+
+	gstl::advance( iv3, 0 );
+	BOOST_CHECK_EQUAL( *iv3, int_vec[0] );
+
+
+	gstl::advance( iv2, -2 );
+	BOOST_CHECK_EQUAL( *iv2, int_vec[0] );
+	BOOST_CHECK_EQUAL( *iv2, *iv3 );
+
+
+	typedef std::list<int> int_list_type;
+	int_list_type int_list( int_vec.begin(), int_vec.end() );
+
+	int_list_type::iterator il = int_list.begin();
+	int_list_type::iterator il2 = il;
+	int_list_type::iterator il2_s = il;
+
+	gstl::advance( il2, 5 );
+	std::advance( il2_s, 5 );
+	BOOST_CHECK( il2 == il2_s );
+	BOOST_CHECK_EQUAL( *il2, *il2_s );
+
+	gstl::advance( il2, -2 );
+	std::advance( il2_s, -2 );
+	BOOST_CHECK( il2 == il2_s );
+	BOOST_CHECK_EQUAL( *il2, *il2_s );
+}
+
+BOOST_AUTO_TEST_CASE( test_distance )
+{
+	typedef std::vector<int> int_vec_type;
+	int_vec_type int_vec( 10 );
+	int i = 0;
+	BOOST_FOREACH( int& vi, int_vec )
+	{
+		vi = ++i;
+	}
+
+	int_vec_type::iterator it = int_vec.begin();
+	int_vec_type::iterator it0 = it;
+	int_vec_type::iterator it3 = it + 3;
+	int_vec_type::iterator it5 = it + 5;
+
+	BOOST_CHECK_EQUAL( gstl::distance( it, it0 ), 0 );
+	BOOST_CHECK_EQUAL( gstl::distance( it, it3 ), 3 );
+	BOOST_CHECK_EQUAL( gstl::distance( it, it5 ), 5 );
+	BOOST_CHECK_EQUAL( gstl::distance( it3, it5 ), 2 );
+
+	typedef std::list<int> int_list_type;
+	int_list_type int_list( int_vec.begin(), int_vec.end() );
+
+	int_list_type::iterator il = int_list.begin();
+	int_list_type::iterator il0 = il;
+	int_list_type::iterator il3 = il;
+	int_list_type::iterator il5= il;
+	std::advance( il3, 3 );
+	std::advance( il5, 5 );
+
+	BOOST_CHECK_EQUAL( gstl::distance( il, il0 ), 0 );
+	BOOST_CHECK_EQUAL( gstl::distance( il, il3 ), 3 );
+	BOOST_CHECK_EQUAL( gstl::distance( il, il5 ), 5 );
+	BOOST_CHECK_EQUAL( gstl::distance( il3, il5 ), 2 );
+}
+
 BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 {
 	char array[] = "only test array";
-	const size_t arr_len = GSTL_ARRAY_LEN( array, char );
+	const size_t arr_len = GSTL_ARRAY_LEN( array );
 
 	typedef char* iter_t;
 	typedef const char* const_iter_t;
@@ -383,10 +461,6 @@ BOOST_AUTO_TEST_CASE( test_stream_iterators )
 	gstl::ostream_iterator<int, char, traits>	ostream_iter( ostr );
 	gstl::ostreambuf_iterator<char, traits>		ostreambuf_iter( ostr );
 	gstl::ostreambuf_iterator<char, traits>		ostreambuf_iter2( ostr.rdbuf() );
-
-
-
-
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator2, type, t_list )
