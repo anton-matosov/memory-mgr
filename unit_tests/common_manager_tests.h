@@ -70,7 +70,6 @@ namespace test
 
 		for( int i = 0; i < 1000; ++i )
 		{
-			//int* p = memory_mgr::detail::to_pointer<int>( mgr.allocate( sizeof(int) ), mgr );
 			value_type *p = alloc.allocate(1);
 			BOOST_CHECK( p != 0 );
 			value_type val = static_cast<value_type>( rand() );
@@ -96,7 +95,7 @@ namespace test
 	template<class MemMgr>
 	void test_data_validness()
 	{
-		test_data_validness_impl<MemMgr, bool, memory_mgr::member_allocator<int, MemMgr> >();
+		test_data_validness_impl<MemMgr, char, memory_mgr::member_allocator<char, MemMgr> >();
 		test_data_validness_impl<MemMgr, int, memory_mgr::member_allocator<int, MemMgr> >();
 	}
 
@@ -134,9 +133,9 @@ namespace test
 	template<class MemMgr>
 	void test_null_pointer_dealloc_impl( MemMgr& mgr )
 	{
-		typedef MemMgr memmgr_type;
+		typedef MemMgr										memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef typename traits_type::block_id_type					block_id_type;
+		typedef typename traits_type::block_id_type			block_id_type;
 
 		block_id_type null_ptr = memory_mgr::offset_traits<block_id_type>::invalid_offset;
 
@@ -156,9 +155,9 @@ namespace test
 	template<class MemMgr>
 	void test_null_pointer_dealloc()
 	{
-		typedef MemMgr memmgr_type;
+		typedef MemMgr										memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef typename traits_type::chunk_type		chunk_type;
+		typedef typename traits_type::chunk_type			chunk_type;
 
 		std::vector<chunk_type> memory( traits_type::memory_size );
 		memmgr_type mgr( &*memory.begin() );

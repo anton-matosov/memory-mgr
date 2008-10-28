@@ -74,12 +74,12 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		delete_<mgr_type>( p4 );
 		delete_( p5, mgr );
 
-		base_test_class* p6 = new_<derived_test_class>( mgr )( 5 );
-		delete_( p6, mem_mgr(mgr) );
+		//base_test_class* p6 = new_<derived_test_class>( mgr )( 5 );
+		//delete_( p6, mem_mgr(mgr) );
 
 
-		derived_test_class* arr1 = new_<derived_test_class>( mgr )[ 15 ];
-		delete_array( arr1, mem_mgr(mgr) );
+		//derived_test_class* arr1 = new_<derived_test_class>( mgr )[ 15 ];
+		//delete_array( arr1, mem_mgr(mgr) );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )
