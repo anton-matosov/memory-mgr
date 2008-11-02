@@ -30,53 +30,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <assert.h>
 #include <memory-mgr/manager_traits.h>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_const.hpp>
+#include <memory-mgr/config/config.h>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
-		static inline char* char_cast( void* p )
-		{
-			return static_cast< char* >( p );
-		}
-
-		static inline const char* char_cast( const void* p )
-		{
-			return static_cast< const char* >( p );
-		}
-
-		static inline char* unconst_char( const char* p )
-		{
-			return const_cast< char* >( p );
-		}
-
-		static inline wchar_t* unconst_wchar( const wchar_t* p )
-		{
-			return const_cast< wchar_t* >( p );
-		}
-
-		static inline void* unconst_void( const void* p )
-		{
-			return const_cast< void* >( p );
-		}
-
-		static inline ptrdiff_t diff( const void* p1, const void* p2 )
-		{
-			return char_cast(p1) - char_cast(p2);
-		}
-
-		static inline void* shift( void* p, size_t offset )
-		{
-			return char_cast(p) + offset;
-		}
-
-		static inline const void* shift( const void* p, const size_t offset )
-		{
-			return char_cast(p) + offset;
-		}
-
 		template<class MemMgr>
 		static inline void* offset_to_pointer( typename manager_traits<MemMgr>::offset_type offset, MemMgr& mgr )
 		{
@@ -124,10 +83,6 @@ namespace memory_mgr
 			return ptr;
 		}
 
-		static inline size_t* size_cast( void* p )
-		{
-			return static_cast< size_t* >( p );
-		}
 	}// namespace detail
 
 }// namespace memory_mgr

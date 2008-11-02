@@ -40,8 +40,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/helpers.h>
 
 #define BOOST_ALL_NO_LIB
-#include <boost/utility.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple.hpp>	//For boost::tie
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_const.hpp>

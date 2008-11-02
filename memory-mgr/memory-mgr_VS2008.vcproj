@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\ptr_casts.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\ptr_helpers.h"
 				>
 			</File>

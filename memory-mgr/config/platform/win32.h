@@ -31,7 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_WINDOWS_PLATFORM
 #include <windows.h>
 #include <string>
-#include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/detail/ptr_casts.h>
 #include <memory-mgr/detail/types.h>
 #include <memory-mgr/detail/temp_buffer.h>
 
