@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/detail/static_bitset.h>
-#include <memory-mgr/detail/ptr_helpers.h>
+#include <memory-mgr/detail/ptr_casts.h>
 
 namespace memory_mgr
 {

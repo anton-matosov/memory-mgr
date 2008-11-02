@@ -37,6 +37,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <boost/test/parameterized_test.hpp>
 #include <boost/mpl/list.hpp>
 
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <map>
+#include <vector>
+#include <memory-mgr/config/config.h>
+#include "common_manager_tests.h"
+
+
 static const size_t sz_null = 0;
 static const size_t sz_one = 1;
 static const size_t sz_two = 2;
@@ -48,14 +58,6 @@ static const size_t sz_seven = 7;
 static const size_t sz_eight = 8;
 static const size_t sz_nine = 9;
 static const size_t sz_ten = 10;
-
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <map>
-#include <vector>
-#include <memory-mgr/config/config.h>
-#include "common_manager_tests.h"
 
 
 #endif// MGR_STD_AFX_UNIT_HEADER

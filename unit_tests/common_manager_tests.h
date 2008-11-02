@@ -78,7 +78,7 @@ namespace test
 			real_vals[p] = val;
 		}
 
-		for( ptrval_map_type::const_iterator it = real_vals.begin(); it != real_vals.end(); ++it )
+		for( typename ptrval_map_type::const_iterator it = real_vals.begin(); it != real_vals.end(); ++it )
 		{
 			BOOST_CHECK_EQUAL( *it->first, it->second );
 			//mgr.deallocate( memory_mgr::detail::to_offset( it->first, mgr ), sizeof(int) );

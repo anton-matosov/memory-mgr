@@ -29,8 +29,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/detail/singleton.h>
+#include <memory-mgr/detail/new_helpers.h>
 #include <memory-mgr/manager_traits.h>
-#include <memory-mgr/new.h>
 #include <memory-mgr/manager_category.h>
 
 namespace memory_mgr
