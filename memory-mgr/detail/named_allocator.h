@@ -73,7 +73,7 @@ namespace memory_mgr
 			{
 				if( mgr.is_free() )
 				{
-					typedef typename allocator_type::template rebind<map_type>::other map_alloc_type;
+					typedef member_allocator<map_type, mgr_type> map_alloc_type;
 					map_alloc_type map_alloc( &mgr );
 					m_objects = map_alloc.allocate( 1 );
 					new( m_objects ) map_type( compare_type(), m_alloc );
@@ -81,7 +81,7 @@ namespace memory_mgr
 				else
 				{
 					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
-						is_category_supported< MemMgr, size_tracking_tag>::value ? 4 : 0, mgr ) );
+						is_category_supported< mgr_type, size_tracking_tag>::value ? 4 : 0, mgr ) );
 				}
 			}
 
