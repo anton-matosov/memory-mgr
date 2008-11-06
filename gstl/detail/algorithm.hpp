@@ -198,6 +198,21 @@ page 577
 	}
 
 	// 25.1, non-modifying sequence operations:
+	/**
+		@brief		Apply function to range
+
+		@details	Applies function f to each of the elements in the range [first,last).
+
+	  
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	f		Unary function taking an element in the range as argument.
+						Its return value, if any, is ignored. 
+
+		@exception newer throws
+	  
+		@return The same as f.
+	*/
 	template<class InputIterator, class Function>
 	Function for_each(InputIterator first, InputIterator last, Function f)
 	{
@@ -208,6 +223,23 @@ page 577
 		}
 		return f;
 	}
+
+
+	/**
+		@brief		Find value in range
+
+		@details	Returns an iterator to the first element in the
+					range [first,last) that compares equal to
+					value, or last if not found.
+	  
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	value	Value to be compared to each of the elements
+		@exception newer throws
+
+		@return		An iterator to the first element in the range that matches value.
+					If no element matches, the function returns last.
+	*/
 	template<class InputIterator, class T>
 	InputIterator find(InputIterator first, InputIterator last,
 		const T& value)
@@ -221,6 +253,25 @@ page 577
 		{}
 		return first;
 	}
+
+	/**
+		@brief		Find element in range
+		@details	Returns an iterator to the first element
+					in the range [first,last) for which applying pred to it, is true
+	*/
+	/**
+		@brief Call this method to 
+		
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	pred	Unary predicate taking an element in the range as argument,
+						and returning a value indicating the falsehood (with false, or a zero value)
+						or truth (true, or non-zero) of some condition applied to it.
+		@exception newer throws
+		
+		@return		An iterator to the first element in the range for which the application of pred to it does not return false (zero).
+					If pred is false for all elements, the function returns last. 
+	*/
 	template<class InputIterator, class Predicate>
 	InputIterator find_if(InputIterator first, InputIterator last,
 		Predicate pred)
@@ -378,6 +429,9 @@ page 577
 		return ret;
 	}
 	
+	/**
+		@brief Return first position where two ranges differ
+	*/
 	template<class InputIterator1, class InputIterator2>
 	pair<InputIterator1, InputIterator2>
 		mismatch(InputIterator1 first1, InputIterator1 last1,
@@ -387,40 +441,86 @@ page 577
 			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
 	}
 	
+	/**
+		@brief Return first position where two ranges differ
+	*/
 	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 	pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1, InputIterator1 last1,
 						InputIterator2 first2, BinaryPredicate pred)
 	{
 		while( first1 != last1 )
 		{
-			if( !pred( *first1,*first2) )
+			if( !pred( *first1, *first2) )
 			{
 				break;
 			}
 			++first1; ++first2;
 		}
-		return make_pair( first1, first2 );
+		return gstl::make_pair( first1, first2 );
 	}
 
+	/**
+		@brief Test whether the elements in two ranges are equal 
+		@details Compares the elements in the range [first1,last1)
+				with those in the range beginning at first2,
+				and returns true if the elements in both ranges are considered equal.
+
+				The elements are compared by either applying the == comparison operator
+				to each pair of corresponding elements, or the template parameter comp (for the second version).
+		
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	first2	Forward iterator to the initial position of the second sequence.
+						The comparison includes up to as many elements in this sequence
+						as in the above sequence.
+		@exception newer throws
+		
+		@return true if all the elements in the range [first1,last1)
+				compare equal to those of the range starting at first2, and false otherwise. 
+	*/
 	template<class InputIterator1, class InputIterator2>
 	bool equal( InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2 )
 	{
-		return equal( first1, last1, first2, std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
+		return gstl::equal( first1, last1, first2, std::equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
 
+	/**
+		@brief Test whether the elements in two ranges are equal 
+		@details Compares the elements in the range [first1,last1)
+				with those in the range beginning at first2,
+				and returns true if the elements in both ranges are considered equal.
+
+				The elements are compared by either applying the template parameter pred
+				to each pair of corresponding elements. 
+		
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	first2	Forward iterator to the initial position of the second sequence.
+						The comparison includes up to as many elements in this sequence
+						as in the above sequence.
+		@param	pred	Binary predicate taking two elements as argument
+						(one of each of the two sequences), and returning the result
+						of the comparison between them, with true (non-zero) meaning
+						that they are to be considered equal, and false (zero)
+						that they are not-equal.
+		@exception newer throws
+		
+		@return true if all the elements in the range [first1,last1)
+				compare equal to those of the range starting at first2, and false otherwise.
+	*/
 	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 	bool equal( InputIterator1 first1, InputIterator1 last1,
 				InputIterator2 first2, BinaryPredicate pred )
 	{
-		return mismatch( first1, last1, first2, pred ).first == last1;
+		return gstl::mismatch( first1, last1, first2, pred ).first == last1;
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2>
 	ForwardIterator1 search( ForwardIterator1 first1, ForwardIterator1 last1,
 		ForwardIterator2 first2, ForwardIterator2 last2 )
 	{
-		return search( first1, last1, first2, last2, std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator1 )> );
+		return gstl::search( first1, last1, first2, last2, std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator1 )> );
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
@@ -832,11 +932,54 @@ page 577
 
 	template<class InputIterator1, class InputIterator2>
 	bool lexicographical_compare( InputIterator1 first1, InputIterator1 last1,
-		InputIterator2 first2, InputIterator2 last2 );
+		InputIterator2 first2, InputIterator2 last2 )
+	{
+		return gstl::lexicographical_compare( first1, last1, first2, last2, 
+			std::less<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
+	}
+
+	/**
+		@brief		Lexicographical less-than comparison
+
+		@details	Returns true if range [first1,last1)
+					compares lexicographically less than the range [first2,last2).
+		
+		@param	first1	Input iterators to the initial positions of the first sequence
+		@param	last1	Input iterators to the final positions of the first sequence
+
+		@param	first1	Input iterators to the initial positions of the second sequence
+		@param	last1	Input iterators to the final positions of the second sequence
+		@param	comp	Comparison function object that, taking two values of the same
+						type than those contained in the range, returns true if the first
+						argument is to be considered less than the second argument.
+		@exception newer throws
+		
+		@retval true if the first range compares lexicographically less than than the second.
+		@retval false if either both ranges are entirely equivalent or 
+				if is the second that compares less than the first. 
+	*/
 	template<class InputIterator1, class InputIterator2, class Compare>
 	bool lexicographical_compare( InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2, InputIterator2 last2,
-		Compare comp );
+		Compare comp )
+	{
+		//Not implemented
+		BOOST_STATIC_ASSERT( false );
+// 		while( first1!=last1 )
+// 		{
+// 			if( comp( *first2, *first1 ) || first2 == last2 )
+// 			{
+// 				return false
+// 			}
+// 			else if( comp( *first1, *first2 ) )
+// 			{
+// 				return true;
+// 			}
+// 			++first1;
+// 			++first2;
+// 		}
+		return true;
+	}
 
 	// 25.3.9, permutations
 	template<class BidirectionalIterator>

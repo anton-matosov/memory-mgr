@@ -200,6 +200,11 @@ BOOST_AUTO_TEST_CASE( test_find_end )
 	BOOST_CHECK( list_fres == find_end_list_fres );
 }
 
+BOOST_AUTO_TEST_CASE( test_equal )
+{
+	BOOST_CHECK( std::equal( int_vec.begin(), int_vec.end(), int_vec.begin() ) );
+	BOOST_CHECK( gstl::equal( int_vec.begin(), int_vec.end(), int_vec.begin() ) );
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_1, type, t_list )
 {

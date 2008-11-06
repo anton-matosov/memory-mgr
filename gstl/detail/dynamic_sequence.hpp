@@ -166,6 +166,50 @@ namespace gstl
 				reserved_	= tmp_reserved;
 				buffer_		= tmp_buffer;
 			}
+
+			size_type size() const
+			{
+				return size_;
+			}
+
+			size_type capacity() const
+			{
+				return reserved_;
+			}
+
+			bool empty() const
+			{
+				return !size();
+			}
+
+			// 21.3.4 element access:
+			const_reference operator[](size_type pos) const
+			{
+				return get_buffer()[ pos ];
+			}
+
+			reference operator[](size_type pos)
+			{
+				return get_buffer()[ pos ];
+			}
+
+			const_reference at(size_type n) const
+			{
+				if( n >= size() )
+				{
+					throw_out_of_range()
+				}
+				return get_buffer()[n];
+			}
+
+			reference at(size_type n)
+			{
+				if( n >= size() )
+				{
+					throw_out_of_range();
+				}
+				return get_buffer()[n];
+			}
 		};
 	}
 }

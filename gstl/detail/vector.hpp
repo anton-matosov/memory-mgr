@@ -74,91 +74,229 @@ namespace gstl
 		typedef gstl::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		// 23.2.4.1 construct/copy/destroy:
-		explicit vector(const allocator_type& = allocator_type());
+		explicit vector(const allocator_type& = allocator_type())
+			:base_type( a )
+		{}
+
 		explicit vector(size_type n, const T& value = T(),
-			const allocator_type& = allocator_type());
+			const allocator_type& a = allocator_type())
+			:base_type( a )
+		{
+			insert( begin(), n, value );
+		}
 
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last,
-			const allocator_type& = allocator_type());
+			const allocator_type& a = allocator_type())
+			:base_type( a )
+		{
+			insert( begin(), first, last );
+		}
 
-		vector(const self_type& x);
+		vector( const self_type& x )
+			:base_type( x.get_allocator() )
+		{
+			*this = x;
+		}
 		~vector();
 
-		self_type& operator=(const self_type& x);
+		self_type& operator=( const self_type& x )
+		{
+			assign( x.begin(), x.end() );
+			return *this;
+		}
 
 		template <class InputIterator>
-		void assign(InputIterator first, InputIterator last);
-		void assign(size_type n, const T& u);
+		void assign( InputIterator first, InputIterator last )
+		{
+			erase( begin(), end() );
+			insert( begin(), first, last );
+		}
+
+		void assign( size_type n, const T& t )
+		{
+			erase( begin(), end() );
+			insert( begin(), n, t );
+		}
 
 		allocator_type get_allocator() const;
 		// iterators:
-		iterator begin();
-		const_iterator begin() const;
-		iterator end();
-		const_iterator end() const;
-		reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-		reverse_iterator rend();
-		const_reverse_iterator rend() const;
+		iterator begin()
+		{
+			return get_buffer();
+		}
+
+		const_iterator begin() const
+		{
+			return get_buffer();
+		}
+
+		iterator end()
+		{
+			return begin() + size_;
+		}
+
+		const_iterator end() const
+		{
+			return begin() + size_;
+		}
+
+		reverse_iterator rbegin()
+		{
+			return reverse_iterator( end() );
+		}
+
+		const_reverse_iterator rbegin() const
+		{			
+			return  const_reverse_iterator( end() );
+		}
+
+		reverse_iterator rend()
+		{
+			return reverse_iterator( begin() );
+		}
+
+		const_reverse_iterator rend() const
+		{
+			return const_reverse_iterator( begin() );
+		}
+
 		// 23.2.4.2 capacity:
-		size_type size() const;
-		size_type max_size() const;
-		void resize(size_type sz, T c = T());
-		size_type capacity() const;
-		bool empty() const;
-		void reserve(size_type n);
-		// element access:
-		reference operator[](size_type n);
-		const_reference operator[](size_type n) const;
-		const_reference at(size_type n) const;
-		reference at(size_type n);
-		reference front();
-		const_reference front() const;
-		reference back();
-		const_reference back() const;
+		using base_type::max_size;
+		using base_type::size;
+		using base_type::capacity;
+		using base_type::reserve;
+		using base_type::empty;
 		
-		void push_back(const T& x);
-		void pop_back();
-		iterator insert(iterator position, const T& x);
-		void insert(iterator position, size_type n, const T& x);
+		void resize(size_type sz, T c = T())
+		{
+			detail::container::resize( *this, sz, c );
+		}
+
+		// element access:
+		using base_type::operator[];
+		using base_type::at;
+
+		reference front()
+		{
+			return detail::container::front( this );
+		}
+
+		const_reference front() const
+		{
+			return detail::container::front( this );
+		}
+
+		reference back()
+		{
+			return detail::container::back( this );
+		}
+
+		const_reference back() const
+		{
+			return detail::container::back( this );
+		}
+		
+		void push_back( const value_type& x )
+		{
+			detail::container::push_back( this, x );
+		}
+
+		void pop_back()
+		{
+			detail::container::pop_back( this );
+		}
+
+		iterator insert( iterator position, const T& x );
+		void insert( iterator position, size_type n, const T& x );
+
 		template <class InputIterator>
-		void insert(iterator position,
-			InputIterator first, InputIterator last);
-		iterator erase(iterator position);
-		iterator erase(iterator first, iterator last);
-		void swap( self_type& );
-		void clear();
+		void insert( iterator position,
+			InputIterator first, InputIterator last )
+		{
+			do_insert( position, first, last, GSTL_ITER_CAT( InputIterator ) );
+		}
+
+		iterator erase( iterator position );
+		iterator erase( iterator first, iterator last );
+		
+		void swap( self_type& rhs )
+		{
+			base_type::swap( rhs );
+		}
+
+		void clear()
+		{
+			detail::container::clear( this );
+		}
+
+	private:
+		template <class InputIterator>
+		void do_insert( iterator position,
+			InputIterator first, InputIterator last, input_iterator_tag )
+		{
+
+		}
+
+		template <class FwdIterator>
+		void do_insert( iterator position,
+			FwdIterator first, FwdIterator last, forward_iterator_tag )
+		{
+			
+		}
 	};
 
 
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator==(const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator==( const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y )
+	{
+		return ( lhs.size() == rhs.size() ) && gstl::equal( lhs.begin(), lhs.end(), rhs.begin() );
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator< (const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator< (const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		return gstl::lexicographical_compare( lhs.begin(), lhs.end(),
+				rhs.begin(), rhs.end());
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator!=(const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator!=( const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator !=( lhs, rhs );
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator> (const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator>( const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator >( lhs, rhs );
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator>=(const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator>=( const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator >=( lhs, rhs );
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator<=(const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y);
+	bool operator<=( const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator =<( lhs, rhs );
+	}
 
 	template<class value_type, class allocator, class pointer_traits>
-	void swap(vector<value_type, allocator, pointer_traits>& x, vector<value_type, allocator, pointer_traits>& y);
+	void swap( vector<value_type, allocator, pointer_traits>& lhs,
+		vector<value_type, allocator, pointer_traits>& rhs )
+	{
+		lhs.swap( rhs );
+	}
 
 }
 
