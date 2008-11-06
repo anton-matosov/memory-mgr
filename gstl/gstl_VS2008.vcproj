@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\dynamic_sequence.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\helpers.hpp"
 				>
 			</File>

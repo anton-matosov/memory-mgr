@@ -62,7 +62,7 @@ template struct gstl::iterator_traits<int*>;
 template struct gstl::iterator_traits<const int*>;
 
 
-BOOST_FIXTURE_TEST_SUITE( iterator_test, iterator_test_fixture );
+BOOST_FIXTURE_TEST_SUITE( iterator_test, iterator_test_fixture )
 
 typedef boost::mpl::list< int, float, double > t_list;
 

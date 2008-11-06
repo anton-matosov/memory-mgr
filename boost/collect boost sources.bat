@@ -2,7 +2,7 @@
 setlocal ENABLEEXTENSIONS 
 
 set file_to_check=%cd%\..\detail\iterator.hpp
-set boost_path=C:\Boost\include\boost-1_35
+set boost_path=E:\projects\Library\boost_1_36_0
 
 ::bcp --boost=%boost_path% --scan "%file_to_check%" "%cd%"
 

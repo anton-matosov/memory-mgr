@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_dynamic_sequence.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_iterator.cpp"
 				>
 				<FileConfiguration
@@ -233,6 +237,10 @@
 			</File>
 			<File
 				RelativePath=".\test_utilities.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_vector.cpp"
 				>
 			</File>
 		</Filter>
