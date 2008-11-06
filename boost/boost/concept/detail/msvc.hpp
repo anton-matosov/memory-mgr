@@ -19,7 +19,6 @@ struct check
 {
     virtual void failed(Model* x)
     {
-		x;
         x->~Model();
     }
 };
