@@ -35,9 +35,9 @@ namespace gstl
 {
 	namespace detail
 	{
+		template<class T>
 		struct default_sequence_traits
 		{
-			template<class T>
 			const T* move( T* dst, const T* src, size_t size )
 			{
 				memmove_s( dst, src, size * sizeof(T) );
@@ -48,15 +48,16 @@ namespace gstl
 		<
 			class T,
 			class Alloc,
-			class Traits,
-			class PtrTraits
+			class Traits = default_sequence_traits<T>,
+			class PtrTraits = typename Alloc::pointer_traits_type
 		>
 		class dynamic_sequence
 		{
 		public:
 			enum{ min_buff_size = 4 };
 
-			typedef typename Alloc::rebind<T>::other	allocator_type;
+			typedef dynamic_sequence							self_type;
+			typedef typename Alloc::rebind<T>::other			allocator_type;
 
 
 			typedef typename allocator_type::value_type			value_type;
@@ -84,6 +85,11 @@ namespace gstl
 				alloc_( alloc )
 			{
 			}
+			
+			~dynamic_sequence()
+			{
+				alloc_.deallocate( buffer_, reserved_ );
+			}
 
 			void reserve( size_type n = 0 )
 			{
@@ -103,7 +109,6 @@ namespace gstl
 					reset_buffer( new_buffer, size_, n );
 				}
 			}
-
 
 			void grow( size_type n )
 			{
@@ -145,6 +150,21 @@ namespace gstl
 			{
 				size_type max = alloc_.max_size();
 				return max <= 1 ? 1 : max - 1;
+			}
+
+			void swap( self_type& rhs )
+			{
+				size_type tmp_size		= rhs.size_;
+				size_type tmp_reserved	= rhs.reserved_;
+				pointer tmp_buffer	= rhs.buffer_;
+
+				rhs.size_		= size_;
+				rhs.reserved_	= reserved_;
+				rhs.buffer_		= buffer_;
+
+				size_		= tmp_size;
+				reserved_	= tmp_reserved;
+				buffer_		= tmp_buffer;
 			}
 		};
 	}

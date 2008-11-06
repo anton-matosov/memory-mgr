@@ -28,39 +28,69 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <gstl/detail/allocator.hpp>
+#include <gstl/allocator>
+#include <gstl/iterator>
+#include <gstl/detail/dynamic_sequence.hpp>
 
 namespace gstl
 {
-	template <class T, class Allocator = allocator<T> >
-	class vector {
+	//23.2.4 Class template vector
+	//page 489 (real page - 515)
+	template
+		<
+			class T,
+			class Alloc = allocator<T>,
+			class PtrTraits = typename Alloc::pointer_traits_type
+		>
+	class vector
+		:public detail::dynamic_sequence<T, Alloc, detail::default_sequence_traits<T>, PtrTraits>
+	{
 	public:
+		typedef detail::dynamic_sequence<T, Alloc,
+			detail::default_sequence_traits<T>, PtrTraits>	base_type;
+
 		// types:
-		typedef typename Allocator::reference reference;
-		typedef typename Allocator::const_reference const_reference;
-		typedef implementation defined iterator; // See 23.1
-		typedef implementation defined const_iterator; // See 23.1
-		typedef implementation defined size_type; // See 23.1
-		typedef implementation defined difference_type;// See 23.1
-		typedef T value_type;
-		typedef Allocator allocator_type;
-		typedef typename Allocator::pointer pointer;
-		typedef typename Allocator::const_pointer const_pointer;
-		typedef std::reverse_iterator<iterator> reverse_iterator;
-		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef vector								self_type;
+		typedef typename base_type::ptr_traits		ptr_traits;
+
+		typedef typename base_type::allocator_type	allocator_type;
+
+		typedef typename base_type::value_type		value_type;
+		typedef typename base_type::pointer			pointer;
+		typedef typename base_type::const_pointer	const_pointer;
+		typedef typename base_type::reference		reference;
+		typedef typename base_type::const_reference	const_reference;
+
+		typedef typename base_type::size_type		size_type;
+		typedef typename base_type::difference_type	difference_type;
+
+
+		//////////////////////////////////////////////////////////////////////////
+		typedef value_type* iterator; //See 23.1
+		typedef const value_type* const_iterator; // See 23.1
+		//typedef typename pointer iterator; //See 23.1
+		//typedef typename const_pointer const_iterator; // See 23.1
+		typedef gstl::reverse_iterator<iterator> reverse_iterator;
+		typedef gstl::reverse_iterator<const_iterator> const_reverse_iterator;
+
 		// 23.2.4.1 construct/copy/destroy:
-		explicit vector(const Allocator& = Allocator());
+		explicit vector(const allocator_type& = allocator_type());
 		explicit vector(size_type n, const T& value = T(),
-			const Allocator& = Allocator());
+			const allocator_type& = allocator_type());
+
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last,
-			const Allocator& = Allocator());
-		vector(const vector<T,Allocator>& x);
+			const allocator_type& = allocator_type());
+
+		vector(const self_type& x);
 		~vector();
-		vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
+
+		self_type& operator=(const self_type& x);
+
 		template <class InputIterator>
 		void assign(InputIterator first, InputIterator last);
 		void assign(size_type n, const T& u);
+
 		allocator_type get_allocator() const;
 		// iterators:
 		iterator begin();
@@ -97,54 +127,39 @@ namespace gstl
 			InputIterator first, InputIterator last);
 		iterator erase(iterator position);
 		iterator erase(iterator first, iterator last);
-		void swap(vector<T,Allocator>&);
+		void swap( self_type& );
 		void clear();
 	};
 
 
 
-	template <class T, class Allocator>
-	bool operator==(const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator< (const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator!=(const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator> (const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator>=(const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator<=(const vector<T,Allocator>& x,
-		const vector<T,Allocator>& y);
-	template <class T, class Allocator>
-	void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator==(const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
 
-	template <class Allocator> class vector<bool,Allocator>;
-	template <class Allocator>
-	bool operator==(const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	bool operator< (const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	bool operator!=(const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	bool operator> (const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	bool operator>=(const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	bool operator<=(const vector<bool,Allocator>& x,
-		const vector<bool,Allocator>& y);
-	template <class Allocator>
-	void swap(vector<bool,Allocator>& x, vector<bool,Allocator>& y);
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator< (const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator!=(const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator> (const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator>=(const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator<=(const vector<value_type, allocator, pointer_traits>& x,
+		const vector<value_type, allocator, pointer_traits>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	void swap(vector<value_type, allocator, pointer_traits>& x, vector<value_type, allocator, pointer_traits>& y);
+
 }
 
 #endif GSTL_VECTOR_HEADER
