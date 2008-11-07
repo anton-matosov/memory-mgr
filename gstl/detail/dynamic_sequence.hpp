@@ -143,7 +143,13 @@ namespace gstl
 					buffer_ = new_buffer;
 					alloc_.deallocate( old_buffer, reserved_ );
 					reserved_ = new_reserved;
+					set_size( new_size );
 				}
+			}
+
+			void set_size( size_type new_size )
+			{
+				size_ = new_size;
 			}
 
 			size_type max_size() const

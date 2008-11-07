@@ -207,7 +207,11 @@ namespace gstl
 			detail::container::pop_back( this );
 		}
 
-		iterator insert( iterator position, const T& x );
+		iterator insert( iterator position, const T& x )
+		{
+			do_insert( position, &x, &x + 1, random_access_iterator_tag() );
+		}
+
 		void insert( iterator position, size_type n, const T& x );
 
 		template <class InputIterator>
@@ -217,8 +221,21 @@ namespace gstl
 			do_insert( position, first, last, GSTL_ITER_CAT( InputIterator ) );
 		}
 
-		iterator erase( iterator position );
-		iterator erase( iterator first, iterator last );
+		iterator erase( iterator position )
+		{
+			return erase( position, position + 1 )
+		}
+
+		iterator erase( iterator first, iterator last )
+		{
+			GSTL_DEBUG_RANGE( first, last );
+			if( first != last )
+			{
+				detail::move( &*first, &*last, end() - last );
+				set_size( size() - (last - first) );
+				destroy( first, last );
+			}
+		}
 		
 		void swap( self_type& rhs )
 		{
@@ -235,14 +252,42 @@ namespace gstl
 		void do_insert( iterator position,
 			InputIterator first, InputIterator last, input_iterator_tag )
 		{
+			
+		}
 
+		void destroy( iterator first, iterator last )
+		{
+			while( first != last )
+			{
+				alloc_.destroy( &*first );
+				++first;
+			}
 		}
 
 		template <class FwdIterator>
 		void do_insert( iterator position,
 			FwdIterator first, FwdIterator last, forward_iterator_tag )
 		{
-			
+			size_type new_items_count = gstl::distance( first, last );
+			if( size() + new_items_count >  )
+			{
+			}
+		}
+
+		template<class InputIterator>
+		bool check_overlap( InputIterator first, InputIterator last )
+		{
+			return false;
+		}
+
+		bool check_overlap( iterator first, iterator last )
+		{
+			return detail::check_overlap( &*begin(), &*end(), &*first, &*last ) != 0;
+		}
+
+		bool check_overlap( const value_type* first, const value_type* last )
+		{
+			return detail::check_overlap( &*begin(), &*end(), first, last ) != 0;
 		}
 	};
 

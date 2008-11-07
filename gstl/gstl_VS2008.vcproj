@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\buffer_helpers.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\char_traits.hpp"
 				>
 			</File>
