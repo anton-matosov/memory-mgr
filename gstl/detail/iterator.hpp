@@ -64,12 +64,33 @@ namespace std
 
 namespace gstl
 {
+	namespace detail
+	{
+		struct class_iter{};
+		struct pointer_iter{};
+		struct integral_iter{};
+		struct float_iter{};
+
+		template<class iterator_type> 
+		struct choose_iter_type
+		{
+			typedef typename boost::mpl::if_c< boost::is_float<T>, float_iter,
+				typename boost::mpl::if_c< boost::is_integral<T>, integral_iter,
+				typename boost::mpl::if_c< boost::is_pointer<T>, pointer_iter, class_iter >::result
+				>::result
+			>::result result;
+
+		};
+	}
+
  	typedef std::input_iterator_tag				input_iterator_tag;
  	typedef std::output_iterator_tag			output_iterator_tag;
  	typedef std::forward_iterator_tag			forward_iterator_tag;
  	typedef std::bidirectional_iterator_tag		bidirectional_iterator_tag;
  	typedef std::random_access_iterator_tag		random_access_iterator_tag;
 
+	struct integral_iterator_tag {};
+	struct float_iterator_tag {};
 
 	template<class iterator_type> 
 	struct iterator_traits
@@ -100,6 +121,22 @@ namespace gstl
 		typedef const T& reference;
 		typedef random_access_iterator_tag iterator_category;
 	};
+
+	
+	template<class T> 
+	struct integral_iter_traits
+	{
+		typedef ptrdiff_t difference_type;
+		typedef T value_type;
+		typedef T* pointer;
+		typedef T& reference;
+		typedef integral_iterator_tag iterator_category;
+	};
+
+	template<class T, class type = typename detail::choose_iter_type<T>::result > 
+	struct iterator_traits
+	{
+	}
 
 #ifdef GSTL_HAS_FAR_PTR
 	template<class T> 
