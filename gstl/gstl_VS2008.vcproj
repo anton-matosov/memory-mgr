@@ -244,6 +244,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\raw_memory.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\temp_buffer.hpp"
 				>
 			</File>

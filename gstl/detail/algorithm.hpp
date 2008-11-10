@@ -605,14 +605,36 @@ page 577
 	}
 
 	// 25.2.2, swap:
-	template<class T> void swap(T& a, T& b);
+	template<class T>
+	void swap( T& lhs, T& rhs )
+	{
+		if( &lhs != &rhs )
+		{
+			T tmp = lhs;
+			lhs = rhs;
+			rhs = tmp;
+		}
+	}
+
+	template<class ForwardIterator1, class ForwardIterator2>
+	void iter_swap( ForwardIterator1 lhs, ForwardIterator2 rhs )
+	{
+		swap( *lhs, *rhs );
+	}
 
 	template<class ForwardIterator1, class ForwardIterator2>
 	ForwardIterator2 swap_ranges( ForwardIterator1 first1,
-		ForwardIterator1 last1, ForwardIterator2 first2 );
+		ForwardIterator1 last1, ForwardIterator2 first2 )
+	{
+		GSTL_DEBUG_RANGE( first1, first2 );
+		while( first1 != last1 )
+		{
+			iter_swap( first1, first2 );
+			++first1;
+			++first2;
+		}
+	}
 
-	template<class ForwardIterator1, class ForwardIterator2>
-	void iter_swap( ForwardIterator1 a, ForwardIterator2 b );
 
 	template<class InputIterator, class OutputIterator, class UnaryOperation>
 	OutputIterator transform( InputIterator first, InputIterator last,
@@ -690,14 +712,32 @@ page 577
 	OutputIterator unique_copy(InputIterator first, InputIterator last,
 		OutputIterator result);
 	template<class InputIterator, class OutputIterator, class BinaryPredicate>
-	OutputIterator unique_copy(InputIterator first, InputIterator last,
-		OutputIterator result, BinaryPredicate pred);
+	OutputIterator unique_copy( InputIterator first, InputIterator last,
+		OutputIterator result, BinaryPredicate pred );
+	
 	template<class BidirectionalIterator>
-	void reverse(BidirectionalIterator first, BidirectionalIterator last);
+	void reverse( BidirectionalIterator first, BidirectionalIterator last )
+	{
+		GSTL_DEBUG_RANGE( first, first );
+		
+		for( ; first != last && first != --last; ++first )
+		{
+			iter_swap( first, last );
+		}
+	}
+
 	template<class BidirectionalIterator, class OutputIterator>
-	OutputIterator reverse_copy(BidirectionalIterator first,
-		BidirectionalIterator last,
-		OutputIterator result);
+	OutputIterator reverse_copy( BidirectionalIterator first,
+		BidirectionalIterator last, OutputIterator result )
+	{
+		GSTL_DEBUG_RANGE( first, first );
+		while( first != last )  
+		{
+			*result = *first;
+			++first;
+		}
+	}
+
 	template<class ForwardIterator>
 	void rotate(ForwardIterator first, ForwardIterator middle,
 		ForwardIterator last);

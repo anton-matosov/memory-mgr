@@ -256,8 +256,11 @@ namespace gstl
 			size_type pos = position - begin();
 			while( first != last )
 			{
-
+				insert( position, *first );
+				++first;
+				++position;
 			}
+			return iterator( begin() + pos );
 		}
 
 		template <class FwdIterator>
