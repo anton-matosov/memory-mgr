@@ -45,6 +45,10 @@ Table 71 - Relations among iterator categories
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/config.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_float.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 
 //If there is no STL installed
 #ifndef BOOST_STDLIB_CONFIG
@@ -64,79 +68,92 @@ namespace std
 
 namespace gstl
 {
-	namespace detail
-	{
-		struct class_iter{};
-		struct pointer_iter{};
-		struct integral_iter{};
-		struct float_iter{};
-
-		template<class iterator_type> 
-		struct choose_iter_type
-		{
-			typedef typename boost::mpl::if_c< boost::is_float<T>, float_iter,
-				typename boost::mpl::if_c< boost::is_integral<T>, integral_iter,
-				typename boost::mpl::if_c< boost::is_pointer<T>, pointer_iter, class_iter >::result
-				>::result
-			>::result result;
-
-		};
-	}
-
- 	typedef std::input_iterator_tag				input_iterator_tag;
- 	typedef std::output_iterator_tag			output_iterator_tag;
- 	typedef std::forward_iterator_tag			forward_iterator_tag;
- 	typedef std::bidirectional_iterator_tag		bidirectional_iterator_tag;
- 	typedef std::random_access_iterator_tag		random_access_iterator_tag;
+	typedef std::input_iterator_tag				input_iterator_tag;
+	typedef std::output_iterator_tag			output_iterator_tag;
+	typedef std::forward_iterator_tag			forward_iterator_tag;
+	typedef std::bidirectional_iterator_tag		bidirectional_iterator_tag;
+	typedef std::random_access_iterator_tag		random_access_iterator_tag;
 
 	struct integral_iterator_tag {};
 	struct float_iterator_tag {};
 
-	template<class iterator_type> 
-	struct iterator_traits
+	namespace detail
 	{
-		typedef typename iterator_type::difference_type difference_type;
-		typedef typename iterator_type::value_type value_type;
-		typedef typename iterator_type::pointer pointer;
-		typedef typename iterator_type::reference reference;
-		typedef typename iterator_type::iterator_category iterator_category;
-	};
+		namespace iter
+		{
+			struct class_iter{};
+			struct pointer_iter{};
+			struct integral_iter{};
+			struct float_iter{};
+			struct unknown_iter{};
 
-	template<class T>
-	struct iterator_traits<T*>
-	{
-		typedef ptrdiff_t difference_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T& reference;
-		typedef random_access_iterator_tag iterator_category;
-	};
+			template<class T> 
+			struct choose_iter_type
+			{
+				typedef typename boost::mpl::if_c< boost::is_float<T>::value, float_iter,
+					typename boost::mpl::if_c< boost::is_integral<T>::value, integral_iter,
+					typename boost::mpl::if_c< boost::is_pointer<T>::value, pointer_iter, class_iter >::type
+					>::type
+				>::type type;
 
-	template<class T> 
-	struct iterator_traits<const T*>
-	{
-		typedef ptrdiff_t difference_type;
-		typedef T value_type;
-		typedef const T* pointer;
-		typedef const T& reference;
-		typedef random_access_iterator_tag iterator_category;
-	};
+			};
 
-	
-	template<class T> 
-	struct integral_iter_traits
-	{
-		typedef ptrdiff_t difference_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T& reference;
-		typedef integral_iterator_tag iterator_category;
-	};
+			template<class iterator_class, class IterType>
+			struct iterator_traits
+			{
+				typedef typename iterator_class::difference_type difference_type;
+				typedef typename iterator_class::value_type value_type;
+				typedef typename iterator_class::pointer pointer;
+				typedef typename iterator_class::reference reference;
+				typedef typename iterator_class::iterator_category iterator_category;
+			};
 
-	template<class T, class type = typename detail::choose_iter_type<T>::result > 
-	struct iterator_traits
-	{
+			template<class T>
+			struct iterator_traits<T*, pointer_iter>
+			{
+				typedef ptrdiff_t difference_type;
+				typedef T value_type;
+				typedef T* pointer;
+				typedef T& reference;
+				typedef random_access_iterator_tag iterator_category;
+			};
+
+			template<class T> 
+			struct iterator_traits<T, integral_iter>
+			{
+				typedef ptrdiff_t difference_type;
+				typedef T value_type;
+				typedef T* pointer;
+				typedef T& reference;
+				typedef integral_iterator_tag iterator_category;
+			};
+
+			template<class T> 
+			struct iterator_traits<T, float_iter>
+			{
+				typedef ptrdiff_t difference_type;
+				typedef T value_type;
+				typedef T* pointer;
+				typedef T& reference;
+				typedef float_iterator_tag iterator_category;
+			};
+		}
+		
 	}
+	template<class T> 
+	struct iterator_traits
+		:public detail::iter::iterator_traits<T, typename detail::iter::choose_iter_type<T>::type>
+	{
+		typedef detail::iter::iterator_traits<T, typename detail::iter::choose_iter_type<T>::type> iter_traits;
+
+		typedef typename iter_traits::difference_type difference_type;
+		typedef typename iter_traits::value_type value_type;
+		typedef typename iter_traits::pointer pointer;
+		typedef typename iter_traits::reference reference;
+		typedef typename iter_traits::iterator_category iterator_category;
+	};
+
+
 
 #ifdef GSTL_HAS_FAR_PTR
 	template<class T> 

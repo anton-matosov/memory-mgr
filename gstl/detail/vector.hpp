@@ -264,7 +264,7 @@ namespace gstl
 		}
 
 		template <class FwdIterator>
-		iterators do_insert( iterator position,
+		iterator do_insert( iterator position,
 			FwdIterator first, FwdIterator last, forward_iterator_tag )
 		{
 			size_type new_items_count = gstl::distance( first, last );
