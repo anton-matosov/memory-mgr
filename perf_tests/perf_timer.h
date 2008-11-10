@@ -30,18 +30,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/config/config.h>
 
-#ifdef MGR_WINDOWS_PLATFORM
-#	include "detail/win_perf_timer.h"
-namespace memory_mgr
-{	
-	typedef detail::win_perf_timer perf_timer;
-}
-#elif defined( MGR_LINUX_PLATFORM )
-#	include "detail/posix_perf_timer.h"
 namespace memory_mgr
 {
+
+#ifdef MGR_WINDOWS_PLATFORM
+#	include "detail/win_perf_timer.h"
+	typedef detail::win_perf_timer perf_timer;
+	
+#elif defined( MGR_LINUX_PLATFORM )
+#	include "detail/posix_perf_timer.h"
 	typedef detail::posix_perf_timer perf_timer;
-}
 #endif //MGR_WINDOWS_PLATFORM
+
+}
 
 #endif//MGR_PERF_TIMER_HEADER
