@@ -30,14 +30,21 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 class vector_fixture
 {
-
+public:
+	typedef gstl::vector<int> vector_type;
 };
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
 BOOST_AUTO_TEST_CASE( test_constructors )
 {
+	//Default constructor
+	vector_type vec1;
 
+	int arr[] = { 1, 2, 3 };
+
+	//Iterators constructor
+	vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

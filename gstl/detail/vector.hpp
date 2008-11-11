@@ -29,6 +29,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <gstl/allocator>
+#include <gstl/algorithm>
+#include <gstl/memory>
 #include <gstl/iterator>
 #include <gstl/detail/dynamic_sequence.hpp>
 
@@ -48,6 +50,7 @@ namespace gstl
 	public:
 		typedef detail::dynamic_sequence<T, Alloc,
 			detail::default_sequence_traits<T>, PtrTraits>	base_type;
+		typedef base_type							internal_buffer_type;
 
 		// types:
 		typedef vector								self_type;
@@ -74,7 +77,7 @@ namespace gstl
 		typedef gstl::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		// 23.2.4.1 construct/copy/destroy:
-		explicit vector(const allocator_type& = allocator_type())
+		explicit vector(const allocator_type& a = allocator_type())
 			:base_type( a )
 		{}
 
@@ -98,7 +101,11 @@ namespace gstl
 		{
 			*this = x;
 		}
-		~vector();
+
+		~vector()
+		{
+			destroy( begin(), end() );
+		}
 
 		self_type& operator=( const self_type& x )
 		{
@@ -268,10 +275,44 @@ namespace gstl
 			FwdIterator first, FwdIterator last, forward_iterator_tag )
 		{
 			size_type new_items_count = gstl::distance( first, last );
-			if( size() + new_items_count > capacity() )
+			size_type new_size = size() + new_items_count;
+			if( new_size > capacity() )
 			{
+				internal_buffer_type tmp_buff;
+				tmp_buff.reserve( new_size + 10 );
+				value_type* tmp_begin = tmp_buff.get_buffer();
 
+				value_type* tmp_pos = tmp_begin;
+				try
+				{
+					//Copy prefix
+					tmp_pos = uninitialized_copy( begin(), position, tmp_pos );
+					//Copy new
+					tmp_pos = uninitialized_copy( first, last, tmp_pos );
+					//Copy suffix
+					tmp_pos = uninitialized_copy( position, end(), tmp_pos );
+				}
+				catch(...)
+				{
+					destroy( tmp_begin, tmp_pos );
+					throw;
+				}
+				destroy( begin(), end() );
+				base_type::swap( tmp_buff );
 			}
+			else
+			{
+				//Buffer size is enough to hold new items
+				iterator vec_end = end();
+				//Insert them past the end of existent items
+				iterator new_end = uninitialized_copy( first, last, vec_end );
+				
+				//put new items on their position
+				reverse( position, vec_end );
+				reverse( vec_end, new_end );
+				reverse( position, new_end );
+			}
+			set_size( new_size );
 		}
 
 		template<class InputIterator>

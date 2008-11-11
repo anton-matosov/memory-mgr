@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <gstl/allocator>
+#include <gstl/detail/buffer_helpers.hpp>
 
 
 namespace gstl
@@ -38,12 +39,12 @@ namespace gstl
 		template<class T>
 		struct default_sequence_traits
 		{
-			const T* move( T* dst, const T* src, size_t size )
-			{
-				memmove_s( dst, src, size * sizeof(T) );
-				return dst;
+			static inline const T* move( T* dst, const T* src, size_t size )
+			{	
+				return detail::move( dst, src, size );
 			}
 		};
+
 		template
 		<
 			class T,

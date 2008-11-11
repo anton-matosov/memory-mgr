@@ -41,7 +41,7 @@ public:
 #define DECLARE_INT_CONTAINER( name, array_values, cont_type )	\
 	int ARRAY_NAME( name )[] = {array_values};					\
 	cont_type<int>	name( ARRAY_NAME( name ),					\
-	ARRAY_NAME( name ) + GSTL_ARRAY_LEN( ARRAY_NAME( name ) ) );
+	GSTL_ARRAY_END( ARRAY_NAME( name ) ) );
 
 
 #define DECLARE_INT_VECTOR( name, array_values )	\
