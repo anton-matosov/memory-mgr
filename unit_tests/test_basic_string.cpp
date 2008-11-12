@@ -69,6 +69,10 @@ typedef gstl::basic_string<char, gstl::char_traits<char>,
 class basic_string_test_fixture
 {
 public:
+	static const char m_test_str[];
+	static const char m_test_str2[];
+	static const size_t m_test_str_len;
+	static const size_t m_test_str_len2;
 	
 };
 

@@ -258,6 +258,13 @@ namespace gstl
 	private:
 		template <class InputIterator>
 		iterator do_insert( iterator position,
+			InputIterator n, InputIterator x, integral_iterator_tag )
+		{
+			return insert( position, static_cast<size_type>( n ), static_cast<const value_type&>( x ) );
+		}
+
+		template <class InputIterator>
+		iterator do_insert( iterator position,
 			InputIterator first, InputIterator last, input_iterator_tag )
 		{
 			size_type pos = position - begin();
@@ -276,6 +283,8 @@ namespace gstl
 		{
 			size_type new_items_count = gstl::distance( first, last );
 			size_type new_size = size() + new_items_count;
+
+			iterator result_pos = position;
 			if( new_size > capacity() )
 			{
 				internal_buffer_type tmp_buff;
@@ -298,6 +307,8 @@ namespace gstl
 					throw;
 				}
 				destroy( begin(), end() );
+				result_pos = tmp_begin + gstl::distance( begin(), position );
+				
 				base_type::swap( tmp_buff );
 			}
 			else
@@ -313,6 +324,7 @@ namespace gstl
 				reverse( position, new_end );
 			}
 			set_size( new_size );
+			return result_pos;
 		}
 
 		template<class InputIterator>

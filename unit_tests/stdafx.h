@@ -45,8 +45,3 @@ static const size_t sz_seven = 7;
 static const size_t sz_eight = 8;
 static const size_t sz_nine = 9;
 static const size_t sz_ten = 10;
-
-static const char m_test_str[];
-static const char m_test_str2[];
-static const size_t m_test_str_len;
-static const size_t m_test_str_len2;
