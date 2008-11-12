@@ -69,23 +69,9 @@ typedef gstl::basic_string<char, gstl::char_traits<char>,
 class basic_string_test_fixture
 {
 public:
-	static const size_t sz_null = 0;
-	static const size_t sz_one = 1;
-	static const size_t sz_two = 2;
-	static const size_t sz_three = 3;
-	static const size_t sz_four = 4;
-	static const size_t sz_five = 5;
-	static const size_t sz_six = 6;
-	static const size_t sz_seven = 7;
-	static const size_t sz_eight = 8;
-	static const size_t sz_nine = 9;
-	static const size_t sz_ten = 10;
-
-	static const char m_test_str[];
-	static const char m_test_str2[];
-	static const size_t m_test_str_len;
-	static const size_t m_test_str_len2;
+	
 };
+
 const char basic_string_test_fixture::m_test_str[] = "Hello World!";
 const size_t basic_string_test_fixture::m_test_str_len = GSTL_STR_LEN( m_test_str );
 const char basic_string_test_fixture::m_test_str2[] = "Goodbye!";

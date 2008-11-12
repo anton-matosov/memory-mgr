@@ -40,11 +40,16 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 {
 	//Default constructor
 	vector_type vec1;
+	BOOST_CHECK_EQUAL( vec1.size(), sz_null );
+	BOOST_CHECK_GE( vec1.capacity(), sz_null );
 
 	int arr[] = { 1, 2, 3 };
 
 	//Iterators constructor
 	vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
+	BOOST_CHECK_EQUAL( vec1.size(), sz_three );
+	BOOST_CHECK_GE( vec1.capacity(), sz_three );
+	BOOST_CHECK_EQUAL_COLLECTIONS
 }
 
 BOOST_AUTO_TEST_SUITE_END()
