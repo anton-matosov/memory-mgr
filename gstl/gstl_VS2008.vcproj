@@ -228,6 +228,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\fill_iterator.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\helpers.hpp"
 				>
 			</File>

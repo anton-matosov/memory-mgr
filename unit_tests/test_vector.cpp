@@ -50,6 +50,16 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 	BOOST_CHECK_EQUAL( vec2.size(), sz_three );
 	BOOST_CHECK_GE( vec2.capacity(), sz_three );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec2.begin(), vec2.end(), arr, GSTL_ARRAY_END( arr ) );
+
+
+	int arr2[] = { 5, 5, 5, 5, 5 };
+
+	int val = arr2[0];
+	size_t count = GSTL_ARRAY_LEN( arr2 );
+	vector_type vec3( count, val );
+	BOOST_CHECK_EQUAL( vec3.size(), count );
+	BOOST_CHECK_GE( vec3.capacity(), count );
+	BOOST_CHECK_EQUAL_COLLECTIONS( vec3.begin(), vec3.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

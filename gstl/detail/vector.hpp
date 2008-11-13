@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/memory>
 #include <gstl/iterator>
 #include <gstl/detail/dynamic_sequence.hpp>
+#include <gstl/detail/fill_iterator.hpp>
 
 namespace gstl
 {
@@ -214,12 +215,16 @@ namespace gstl
 			detail::container::pop_back( this );
 		}
 
-		iterator insert( iterator position, const T& x )
+		iterator insert( iterator position, const value_type& x )
 		{
 			return do_insert( position, &x, &x + 1, random_access_iterator_tag() );
 		}
 
-		void insert( iterator position, size_type n, const T& x );
+		void insert( iterator position, size_type n, const value_type& x )
+		{
+			typedef fill_iterator_ref<const value_type>  fill_iter;
+			insert( position,  fill_iter( x ),  fill_iter( x, n ) );
+		}
 
 		template <class InputIterator>
 		void insert( iterator position,
