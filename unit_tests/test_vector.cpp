@@ -51,15 +51,27 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 	BOOST_CHECK_GE( vec2.capacity(), sz_three );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec2.begin(), vec2.end(), arr, GSTL_ARRAY_END( arr ) );
 
-
-	int arr2[] = { 5, 5, 5, 5, 5 };
+	int arr2[] = { 7, 7, 7 };
 
 	int val = arr2[0];
 	size_t count = GSTL_ARRAY_LEN( arr2 );
+	//Fill constructor
 	vector_type vec3( count, val );
 	BOOST_CHECK_EQUAL( vec3.size(), count );
 	BOOST_CHECK_GE( vec3.capacity(), count );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec3.begin(), vec3.end(), arr2, GSTL_ARRAY_END( arr2 ) );
+
+	//Integral Iterator constructor
+	vector_type vec4( (int)count, val );
+	BOOST_CHECK_EQUAL( vec4.size(), count );
+	BOOST_CHECK_GE( vec4.capacity(), count );
+	BOOST_CHECK_EQUAL_COLLECTIONS( vec4.begin(), vec4.end(), arr2, GSTL_ARRAY_END( arr2 ) );
+
+	//Copy constructor
+	vector_type vec5( vec2 );
+	BOOST_CHECK_EQUAL( vec5.size(), vec2.size() );
+	BOOST_CHECK_GE( vec5.capacity(), vec2.size() );
+	BOOST_CHECK_EQUAL_COLLECTIONS( vec5.begin(), vec5.end(), vec2.begin(), vec2.end() );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

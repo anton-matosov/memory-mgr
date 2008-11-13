@@ -217,6 +217,11 @@ namespace gstl
 				}
 				return get_buffer()[n];
 			}
+
+			allocator_type get_allocator() const
+			{
+				return alloc_;
+			}
 		};
 	}
 }

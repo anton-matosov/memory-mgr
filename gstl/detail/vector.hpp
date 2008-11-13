@@ -127,7 +127,6 @@ namespace gstl
 			insert( begin(), n, t );
 		}
 
-		allocator_type get_allocator() const;
 		// iterators:
 		iterator begin()
 		{
@@ -168,6 +167,8 @@ namespace gstl
 		{
 			return const_reverse_iterator( begin() );
 		}
+
+		using base_type::get_allocator;
 
 		// 23.2.4.2 capacity:
 		using base_type::max_size;
@@ -262,10 +263,10 @@ namespace gstl
 
 	private:
 		template <class InputIterator>
-		iterator do_insert( iterator position,
+		void do_insert( iterator position,
 			InputIterator n, InputIterator x, integral_iterator_tag )
 		{
-			return insert( position, static_cast<size_type>( n ), static_cast<const value_type&>( x ) );
+			insert( position, static_cast<size_type>( n ), static_cast<const value_type&>( x ) );
 		}
 
 		template <class InputIterator>
