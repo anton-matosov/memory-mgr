@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "stdafx.h"
 
 #include <gstl/vector>
+#include "operations_tracer.hpp"
 #include <vector>
 
 
@@ -31,10 +32,17 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 class vector_fixture
 {
 public:
-	typedef gstl::vector<int> vector_type;
+	typedef gstl::test::operations_tracer<int>	tracer_type;
+	typedef gstl::vector<int>					vector_type;
+	typedef gstl::vector<tracer_type>			traced_vector_type;
 };
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
+
+int arr[] = { 1, 2, 3 };
+int arr2[] = { 7, 7, 7 };
+int val = arr2[0];
+size_t count = GSTL_ARRAY_LEN( arr2 );
 
 BOOST_AUTO_TEST_CASE( test_constructors )
 {
@@ -43,7 +51,6 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 	BOOST_CHECK_EQUAL( vec1.size(), sz_null );
 	BOOST_CHECK_GE( vec1.capacity(), sz_null );
 
-	int arr[] = { 1, 2, 3 };
 
 	//Iterators constructor
 	vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
@@ -51,10 +58,6 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 	BOOST_CHECK_GE( vec2.capacity(), sz_three );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec2.begin(), vec2.end(), arr, GSTL_ARRAY_END( arr ) );
 
-	int arr2[] = { 7, 7, 7 };
-
-	int val = arr2[0];
-	size_t count = GSTL_ARRAY_LEN( arr2 );
 	//Fill constructor
 	vector_type vec3( count, val );
 	BOOST_CHECK_EQUAL( vec3.size(), count );
@@ -72,6 +75,57 @@ BOOST_AUTO_TEST_CASE( test_constructors )
 	BOOST_CHECK_EQUAL( vec5.size(), vec2.size() );
 	BOOST_CHECK_GE( vec5.capacity(), vec2.size() );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec5.begin(), vec5.end(), vec2.begin(), vec2.end() );
+}
+
+BOOST_AUTO_TEST_CASE( test_objects_validness )
+{
+	traced_vector_type vec1;
+	long creations = 0;
+	long destructions = 0;
+	const long fill_insert_overhead = 3;
+	BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+	BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+	
+	{
+		//Iterators constructor
+		traced_vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
+		creations += GSTL_ARRAY_LEN( arr );
+		
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+		
+		vec2.clear();
+		destructions += GSTL_ARRAY_LEN( arr );
+
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+		vec2.insert( vec2.begin(), count, val );
+		creations += count + fill_insert_overhead;
+		destructions += fill_insert_overhead;
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+		traced_vector_type vec3 = vec2;
+		creations += vec3.size();
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+		vec2 = traced_vector_type();
+		destructions += vec3.size();
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+		//Affect of ~vector
+		destructions += vec2.size();
+		destructions += vec3.size();
+	}
+
+	BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+	BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+	tracer_type::clear();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

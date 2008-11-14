@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/algorithm>
 #include <gstl/memory>
 #include <gstl/iterator>
+#include <gstl/detail/container_helpers.hpp>
 #include <gstl/detail/dynamic_sequence.hpp>
 #include <gstl/detail/fill_iterator.hpp>
 
