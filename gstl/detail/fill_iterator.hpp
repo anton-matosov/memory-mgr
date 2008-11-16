@@ -1,7 +1,7 @@
 /* 
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
-Copyright (c) 2007-2008 Anton (shikin) Matosov
+Copyright (c) 2007, 2008 Anton (shikin) Matosov
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -53,7 +53,7 @@ namespace gstl
 		class fill_iterator_base
 			: public boost::iterator_adaptor<
 			fill_iterator_base<Value>				// Derived
-			, size_t								// Base
+			, long									// Base
 			, Value									// Value
 			, boost::random_access_traversal_tag	// CategoryOrTraversal
 			>
@@ -66,16 +66,16 @@ namespace gstl
 			typedef typename self_type::iterator_adaptor_	base_type;
 			typedef Value									value_type;
 			typedef value_type&								reference;
-			typedef size_t									size_type;
+			typedef long									counter_type;
 
-			static const size_type npos = static_cast<size_type>( -1 );
+			static const counter_type npos = static_cast<counter_type>( -1 );
 
 			fill_iterator_base()
 				: base_type( npos ),
 				value_( 0 )
 			{}
 
-			explicit fill_iterator_base( value_type* p, size_type count )
+			explicit fill_iterator_base( value_type* p, counter_type count )
 				: base_type( count ),
 				value_( p )
 			{}
@@ -85,7 +85,10 @@ namespace gstl
 				typename boost::enable_if< boost::is_convertible<OtherValue*,Value*>,
 				enabler >::type = enabler() )
 				: base_type( other.base() ),
-				current_( other.current_ )
+				value_( other.value_ )
+			{
+
+			}
 
 		private:
 			friend class boost::iterator_core_access;
@@ -107,7 +110,7 @@ namespace gstl
 	public:
 		typedef fill_iterator	self_type;
 		typedef typename boost::add_const<typename  self_type::reference>::type const_reference;
-		fill_iterator( const_reference val, typename self_type::size_type count = 0 )
+		fill_iterator( const_reference val, typename self_type::counter_type count = 0 )
 			:base_type( &this->value_, count ),
 			value_( val )
 		{}
@@ -123,7 +126,7 @@ namespace gstl
 		typedef detail::fill_iterator_base<Value>	base_type;
 	public:
 		typedef fill_iterator_ref	self_type;
-		fill_iterator_ref( typename self_type::reference val, typename self_type::size_type count = 0 )
+		fill_iterator_ref( typename self_type::reference val, typename self_type::counter_type count = 0 )
 			:base_type( &val, count )
 		{}
 	};

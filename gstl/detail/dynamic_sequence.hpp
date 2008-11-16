@@ -1,7 +1,7 @@
 /* 
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
-Copyright (c) 2007-2008 Anton (shikin) Matosov
+Copyright (c) 2007, 2008 Anton (shikin) Matosov
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <gstl/allocator>
 #include <gstl/detail/buffer_helpers.hpp>
+#include <gstl/detail/sequence_iterator.hpp>
 
 
 namespace gstl
@@ -72,6 +73,10 @@ namespace gstl
 
 			typedef Traits										traits_type;
 			typedef PtrTraits									ptr_traits;
+
+
+			typedef detail::sequence_iterator<pointer>			iterator;
+			typedef detail::sequence_iterator<const_pointer>	const_iterator;
 
 			pointer			buffer_;
 			size_type		size_;
@@ -221,6 +226,20 @@ namespace gstl
 			allocator_type get_allocator() const
 			{
 				return alloc_;
+			}
+
+
+
+			iterator build_iter( value_type* p )
+			{
+				iterator it( p );
+				return it;
+			}
+
+			const_iterator build_iter( const value_type* p ) const
+			{
+				const_iterator it( p );
+				return it;
 			}
 		};
 	}

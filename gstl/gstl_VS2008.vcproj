@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\sequence_iterator.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\temp_buffer.hpp"
 				>
 			</File>
