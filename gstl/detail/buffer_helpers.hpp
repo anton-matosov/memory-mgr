@@ -63,9 +63,9 @@ namespace gstl
 		   @retval 0 if sequences don't overlap
 		   @retval 1 if the beginning of the first sequence overlaps with the end of the second
 		*/
-		template<class T>
-		static inline int check_overlap( const T* const first1, const T* const last1
-			, const T* const first2, const T* const last2 )
+		template<class RanIter1, class RanIter2>
+		static inline int check_overlap( RanIter1 first1, RanIter1 last1,
+			RanIter2 first2, RanIter2 last2 )
 		{
 			if( first1 <= first2 )
 			{//1) or 2)
@@ -85,24 +85,27 @@ namespace gstl
 			return 0;
 		}
 
-		template<class T>
-		static inline int check_overlap( const T* buf1, const T* buf2, size_t n )
+		template<class T1, class T2>
+		static inline int check_overlap( const T1* buf1, const T2* buf2, size_t n )
 		{
 			return check_overlap( buf1, buf1 + n, buf2, buf2 + n );
 		}
 
-		template<class T>
-		static inline T* move( T* dst, const T* src, size_t n )
+		template<class DstItem, class SrcItem>
+		static inline DstItem* move( DstItem* dst, const SrcItem* src, size_t n )
 		{
 			GSTL_ASSERT( dst != 0 && "dst is null" );
 			GSTL_ASSERT( src != 0 && "src is null" );
+
+			typedef DstItem*		dst_pointer_type;
+			typedef const SrcItem*	src_pointer_type;
 			
 			int overlap = check_overlap( src, dst, n );
-			T* s = dst;
+			dst_pointer_type dst_begin = dst;
 			if( overlap == -1 )
 			{//copy backward
-				const T* src_end = src + n;
-				T* dst_end = dst + n;
+				src_pointer_type src_end = src + n;
+				dst_pointer_type dst_end = dst + n;
 				while( n-- )
 				{
 					*--dst_end = *--src_end;
@@ -116,7 +119,7 @@ namespace gstl
 				}
 
 			}
-			return s;
+			return dst_begin;
 		}
 	}
 }
