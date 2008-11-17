@@ -74,10 +74,6 @@ namespace gstl
 			typedef Traits										traits_type;
 			typedef PtrTraits									ptr_traits;
 
-
-			typedef detail::sequence_iterator<pointer>			iterator;
-			typedef detail::sequence_iterator<const_pointer>	const_iterator;
-
 			pointer			buffer_;
 			size_type		size_;
 			size_type		reserved_;
@@ -228,19 +224,6 @@ namespace gstl
 				return alloc_;
 			}
 
-
-
-			iterator build_iter( value_type* p )
-			{
-				iterator it( p );
-				return it;
-			}
-
-			const_iterator build_iter( const value_type* p ) const
-			{
-				const_iterator it( p );
-				return it;
-			}
 		};
 	}
 }

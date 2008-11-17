@@ -34,7 +34,7 @@ namespace gstl
 {
 	namespace detail
 	{
- 		template <class PtrT>
+ 		template <class PtrT, class ContainerT>
  		class sequence_iterator
  			: public boost::iterator_adaptor<
  			sequence_iterator<PtrT>					// Derived
@@ -46,6 +46,7 @@ namespace gstl
  		private:
  			struct enabler {};  // a private type avoids misuse
  
+			typedef ContainerT								container_type;
  		public:
  			typedef sequence_iterator						self_type;
  			typedef typename self_type::iterator_adaptor_	base_type;
@@ -68,6 +69,30 @@ namespace gstl
  
  			}
  		};
+
+		template <class ContainerT>
+		class declare_sequence_iterator
+		{
+		public:
+			typedef ContainerT									container_type;
+			typedef typename container_type::value_type			value_type;
+			typedef typename container_type::pointer			pointer;
+
+			typedef detail::sequence_iterator<pointer, container_type>			iterator;
+			typedef detail::sequence_iterator<const_pointer, container_type>	const_iterator;
+
+			static inline iterator build_iter( value_type* p )
+			{
+				iterator it( p );
+				return it;
+			}
+
+			static inline const_iterator build_iter( const value_type* p ) const
+			{
+				const_iterator it( p );
+				return it;
+			}
+		};
 	}
 }
 
