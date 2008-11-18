@@ -45,16 +45,11 @@ namespace memory_mgr
 
 		typedef pointer_traits<T, MemMgr>				pointer_traits_type;
 
-		typedef typename pointer_traits_type::pointer				pointer_type;
-		typedef typename pointer_traits_type::const_pointer			const_pointer_type;
-		typedef typename pointer_traits_type::reference				reference_type;
-		typedef typename pointer_traits_type::const_reference		const_reference_type;
+		typedef typename pointer_traits_type::pointer				pointer;
+		typedef typename pointer_traits_type::const_pointer			const_pointer;
+		typedef typename pointer_traits_type::reference				reference;
+		typedef typename pointer_traits_type::const_reference		const_reference;
 
- 		typedef value_type*								pointer;
- 		typedef const value_type*						const_pointer;
- 		typedef value_type&								reference;
- 		typedef const value_type&						const_reference;
-		
 		typedef typename manager_traits<mgr_type>::size_type	size_type;
 		typedef ptrdiff_t										difference_type;
 
@@ -65,13 +60,13 @@ namespace memory_mgr
 		};
 
 		// return address of mutable val
-		inline pointer address( reference_type val ) const
+		inline pointer address( reference val ) const
 		{	
 			return pointer(&*val);
 		}
 
 		// return address of nonmutable val
-		inline const_pointer address( const_reference_type val ) const
+		inline const_pointer address( const_reference val ) const
 		{	
 			return const_pointer(&*val);
 		}
@@ -98,31 +93,31 @@ namespace memory_mgr
 		}
 
 		// deallocate object at ptr, ignore size
-		inline void deallocate( pointer_type ptr, size_type size )
+		inline void deallocate( pointer ptr, size_type size )
 		{	
 			mgr_type::instance().deallocate( get_offset_internal( ptr ), size );
 		}
 
 		// allocate array of count elements
-		inline pointer_type allocate(size_type count)
+		inline pointer allocate(size_type count)
 		{	
-			return pointer_type( mgr_type::instance().allocate( count * sizeof(value_type) ) );
+			return pointer( mgr_type::instance().allocate( count * sizeof(value_type) ) );
 		}
 
 		// allocate array of count elements, ignore hint
-		inline pointer_type allocate(size_type count, const void *)
+		inline pointer allocate(size_type count, const void *)
 		{	
-			return (allocate(count));
+			return allocate(count);
 		}
 
 		// construct object at ptr with value val
-		inline void construct(pointer_type ptr, const_reference_type val)
+		inline void construct(pointer ptr, const_reference val)
 		{	
 			::new (&*ptr) value_type(val);
 		}
 
 		// destroy object at ptr
-		inline void destroy(pointer_type ptr)
+		inline void destroy(pointer ptr)
 		{	
 			ptr;//VS 2008 warning
 			(&*ptr)->~value_type();
