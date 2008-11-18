@@ -51,6 +51,7 @@ namespace gstl
  			typedef sequence_iterator						self_type;
  			typedef typename self_type::iterator_adaptor_	base_type;
  			typedef typename base_type::value_type			value_type;
+			typedef gstl::random_access_iterator_tag		iterator_category;
  
  			sequence_iterator()
  				: base_type( 0 )
@@ -68,6 +69,8 @@ namespace gstl
  			{
  
  			}
+
+			
  		};
 
 		template <class ContainerT>
