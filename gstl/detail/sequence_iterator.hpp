@@ -37,7 +37,7 @@ namespace gstl
  		template <class PtrT, class ContainerT>
  		class sequence_iterator
  			: public boost::iterator_adaptor<
- 			sequence_iterator<PtrT>					// Derived
+ 			sequence_iterator<PtrT, ContainerT>		// Derived
  			, PtrT									// Base
  			, boost::use_default					// Value
  			, boost::random_access_traversal_tag	// CategoryOrTraversal
@@ -61,7 +61,7 @@ namespace gstl
  			{}
  
  			template <class OtherPtrT>
- 			sequence_iterator( sequence_iterator<OtherPtrT> const& other,
+ 			sequence_iterator( sequence_iterator<OtherPtrT, ContainerT> const& other,
  				typename boost::enable_if< boost::is_convertible<OtherPtrT, PtrT>,
  				enabler >::type = enabler() )
  				: base_type( other.base() )
@@ -77,6 +77,7 @@ namespace gstl
 			typedef ContainerT									container_type;
 			typedef typename container_type::value_type			value_type;
 			typedef typename container_type::pointer			pointer;
+			typedef typename container_type::const_pointer		const_pointer;
 
 			typedef detail::sequence_iterator<pointer, container_type>			iterator;
 			typedef detail::sequence_iterator<const_pointer, container_type>	const_iterator;
@@ -87,7 +88,7 @@ namespace gstl
 				return it;
 			}
 
-			static inline const_iterator build_iter( const value_type* p ) const
+			static inline const_iterator build_iter( const value_type* p )
 			{
 				const_iterator it( p );
 				return it;
