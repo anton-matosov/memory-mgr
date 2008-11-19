@@ -1009,20 +1009,24 @@ page 577
 		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator1> ));
 		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator2> ));
 
- 		while( first1 != last1 )
+		GSTL_DEBUG_RANGE( first1, last1 );
+		GSTL_DEBUG_RANGE( first2, last2 );
+
+ 		while( first1 != last1 && first2 != last2 )
  		{
- 			if( comp( *first2, *first1 ) || first2 == last2 )
+			if( comp( *first1, *first2 ) )
+			{//first is less than second
+				return true;
+			}
+			else if( comp( *first2, *first1 ) )
  			{//second is less than first, or shorter than first
  				return false;
- 			}
- 			else if( comp( *first1, *first2 ) )
- 			{//first is less than second
- 				return true;
- 			}
+ 			} 
  			++first1;
  			++first2;
  		}
-		return true;
+
+		return first1 == last1 && first2 != last2;
 	}
 
 	// 25.3.9, permutations

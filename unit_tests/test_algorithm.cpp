@@ -67,10 +67,12 @@ namespace
 	typedef int_vec_type::const_iterator int_vec_iter;
 	typedef int_list_type::const_iterator int_list_iter;
 	
-#define ARRAY_ITEMS  1, 2, 3, 3, 2, 3, 3, 1, 2, 2, 3
+#define ARRAY_ITEMS			1, 2, 3, 3, 2, 3, 3, 1, 2, 2, 3
+#define LESS_ARRAY_ITEMS	1, 2, 3, 3, 2, 3, 3, 1, 2, 2, 1
 
 
 	DECLARE_INT_VECTOR( int_vec, ARRAY_ITEMS );
+	DECLARE_INT_VECTOR( less_int_vec, LESS_ARRAY_ITEMS );
 	DECLARE_INT_CONST_VECTOR( const_int_vec, ARRAY_ITEMS );
 	DECLARE_INT_LIST( int_list, ARRAY_ITEMS );
 
@@ -204,6 +206,29 @@ BOOST_AUTO_TEST_CASE( test_equal )
 {
 	BOOST_CHECK( std::equal( int_vec.begin(), int_vec.end(), int_vec.begin() ) );
 	BOOST_CHECK( gstl::equal( int_vec.begin(), int_vec.end(), int_vec.begin() ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_lexicographical_compare )
+{
+	//Equal
+	BOOST_CHECK( !std::lexicographical_compare( int_vec.begin(), int_vec.end(), int_vec.begin(), int_vec.end() ) );
+	BOOST_CHECK( !gstl::lexicographical_compare( int_vec.begin(), int_vec.end(), int_vec.begin(), int_vec.end() ) );
+
+	//The first is  shorter
+	BOOST_CHECK( std::lexicographical_compare( int_vec.begin(), int_vec.end() - 1, int_vec.begin(), int_vec.end() ) );
+	BOOST_CHECK( gstl::lexicographical_compare( int_vec.begin(), int_vec.end() - 1, int_vec.begin(), int_vec.end() ) );
+
+	//The first is lesser, length is the same
+	BOOST_CHECK( std::lexicographical_compare( less_int_vec.begin(), less_int_vec.end(), int_vec.begin(), int_vec.end() ) );
+	BOOST_CHECK( gstl::lexicographical_compare( less_int_vec.begin(), less_int_vec.end(), int_vec.begin(), int_vec.end() ) );
+
+	//The second is shorter
+	BOOST_CHECK( !std::lexicographical_compare( int_vec.begin(), int_vec.end(), int_vec.begin(), int_vec.end() - 1 ) );
+	BOOST_CHECK( !gstl::lexicographical_compare( int_vec.begin(), int_vec.end(), int_vec.begin(), int_vec.end() - 1 ) );
+
+	//The second is  lesser, length is the same
+	BOOST_CHECK( !std::lexicographical_compare( int_vec.begin(), int_vec.end(), less_int_vec.begin(), less_int_vec.end() ) );
+	BOOST_CHECK( !gstl::lexicographical_compare( int_vec.begin(), int_vec.end(), less_int_vec.begin(), less_int_vec.end() ) );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_1, type, t_list )
