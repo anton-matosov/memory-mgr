@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <gstl/vector>
 #include <vector>
+#include <boost/foreach.hpp>
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
@@ -37,12 +38,39 @@ public:
 
 };
 
+namespace gstl
+{
+	template <class T, class Alloc, class PtrTraits, class StreamT>
+	StreamT& operator<<( StreamT& stream, const vector<T, Alloc, PtrTraits>& vec )
+	{
+		BOOST_FOREACH( const T& val, vec )
+		{
+			stream << val << ' ';
+		}
+		return stream;
+	}
+}
+
+namespace std
+{
+	template <class T, class Alloc, class StreamT>
+	StreamT& operator<<( StreamT& stream, const vector<T, Alloc>& vec )
+	{
+		BOOST_FOREACH( const T& val, vec )
+		{
+			stream << val << ' ';
+		}
+		return stream;
+	}
+}
+
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
 int arr[] = { 1, 2, 3 };
-int arr2[] = { 7, 7, 7 };
+int arr2[] = { 7, 7, 7, 7, 7 };
 int val = arr2[0];
-size_t count = GSTL_ARRAY_LEN( arr2 );
+size_t arr_len = GSTL_ARRAY_LEN( arr );
+size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
 
 typedef int								test_value_type;
 typedef std::vector<test_value_type>	std_vector;
@@ -52,7 +80,7 @@ typedef gstl::vector<test_value_type,
 typedef gstl::vector<test_value_type,
 	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 
-typedef boost::mpl::list< /**/std_vector,/**/ gstl_vector, memory_mgr_vector/**/, memory_mgr_off_vector/**/> t_list;
+typedef boost::mpl::list< /**/std_vector, gstl_vector/**, memory_mgr_vector/**, memory_mgr_off_vector/**/> t_list;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, vector_type, t_list )
 {
@@ -69,15 +97,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, vector_type, t_list )
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec2.begin(), vec2.end(), arr, GSTL_ARRAY_END( arr ) );
 
 	//Fill constructor
-	vector_type vec3( count, val );
-	BOOST_CHECK_EQUAL( vec3.size(), count );
-	BOOST_CHECK_GE( vec3.capacity(), count );
+	vector_type vec3( arr2_len, val );
+	BOOST_CHECK_EQUAL( vec3.size(), arr2_len );
+	BOOST_CHECK_GE( vec3.capacity(), arr2_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec3.begin(), vec3.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 
 	//Integral Iterator constructor
-	vector_type vec4( (int)count, val );
-	BOOST_CHECK_EQUAL( vec4.size(), count );
-	BOOST_CHECK_GE( vec4.capacity(), count );
+	vector_type vec4( (int)arr2_len, val );
+	BOOST_CHECK_EQUAL( vec4.size(), arr2_len );
+	BOOST_CHECK_GE( vec4.capacity(), arr2_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec4.begin(), vec4.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 
 	//Copy constructor
@@ -87,12 +115,113 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, vector_type, t_list )
 	BOOST_CHECK_EQUAL_COLLECTIONS( vec5.begin(), vec5.end(), vec2.begin(), vec2.end() );
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, contaier_type, t_list )
+{
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+
+	cont.clear();
+	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
+	BOOST_CHECK_GE( cont.capacity(), sz_null );
+
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, contaier_type, t_list )
+{
+	contaier_type cont;
+	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
+	BOOST_CHECK( cont.empty() );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_access_operators, contaier_type, t_list )
+{
+	size_t test_pos = arr_len / 2;
+
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	BOOST_REQUIRE_EQUAL( cont.size(), arr_len );
+
+	BOOST_CHECK_EQUAL( cont[test_pos],  arr[test_pos] );
+
+	/*
+	Requires: pos < size()
+	Throws: out_of_range if pos >= size().
+	Returns: operator[](pos).
+	*/
+	BOOST_CHECK_EQUAL( cont.at( test_pos ),  cont[test_pos] );
+	BOOST_CHECK_THROW( cont.at( cont.size() ),  std::out_of_range );
+	BOOST_CHECK_THROW( cont.at( cont.size() + 1 ),  std::out_of_range );
+
+	//Constant container test
+	const contaier_type const_cont( cont );
+	BOOST_REQUIRE_EQUAL( const_cont.size(), cont.size() );
+
+	BOOST_CHECK_EQUAL( const_cont[test_pos],  arr[test_pos] );
+	BOOST_CHECK_EQUAL( const_cont.at( test_pos ),  cont[test_pos] );
+	BOOST_CHECK_THROW( const_cont.at( const_cont.size() ),  std::out_of_range );
+	BOOST_CHECK_THROW( const_cont.at( const_cont.size() + 1 ),  std::out_of_range );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, contaier_type, t_list )
+{		
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+
+	contaier_type cont2( arr2, GSTL_ARRAY_END( arr2 ) );
+
+	cont.swap( cont2 );
+	BOOST_CHECK_EQUAL( cont2.size(), arr_len );
+	BOOST_CHECK_GE( cont2.capacity(), arr_len );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
+
+	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
+	BOOST_CHECK_GE( cont.capacity(), arr2_len );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
+}
+
+//21.3.7 basic_string non-member functions
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare_operators, contaier_type, t_list )
+{
+	int arr[] = { 1, 2, 3 };
+	int arr2[] = { 1, 2, 2 };
+
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	contaier_type cont2( arr, GSTL_ARRAY_END( arr ) );
+	contaier_type cont3( arr2, GSTL_ARRAY_END( arr2 ) );
+
+	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		cont2.begin(), cont2.end() );
+
+	//21.3.7.2 operator==
+	BOOST_CHECK_EQUAL( cont, cont2 );
+
+	//21.3.7.3 operator!=
+	BOOST_CHECK_NE( cont, cont3 );
+
+	//21.3.7.4 operator<
+	BOOST_CHECK_LT( cont3, cont );
+
+	//21.3.7.5 operator>
+	BOOST_CHECK_GT( cont, cont3 );
+
+	//21.3.7.6 operator<=
+	BOOST_CHECK_LE( cont, cont2 ); //Equal
+	BOOST_CHECK_LE( cont3, cont ); //Less
+
+	//21.3.7.7 operator>=
+	BOOST_CHECK_GE( cont2, cont ); //Equal
+	BOOST_CHECK_GE( cont, cont3 ); //Greater
+
+	//21.3.7.8 swap
+	swap( cont, cont3 );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont3.begin(), cont3.end(), arr, GSTL_ARRAY_END( arr ) );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_objects_validness )
 {
+	tracer_type::clear();
 	traced_vector_type vec1;
 	long creations = 0;
 	long destructions = 0;
-	const long fill_insert_overhead = 3;
 	BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 	BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
@@ -111,8 +240,9 @@ BOOST_AUTO_TEST_CASE( test_objects_validness )
 		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
-		vec2.insert( vec2.begin(), count, val );
-		creations += count + fill_insert_overhead;
+		vec2.insert( vec2.begin(), arr2_len, val );
+		const long fill_insert_overhead = 5;
+		creations += arr2_len + fill_insert_overhead;
 		destructions += fill_insert_overhead;
 		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );

@@ -205,7 +205,7 @@ namespace gstl
 			{
 				if( n >= size() )
 				{
-					throw_out_of_range()
+					throw_out_of_range();
 				}
 				return get_buffer()[n];
 			}

@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/algorithm>
+
 namespace gstl
 {
 	namespace test
@@ -44,7 +46,8 @@ namespace gstl
 			static long created_;		// number of constructor calls
 			static long destroyed_;		// number of destructor calls
 			static long assigned_;		// number of assignments
-			static long le_compared_;	// number of comparisons
+			static long le_compared_;	// number of less comparisons
+			static long eq_compared_;	// number of equal comparisons
 			static long max_live_;		// maximum of existing objects
 
 			// recompute maximum of existing objects
@@ -74,6 +77,11 @@ namespace gstl
 				return le_compared_; 
 			}
 
+			static long eq_comparisons()
+			{ 
+				return eq_compared_; 
+			}
+
 			static long max_live()
 			{ 
 				return max_live_; 
@@ -86,6 +94,7 @@ namespace gstl
 				assigned_ = 0;
 				le_compared_ = 0;
 				max_live_ = 0;
+				eq_compared_ = 0;
 			}
 
 		public:
@@ -129,6 +138,13 @@ namespace gstl
 					return lhs.value_ < rhs.value_;
 			}
 
+			// equality comparison
+			friend bool operator==( self_type const& lhs, self_type const& rhs )
+			{
+					++eq_compared_;
+					return lhs.value_ == rhs.value_;
+			}
+
 			int value() const
 			{ 
 				return value_;
@@ -146,6 +162,9 @@ namespace gstl
 
 		template<class T>
 		long operations_tracer<T>::le_compared_ = 0;
+
+		template<class T>
+		long operations_tracer<T>::eq_compared_ = 0;
 
 		template<class T>
 		long operations_tracer<T>::max_live_ = 0;

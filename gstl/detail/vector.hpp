@@ -380,8 +380,8 @@ namespace gstl
 
 
 	template<class value_type, class allocator, class pointer_traits>
-	bool operator==( const vector<value_type, allocator, pointer_traits>& x,
-		const vector<value_type, allocator, pointer_traits>& y )
+	bool operator==( const vector<value_type, allocator, pointer_traits>& lhs,
+		const vector<value_type, allocator, pointer_traits>& rhs )
 	{
 		return ( lhs.size() == rhs.size() ) && gstl::equal( lhs.begin(), lhs.end(), rhs.begin() );
 	}
@@ -419,7 +419,7 @@ namespace gstl
 	bool operator<=( const vector<value_type, allocator, pointer_traits>& lhs,
 		const vector<value_type, allocator, pointer_traits>& rhs )
 	{
-		return rel_ops::operator =<( lhs, rhs );
+		return rel_ops::operator <=( lhs, rhs );
 	}
 
 	template<class value_type, class allocator, class pointer_traits>

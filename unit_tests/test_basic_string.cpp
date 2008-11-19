@@ -283,7 +283,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		BOOST_CHECK_THROW( s.at( s.size() ),  std::out_of_range );
 		BOOST_CHECK_THROW( s.at( s.size() + 1 ),  std::out_of_range );
 
-		string_type cs( m_test_str, m_test_str_len );
+		const string_type cs( m_test_str, m_test_str_len );
 		BOOST_CHECK_EQUAL( cs.c_str(), m_test_str );
 		BOOST_CHECK_EQUAL( cs.size(), m_test_str_len );
 		BOOST_CHECK_GE( cs.capacity(), m_test_str_len );

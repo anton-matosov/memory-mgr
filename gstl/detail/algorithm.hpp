@@ -974,6 +974,9 @@ page 577
 	bool lexicographical_compare( InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2, InputIterator2 last2 )
 	{
+		BOOST_CONCEPT_ASSERT(( boost::LessThanOp< 
+			GSTL_ITER_VALUE_TYPE( InputIterator1 ),
+			GSTL_ITER_VALUE_TYPE( InputIterator2 )> ));
 		return gstl::lexicographical_compare( first1, last1, first2, last2, 
 			std::less<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
@@ -994,7 +997,7 @@ page 577
 						argument is to be considered less than the second argument.
 		@exception newer throws
 		
-		@retval true if the first range compares lexicographically less than than the second.
+		@retval true if the first range compares lexicographically less than the second.
 		@retval false if either both ranges are entirely equivalent or 
 				if is the second that compares less than the first. 
 	*/
@@ -1003,21 +1006,22 @@ page 577
 		InputIterator2 first2, InputIterator2 last2,
 		Compare comp )
 	{
-		//Not implemented
-		BOOST_STATIC_ASSERT( false );
-// 		while( first1!=last1 )
-// 		{
-// 			if( comp( *first2, *first1 ) || first2 == last2 )
-// 			{
-// 				return false
-// 			}
-// 			else if( comp( *first1, *first2 ) )
-// 			{
-// 				return true;
-// 			}
-// 			++first1;
-// 			++first2;
-// 		}
+		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator1> ));
+		BOOST_CONCEPT_ASSERT(( boost::InputIterator<InputIterator2> ));
+
+ 		while( first1 != last1 )
+ 		{
+ 			if( comp( *first2, *first1 ) || first2 == last2 )
+ 			{//second is less than first, or shorter than first
+ 				return false;
+ 			}
+ 			else if( comp( *first1, *first2 ) )
+ 			{//first is less than second
+ 				return true;
+ 			}
+ 			++first1;
+ 			++first2;
+ 		}
 		return true;
 	}
 

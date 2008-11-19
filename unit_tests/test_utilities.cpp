@@ -24,6 +24,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "stdafx.h"
 
 #include <gstl/utility>
+#include "operations_tracer.hpp"
+
 
 class utilities_test_fixture
 {
@@ -36,10 +38,7 @@ namespace gstl
 	template <class T1, class T2, class StreamT>
 	StreamT& operator<<( StreamT& stream, const pair<T1, T2>& p )
 	{
-		stream << p.first;
-		stream << ' ';
-		stream << p.second;
-		return stream;
+		return stream << p.first << ' ' << p.second;
 	}
 }
 
@@ -50,6 +49,27 @@ typedef boost::mpl::list< int, float, double > t_list;
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_1, type, t_list )
 	{
 		
+	}
+
+	BOOST_AUTO_TEST_CASE( test_rel_ops )
+	{
+		typedef gstl::test::operations_tracer<int> test_type;
+		test_type v1 = 1;
+		test_type v2 = 1;
+		test_type v3 = 2;
+
+		BOOST_REQUIRE( v1 == v2 );
+		BOOST_REQUIRE( v1 < v3 );
+
+		BOOST_CHECK( gstl::rel_ops::operator !=( v1, v3 ) );
+
+		BOOST_CHECK( gstl::rel_ops::operator <=( v1, v2 ) ); //Equal
+		BOOST_CHECK( gstl::rel_ops::operator <=( v1, v3 ) ); //Less
+
+		BOOST_CHECK( gstl::rel_ops::operator >=( v1, v2 ) ); //Equal
+		BOOST_CHECK( gstl::rel_ops::operator >=( v3, v1 ) ); //Greater
+
+		BOOST_CHECK( gstl::rel_ops::operator >( v3, v1 ) ); //Greater
 	}
 
 	GSTL_TEST_CASE_TEMPLATE_TWO_LISTS( test_pair, type_1, type_2, t_list, t_list  )
