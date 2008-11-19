@@ -35,6 +35,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/detail/container_helpers.hpp>
 #include <gstl/detail/dynamic_sequence.hpp>
 #include <gstl/detail/fill_iterator.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 
 namespace gstl
 {
@@ -71,10 +73,11 @@ namespace gstl
 
 
 		//////////////////////////////////////////////////////////////////////////
-		typedef value_type* iterator; //See 23.1
-		typedef const value_type* const_iterator; // See 23.1
-		//typedef typename pointer iterator; //See 23.1
-		//typedef typename const_pointer const_iterator; // See 23.1
+		typedef detail::declare_sequence_iterator<self_type> iter_helper;
+
+		typedef typename iter_helper::iterator			iterator; //See 23.1
+		typedef typename iter_helper::const_iterator	const_iterator; // See 23.1
+
 		typedef gstl::reverse_iterator<iterator> reverse_iterator;
 		typedef gstl::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -128,15 +131,15 @@ namespace gstl
 			insert( begin(), n, t );
 		}
 
-		// iterators:
+		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return get_buffer();
+			return iter_helper::build_iter( get_buffer() );
 		}
 
 		const_iterator begin() const
 		{
-			return get_buffer();
+			return iter_helper::build_iter( get_buffer() );
 		}
 
 		iterator end()
@@ -314,7 +317,8 @@ namespace gstl
 					throw;
 				}
 				destroy( begin(), end() );
-				result_pos = tmp_begin + gstl::distance( begin(), position );
+				result_pos = iter_helper::build_iter( 
+					tmp_begin + gstl::distance( begin(), position ) );
 				
 				base_type::swap( tmp_buff );
 			}
@@ -352,12 +356,25 @@ namespace gstl
 
 		void destroy( iterator first, iterator last )
 		{
+			destroy( pointer(&*first), pointer(&*last) );
+		};
+
+		void destroy( pointer first, pointer last )
+		{
 			while( first != last )
 			{
-				alloc_.destroy( &*first );
+				alloc_.destroy( first );
 				++first;
 			}
 		}
+
+		template<class T>
+		void destroy( T* first, T* last, 
+			typename boost::disable_if< boost::is_pointer<pointer>, T >::type* = 0 )
+		{
+			destroy( iter_helper::build_iter( first ),
+				iter_helper::build_iter( last ) );
+		};
 	};
 
 

@@ -24,17 +24,17 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "stdafx.h"
 
 #include <gstl/vector>
-#include "operations_tracer.hpp"
 #include <vector>
-
+#include "operations_tracer.hpp"
+#include "managers.hpp"
 
 
 class vector_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
-	typedef gstl::vector<int>					vector_type;
 	typedef gstl::vector<tracer_type>			traced_vector_type;
+
 };
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
@@ -44,7 +44,17 @@ int arr2[] = { 7, 7, 7 };
 int val = arr2[0];
 size_t count = GSTL_ARRAY_LEN( arr2 );
 
-BOOST_AUTO_TEST_CASE( test_constructors )
+typedef int								test_value_type;
+typedef std::vector<test_value_type>	std_vector;
+typedef gstl::vector<test_value_type>	gstl_vector;
+typedef gstl::vector<test_value_type,
+	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
+typedef gstl::vector<test_value_type,
+	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
+
+typedef boost::mpl::list< /**/std_vector,/**/ gstl_vector, memory_mgr_vector/**/, memory_mgr_off_vector/**/> t_list;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, vector_type, t_list )
 {
 	//Default constructor
 	vector_type vec1;

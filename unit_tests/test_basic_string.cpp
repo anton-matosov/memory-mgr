@@ -24,34 +24,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "stdafx.h"
 
 #include <gstl/detail/basic_string.hpp>
-#include <memory-mgr/allocator.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/heap_segment.h>
-#include <memory-mgr/offset_allocator.h>
 #include <gstl/utility>
-
-typedef memory_mgr::heap_segment
-< 
-	memory_mgr::memory_manager<size_t, 4 * 1024, 4> 
-> heap_mgr;
-
-typedef memory_mgr::singleton_manager
-< 
-	//memory_mgr::size_tracking
-	//<
-		memory_mgr::pointer_convert
-		< 
-			heap_mgr 
-		>
-	//>
-> ptr_alloc_mgr;
-
-typedef memory_mgr::singleton_manager
-< 
-	heap_mgr
-> off_alloc_mgr;
+#include "managers.hpp"
 
 typedef gstl::string gstl_string;
 
