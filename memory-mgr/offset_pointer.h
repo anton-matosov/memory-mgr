@@ -37,7 +37,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {	
-	//Offset pointer class
+	/**
+		@brief		Offset pointer class.
+		@details	Smart pointer class which stores offset between the base address
+					of the memory segment and the object. This allows to put this pointer
+					to the shared memory and/or memory mapped file mapped to the different base 
+					addresses.
+
+		@note		Declaration examples:
+					offset_pointer<char>		char_ptr;
+					offset_pointer<const char>	const_char_ptr;
+	*/
 	template< class T, class Mgr >
 	class offset_pointer : public detail::cmp_helper< offset_pointer< T, Mgr > >
 	{		
@@ -51,6 +61,7 @@ namespace memory_mgr
 		typedef manager_traits<mgr_type>				manager_traits;
 		typedef typename manager_traits::offset_type	offset_type;
 
+		//These typedefs are required if this class is used in the containers as iterator
 		typedef T					value_type;
 		typedef value_type*			pointer;
 		typedef const value_type*	const_pointer;
@@ -59,6 +70,8 @@ namespace memory_mgr
 		typedef const value_type&	const_reference;
 
 		typedef std::ptrdiff_t		difference_type;
+		
+		typedef std::random_access_iterator_tag		iterator_category;
 
 		//Default constructor
 		//Constructs null pointer
@@ -100,59 +113,40 @@ namespace memory_mgr
 			return *this;
 		}
 
-		inline pointer operator->()
+		inline pointer operator->() const
 		{
 			return get_pointer_internal();
 		}
 
-		inline const_pointer operator->() const
-		{
-			return get_pointer_internal();
-		}
-
-		inline reference operator*()
+		inline reference operator*() const
 		{
 			return *get_pointer_internal();
 		}
 
-		inline const_reference operator*() const
-		{
-			return *get_pointer_internal();
-		}
-
-		inline pointer operator&()
+		inline pointer operator&() const
 		{
 			return get_pointer_internal();
 		}
 
-		inline const_pointer operator&() const
-		{
-			return get_pointer_internal();
-		}
-
-		inline reference operator[](difference_type n)
+		inline reference operator[](difference_type n) const
 		{
 			return *(get_pointer_internal() + n);
 		}
 
-		inline const_reference operator[](difference_type n) const
-		{
-			return *(get_pointer_internal() + n);
+		bool is_null() const
+		{ 
+			return m_offset == offset_traits<offset_type>::invalid_offset;
 		}
 
-// 		operator T* ()
-// 		{
-// 			return get_pointer_internal();
-// 		}
-// 
-// 		operator const T*() const
-// 		{
-// 			return get_pointer_internal();
-// 		}
+		bool is_not_null() const
+		{ 
+			return !is_null();
+		}
 
-		bool is_null() const { return m_offset == offset_traits<offset_type>::invalid_offset; }
-		bool is_not_null() const { return !is_null(); }
-		bool operator!() const { return  is_null(); }
+		bool operator!() const
+		{ 
+			return  is_null();
+		}
 
 		inline self_ref_type operator++()
 		{
@@ -224,19 +218,14 @@ namespace memory_mgr
 
 		typedef pointer_convert<typename manager_traits::manager_type> converter;
 
-		inline pointer unconst_pointer( const_pointer ptr )
+		static inline pointer unconst_pointer( const_pointer ptr )
 		{
 			return const_cast<pointer>( ptr );
 		}
 
-		inline pointer get_pointer_internal()
+		inline pointer get_pointer_internal() const
 		{
 			return unconst_pointer( do_get_pointer() );
-		}
-
-		inline const_pointer get_pointer_internal() const
-		{
-			return do_get_pointer();
 		}
 
 		inline const_pointer do_get_pointer() const
