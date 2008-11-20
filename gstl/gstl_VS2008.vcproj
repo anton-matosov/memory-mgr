@@ -156,6 +156,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\deque"
+				>
+			</File>
+			<File
 				RelativePath=".\functional"
 				>
 			</File>
@@ -177,6 +181,18 @@
 			</File>
 			<File
 				RelativePath=".\pointer_traits"
+				>
+			</File>
+			<File
+				RelativePath=".\priority_queue"
+				>
+			</File>
+			<File
+				RelativePath=".\queue"
+				>
+			</File>
+			<File
+				RelativePath=".\stack"
 				>
 			</File>
 			<File
@@ -228,6 +244,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\deque.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\dynamic_sequence.hpp"
 				>
 			</File>
@@ -256,11 +276,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\priority_queue.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\queue.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\raw_memory.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\detail\sequence_iterator.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\stack.hpp"
 				>
 			</File>
 			<File
