@@ -237,6 +237,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\test_list.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_utilities.cpp"
 				>
 			</File>
@@ -268,6 +272,54 @@
 			</File>
 			<File
 				RelativePath=".\test_common.hpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="detail"
+			>
+			<File
+				RelativePath=".\detail\test_access_operators.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_assign_operator.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_begin_end.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_clear.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_compare_operators.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_construction.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_empty.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_reserve.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_resize.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_resize_reserve_throw.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_swap.hpp"
 				>
 			</File>
 		</Filter>

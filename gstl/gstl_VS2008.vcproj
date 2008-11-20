@@ -164,6 +164,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\list"
+				>
+			</File>
+			<File
 				RelativePath=".\map"
 				>
 			</File>
@@ -237,6 +241,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\iterator.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\list.hpp"
 				>
 			</File>
 			<File
