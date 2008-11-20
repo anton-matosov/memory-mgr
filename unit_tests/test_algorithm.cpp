@@ -26,6 +26,12 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/algorithm>
 #include <vector>
 
+/**
+	@brief		Wrapper class on advance algorithm
+	@details	Helper class for declaration of the iterator
+				variable that is advanced from the base position
+				on specific number of iterations
+*/
 class iterator_shifter
 {
 public:

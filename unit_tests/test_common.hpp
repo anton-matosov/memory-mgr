@@ -35,6 +35,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <boost/mpl/list.hpp>
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/iterator/reverse_iterator.hpp>
+#include <boost/foreach.hpp>
 
 
 namespace ut = boost::unit_test;
@@ -81,6 +83,45 @@ void test_compare_n_values( IterT first, ValueT val, size_t len )
 		{
 			break;
 		}
+	}
+}
+
+
+namespace gstl
+{
+	template <class T, class Alloc, class PtrTraits, class StreamT,
+		template <class,class,class> class Container>
+	StreamT& operator<<( StreamT& stream, const Container<T, Alloc, PtrTraits>& vec )
+	{
+		BOOST_FOREACH( const T& val, vec )
+		{
+			stream << val << ' ';
+		}
+		return stream;
+	}
+}
+
+namespace std
+{
+	template <class T, class Alloc, class StreamT, template <class,class> class Container>
+	StreamT& operator<<( StreamT& stream, const Container<T, Alloc>& vec )
+	{
+		BOOST_FOREACH( const T& val, vec )
+		{
+			stream << val << ' ';
+		}
+		return stream;
+	}
+}
+
+namespace boost
+{
+	//Required by boost::unit_test to print test log
+	template <class T, class StreamT>
+	StreamT& operator<<( StreamT& stream, const reverse_iterator<T>& iter )
+	{
+		stream << *iter;
+		return stream;
 	}
 }
 

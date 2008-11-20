@@ -36,32 +36,7 @@ public:
 	//typedef gstl::list<tracer_type>			traced_vector_type;
 
 };
-// 
-// namespace gstl
-// {
-// 	template <class T, class Alloc, class PtrTraits, class StreamT>
-// 	StreamT& operator<<( StreamT& stream, const list<T, Alloc, PtrTraits>& vec )
-// 	{
-// 		BOOST_FOREACH( const T& val, vec )
-// 		{
-// 			stream << val << ' ';
-// 		}
-// 		return stream;
-// 	}
-// }
-// 
-// namespace std
-// {
-// 	template <class T, class Alloc, class StreamT>
-// 	StreamT& operator<<( StreamT& stream, const list<T, Alloc>& vec )
-// 	{
-// 		BOOST_FOREACH( const T& val, vec )
-// 		{
-// 			stream << val << ' ';
-// 		}
-// 		return stream;
-// 	}
-// }
+
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
@@ -79,7 +54,13 @@ typedef boost::mpl::list< /**/std_list/**, gstl_listr/**, memory_mgr_list/**, me
 
 
 #include "detail/test_construction.hpp"
-
+#include "detail/test_assign_operator.hpp"
+#include "detail/test_clear.hpp"
+#include "detail/test_empty.hpp"
+#include "detail/test_resize.hpp"
+#include "detail/test_begin_end.hpp"
+#include "detail/test_swap.hpp"
+#include "detail/test_compare_operators.hpp"
 
 BOOST_AUTO_TEST_SUITE_END()
 

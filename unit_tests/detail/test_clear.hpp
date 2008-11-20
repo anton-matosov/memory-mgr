@@ -31,7 +31,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, contaier_type, t_list )
 
 	cont.clear();
 	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
-	BOOST_CHECK_GE( cont.capacity(), sz_null );
 
 }
 

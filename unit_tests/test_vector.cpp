@@ -25,7 +25,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <gstl/vector>
 #include <vector>
-#include <boost/foreach.hpp>
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
@@ -36,32 +35,6 @@ public:
 	typedef gstl::vector<tracer_type>			traced_vector_type;
 
 };
-
-namespace gstl
-{
-	template <class T, class Alloc, class PtrTraits, class StreamT>
-	StreamT& operator<<( StreamT& stream, const vector<T, Alloc, PtrTraits>& vec )
-	{
-		BOOST_FOREACH( const T& val, vec )
-		{
-			stream << val << ' ';
-		}
-		return stream;
-	}
-}
-
-namespace std
-{
-	template <class T, class Alloc, class StreamT>
-	StreamT& operator<<( StreamT& stream, const vector<T, Alloc>& vec )
-	{
-		BOOST_FOREACH( const T& val, vec )
-		{
-			stream << val << ' ';
-		}
-		return stream;
-	}
-}
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 

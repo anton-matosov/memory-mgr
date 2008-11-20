@@ -34,16 +34,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, contaier_type, t_list )
 
 	cont.swap( cont2 );
 	BOOST_CHECK_EQUAL( cont2.size(), arr_len );
-	BOOST_CHECK_GE( cont2.capacity(), arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
 
 	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
-	BOOST_CHECK_GE( cont.capacity(), arr2_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 
 	//swap function
 	swap( cont, cont2 );
+	BOOST_CHECK_EQUAL( cont.size(), arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr, GSTL_ARRAY_END( arr ) );
+	
+	BOOST_CHECK_EQUAL( cont2.size(), arr2_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 }
 

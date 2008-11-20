@@ -34,16 +34,6 @@ class iterator_test_fixture
 public:
 };
 
-namespace boost
-{
-	//Required by boost::unit_test to print test log
-	template <class T, class StreamT>
-	StreamT& operator<<( StreamT& stream, const reverse_iterator<T>& iter )
-	{
-		stream << *iter;
-		return stream;
-	}
-}
 
 //Instantiate iterator base templates
 template struct gstl::iterator<gstl::input_iterator_tag, int>;

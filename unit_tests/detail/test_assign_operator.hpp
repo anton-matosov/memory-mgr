@@ -33,7 +33,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign_operator, contaier_type, t_list )
 	contaier_type cont2;
 	cont2 = cont;
 	BOOST_CHECK_EQUAL( cont2.size(), cont.size() );
-	BOOST_CHECK_GE( cont2.capacity(), cont.size() );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		cont2.begin(), cont2.end() );
 }
