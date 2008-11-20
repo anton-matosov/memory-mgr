@@ -170,7 +170,7 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 	{
 		traits_type::assign( s1_, s1_len, c1_ );
  
-		test_compare_n_chars( s1_, c1_, s1_len );
+		test_compare_n_values( s1_, c1_, s1_len );
 	}
 
 	BOOST_AUTO_TEST_CASE(test_eq_int_type)

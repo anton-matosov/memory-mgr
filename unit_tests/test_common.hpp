@@ -71,12 +71,16 @@ struct BOOST_AUTO_TC_UNIQUE_ID( test_name ) {};											\
 //#define GSTL_STATIC_ARR_END( arr )\
 //	template<class T, T[]
 
-template<class CharT>
-void test_compare_n_chars( const CharT* str, CharT ch, size_t len )
+template<class ValueT, class IterT>
+void test_compare_n_values( IterT first, ValueT val, size_t len )
 {
-	while( len-- && (*str == ch) )
+	while( len-- )
 	{
-		BOOST_CHECK_EQUAL( *str++, ch );
+		BOOST_CHECK_EQUAL( *first++, val );
+		if( *first != val ) 
+		{
+			break;
+		}
 	}
 }
 

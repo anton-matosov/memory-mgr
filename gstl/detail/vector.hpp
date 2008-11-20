@@ -183,7 +183,7 @@ namespace gstl
 		
 		void resize(size_type sz, T c = T())
 		{
-			detail::container::resize( *this, sz, c );
+			detail::container::resize( this, sz, c );
 		}
 
 		// element access:

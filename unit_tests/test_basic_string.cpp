@@ -101,7 +101,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 
 
 		string_type s7( test_len, ch );
-		test_compare_n_chars( s7.c_str(), ch, test_len );
+		test_compare_n_values( s7.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s7.size(), test_len );
 		BOOST_CHECK_GE( s7.capacity(), test_len );
 
@@ -112,7 +112,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 
 		/**
 		string_type s9( (int)test_len, (int)ch );
-		test_compare_n_chars( s9.c_str(), ch, test_len );
+		test_compare_n_values( s9.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s9.size(), test_len );
 		BOOST_CHECK_GE( s9.capacity(), test_len );
 		//*/
@@ -201,20 +201,20 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		BOOST_CHECK_EQUAL( s2.size(), test_len );
 		BOOST_CHECK_GE( s2.capacity(), test_len );
 		BOOST_CHECK_EQUAL( char_traits::compare( s2.c_str(), m_test_str, m_test_str_len - 1 ), 0 );
-		test_compare_n_chars( s2.c_str() + m_test_str_len, ch, test_add_len );
+		test_compare_n_values( s2.c_str() + m_test_str_len, ch, test_add_len );
 
 
 		string_type s3;
 		s3.resize( test_len, ch );
 		BOOST_CHECK_EQUAL( s3.size(), test_len );
 		BOOST_CHECK_GE( s3.capacity(), test_len );
-		test_compare_n_chars( s3.c_str(), ch, test_len );
+		test_compare_n_values( s3.c_str(), ch, test_len );
 
 		string_type s4;
 		s4.resize( test_len );
 		BOOST_CHECK_EQUAL( s4.size(), test_len );
 		BOOST_CHECK_GE( s4.capacity(), test_len );
-		test_compare_n_chars( s4.c_str(), ch_null, test_len );
+		test_compare_n_values( s4.c_str(), ch_null, test_len );
 		
 		s4.reserve( test_len_x2 );
 		BOOST_CHECK_GE( s4.capacity(), test_len_x2 );
@@ -391,7 +391,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 
 		string_type s7;
 		s7.append( test_len, ch );
-		test_compare_n_chars( s7.c_str(), ch, test_len );
+		test_compare_n_values( s7.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s7.size(), test_len );
 		BOOST_CHECK_GE( s7.capacity(), test_len );
 
@@ -404,7 +404,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		/* NOT Implemented yet
 		string_type s9;
 		s9.append( (int)test_len, (int)ch );
-		test_compare_n_chars( s9.c_str(), ch, test_len );
+		test_compare_n_values( s9.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s9.size(), test_len );
 		BOOST_CHECK_GE( s9.capacity(), test_len );
 		/*/
@@ -460,7 +460,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 
 		string_type s7;
 		s7.assign( test_len, ch );
-		test_compare_n_chars( s7.c_str(), ch, test_len );
+		test_compare_n_values( s7.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s7.size(), test_len );
 		BOOST_CHECK_GE( s7.capacity(), test_len );
 
@@ -473,7 +473,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		/*
 		string_type s9;
 		s9.assign( (int)test_len, (int)ch );
-		test_compare_n_chars( s9.c_str(), ch, test_len );
+		test_compare_n_values( s9.c_str(), ch, test_len );
 		BOOST_CHECK_EQUAL( s9.size(), test_len );
 		BOOST_CHECK_GE( s9.capacity(), test_len );
 		//*/

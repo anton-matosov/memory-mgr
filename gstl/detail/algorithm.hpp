@@ -543,7 +543,7 @@ page 577
 	ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
 		Size count, const T& value)
 	{
-		return search_n( first, last, count, value, std::equal<T>() );
+		return gstl::search_n( first, last, count, value, std::equal_to<T>() );
 	}
 
 

@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
-
 class vector_fixture
 {
 public:
@@ -179,8 +178,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, contaier_type, t_list )
 //21.3.7 basic_string non-member functions
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare_operators, contaier_type, t_list )
 {
-	int arr[] = { 1, 2, 3 };
-	int arr2[] = { 1, 2, 2 };
+	typedef typename contaier_type::value_type value_type;
+	value_type arr[] = { 1, 2, 3 };
+	value_type arr2[] = { 1, 2, 2 };
 
 	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
 	contaier_type cont2( arr, GSTL_ARRAY_END( arr ) );
@@ -213,7 +213,110 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare_operators, contaier_type, t_list )
 	swap( cont, cont3 );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont3.begin(), cont3.end(), arr, GSTL_ARRAY_END( arr ) );
+}
 
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign_operator, contaier_type, t_list )
+{
+	typedef typename contaier_type::value_type value_type;
+	value_type arr[] = { 1, 2, 3 };
+
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr, GSTL_ARRAY_END( arr ) );
+
+	contaier_type cont2;
+	cont2 = cont;
+	BOOST_CHECK_EQUAL( cont2.size(), cont.size() );
+	BOOST_CHECK_GE( cont2.capacity(), cont.size() );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		cont2.begin(), cont2.end() );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_begin_end, contaier_type, t_list )
+{
+	typedef typename contaier_type::value_type value_type;
+	value_type arr[] = { 1, 2, 3 };
+	value_type first = *arr;
+	value_type last = *(GSTL_ARRAY_END( arr ) - 1);
+
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr, GSTL_ARRAY_END( arr ) );
+	BOOST_CHECK_EQUAL( *cont.begin(), first );
+	BOOST_CHECK_EQUAL( *(cont.end() - 1), last );
+	BOOST_CHECK_EQUAL( *cont.rbegin(), last );
+	BOOST_CHECK_EQUAL( *(cont.rend() - 1), first );
+
+	//Const versions
+	const contaier_type const_cont( cont );
+	BOOST_CHECK_EQUAL( *const_cont.begin(), first );
+	BOOST_CHECK_EQUAL( *(const_cont.end() - 1), last );
+	BOOST_CHECK_EQUAL( *const_cont.rbegin(), last );
+	BOOST_CHECK_EQUAL( *(const_cont.rend() - 1), first );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_reserve, contaier_type, t_list )
+{
+	typedef typename contaier_type::value_type value_type;
+	value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
+	size_t arr_len = GSTL_ARRAY_LEN( arr );
+
+
+	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	BOOST_CHECK_EQUAL( cont.size(), arr_len );
+	BOOST_CHECK_GE( cont.capacity(), arr_len );
+	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr, GSTL_ARRAY_END( arr ) );
+
+	/*
+	Resize effects:
+		if (sz > size())
+			insert(end(), sz-size(), c);	// 1
+		else if (sz < size())
+		{
+			iterator i = begin();			// 2
+			advance(i, sz);
+			erase(i, end());
+		}
+		else								// 3
+			;
+	*/
+	/* 1 */
+	size_t arr_len_2 = cont.size() / 2;		
+	cont.resize( arr_len_2 );
+	BOOST_CHECK_EQUAL( cont.size(), arr_len_2 );
+	BOOST_CHECK_GE( cont.capacity(), arr_len_2 );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr, arr + arr_len_2 );
+
+	value_type val = arr[arr_len_2];
+	/* 2 */
+	cont.resize( arr_len, val );				
+	BOOST_CHECK_EQUAL( cont.size(), arr_len );
+	BOOST_CHECK_GE( cont.capacity(), arr_len );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr, arr + arr_len_2 );
+
+	typename contaier_type::const_iterator it = cont.begin();
+	gstl::advance( it, arr_len_2 );
+	test_compare_n_values( it, val, arr_len - arr_len_2 );
+
+
+	/*
+	Calling reserve() with a res_arg argument less than capacity() is in effect a non-binding shrink
+	request. A call with res_arg <= size() is in effect a non-binding shrink-to-fit request.
+	*/
+	//Doesn't work for std::basic_string in VC9 (VS 2008) 
+	//s4.reserve();
+	//BOOST_CHECK_LT( s4.capacity(), test_len_x2 );
+	//BOOST_CHECK_GE( s4.capacity(), s4.size() );
+
+	//resize/reserve Throws: length_error if n > max_size().
+	//218)reserve() uses Allocator::allocate() which may throw an appropriate exception.
+	
+	BOOST_CHECK_THROW( cont.resize( cont.max_size() + 1 ), std::length_error );
+	BOOST_CHECK_THROW( cont.reserve( cont.max_size() + 1 ), std::length_error );
+	BOOST_CHECK_THROW( cont.resize( cont.max_size() + 1, val ), std::length_error );	
 }
 
 BOOST_AUTO_TEST_CASE( test_objects_validness )
