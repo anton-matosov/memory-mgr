@@ -22,9 +22,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 #ifndef GSTL_POINTER_TRAITS_HEADER
-#define GSTL_VECTOR_HEADER
+#define GSTL_POINTER_TRAITS_HEADER
 
-#ifdef PRAGMA_ONCE_SUPPORTED
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 

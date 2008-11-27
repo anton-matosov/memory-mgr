@@ -21,16 +21,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign_operator, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_assign_operator, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type arr[] = { 1, 2, 3 };
 
-	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		arr, GSTL_ARRAY_END( arr ) );
 
-	contaier_type cont2;
+	container_type cont2;
 	cont2 = cont;
 	BOOST_CHECK_EQUAL( cont2.size(), cont.size() );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),

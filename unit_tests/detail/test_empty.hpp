@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, container_type, t_list )
 {
-	contaier_type cont;
+	container_type cont;
 	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
 	BOOST_CHECK( cont.empty() );
 }

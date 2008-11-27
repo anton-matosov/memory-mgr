@@ -21,32 +21,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, container_type, t_list )
-{		
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase_range, container_type, t_list )
+{
 	typedef typename container_type::value_type value_type;
-	value_type arr[] = { 1, 2, 3 };
-	value_type arr2[] = { 7, 7, 7, 7, 7 };
-	size_t arr_len = GSTL_ARRAY_LEN( arr );
-	size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
+	value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
+	value_type arr_wo_range[] = { 1, 5, 6, 7 };
+	size_t range_first_id = 1;
+	size_t range_last_id = 4;
 
 	container_type cont( arr, GSTL_ARRAY_END( arr ) );
-	container_type cont2( arr2, GSTL_ARRAY_END( arr2 ) );
-
-	cont.swap( cont2 );
-	BOOST_CHECK_EQUAL( cont2.size(), arr_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
-
-	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-
-	//swap function
-	swap( cont, cont2 );
-	BOOST_CHECK_EQUAL( cont.size(), arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr, GSTL_ARRAY_END( arr ) );
-	
-	BOOST_CHECK_EQUAL( cont2.size(), arr2_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-}
 
+	typedef typename container_type::iterator iterator;
+	iterator range_first = cont.begin();
+	iterator range_last = cont.begin();
+
+	gstl::advance( range_first, range_first_id );
+	gstl::advance( range_last, range_last_id );
+
+	cont.erase( range_first, range_last );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr_wo_range, GSTL_ARRAY_END( arr_wo_range ) );
+}
 
 

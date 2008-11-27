@@ -22,12 +22,12 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type arr[] = { 1, 2, 3 };
 
-	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 
 	cont.clear();
 	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );

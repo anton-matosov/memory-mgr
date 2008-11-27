@@ -21,32 +21,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, container_type, t_list )
-{		
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase_iter, container_type, t_list )
+{
 	typedef typename container_type::value_type value_type;
-	value_type arr[] = { 1, 2, 3 };
-	value_type arr2[] = { 7, 7, 7, 7, 7 };
-	size_t arr_len = GSTL_ARRAY_LEN( arr );
-	size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
+	value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
+	value_type arr_wo_beg[] = { 2, 3, 4, 5, 6, 7 };
+	value_type arr_wo_beg_end[] = { 2, 3, 4, 5, 6 };
+	value_type arr_wo_beg_end_mid[] = { 2, 3, 5, 6 };
 
 	container_type cont( arr, GSTL_ARRAY_END( arr ) );
-	container_type cont2( arr2, GSTL_ARRAY_END( arr2 ) );
-
-	cont.swap( cont2 );
-	BOOST_CHECK_EQUAL( cont2.size(), arr_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
-
-	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-
-	//swap function
-	swap( cont, cont2 );
-	BOOST_CHECK_EQUAL( cont.size(), arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr, GSTL_ARRAY_END( arr ) );
-	
-	BOOST_CHECK_EQUAL( cont2.size(), arr2_len );
-	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-}
 
+
+
+	cont.erase( cont.begin() );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr_wo_beg, GSTL_ARRAY_END( arr_wo_beg ) );
+
+	cont.erase( --cont.end() );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr_wo_beg_end, GSTL_ARRAY_END( arr_wo_beg_end ) );
+
+	typedef typename container_type::iterator iterator;
+	iterator it = cont.begin();
+	gstl::advance( it, cont.size() / 2 );
+
+	cont.erase( it );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
+		arr_wo_beg_end_mid, GSTL_ARRAY_END( arr_wo_beg_end_mid ) );
+}
 
 

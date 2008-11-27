@@ -28,36 +28,47 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/allocator>
+
 namespace gstl
 {
-	template <class T, class Allocator = allocator<T> >
+	template
+	<
+		class T,
+		class Alloc = allocator<T>,
+		class PtrTraits = typename Alloc::pointer_traits_type
+	>
 	class deque
 	{
 	public:
 		// types:
-		typedef typename Allocator::reference reference;
-		typedef typename Allocator::const_reference const_reference;
-		typedef implementation defined iterator; // See 23.1
-		typedef implementation defined const_iterator; // See 23.1
-		typedef implementation defined size_type; // See 23.1
-		typedef implementation defined difference_type; // See 23.1
+		typedef typename Alloc::reference reference;
+		typedef typename Alloc::const_reference const_reference;
+		
+
 		typedef T value_type;
-		typedef Allocator allocator_type;
-		typedef typename Allocator::pointer pointer;
-		typedef typename Allocator::const_pointer const_pointer;
+		typedef Alloc allocator_type;
+		typedef typename Alloc::pointer pointer;
+		typedef typename Alloc::const_pointer const_pointer;
+
+		typedef value_type* iterator; // See 23.1
+		typedef const value_type* const_iterator; // See 23.1
+		typedef size_t size_type; // See 23.1
+		typedef ptrdiff_t difference_type;// See 23.1
+
 		typedef std::reverse_iterator<iterator> reverse_iterator;
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-		
+
 		// 23.2.1.1 construct/copy/destroy:
-		explicit deque(const Allocator& = Allocator());
+		explicit deque(const Alloc& = Alloc());
 		explicit deque(size_type n, const T& value = T(),
-			const Allocator& = Allocator());
+			const Alloc& = Alloc());
 		template <class InputIterator>
 		deque(InputIterator first, InputIterator last,
-			const Allocator& = Allocator());
-		deque(const deque<T,Allocator>& x);
+			const Alloc& = Alloc());
+		deque(const deque<T,Alloc>& x);
 		~deque();
-		deque<T,Allocator>& operator=(const deque<T,Allocator>& x);
+		deque<T,Alloc>& operator=(const deque<T,Alloc>& x);
 		template <class InputIterator>
 		void assign(InputIterator first, InputIterator last);
 		void assign(size_type n, const T& t);
@@ -97,31 +108,60 @@ namespace gstl
 		void pop_back();
 		iterator erase(iterator position);
 		iterator erase(iterator first, iterator last);
-		void swap(deque<T,Allocator>&);
+		void swap(deque<T,Alloc>&);
 		void clear();
 	};
 	
-	template <class T, class Allocator>
-	bool operator==(const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator< (const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator!=(const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator> (const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator>=(const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	template <class T, class Allocator>
-	bool operator<=(const deque<T,Allocator>& x,
-		const deque<T,Allocator>& y);
-	// specialized algorithms:
-	template <class T, class Allocator>
-	void swap(deque<T,Allocator>& x, deque<T,Allocator>& y);
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator==( const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return ( lhs.size() == rhs.size() ) && gstl::equal( lhs.begin(), lhs.end(), rhs.begin() );
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator< (const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return gstl::lexicographical_compare( lhs.begin(), lhs.end(),
+			rhs.begin(), rhs.end());
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator!=( const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator !=( lhs, rhs );
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator>( const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator >( lhs, rhs );
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator>=( const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator >=( lhs, rhs );
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	bool operator<=( const deque<value_type, allocator, pointer_traits>& lhs,
+		const deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		return rel_ops::operator <=( lhs, rhs );
+	}
+
+	template<class value_type, class allocator, class pointer_traits>
+	void swap( deque<value_type, allocator, pointer_traits>& lhs,
+		deque<value_type, allocator, pointer_traits>& rhs )
+	{
+		lhs.swap( rhs );
+	}
 }
 
 

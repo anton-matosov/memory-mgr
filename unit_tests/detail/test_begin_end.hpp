@@ -21,14 +21,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_begin_end, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_begin_end, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type arr[] = { 1, 2, 3 };
 	value_type first = *arr;
 	value_type last = *(GSTL_ARRAY_END( arr ) - 1);
 
-	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		arr, GSTL_ARRAY_END( arr ) );
 	BOOST_CHECK_EQUAL( *cont.begin(), first );
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_begin_end, contaier_type, t_list )
 	BOOST_CHECK_EQUAL( *(--cont.rend()), first );
 
 	//Const versions
-	const contaier_type const_cont( cont );
+	const container_type const_cont( cont );
 	BOOST_CHECK_EQUAL( *const_cont.begin(), first );
 	BOOST_CHECK_EQUAL( *(--const_cont.end()), last );
 	BOOST_CHECK_EQUAL( *const_cont.rbegin(), last );

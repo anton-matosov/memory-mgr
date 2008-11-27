@@ -22,15 +22,15 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 //Compare operators
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare_operators, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_compare_operators, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type arr[] = { 1, 2, 3 };
 	value_type arr2[] = { 1, 2, 2 };
 
-	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
-	contaier_type cont2( arr, GSTL_ARRAY_END( arr ) );
-	contaier_type cont3( arr2, GSTL_ARRAY_END( arr2 ) );
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont2( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont3( arr2, GSTL_ARRAY_END( arr2 ) );
 
 	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		cont2.begin(), cont2.end() );

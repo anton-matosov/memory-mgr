@@ -40,9 +40,10 @@ namespace gstl
 	class stack
 	{
 	public:
-		typedef Container container_type;
-		typedef typename container_type::value_type value_type;
-		typedef typename container_type::size_type size_type;
+		typedef Container								container_type;
+		typedef typename container_type::value_type		value_type;
+		typedef typename container_type::size_type		size_type;
+		typedef stack									self_type;
 		
 	
 		explicit stack( const container_type& cont = container_type() )
@@ -82,48 +83,60 @@ namespace gstl
 		}
 	protected:
 		container_type container_;
+		/**
+		@brief Call this method to get reference to internal container
+
+		@param	x	stack instance
+		@exception newer throws
+
+		@return constant reference to internal container 
+		*/
+		friend const container_type& get_container( const self_type& x )
+		{
+			return x.container_;
+		}
 	};
 
 	template <class T, class Container>
 	bool operator==(const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-		return lhs == rhs;
+		return get_container( lhs ) == get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator< (const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-		return lhs < rhs;
+		return get_container( lhs ) < get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator!=(const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-		return lhs != rhs;
+		return get_container( lhs ) != get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator> (const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-		return lhs > rhs;
+		return get_container( lhs ) > get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator>=(const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-		return lhs >= rhs;
+		return get_container( lhs ) >= get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator<=(const stack<T, Container>& lhs,
 		const stack<T, Container>& rhs)
 	{
-			return lhs <= rhs;
+		return get_container( lhs ) <= get_container( rhs );
 	}
 
 }

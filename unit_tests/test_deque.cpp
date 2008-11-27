@@ -23,46 +23,45 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
-#include <gstl/list>
-#include <list>
+#include <gstl/deque>
+#include <deque>
 #include <boost/foreach.hpp>
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
-class list_fixture
+class vector_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
-	typedef gstl::list<tracer_type>				traced_list_type;
+	typedef gstl::deque<tracer_type>			traced_deque_type;
 
 };
 
 
-BOOST_FIXTURE_TEST_SUITE( list_test, list_fixture )
+BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
 
 
 typedef int								test_value_type;
-typedef std::list<test_value_type>		std_list;
-// typedef gstl::list<test_value_type>		gstl_list;
-// typedef gstl::list<test_value_type,
-// memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_list;
-// typedef gstl::list<test_value_type,
-// memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_list;
+typedef std::deque<test_value_type>		std_deque;
+// typedef gstl::deque<test_value_type>		gstl_deque;
+// typedef gstl::deque<test_value_type,
+// memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_deque;
+// typedef gstl::deque<test_value_type,
+// memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_deque;
 
-typedef boost::mpl::list< /**/std_list/**, gstl_list/**, memory_mgr_list/**, memory_mgr_off_list/**/> t_list;
+//typedef boost::mpl::list< /**/std_list/**, gstl_deque/**, memory_mgr_deque/**, memory_mgr_off_deque/**/> t_list;
 
 
-#include "detail/test_construction.hpp"
-#include "detail/test_assign_operator.hpp"
-#include "detail/test_clear.hpp"
-#include "detail/test_empty.hpp"
-#include "detail/test_resize.hpp"
-#include "detail/test_begin_end.hpp"
-#include "detail/test_swap.hpp"
-#include "detail/test_erase_iter.hpp"
-#include "detail/test_erase_range.hpp"
-#include "detail/test_compare_operators.hpp"
+// #include "detail/test_construction.hpp"
+// #include "detail/test_assign_operator.hpp"
+// #include "detail/test_clear.hpp"
+// #include "detail/test_empty.hpp"
+// #include "detail/test_resize.hpp"
+// #include "detail/test_begin_end.hpp"
+// #include "detail/test_swap.hpp"
+// #include "detail/test_erase.hpp"
+// #include "detail/test_compare_operators.hpp"
 
 BOOST_AUTO_TEST_SUITE_END()
 

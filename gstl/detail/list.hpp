@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/allocator>
+
 namespace gstl
 {
 	template <class T, class Allocator = allocator<T> >

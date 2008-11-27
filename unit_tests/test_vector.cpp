@@ -38,89 +38,89 @@ public:
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
+	typedef int								test_value_type;
+	typedef std::vector<test_value_type>	std_vector;
+	typedef gstl::vector<test_value_type>	gstl_vector;
+	typedef gstl::vector<test_value_type,
+		memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
+	typedef gstl::vector<test_value_type,
+		memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
+
+	typedef boost::mpl::list< /**/std_vector, gstl_vector/**, memory_mgr_vector/**, memory_mgr_off_vector/**/> t_list;
+
+	#include "detail/test_construction.hpp"
+	#include "detail/test_assign_operator.hpp"
+	#include "detail/test_clear.hpp"
+	#include "detail/test_empty.hpp"
+	#include "detail/test_resize.hpp"
+	#include "detail/test_begin_end.hpp"
+	#include "detail/test_swap.hpp"
+	#include "detail/test_erase_iter.hpp"
+	#include "detail/test_erase_range.hpp"
+	#include "detail/test_compare_operators.hpp"
+
+	#include "detail/test_access_operators.hpp"
+	#include "detail/test_reserve.hpp"
+	#include "detail/test_resize_reserve_throw.hpp"
 
 
-typedef int								test_value_type;
-typedef std::vector<test_value_type>	std_vector;
-typedef gstl::vector<test_value_type>	gstl_vector;
-typedef gstl::vector<test_value_type,
-	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
-typedef gstl::vector<test_value_type,
-	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
-
-typedef boost::mpl::list< /**/std_vector, gstl_vector/**, memory_mgr_vector/**, memory_mgr_off_vector/**/> t_list;
-
-#include "detail/test_construction.hpp"
-#include "detail/test_assign_operator.hpp"
-#include "detail/test_clear.hpp"
-#include "detail/test_empty.hpp"
-#include "detail/test_resize.hpp"
-#include "detail/test_begin_end.hpp"
-#include "detail/test_swap.hpp"
-#include "detail/test_compare_operators.hpp"
-
-#include "detail/test_access_operators.hpp"
-#include "detail/test_reserve.hpp"
-#include "detail/test_resize_reserve_throw.hpp"
-
-
-BOOST_AUTO_TEST_CASE( test_objects_validness )
-{
-	typedef traced_vector_type::value_type value_type;
-	value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
-	value_type arr2[] = { 7, 7, 7, 7 };
-	value_type val = arr2[0];
-	size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
-
-	tracer_type::clear();
-	traced_vector_type vec1;
-	long creations = 0;
-	long destructions = 0;
-	BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-	BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-
-	
+	BOOST_AUTO_TEST_CASE( test_objects_validness )
 	{
-		//Iterators constructor
-		traced_vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
-		creations += GSTL_ARRAY_LEN( arr );
+		typedef traced_vector_type::value_type value_type;
+		value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
+		value_type arr2[] = { 7, 7, 7, 7 };
+		value_type val = arr2[0];
+		size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
+
+		tracer_type::clear();
+		traced_vector_type vec1;
+		long creations = 0;
+		long destructions = 0;
+		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
 		
-		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-		
-		vec2.clear();
-		destructions += GSTL_ARRAY_LEN( arr );
+		{
+			//Iterators constructor
+			traced_vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
+			creations += GSTL_ARRAY_LEN( arr );
+			
+			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+			
+			vec2.clear();
+			destructions += GSTL_ARRAY_LEN( arr );
+
+			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+			vec2.insert( vec2.begin(), arr2_len, val );
+			const long fill_insert_overhead = 4;
+			creations += arr2_len + fill_insert_overhead;
+			destructions += fill_insert_overhead;
+			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+			traced_vector_type vec3 = vec2;
+			creations += vec3.size();
+			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+			vec2 = traced_vector_type();
+			destructions += vec3.size();
+			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+			//Affect of ~vector
+			destructions += vec2.size();
+			destructions += vec3.size();
+		}
 
 		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
-		vec2.insert( vec2.begin(), arr2_len, val );
-		const long fill_insert_overhead = 4;
-		creations += arr2_len + fill_insert_overhead;
-		destructions += fill_insert_overhead;
-		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-
-		traced_vector_type vec3 = vec2;
-		creations += vec3.size();
-		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-
-		vec2 = traced_vector_type();
-		destructions += vec3.size();
-		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-		BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-
-		//Affect of ~vector
-		destructions += vec2.size();
-		destructions += vec3.size();
+		tracer_type::clear();
 	}
-
-	BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
-	BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
-
-	tracer_type::clear();
-}
 
 BOOST_AUTO_TEST_SUITE_END()
 

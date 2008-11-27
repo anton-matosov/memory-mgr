@@ -30,15 +30,19 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 namespace gstl
 {
-	template <class T, class Container = deque<T> >
+	template
+		<
+			class T,
+			class Container = deque<T>
+		>
 	class queue
 	{
 	public:
-		typedef Container container_type;
-		typedef typename container_type::value_type value_type;
-		typedef typename container_type::size_type size_type;
-		
-	public:
+		typedef Container								container_type;
+		typedef typename container_type::value_type		value_type;
+		typedef typename container_type::size_type		size_type;
+		typedef queue									self_type;
+
 		explicit queue( const container_type& cont = container_type() )
 			:container_( cont )
 		{
@@ -85,48 +89,61 @@ namespace gstl
 		}
 	protected:
 		container_type container_;
+
+		/**
+			@brief Call this method to get reference to internal container
+			
+			@param	x	queue instance
+			@exception newer throws
+			
+			@return constant reference to internal container 
+		*/
+		friend const container_type& get_container( const self_type& x )
+		{
+			return x.container_;
+		}
 	};
 	
 	template <class T, class Container>
 	bool operator==(const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs == rhs;
+		return get_container( lhs ) == get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator< (const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs < rhs;
+		return get_container( lhs ) < get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator!=(const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs != rhs;
+		return get_container( lhs ) != get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator> (const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs > rhs;
+		return get_container( lhs ) > get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator>=(const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs >= rhs;
+		return get_container( lhs ) >= get_container( rhs );
 	}
 
 	template <class T, class Container>
 	bool operator<=(const queue<T, Container>& lhs,
 		const queue<T, Container>& rhs)
 	{
-		return lhs <= rhs;
+		return get_container( lhs ) <= get_container( rhs );
 	}
 
 }

@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_deque.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_dynamic_sequence.cpp"
 				>
 			</File>
@@ -238,6 +242,10 @@
 			</File>
 			<File
 				RelativePath=".\test_list.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_stack.cpp"
 				>
 			</File>
 			<File
@@ -304,6 +312,14 @@
 			</File>
 			<File
 				RelativePath=".\detail\test_empty.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_erase_iter.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_erase_range.hpp"
 				>
 			</File>
 			<File

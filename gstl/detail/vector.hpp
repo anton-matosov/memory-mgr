@@ -240,7 +240,7 @@ namespace gstl
 
 		iterator erase( iterator position )
 		{
-			return erase( position, position + 1 )
+			return erase( position, position + 1 );
 		}
 
 		iterator erase( iterator first, iterator last )

@@ -22,11 +22,11 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_reserve_throw, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_reserve_throw, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type val = value_type();
-	contaier_type cont;
+	container_type cont;
 	
 	//resize/reserve Throws: length_error if n > max_size().
 	//218)reserve() uses Allocator::allocate() which may throw an appropriate exception.

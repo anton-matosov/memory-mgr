@@ -22,9 +22,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize, contaier_type, t_list )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize, container_type, t_list )
 {
-	typedef typename contaier_type::value_type value_type;
+	typedef typename container_type::value_type value_type;
 	value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
 	size_t arr_len = GSTL_ARRAY_LEN( arr );
 	size_t arr_len_2 = arr_len / 2;	
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize, contaier_type, t_list )
 	value_type val = arr[arr_len_2];
 
 
-	contaier_type cont( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 	BOOST_CHECK_EQUAL( cont.size(), arr_len );
 	BOOST_REQUIRE_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		arr, GSTL_ARRAY_END( arr ) );
@@ -54,10 +54,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize, contaier_type, t_list )
 	/************************************************************************/
 	/* Case 1                                                               */
 	/************************************************************************/
-	contaier_type cont2( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont2( arr, GSTL_ARRAY_END( arr ) );
 	cont2.resize( new_size, val );				
 	BOOST_CHECK_EQUAL( cont2.size(), new_size );
-	typename contaier_type::iterator old_end = cont2.begin();
+	typename container_type::iterator old_end = cont2.begin();
 	gstl::advance( old_end, arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), old_end,
 		arr, GSTL_ARRAY_END( arr ) );
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize, contaier_type, t_list )
 	/************************************************************************/
 	/* Case 3                                                               */
 	/************************************************************************/
-	contaier_type cont3( arr, GSTL_ARRAY_END( arr ) );
+	container_type cont3( arr, GSTL_ARRAY_END( arr ) );
 	cont3.resize( cont3.size(), val );				
 	BOOST_CHECK_EQUAL( cont3.size(), arr_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont3.begin(), cont3.end(),
