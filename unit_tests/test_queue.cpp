@@ -23,15 +23,15 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
-#include <gstl/stack>
-#include <gstl/vector>
-#include <stack>
-#include <vector>
+#include <gstl/queue>
+#include <gstl/list>
+#include <queue>
+#include <list>
 #include <boost/foreach.hpp>
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
-class stack_fixture
+class queue_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
@@ -39,51 +39,48 @@ public:
 
 };
 
-BOOST_FIXTURE_TEST_SUITE( stack_test, stack_fixture )
+BOOST_FIXTURE_TEST_SUITE( queue_test, queue_fixture )
 
 
 
 typedef int								test_value_type;
-typedef std::stack<test_value_type>		std_stack;
+typedef std::queue<test_value_type>		std_queue;
+typedef std::list<test_value_type>		std_list;
 
-typedef gstl::vector<test_value_type>	gstl_vector;
-typedef gstl::vector<test_value_type,
+typedef gstl::list<test_value_type>		gstl_list;
+typedef gstl::list<test_value_type,
 	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
-typedef gstl::vector<test_value_type,
+typedef gstl::list<test_value_type,
 	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 
-typedef gstl::stack<test_value_type, gstl_vector>		gstl_vec_stack;
-typedef gstl::stack<test_value_type, memory_mgr_vector>		gstl_memory_mgr_vec_stack;
-typedef gstl::stack<test_value_type, memory_mgr_off_vector>		gstl_memory_mgr_off_vec_stack;
+typedef gstl::queue<test_value_type, std_list>		gstl_std_list_queue;
+// typedef gstl::queue<test_value_type, gstl_list>		gstl_vec_queue;
+// typedef gstl::queue<test_value_type, memory_mgr_vector>		gstl_memory_mgr_vec_queue;
+// typedef gstl::queue<test_value_type, memory_mgr_off_vector>		gstl_memory_mgr_off_vec_queue;
 
-typedef boost::mpl::list< /**/std_stack/**/, gstl_vec_stack/**/, 
-			gstl_memory_mgr_vec_stack/**/, gstl_memory_mgr_off_vec_stack/**/> t_list;
+typedef boost::mpl::list< /**/std_queue/**/, gstl_std_list_queue/**, 
+			gstl_memory_mgr_vec_queue/**, gstl_memory_mgr_off_vec_queue/**/> t_list;
 
 
 #include "detail/test_wrapper_construction.hpp"
 #include "detail/test_wrapper_compare_operators.hpp"
 #include "detail/test_push_pop.hpp"
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_top, wrapper_type, t_list )
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_wrapper_front_back, wrapper_type, t_list )
 {
 	typedef typename wrapper_type::container_type container_type;
 	typedef typename container_type::value_type value_type;
-
 	value_type arr[] = { 1, 2, 3 };
-	
+
 	container_type cont( arr, GSTL_ARRAY_END( arr ) );
-	
+
 	wrapper_type wrap( cont );
 	BOOST_REQUIRE_EQUAL( wrap.size(), cont.size() );
 
-	BOOST_CHECK_EQUAL( wrap.top(), arr[wrap.size() - 1] );
-	wrap.pop();
+	BOOST_CHECK_EQUAL( wrap.back(), arr[wrap.size() - 1] );
 
-	BOOST_CHECK_EQUAL( wrap.top(), arr[wrap.size() - 1] );
-	wrap.pop();
-
-	BOOST_CHECK_EQUAL( wrap.top(), arr[wrap.size() - 1] );
-	wrap.pop();
+	BOOST_CHECK_EQUAL( wrap.front(), arr[0] );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

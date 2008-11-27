@@ -245,6 +245,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_queue.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_stack.cpp"
 				>
 			</File>
@@ -295,6 +299,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\test_back.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\test_begin_end.hpp"
 				>
 			</File>
@@ -323,6 +331,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\test_front.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_push_pop.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_push_pop_back.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_push_pop_front.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\test_reserve.hpp"
 				>
 			</File>
@@ -336,6 +360,14 @@
 			</File>
 			<File
 				RelativePath=".\detail\test_swap.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_wrapper_compare_operators.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_wrapper_construction.hpp"
 				>
 			</File>
 		</Filter>

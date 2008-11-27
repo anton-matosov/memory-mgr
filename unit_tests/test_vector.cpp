@@ -58,6 +58,9 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 	#include "detail/test_erase_iter.hpp"
 	#include "detail/test_erase_range.hpp"
 	#include "detail/test_compare_operators.hpp"
+	#include "detail/test_push_pop_back.hpp"
+	#include "detail/test_back.hpp"
+	#include "detail/test_front.hpp"
 
 	#include "detail/test_access_operators.hpp"
 	#include "detail/test_reserve.hpp"

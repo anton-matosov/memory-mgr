@@ -50,18 +50,25 @@ typedef std::deque<test_value_type>		std_deque;
 // typedef gstl::deque<test_value_type,
 // memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_deque;
 
-//typedef boost::mpl::list< /**/std_list/**, gstl_deque/**, memory_mgr_deque/**, memory_mgr_off_deque/**/> t_list;
+typedef boost::mpl::list< /**/std_deque/**, gstl_deque/**, memory_mgr_deque/**, memory_mgr_off_deque/**/> t_list;
 
 
-// #include "detail/test_construction.hpp"
-// #include "detail/test_assign_operator.hpp"
-// #include "detail/test_clear.hpp"
-// #include "detail/test_empty.hpp"
-// #include "detail/test_resize.hpp"
-// #include "detail/test_begin_end.hpp"
-// #include "detail/test_swap.hpp"
-// #include "detail/test_erase.hpp"
-// #include "detail/test_compare_operators.hpp"
+#include "detail/test_construction.hpp"
+#include "detail/test_assign_operator.hpp"
+#include "detail/test_clear.hpp"
+#include "detail/test_empty.hpp"
+#include "detail/test_resize.hpp"
+#include "detail/test_begin_end.hpp"
+#include "detail/test_swap.hpp"
+#include "detail/test_erase_iter.hpp"
+#include "detail/test_erase_range.hpp"
+#include "detail/test_compare_operators.hpp"
+#include "detail/test_push_pop_back.hpp"
+#include "detail/test_back.hpp"
+#include "detail/test_front.hpp"
+#include "detail/test_access_operators.hpp"
+
+#include "detail/test_push_pop_front.hpp"
 
 BOOST_AUTO_TEST_SUITE_END()
 
