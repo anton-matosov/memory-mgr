@@ -187,7 +187,6 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalOptions="-D_SCL_SECURE_NO_WARNINGS"
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>

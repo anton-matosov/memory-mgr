@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 //#define _CRTDBG_MAP_ALLOC_NEW
 
 
+#include <gstl/detail/boost_warnings_off.hpp>
 //#define BOOST_TEST_NO_LIB
 #include <boost/test/test_tools.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -37,7 +38,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <boost/tuple/tuple.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/foreach.hpp>
-
+#include <gstl/detail/boost_warnings_on.hpp>
 
 namespace ut = boost::unit_test;
 

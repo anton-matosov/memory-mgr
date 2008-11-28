@@ -228,6 +228,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\boost_warnings_off.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\boost_warnings_on.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\buffer_helpers.hpp"
 				>
 			</File>

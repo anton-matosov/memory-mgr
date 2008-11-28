@@ -40,6 +40,8 @@ Table 71 - Relations among iterator categories
 */
 
 #include <gstl/detail/char_traits.hpp>
+
+#include <gstl/detail/boost_warnings_off.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/type_traits/add_reference.hpp>
@@ -49,6 +51,7 @@ Table 71 - Relations among iterator categories
 #include <boost/type_traits/is_float.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <gstl/detail/boost_warnings_on.hpp>
 
 //If there is no STL installed
 #ifndef BOOST_STDLIB_CONFIG

@@ -31,9 +31,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/utility>
 #include <gstl/iterator>
 
-//#pragma warning(push)
-#pragma warning( disable:4100 )
+#include <gstl/detail/boost_warnings_off.hpp>
 #include <boost/concept_check.hpp>
+#include <gstl/detail/boost_warnings_on.hpp>
 
 namespace gstl
 {

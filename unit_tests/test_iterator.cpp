@@ -434,13 +434,15 @@ BOOST_AUTO_TEST_CASE( test_insert_iterators )
 
 BOOST_AUTO_TEST_CASE( test_stream_iterators )
 {
-	//These instantiations produce CRT SECURE warning messages (Tested on VC 9.0)
 	template class gstl::istream_iterator<int>;
 	template class gstl::ostream_iterator<int>;
 	template class gstl::istreambuf_iterator<char>;
 	template class gstl::ostreambuf_iterator<char>;
 
+	//////////////////////////////////////////////////////////////////////////
+	//This instantiations produce CRT SECURE warning messages (Tested on VC 9.0)
 	std::basic_istringstream<char, gstl::char_traits<char> > istr;
+	//////////////////////////////////////////////////////////////////////////
 	std::basic_ostringstream<char, gstl::char_traits<char> > ostr;
 
 
