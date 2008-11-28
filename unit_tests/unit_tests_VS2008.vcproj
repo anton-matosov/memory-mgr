@@ -225,7 +225,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\test_dynamic_sequence.cpp"
+				RelativePath=".\test_dynamic_buffer.cpp"
 				>
 			</File>
 			<File

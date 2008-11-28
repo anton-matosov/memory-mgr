@@ -23,14 +23,14 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "stdafx.h"
 
-#include <gstl/detail/dynamic_sequence.hpp>
+#include <gstl/detail/dynamic_buffer.hpp>
 
-class dynamic_sequence_fixture
+class dynamic_buffer_fixture
 {
 
 };
 
-BOOST_FIXTURE_TEST_SUITE( dynamic_sequence_test, dynamic_sequence_fixture )
+BOOST_FIXTURE_TEST_SUITE( dynamic_sequence_test, dynamic_buffer_fixture )
 
 BOOST_AUTO_TEST_CASE( test_constructors )
 {

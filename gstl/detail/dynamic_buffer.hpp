@@ -53,12 +53,12 @@ namespace gstl
 			class Traits = default_sequence_traits<T>,
 			class PtrTraits = typename Alloc::pointer_traits_type
 		>
-		class dynamic_sequence
+		class dynamic_buffer
 		{
 		public:
 			enum{ min_buff_size = 4 };
 
-			typedef dynamic_sequence							self_type;
+			typedef dynamic_buffer							self_type;
 			typedef typename Alloc::template rebind<T>::other	allocator_type;
 
 
@@ -80,7 +80,7 @@ namespace gstl
 			allocator_type	alloc_;
 
 
-			dynamic_sequence( const allocator_type& alloc = allocator_type() )
+			dynamic_buffer( const allocator_type& alloc = allocator_type() )
 				:buffer_( ptr_traits::null_ptr ),
 				size_(0),
 				reserved_(0),
@@ -88,7 +88,7 @@ namespace gstl
 			{
 			}
 			
-			~dynamic_sequence()
+			~dynamic_buffer()
 			{
 				alloc_.deallocate( buffer_, reserved_ );
 			}

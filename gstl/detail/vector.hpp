@@ -33,7 +33,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/memory>
 #include <gstl/iterator>
 #include <gstl/detail/container_helpers.hpp>
-#include <gstl/detail/dynamic_sequence.hpp>
+#include <gstl/detail/dynamic_buffer.hpp>
 #include <gstl/detail/fill_iterator.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_pointer.hpp>
@@ -49,10 +49,10 @@ namespace gstl
 			class PtrTraits = typename Alloc::pointer_traits_type
 		>
 	class vector
-		:public detail::dynamic_sequence<T, Alloc, detail::default_sequence_traits<T>, PtrTraits>
+		:public detail::dynamic_buffer<T, Alloc, detail::default_sequence_traits<T>, PtrTraits>
 	{
 	public:
-		typedef detail::dynamic_sequence<T, Alloc,
+		typedef detail::dynamic_buffer<T, Alloc,
 			detail::default_sequence_traits<T>, PtrTraits>	base_type;
 		typedef base_type							internal_buffer_type;
 

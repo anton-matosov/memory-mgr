@@ -248,7 +248,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail\dynamic_sequence.hpp"
+				RelativePath=".\detail\dynamic_buffer.hpp"
 				>
 			</File>
 			<File
