@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_SEQUENCE_ITERATOR_HEADER
-#define GSTL_SEQUENCE_ITERATOR_HEADER
+#ifndef GSTL_LIST_ITERATOR_HEADER
+#define GSTL_LIST_ITERATOR_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -35,52 +35,63 @@ namespace gstl
 {
 	namespace detail
 	{
- 		template <class PtrT, class ContainerT>
- 		class sequence_iterator
- 			: public boost::iterator_adaptor<
- 			sequence_iterator<PtrT, ContainerT>		// Derived
- 			, PtrT									// Base
- 			, boost::use_default					// Value
- 			, boost::random_access_traversal_tag	// CategoryOrTraversal
- 			>
- 		{
- 		private:
- 			struct enabler {};  // a private type avoids misuse
+		template <class NodePtrT, class ContainerT>
+		class list_iterator
+			: public boost::iterator_adaptor<
+			list_iterator<NodePtrT, ContainerT>		// Derived
+			, NodePtrT								// Base
+			, boost::use_default					// Value
+			, boost::bidirectional_traversal_tag	// CategoryOrTraversal
+			>
+		{
+		private:
+			struct enabler {};  // a private type avoids misuse
 
-			typedef PtrT									pointer_type;
+			typedef NodePtrT								pointer_type;
 			typedef ContainerT								container_type;
- 		public:
- 			typedef sequence_iterator						self_type;
- 			typedef typename self_type::iterator_adaptor_	base_type;
- 			typedef typename base_type::value_type			value_type;
- 
- 			sequence_iterator()
- 				: base_type( 0 )
- 			{}
- 
- 			explicit sequence_iterator( pointer_type p )
- 				: base_type( p )
- 			{}
- 
+		public:
+			typedef list_iterator							self_type;
+			typedef typename self_type::iterator_adaptor_	base_type;
+			typedef typename base_type::value_type			value_type;
+
+			list_iterator()
+				: base_type( 0 )
+			{}
+
+			explicit list_iterator( NodePtrT p )
+				: base_type( p )
+			{}
+
 			template <class OtherPtrT>
-			sequence_iterator( sequence_iterator<OtherPtrT, container_type> const& other,
+			list_iterator( list_iterator<OtherPtrT, container_type> const& other,
 				typename boost::enable_if< boost::is_convertible<OtherPtrT, pointer_type>,
 				enabler >::type = enabler() )
 				: base_type( other.base() )
 			{
 
 			}
+		private:
+			friend class boost::iterator_core_access;
+			void increment()
+			{
+				//TODO: Implement checking
+				this->base_reference() = this->base()->right_();
+			}
 
-			
- 		};
+			void decrement()
+			{
+				//TODO: Implement checking
+				this->base_reference() = this->base()->left_();
+			}
+		};
 
 		template <class ContainerT>
-		class declare_sequence_iterator
-			:public detail::iterator_declarer<ContainerT, sequence_iterator>
+		class declare_list_iterator
+			:public detail::iterator_declarer<ContainerT, list_iterator>
 		{
-		
+
 		};
 	}
 }
 
-#endif //GSTL_SEQUENCE_ITERATOR_HEADER
+#endif //GSTL_LIST_ITERATOR_HEADER

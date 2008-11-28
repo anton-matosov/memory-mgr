@@ -29,9 +29,14 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <gstl/allocator>
+#include <gstl/iterator>
+#include <gstl/detail/list_node.hpp>
+#include <gstl/detail/list_iterator.hpp>
 
 namespace gstl
 {
+
+
 	template
 	<
 		class T,
@@ -41,34 +46,54 @@ namespace gstl
 	class list {
 	public:
 		// types:
-		typedef typename Alloc::reference reference;
-		typedef typename Alloc::const_reference const_reference;
- 		typedef T value_type;
-		typedef Alloc allocator_type;
-		typedef typename Alloc::pointer pointer;
-		typedef typename Alloc::const_pointer const_pointer;
+		typedef detail::list_node<T, Alloc, PtrTraits>	node_type;
 
-		typedef value_type* iterator; // See 23.1
-		typedef const value_type* const_iterator; // See 23.1
-		typedef size_t size_type; // See 23.1
-		typedef ptrdiff_t difference_type;// See 23.1
+		typedef list								self_type;
+		typedef typename node_type::ptr_traits		ptr_traits;
 
-		typedef std::reverse_iterator<iterator> reverse_iterator;
-		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef typename node_type::allocator_type	allocator_type;
+
+		typedef typename node_type::value_type		value_type;
+		typedef typename node_type::pointer			pointer;
+		typedef typename node_type::const_pointer	const_pointer;
+		typedef typename node_type::reference		reference;
+		typedef typename node_type::const_reference	const_reference;
+
+		typedef typename node_type::size_type		size_type;
+		typedef typename node_type::difference_type	difference_type;
+
+		typedef typename node_type::node_pointer		node_pointer;
+		typedef typename node_type::node_const_pointer	node_const_pointer;
+
+		//////////////////////////////////////////////////////////////////////////
+		typedef detail::declare_list_iterator<self_type> iter_helper;
+
+		typedef typename iter_helper::iterator			iterator; //See 23.1
+		typedef typename iter_helper::const_iterator	const_iterator; // See 23.1
+
+		typedef gstl::reverse_iterator<iterator> reverse_iterator;
+		typedef gstl::reverse_iterator<const_iterator> const_reverse_iterator;
+		
 		// 23.2.2.1 construct/copy/destroy:
-		explicit list(const Alloc& = Alloc());
-		explicit list(size_type n, const T& value = T(),
-			const Alloc& = Alloc());
+		explicit list(const allocator_type& = allocator_type());
+
+		explicit list(size_type n, const value_type& value = value_type(),
+			const allocator_type& = allocator_type());
+
 		template <class InputIterator>
 		list(InputIterator first, InputIterator last,
-			const Alloc& = Alloc());
-		list(const list<T,Alloc>& x);
+			const allocator_type& = allocator_type());
+
+		list(const self_type& x);
 		~list();
-		list<T,Alloc>& operator=(const list<T,Alloc>& x);
+
+		self_type& operator=(const self_type& x);
+
 		template <class InputIterator>
 		void assign(InputIterator first, InputIterator last);
-		void assign(size_type n, const T& t);
+		void assign(size_type n, const value_type& t);
 		allocator_type get_allocator() const;
+
 		// iterators:
 		iterator begin();
 		const_iterator begin() const;
@@ -83,58 +108,77 @@ namespace gstl
 		bool empty() const;
 		size_type size() const;
 		size_type max_size() const;
-		void resize(size_type sz, T c = T());
+		void resize(size_type sz, value_type c = value_type());
+
 		// element access:
 		reference front();
 		const_reference front() const;
 		reference back();
 		const_reference back() const;
+
 		// 23.2.2.3 modifiers:
-		void push_front(const T& x);
+		void push_front(const value_type& x);
 		void pop_front();
-		void push_back(const T& x);
+		void push_back(const value_type& x);
 		void pop_back();
-		iterator insert(iterator position, const T& x);
-		void insert(iterator position, size_type n, const T& x);
+
+		iterator insert(iterator position, const value_type& x);
+		void insert(iterator position, size_type n, const value_type& x);
 		template <class InputIterator>
 		void insert(iterator position, InputIterator first,
 			InputIterator last);
+
 		iterator erase(iterator position);
 		iterator erase(iterator position, iterator last);
-		void swap(list<T,Alloc>&);
+
+		void swap(self_type&);
 		void clear();
+
 		// 23.2.2.4 list operations:
-		void splice(iterator position, list<T,Alloc>& x);
-		void splice(iterator position, list<T,Alloc>& x, iterator i);
-		void splice(iterator position, list<T,Alloc>& x, iterator first,
+		void splice(iterator position, self_type& x);
+		void splice(iterator position, self_type& x, iterator i);
+		void splice(iterator position, self_type& x, iterator first,
 			iterator last);
-		void remove(const T& value);
+
+		void remove(const value_type& value);
+
+		//////////////////////////////////////////////////////////////////////////
 		template <class Predicate> void remove_if(Predicate pred);
 		void unique();
+
 		template <class BinaryPredicate>
 		void unique(BinaryPredicate binary_pred);
-		void merge(list<T,Alloc>& x);
-		template <class Compare> void merge(list<T,Alloc>& x, Compare comp);
+
+		void merge(self_type& x);
+
+		template <class Compare> void merge(self_type& x, Compare comp);
 		void sort();
+
 		template <class Compare> void sort(Compare comp);
 		void reverse();
 	};
 
-		template <class T, class Alloc>
-		bool operator==(const list<T,Alloc>& x, const list<T,Alloc>& y);
-		template <class T, class Alloc>
-		bool operator< (const list<T,Alloc>& x, const list<T,Alloc>& y);
-		template <class T, class Alloc>
-		bool operator!=(const list<T,Alloc>& x, const list<T,Alloc>& y);
-		template <class T, class Alloc>
-		bool operator> (const list<T,Alloc>& x, const list<T,Alloc>& y);
-		template <class T, class Alloc>
-		bool operator>=(const list<T,Alloc>& x, const list<T,Alloc>& y);
-		template <class T, class Alloc>
-		bool operator<=(const list<T,Alloc>& x, const list<T,Alloc>& y);
+		template <class value_type, class allocator_type>
+		bool operator==(const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
+		template <class value_type, class allocator_type>
+		bool operator< (const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
+		template <class value_type, class allocator_type>
+		bool operator!=(const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
+		template <class value_type, class allocator_type>
+		bool operator> (const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
+		template <class value_type, class allocator_type>
+		bool operator>=(const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
+		template <class value_type, class allocator_type>
+		bool operator<=(const list<value_type,allocator_type>& x, const list<value_type,allocator_type>& y);
+
 		// specialized algorithms:
-		template <class T, class Alloc>
-		void swap(list<T,Alloc>& x, list<T,Alloc>& y);
+		template <class value_type, class allocator_type>
+		void swap(list<value_type,allocator_type>& x, list<value_type,allocator_type>& y);
 }
 
 

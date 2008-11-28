@@ -59,7 +59,7 @@ namespace gstl
 			enum{ min_buff_size = 4 };
 
 			typedef dynamic_sequence							self_type;
-			typedef typename Alloc::rebind<T>::other			allocator_type;
+			typedef typename Alloc::template rebind<T>::other	allocator_type;
 
 
 			typedef typename allocator_type::value_type			value_type;

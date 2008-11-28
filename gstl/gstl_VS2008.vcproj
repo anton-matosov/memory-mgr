@@ -264,7 +264,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\iterator_declarer.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\list.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\list_iterator.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\list_node.hpp"
 				>
 			</File>
 			<File

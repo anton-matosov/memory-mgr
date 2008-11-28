@@ -49,10 +49,17 @@ namespace gstl
 				}
 				else if( n < cont->size() )
 				{
-					cont->erase( cont->begin() + n, cont->end() );
+					typename Container::iterator it = cont->begin();
+					advance( it, n );
+					cont->erase( it, cont->end() );
 				}
 			}
 
+			template<class Container>
+			bool empty( Container* cont )
+			{
+				return !cont->size();
+			}
 
 			template<class Container>
 			void clear( Container* cont )
@@ -99,13 +106,13 @@ namespace gstl
 			template<class Container>
 			typename Container::reference back( Container* cont )
 			{
-				return *(--cont->end());
+				return *--(cont->end());
 			}
 
 			template<class Container>
 			typename Container::const_reference back( const Container* cont )
 			{
-				return *(--cont->end());
+				return *--(cont->end());
 			}
 		}
 	}
