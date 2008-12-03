@@ -139,7 +139,7 @@ namespace gstl
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_iter( get_buffer() );
+			return iter_helper::build_const_iter( get_buffer() );
 		}
 
 		iterator end()

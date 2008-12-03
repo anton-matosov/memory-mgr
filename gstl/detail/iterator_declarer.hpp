@@ -37,26 +37,28 @@ namespace gstl
 		template
 		<
 			class ContainerT,
-			template <class,class>	class IteratorT
+			template <class,class>	class IteratorT,
+			class PointerType = typename ContainerT::pointer,
+			class ConstPointerType = typename ContainerT::const_pointer
 		>
 		class iterator_declarer
 		{
 		public:
-			typedef ContainerT									container_type;
-			typedef typename container_type::value_type			value_type;
-			typedef typename container_type::pointer			pointer;
-			typedef typename container_type::const_pointer		const_pointer;
+			typedef ContainerT				container_type;
+
+			typedef PointerType				pointer;
+			typedef ConstPointerType		const_pointer;
 
 			typedef IteratorT<pointer, container_type>			iterator;
 			typedef IteratorT<const_pointer, container_type>	const_iterator;
 
-			static inline iterator build_iter( value_type* p )
+			static inline iterator build_iter( pointer p )
 			{
 				iterator it( p );
 				return it;
 			}
 
-			static inline const_iterator build_iter( const value_type* p )
+			static inline const_iterator build_const_iter( const_pointer p )
 			{
 				const_iterator it( p );
 				return it;

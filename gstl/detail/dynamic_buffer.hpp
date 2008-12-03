@@ -162,17 +162,14 @@ namespace gstl
 
 			void swap( self_type& rhs )
 			{
-				size_type tmp_size		= rhs.size_;
-				size_type tmp_reserved	= rhs.reserved_;
-				pointer tmp_buffer	= rhs.buffer_;
+				//Swap internal representation
+				self_type tmp = *this;
+				*this = rhs;
+				rhs = tmp;
 
-				rhs.size_		= size_;
-				rhs.reserved_	= reserved_;
-				rhs.buffer_		= buffer_;
-
-				size_		= tmp_size;
-				reserved_	= tmp_reserved;
-				buffer_		= tmp_buffer;
+				//Prevent destroying of the swapped buffer
+				tmp.buffer_ = ptr_traits::null_ptr;
+				tmp.reserved_ = 0;
 			}
 
 			size_type size() const

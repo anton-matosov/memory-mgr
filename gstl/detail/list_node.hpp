@@ -62,8 +62,8 @@ namespace gstl
 			typedef typename ptr_traits::template rebind<self_type>::other	node_ptr_traits;
 
 
-			typedef typename node_allocator_type::pointer			node_pointer;
-			typedef typename node_allocator_type::const_pointer		node_const_pointer;
+			typedef typename node_ptr_traits::pointer			node_pointer;
+			typedef typename node_ptr_traits::const_pointer		node_const_pointer;
 			//typedef pointer_traits<node_pointer_type>			node_ptr_traits;
 
 			list_node()
@@ -73,9 +73,10 @@ namespace gstl
 			{
 
 			}
-		private:
-			node_pointer	left_;
-			node_pointer	right_;
+		
+
+			node_pointer		left_;
+			node_pointer		right_;
 
 			pointer				value_ptr_;
 
