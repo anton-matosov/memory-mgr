@@ -109,7 +109,7 @@ namespace gstl
 
 		~vector()
 		{
-			destroy( begin(), end() );
+			_destroy( begin(), end() );
 		}
 
 		self_type& operator=( const self_type& x )
@@ -222,7 +222,7 @@ namespace gstl
 
 		iterator insert( iterator position, const value_type& x )
 		{
-			return do_insert( position, &x, &x + 1, random_access_iterator_tag() );
+			return _do_insert( position, &x, &x + 1, random_access_iterator_tag() );
 		}
 
 		void insert( iterator position, size_type n, const value_type& x )
@@ -235,7 +235,7 @@ namespace gstl
 		void insert( iterator position,
 			InputIterator first, InputIterator last )
 		{
-			do_insert( position, first, last, GSTL_ITER_CAT( InputIterator ) );
+			_do_insert( position, first, last, GSTL_ITER_CAT( InputIterator ) );
 		}
 
 		iterator erase( iterator position )
@@ -250,7 +250,7 @@ namespace gstl
 			{
 				detail::move( &*first, &*last, end() - last );
 				set_size( size() - (last - first) );
-				destroy( first, last );
+				_destroy( first, last );
 			}
 			return first;
 		}
@@ -267,14 +267,14 @@ namespace gstl
 
 	private:
 		template <class InputIterator>
-		void do_insert( iterator position,
+		void _do_insert( iterator position,
 			InputIterator n, InputIterator x, integral_iterator_tag )
 		{
 			insert( position, static_cast<size_type>( n ), static_cast<const value_type&>( x ) );
 		}
 
 		template <class InputIterator>
-		iterator do_insert( iterator position,
+		iterator _do_insert( iterator position,
 			InputIterator first, InputIterator last, input_iterator_tag )
 		{
 			size_type pos = position - begin();
@@ -288,7 +288,7 @@ namespace gstl
 		}
 
 		template <class FwdIterator>
-		iterator do_insert( iterator position,
+		iterator _do_insert( iterator position,
 			FwdIterator first, FwdIterator last, forward_iterator_tag )
 		{
 			size_type new_items_count = gstl::distance( first, last );
@@ -313,10 +313,10 @@ namespace gstl
 				}
 				catch(...)
 				{
-					destroy( tmp_begin, tmp_pos );
+					_destroy( tmp_begin, tmp_pos );
 					throw;
 				}
-				destroy( begin(), end() );
+				_destroy( begin(), end() );
 				result_pos = iter_helper::build_iter( 
 					tmp_begin + gstl::distance( begin(), position ) );
 				
@@ -338,28 +338,12 @@ namespace gstl
 			return result_pos;
 		}
 
-		template<class InputIterator>
-		bool check_overlap( InputIterator first, InputIterator last )
+		void _destroy( iterator first, iterator last )
 		{
-			return false;
-		}
-
-		bool check_overlap( iterator first, iterator last )
-		{
-			return detail::check_overlap( &*begin(), &*end(), &*first, &*last ) != 0;
-		}
-
-		bool check_overlap( const value_type* first, const value_type* last )
-		{
-			return detail::check_overlap( &*begin(), &*end(), first, last ) != 0;
-		}
-
-		void destroy( iterator first, iterator last )
-		{
-			destroy( pointer(&*first), pointer(&*last) );
+			_destroy( pointer(&*first), pointer(&*last) );
 		};
 
-		void destroy( pointer first, pointer last )
+		void _destroy( pointer first, pointer last )
 		{
 			while( first != last )
 			{
@@ -369,10 +353,10 @@ namespace gstl
 		}
 
 		template<class T>
-		void destroy( T* first, T* last, 
+		void _destroy( T* first, T* last, 
 			typename boost::disable_if< boost::is_pointer<pointer>, T >::type* = 0 )
 		{
-			destroy( iter_helper::build_iter( first ),
+			_destroy( iter_helper::build_iter( first ),
 				iter_helper::build_iter( last ) );
 		};
 	};

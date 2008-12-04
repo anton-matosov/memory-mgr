@@ -53,13 +53,13 @@ typedef gstl::list<test_value_type>		gstl_list;
 typedef boost::mpl::list< /**/std_list/**/, gstl_list/**, memory_mgr_list/**, memory_mgr_off_list/**/> t_list;
 
 
-//#include "detail/test_construction.hpp"
-// #include "detail/test_assign_operator.hpp"
-// #include "detail/test_clear.hpp"
-// #include "detail/test_empty.hpp"
-// #include "detail/test_resize.hpp"
-// #include "detail/test_begin_end.hpp"
-// #include "detail/test_swap.hpp"
+#include "detail/test_construction.hpp"
+#include "detail/test_assign_operator.hpp"
+#include "detail/test_clear.hpp"
+#include "detail/test_empty.hpp"
+#include "detail/test_resize.hpp"
+#include "detail/test_begin_end.hpp"
+#include "detail/test_swap.hpp"
 // #include "detail/test_erase_iter.hpp"
 // #include "detail/test_erase_range.hpp"
 // #include "detail/test_compare_operators.hpp"

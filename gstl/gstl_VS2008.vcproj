@@ -280,6 +280,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\list_base.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\list_iterator.hpp"
 				>
 			</File>

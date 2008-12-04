@@ -38,10 +38,10 @@ namespace gstl
 		template <class NodePtrT, class ContainerT>
 		class list_iterator
 			: public boost::iterator_adaptor<
-			list_iterator<NodePtrT, ContainerT>		// Derived
-			, NodePtrT								// Base
-			, boost::use_default					// Value
-			, boost::bidirectional_traversal_tag	// CategoryOrTraversal
+			list_iterator<NodePtrT, ContainerT>,	// Derived
+			NodePtrT,								// Base
+			typename ContainerT::value_type,		// Value
+			boost::bidirectional_traversal_tag		// CategoryOrTraversal
 			>
 		{
 		private:

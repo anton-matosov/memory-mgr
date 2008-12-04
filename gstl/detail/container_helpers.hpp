@@ -44,7 +44,6 @@ namespace gstl
 			{
 				if( n > cont->size() )
 				{
-					cont->reserve( n );
 					cont->insert( cont->end(), n - cont->size(), c );
 				}
 				else if( n < cont->size() )

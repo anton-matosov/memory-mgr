@@ -38,10 +38,10 @@ namespace gstl
  		template <class PtrT, class ContainerT>
  		class sequence_iterator
  			: public boost::iterator_adaptor<
- 			sequence_iterator<PtrT, ContainerT>		// Derived
- 			, PtrT									// Base
- 			, boost::use_default					// Value
- 			, boost::random_access_traversal_tag	// CategoryOrTraversal
+ 			sequence_iterator<PtrT, ContainerT>,	// Derived
+ 			PtrT,									// Base
+ 			boost::use_default,						// Value
+ 			boost::random_access_traversal_tag		// CategoryOrTraversal
  			>
  		{
  		private:

@@ -30,8 +30,10 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <gstl/allocator>
 #include <gstl/iterator>
-#include <gstl/detail/list_node.hpp>
+#include <gstl/detail/list_base.hpp>
+#include <gstl/detail/container_helpers.hpp>
 #include <gstl/detail/list_iterator.hpp>
+#include <gstl/detail/fill_iterator.hpp>
 
 namespace gstl
 {
@@ -43,31 +45,34 @@ namespace gstl
 		class Alloc = allocator<T>,
 		class PtrTraits = typename Alloc::pointer_traits_type
 	>
-	class list {
+	class list
+		:public detail::list_base<T, Alloc, PtrTraits>
+	{
 	public:
 		
 		//////////////////////////////////////////////////////////////////////////
 		//Node types
-		typedef detail::list_node<T, Alloc, PtrTraits>		node_type;
-		typedef typename node_type::node_allocator_type		node_allocator_type;
-		typedef typename node_type::node_pointer			node_pointer;
-		typedef typename node_type::node_const_pointer		node_const_pointer;
+		typedef detail::list_base<T, Alloc, PtrTraits>		base_type;
+		typedef typename base_type::node_type				node_type;
+		typedef typename base_type::node_allocator_type		node_allocator_type;
+		typedef typename base_type::node_pointer			node_pointer;
+		typedef typename base_type::node_const_pointer		node_const_pointer;
 
 		//////////////////////////////////////////////////////////////////////////
 		//Standard types
 		typedef list										self_type;
-		typedef typename node_type::ptr_traits				ptr_traits;
+		typedef typename base_type::ptr_traits				ptr_traits;
 
-		typedef typename node_type::allocator_type			allocator_type;
+		typedef typename base_type::allocator_type			allocator_type;
 
-		typedef typename node_type::value_type				value_type;
-		typedef typename node_type::pointer					pointer;
-		typedef typename node_type::const_pointer			const_pointer;
-		typedef typename node_type::reference				reference;
-		typedef typename node_type::const_reference			const_reference;
+		typedef typename base_type::value_type				value_type;
+		typedef typename base_type::pointer					pointer;
+		typedef typename base_type::const_pointer			const_pointer;
+		typedef typename base_type::reference				reference;
+		typedef typename base_type::const_reference			const_reference;
 
-		typedef typename node_type::size_type				size_type;
-		typedef typename node_type::difference_type			difference_type;
+		typedef typename base_type::size_type				size_type;
+		typedef typename base_type::difference_type			difference_type;
 
 
 		//////////////////////////////////////////////////////////////////////////
@@ -83,14 +88,14 @@ namespace gstl
 		
 		// 23.2.2.1 construct/copy/destroy:
 		explicit list(const allocator_type& alloc = allocator_type())
-			:alloc_( alloc )
+			:base_type( alloc )
 		{
 
 		}
 
 		explicit list(size_type n, const value_type& value = value_type(),
 			const allocator_type& alloc = allocator_type() )
-			:alloc_( alloc )
+			:base_type( alloc )
 		{
 			insert( begin(), n, value );
 		}
@@ -98,20 +103,20 @@ namespace gstl
 		template <class InputIterator>
 		list(InputIterator first, InputIterator last,
 			const allocator_type& alloc = allocator_type())
-			:alloc_( alloc )
+			:base_type( alloc )
 		{
 			insert( begin(), first, last );
 		}
 
 		list( const self_type& x )
-			:alloc_( x.get_allocator() )
+			:base_type( x.get_allocator() )
 		{
 			*this = x;
 		}
 
 		~list()
 		{
-			destroy( begin(), end() );
+			_destroy( begin(), end() );
 		}
 
 		self_type& operator=(const self_type& x)
@@ -188,7 +193,7 @@ namespace gstl
 		// 23.2.2.2 capacity:
 		bool empty() const
 		{
-			detail::container::empty( this );
+			return detail::container::empty( this );
 		}
 
 		size_type size() const
@@ -247,22 +252,42 @@ namespace gstl
 
 		//////////////////////////////////////////////////////////////////////////
 		//Insert methods
-		iterator insert(iterator position, const value_type& x);
+		iterator insert( iterator position, const value_type& x )
+		{
+			return _do_insert( position, &x, &x + 1, random_access_iterator_tag() );
+		}
 
-		void insert(iterator position, size_type n, const value_type& x);
+		void insert( iterator position, size_type n, const value_type& x )
+		{
+			typedef fill_iterator_ref<const value_type>  fill_iter;
+			insert( position,  fill_iter( x ),  fill_iter( x, n ) );
+		}
 
 		template <class InputIterator>
-		void insert(iterator position, InputIterator first,
-			InputIterator last);
+		void insert( iterator position,
+			InputIterator first, InputIterator last )
+		{
+			_do_insert( position, first, last, GSTL_ITER_CAT( InputIterator ) );
+		}
 		//////////////////////////////////////////////////////////////////////////
 
 		//////////////////////////////////////////////////////////////////////////
 		//Erase methods
-		iterator erase( iterator position );
-		iterator erase( iterator position, iterator last );
+		iterator erase( iterator position )
+		{
+			return position;
+		}
+
+		iterator erase( iterator position, iterator /*last*/ )
+		{
+			return position;
+		}
 		//////////////////////////////////////////////////////////////////////////
 
-		void swap(self_type&);
+		void swap( self_type& rhs )
+		{
+			base_type::swap( rhs );
+		}
 		
 		void clear()
 		{
@@ -330,13 +355,51 @@ namespace gstl
 // 			}
 		}
 	private:
-		node_pointer	first_;
-		node_pointer	last_;
 
-		allocator_type	alloc_;
-		size_type		size_;
+		template <class InputIterator>
+		void _do_insert( iterator position,
+			InputIterator n, InputIterator x, integral_iterator_tag )
+		{
+			insert( position, static_cast<size_type>( n ), static_cast<const value_type&>( x ) );
+		}
 
-		void destroy( iterator first, iterator last )
+		template <class InputIterator>
+		iterator _do_insert( iterator position,
+			InputIterator first, InputIterator last, input_iterator_tag )
+		{
+			iterator pos = position;
+			while( first != last )
+			{
+				insert( pos, *first );
+				++first;
+				++pos;
+			}
+			return position;
+		}
+
+		template <class FwdIterator>
+		iterator _do_insert( iterator position,
+			FwdIterator first, FwdIterator last, forward_iterator_tag )
+		{
+			//size_type new_items_count = gstl::distance( first, last );
+			
+
+			node_pointer pos = position.base();
+			while( first != last )
+			{
+				node_pointer new_node = _create_node();
+				_create_node_value( new_node,  *first );
+				
+				_insert_node( new_node, pos );
+
+				++first;
+				++size_;
+			}
+			
+			return position;
+		}
+
+		void _destroy( iterator first, iterator last )
 		{
 			while( first != last )
 			{
