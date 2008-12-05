@@ -56,6 +56,7 @@ namespace gstl
 			typedef typename node_type::node_ptr_traits			node_ptr_traits;
 			typedef typename node_type::node_pointer			node_pointer;
 			typedef typename node_type::node_const_pointer		node_const_pointer;
+			typedef typename node_type::node_reference			node_reference;
 
 			//////////////////////////////////////////////////////////////////////////
 			//Standard types
@@ -73,8 +74,8 @@ namespace gstl
 			typedef typename node_type::size_type				size_type;
 			typedef typename node_type::difference_type			difference_type;
 
-			node_pointer	first_;
-			node_pointer	last_;
+			//node_pointer	head_;
+			node_pointer	tail_;
 
 			allocator_type	alloc_;
 			node_allocator_type	node_alloc_;
@@ -85,16 +86,16 @@ namespace gstl
 				node_alloc_( alloc ),
 				size_( 0 )
 			{
-// 				first_ = last_ = _create_node();
+ 				tail_ = _create_node();
 // 				
-// 				last_->left_ = first_;
-				//_link_nodes( first_, last_ );
+ 				tail_->next_ = tail_;
+				//_link_nodes( head_, last_ );
 			}
 
 			void _link_nodes( node_pointer left, node_pointer right )
 			{
-				left->right_ = right;
-				right->left_ = left;
+				left->next_ = right;
+				right->prev_ = left;
 			}
 
 			void _insert_node( node_pointer node, node_pointer right )
@@ -102,14 +103,14 @@ namespace gstl
 				//Link right and node
 				_link_nodes( node, right );
 				
-				if( right == first_ )
+				if( right == head_ )
 				{
-					first_ = node;
+					head_ = node;
 				}
 				else
 				{
 					//Link left and node
-					_link_nodes( right->left_, node );
+					_link_nodes( right->prev_, node );
 				}
 			}
 
@@ -124,20 +125,58 @@ namespace gstl
 
 			void _remove_node( node_pointer node )
 			{
-				_link_nodes( node->left_, node->right_ );
+				_link_nodes( node->prev_, node->next_ );
 			}
 
 			node_pointer _create_node()
 			{
 				node_pointer node = node_alloc_.allocate( 1 );
-				node_alloc_.construct( node, node_type() );
+				bool next_linked = false;
+
+				try
+				{
+					node_alloc_.construct( &_next( node ), node );
+					next_linked = true;
+					node_alloc_.construct( &_prev( node ), node );
+				}
+				catch(...)
+				{
+					if( next_linked )
+					{
+						node_alloc_.destroy( &_next( node ) );
+					}
+					node_alloc_.destroy( node );
+					throw;
+				}
+
 				return node;
 			}
 
-			void _create_node_value( node_pointer node, const value_type& value )
+			node_pointer _create_node(node_pointer next,
+				node_pointer prev, const _Ty& _Val)
 			{
-				node->value_ptr_ = alloc_.allocate( 1 );
+				node_pointer node = node_alloc_.allocate( 1 );
+
+				node_alloc_.construct( &_next( node ), node );
+				node_alloc_.construct( &_prev( node ), node );
+
 				alloc_.construct( node->value_ptr_, value );
+				return node;
+			}
+
+			static node_reference _next( node_pointer node )
+			{
+				return (*node).next_;
+			}
+
+			static node_reference _prev( node_pointer node )
+			{
+				return (*node).prev_;
+			}
+
+			static reference _value( node_pointer node )
+			{
+				return (*node).value_;
 			}
 
 			void swap( self_type& rhs )

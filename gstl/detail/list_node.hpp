@@ -33,6 +33,11 @@ namespace gstl
 
 	namespace detail
 	{
+		/**
+			@brief		list<> node
+			@details	List node for list<> template class
+						This class is holder the value and links
+		*/
 		template
 			<
 				class T,
@@ -64,21 +69,18 @@ namespace gstl
 
 			typedef typename node_ptr_traits::pointer			node_pointer;
 			typedef typename node_ptr_traits::const_pointer		node_const_pointer;
-			//typedef pointer_traits<node_pointer_type>			node_ptr_traits;
 
-			list_node()
-				:left_( node_ptr_traits::null_ptr ),
-				right_( node_ptr_traits::null_ptr ),
-				value_ptr_( ptr_traits::null_ptr )
-			{
+			typedef typename node_ptr_traits::reference			node_reference;
 
-			}
-		
+			//////////////////////////////////////////////////////////////////////////
+			// There should be no constructor/destructor
+			// because they will never be called
+			//////////////////////////////////////////////////////////////////////////
 
-			node_pointer		left_;
-			node_pointer		right_;
+			node_pointer		prev_;
+			node_pointer		next_;
 
-			pointer				value_ptr_;
+			value_type			value_;
 
 		};
 
