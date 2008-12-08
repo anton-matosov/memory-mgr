@@ -60,14 +60,14 @@ typedef boost::mpl::list< /**/std_list/**/, gstl_list/**, memory_mgr_list/**, me
 #include "detail/test_resize.hpp"
 #include "detail/test_begin_end.hpp"
 #include "detail/test_swap.hpp"
-// #include "detail/test_erase_iter.hpp"
-// #include "detail/test_erase_range.hpp"
-// #include "detail/test_compare_operators.hpp"
-// #include "detail/test_push_pop_back.hpp"
-// #include "detail/test_back.hpp"
-// #include "detail/test_front.hpp"
-// 
-// #include "detail/test_push_pop_front.hpp"
+#include "detail/test_erase_iter.hpp"
+#include "detail/test_erase_range.hpp"
+#include "detail/test_compare_operators.hpp"
+#include "detail/test_push_pop_back.hpp"
+#include "detail/test_back.hpp"
+#include "detail/test_front.hpp"
+
+#include "detail/test_push_pop_front.hpp"
 
 BOOST_AUTO_TEST_SUITE_END()
 

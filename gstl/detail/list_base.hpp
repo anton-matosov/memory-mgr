@@ -53,10 +53,11 @@ namespace gstl
 			//Node types
 			typedef detail::list_node<T, Alloc, PtrTraits>		node_type;
 			typedef typename node_type::node_allocator_type		node_allocator_type;
+			typedef typename node_type::node_ptr_allocator_type	node_ptr_allocator_type;
 			typedef typename node_type::node_ptr_traits			node_ptr_traits;
 			typedef typename node_type::node_pointer			node_pointer;
 			typedef typename node_type::node_const_pointer		node_const_pointer;
-			typedef typename node_type::node_reference			node_reference;
+			typedef typename node_type::node_ptr_reference		node_ptr_reference;
 
 			//////////////////////////////////////////////////////////////////////////
 			//Standard types
@@ -79,39 +80,58 @@ namespace gstl
 
 			allocator_type	alloc_;
 			node_allocator_type	node_alloc_;
+			node_ptr_allocator_type	node_ptr_alloc_;
 			size_type		size_;
 
 			list_base(const allocator_type& alloc )
 				:alloc_( alloc ),
 				node_alloc_( alloc ),
+				node_ptr_alloc_( alloc ),
+				tail_( node_ptr_traits::null_ptr ),
 				size_( 0 )
 			{
+				//This initialization can't be performed in the
+				//initialization list, 'cause it uses member allocators
  				tail_ = _create_node();
-// 				
- 				tail_->next_ = tail_;
-				//_link_nodes( head_, last_ );
+			}
+
+			~list_base()
+			{
+				GSTL_ASSERT( !node_ptr_traits::is_null( tail_ ) );
+				node_ptr_alloc_.destroy( &_next( tail_ ) );
+				node_ptr_alloc_.destroy( &_prev( tail_ ) );
+				node_alloc_.deallocate( tail_, 1 );
+			}
+
+			void _free_node( node_pointer node )
+			{
+				GSTL_ASSERT( !node_ptr_traits::is_null( node ) );	
+
+				//Automatically will call destructor for value_
+				this->node_alloc_.destroy( node );
+				this->node_alloc_.deallocate( node, 1 );
 			}
 
 			void _link_nodes( node_pointer left, node_pointer right )
 			{
-				left->next_ = right;
-				right->prev_ = left;
+				_next( left ) = right;
+				_prev( right ) = left;
 			}
 
 			void _insert_node( node_pointer node, node_pointer right )
 			{
 				//Link right and node
-				_link_nodes( node, right );
-				
-				if( right == head_ )
-				{
-					head_ = node;
-				}
-				else
-				{
-					//Link left and node
-					_link_nodes( right->prev_, node );
-				}
+ 				_link_nodes( node, right );
+// 				
+// 				if( right == head_ )
+// 				{
+// 					head_ = node;
+// 				}
+// 				else
+// 				{
+// 					//Link left and node
+// 					_link_nodes( right->prev_, node );
+// 				}
 			}
 
 // 			void _insert_node( node_pointer node, node_pointer left, node_pointer right )
@@ -135,41 +155,74 @@ namespace gstl
 
 				try
 				{
-					node_alloc_.construct( &_next( node ), node );
+					node_ptr_alloc_.construct( &_next( node ), node );
 					next_linked = true;
-					node_alloc_.construct( &_prev( node ), node );
+					node_ptr_alloc_.construct( &_prev( node ), node );
 				}
 				catch(...)
 				{
 					if( next_linked )
 					{
-						node_alloc_.destroy( &_next( node ) );
+						node_ptr_alloc_.destroy( &_next( node ) );
 					}
-					node_alloc_.destroy( node );
+					node_alloc_.deallocate( node, 1 );
 					throw;
 				}
 
 				return node;
 			}
 
+			/**
+			   @brief Call this method to create new node
+			  
+			   @param	next	pointer that will be set as next_ in new node
+			   @param	prev	pointer that will be set as prev_ in new node
+			   @param	val	(parameter description)
+			   @exception	newer throws by itself, but if exception is 
+							thrown by allocator::allocate method or copy constructor of 
+							node_pointer or value, this exception will be passed out of function
+			  
+			   @return pointer to the new node
+			*/
 			node_pointer _create_node(node_pointer next,
-				node_pointer prev, const _Ty& _Val)
+				node_pointer prev, const_reference val )
 			{
 				node_pointer node = node_alloc_.allocate( 1 );
+				bool next_linked = false;
+				bool prev_linked = false;
 
-				node_alloc_.construct( &_next( node ), node );
-				node_alloc_.construct( &_prev( node ), node );
+				try
+				{
+					node_ptr_alloc_.construct( &_next( node ), next );
+					next_linked = true;
+					
+					node_ptr_alloc_.construct( &_prev( node ), prev );
+					prev_linked = true;
 
-				alloc_.construct( node->value_ptr_, value );
+					alloc_.construct( &_value( node ), val );
+				}
+				catch(...)
+				{
+					if( next_linked )
+					{
+						node_ptr_alloc_.destroy( &_next( node ) );
+					}
+					if( prev_linked )
+					{
+						node_ptr_alloc_.destroy( &_prev( node ) );
+					}
+					node_alloc_.deallocate( node, 1 );
+					throw;
+				}
 				return node;
 			}
 
-			static node_reference _next( node_pointer node )
+			static node_ptr_reference _next( node_pointer node )
 			{
 				return (*node).next_;
 			}
 
-			static node_reference _prev( node_pointer node )
+			static node_ptr_reference _prev( node_pointer node )
 			{
 				return (*node).prev_;
 			}
@@ -181,7 +234,15 @@ namespace gstl
 
 			void swap( self_type& rhs )
 			{
-				gstl::swap( *this, rhs );
+				if( this != &rhs )
+				{
+					//Swap internal representation
+					gstl::swap( tail_,				rhs.tail_ );
+					gstl::swap( alloc_,				rhs.alloc_ );
+					gstl::swap( node_alloc_,		rhs.node_alloc_ );
+					gstl::swap( node_ptr_alloc_,	rhs.node_ptr_alloc_ );
+					gstl::swap( size_,				rhs.size_ );
+				}
 			}
 		};
 	}

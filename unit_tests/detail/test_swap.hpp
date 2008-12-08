@@ -39,6 +39,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, container_type, t_list )
 	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
 
+	//Swap with itself
+	cont.swap( cont );
+	BOOST_CHECK_EQUAL( cont.size(), arr2_len );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(), arr2, GSTL_ARRAY_END( arr2 ) );
+
+	cont2.swap( cont2 );
+	BOOST_CHECK_EQUAL( cont2.size(), arr_len );
+	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
+
 	//swap function
 	swap( cont, cont2 );
 	BOOST_CHECK_EQUAL( cont.size(), arr_len );

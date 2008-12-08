@@ -75,18 +75,18 @@ namespace gstl
 			void increment()
 			{
 				//TODO: Implement checking
-				this->base_reference() = this->base()->right_;
+				this->base_reference() = (*this->base()).next_;
 			}
 
 			void decrement()
 			{
 				//TODO: Implement checking
-				this->base_reference() = this->base()->left_;
+				this->base_reference() = (*this->base()).prev_;
 			}
 
 			typename base_type::reference dereference() const
 			{ 
-				return *(this->base()->value_ptr_); 
+				return (*this->base()).value_; 
 			}
 		};
 

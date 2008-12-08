@@ -67,10 +67,13 @@ namespace gstl
 			typedef typename ptr_traits::template rebind<self_type>::other	node_ptr_traits;
 
 
-			typedef typename node_ptr_traits::pointer			node_pointer;
-			typedef typename node_ptr_traits::const_pointer		node_const_pointer;
+			typedef typename node_ptr_traits::pointer					node_pointer;
+			typedef typename node_ptr_traits::const_pointer				node_const_pointer;
 
-			typedef typename node_ptr_traits::reference			node_reference;
+			typedef typename Alloc::template 
+								rebind<node_pointer>::other				node_ptr_allocator_type;
+
+			typedef typename node_ptr_allocator_type::reference			node_ptr_reference;
 
 			//////////////////////////////////////////////////////////////////////////
 			// There should be no constructor/destructor
@@ -80,7 +83,7 @@ namespace gstl
 			node_pointer		prev_;
 			node_pointer		next_;
 
-			value_type			value_;
+			mutable value_type	value_;
 
 		};
 

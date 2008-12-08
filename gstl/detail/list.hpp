@@ -116,7 +116,7 @@ namespace gstl
 
 		~list()
 		{
-			_destroy( begin(), end() );
+			clear();			
 		}
 
 		self_type& operator=(const self_type& x)
@@ -147,22 +147,22 @@ namespace gstl
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( first_ );
+			return iter_helper::build_iter( base_type::_next( tail_ ) );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( first_ );
+			return iter_helper::build_const_iter( this->_next( tail_ ) );
 		}
 
 		iterator end()
 		{
-			return iter_helper::build_iter( last_ );
+			return iter_helper::build_iter( tail_ );
 		}
 
 		const_iterator end() const
 		{
-			return iter_helper::build_const_iter( last_ );
+			return iter_helper::build_const_iter( tail_ );
 		}
 
 		reverse_iterator rbegin()
@@ -275,11 +275,26 @@ namespace gstl
 		//Erase methods
 		iterator erase( iterator position )
 		{
+			node_pointer node = position.base();
+			++position;
+
+			//If node is not the tail (end) entry of the list
+			if( node != tail_ )
+			{
+				//We can remove it
+				this->_remove_node( node );
+				this->_free_node( node );
+				--size_;
+			}
 			return position;
 		}
 
-		iterator erase( iterator position, iterator /*last*/ )
+		iterator erase( iterator position, iterator last )
 		{
+			while( position != last )
+			{
+				position = erase( position );
+			}
 			return position;
 		}
 		//////////////////////////////////////////////////////////////////////////
@@ -384,13 +399,17 @@ namespace gstl
 			//size_type new_items_count = gstl::distance( first, last );
 			
 
-			node_pointer pos = position.base();
+			node_pointer curr = position.base();
 			while( first != last )
 			{
-				node_pointer new_node = _create_node();
-				_create_node_value( new_node,  *first );
+				node_ptr_reference prev = _prev( curr );
+				node_pointer new_node = _create_node( curr, prev, *first );
+
+				//curr->prev_ = new_node
+				prev = new_node;
+				//new_node->prev_->next_ = new_node
+				_next( _prev( new_node ) ) = new_node;
 				
-				_insert_node( new_node, pos );
 
 				++first;
 				++size_;
@@ -403,7 +422,7 @@ namespace gstl
 		{
 			while( first != last )
 			{
-				alloc_.destroy( first.base()->value_ptr_ );
+				alloc_.destroy( &this->_value( first.base() ) );
 				++first;
 			}
 		};
