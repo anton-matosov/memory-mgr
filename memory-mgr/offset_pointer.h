@@ -123,10 +123,6 @@ namespace memory_mgr
 			return *get_pointer_internal();
 		}
 
-		inline pointer operator&() const
-		{
-			return get_pointer_internal();
-		}
 
 		inline reference operator[](difference_type n) const
 		{

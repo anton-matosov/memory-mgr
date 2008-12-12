@@ -93,10 +93,6 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 		(*dptr).Set( TetsVal2 );
 		BOOST_CHECK( (*cptr).Get() == TetsVal2 );
 
-		////TEST_OPERATOR_PRINT( L"&" );
-		(&ptr)->Set( TetsVal );
-		BOOST_CHECK( (&cptr)->Get() == TetsVal );
-
 		////TEST_OPERATOR_PRINT( L"[]" );
 		dptr[0].Set( TetsVal2 );
 		BOOST_CHECK( cptr[0].Get() == TetsVal2 );
