@@ -46,7 +46,7 @@ namespace gstl
 		class PtrTraits = typename Alloc::pointer_traits_type
 	>
 	class list
-		:public detail::list_base<T, Alloc, PtrTraits>
+		:private detail::list_base<T, Alloc, PtrTraits>
 	{
 	public:
 		

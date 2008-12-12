@@ -118,31 +118,6 @@ namespace gstl
 				_prev( right ) = left;
 			}
 
-			void _insert_node( node_pointer node, node_pointer right )
-			{
-				//Link right and node
- 				_link_nodes( node, right );
-// 				
-// 				if( right == head_ )
-// 				{
-// 					head_ = node;
-// 				}
-// 				else
-// 				{
-// 					//Link left and node
-// 					_link_nodes( right->prev_, node );
-// 				}
-			}
-
-// 			void _insert_node( node_pointer node, node_pointer left, node_pointer right )
-// 			{
-// 				//Link right and node
-// 				_link_nodes( node, right );
-// 
-// 				//Link left and node
-// 				_link_nodes( left, node );
-// 			}
-
 			void _remove_node( node_pointer node )
 			{
 				_link_nodes( node->prev_, node->next_ );

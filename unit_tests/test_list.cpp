@@ -45,12 +45,12 @@ BOOST_FIXTURE_TEST_SUITE( list_test, list_fixture )
 typedef int								test_value_type;
 typedef std::list<test_value_type>		std_list;
 typedef gstl::list<test_value_type>		gstl_list;
-// typedef gstl::list<test_value_type,
-// memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_list;
-// typedef gstl::list<test_value_type,
-// memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_list;
+typedef gstl::list<test_value_type,
+	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_list;
+typedef gstl::list<test_value_type,
+	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_list;
 
-typedef boost::mpl::list< /**/std_list/**/, gstl_list/**, memory_mgr_list/**, memory_mgr_off_list/**/> t_list;
+typedef boost::mpl::list< /**/std_list/**/, gstl_list/**/, memory_mgr_list/**/, memory_mgr_off_list/**/> t_list;
 
 
 #include "detail/test_construction.hpp"
