@@ -32,7 +32,7 @@ class vector_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
-	typedef gstl::vector<tracer_type>			traced_vector_type;
+	typedef gstl::vector<tracer_type>			traced_container_type;
 
 };
 
@@ -47,6 +47,9 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 		memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 
 	typedef boost::mpl::list< /**/std_vector, gstl_vector/**, memory_mgr_vector/**, memory_mgr_off_vector/**/> t_list;
+
+	#include "detail/test_construction_throw.hpp"
+	#include "detail/test_assign_throw.hpp"
 
 	#include "detail/test_construction.hpp"
 	#include "detail/test_assign_operator.hpp"
@@ -69,14 +72,14 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
 	BOOST_AUTO_TEST_CASE( test_objects_validness )
 	{
-		typedef traced_vector_type::value_type value_type;
+		typedef traced_container_type::value_type value_type;
 		value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
 		value_type arr2[] = { 7, 7, 7, 7 };
 		value_type val = arr2[0];
 		size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
 
 		tracer_type::clear();
-		traced_vector_type vec1;
+		traced_container_type vec1;
 		long creations = 0;
 		long destructions = 0;
 		BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
@@ -85,7 +88,9 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 		
 		{
 			//Iterators constructor
-			traced_vector_type vec2( arr, GSTL_ARRAY_END( arr ) );
+			traced_container_type vec2;
+			vec2.reserve( 200 );
+			vec2.assign( arr, GSTL_ARRAY_END( arr ) );
 			creations += GSTL_ARRAY_LEN( arr );
 			
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
@@ -97,19 +102,18 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
-			vec2.insert( vec2.begin(), arr2_len, val );
-			const long fill_insert_overhead = 4;
-			creations += arr2_len + fill_insert_overhead;
-			destructions += fill_insert_overhead;
+			vec2.insert( vec2.end(), arr2_len, val );
+			
+			creations += arr2_len;
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
-			traced_vector_type vec3 = vec2;
+			traced_container_type vec3 = vec2;
 			creations += vec3.size();
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
-			vec2 = traced_vector_type();
+			vec2 = traced_container_type();
 			destructions += vec3.size();
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );

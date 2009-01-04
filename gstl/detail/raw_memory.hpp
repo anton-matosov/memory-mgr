@@ -30,8 +30,34 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <gstl/detail/utility.hpp>
 
-namespace gstl 
+namespace gstl
 {
+	namespace detail
+	{
+		template <class InputIterator, class ForwardIterator, class Allocator>
+		ForwardIterator uninitialized_copy( InputIterator first, InputIterator last,
+			ForwardIterator result, Allocator alloc )
+		{
+			ForwardIterator start = result;
+			try
+			{
+				for (; first != last; ++result, ++first)
+				{
+					alloc.construct( &*result, *first );
+				}
+			}
+			catch( ... )
+			{
+				for (; start != result; ++start )
+				{	
+					alloc.destroy( &*start );
+				}
+				throw;
+			}
+			return result;
+		}
+
+	}
 	// 20.4.2, raw storage iterator:
 	template <class OutputIterator, class T>
 	class raw_storage_iterator
@@ -63,11 +89,8 @@ namespace gstl
 	ForwardIterator uninitialized_copy( InputIterator first, InputIterator last,
 		ForwardIterator result )
 	{
-		for (; first != last; ++result, ++first)
-		{	new( static_cast<void*>( &*result ) )
-				GSTL_ITER_VALUE_TYPE( ForwardIterator )(*first);
-		}
-		return result;
+		return detail::uninitialized_copy( first, last, result, 
+			allocator<GSTL_ITER_VALUE_TYPE( ForwardIterator )>() );
 	}
 
 	template <class ForwardIterator, class T>

@@ -298,6 +298,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\test_assign_throw.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\test_back.hpp"
 				>
 			</File>
@@ -315,6 +319,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\test_construction.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\test_construction_throw.hpp"
 				>
 			</File>
 			<File

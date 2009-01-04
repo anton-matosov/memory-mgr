@@ -38,8 +38,9 @@ namespace gstl
 		class operations_tracer
 		{
 		private:
-			typedef T	value_type;
+			typedef T					value_type;
 			typedef operations_tracer	self_type;
+			
 
 			value_type	value_;				// value to be sorted
 			int			generation_;		// generation of this tracer
@@ -50,13 +51,28 @@ namespace gstl
 			static long eq_compared_;	// number of equal comparisons
 			static long max_live_;		// maximum of existing objects
 
+			static long throw_ctor_;		// when becomes zero, an exception will be thrown
+			static long throw_assign_;		// when becomes zero, an exception will be thrown
+
 			// recompute maximum of existing objects
 			static void update_max_live()
 			{
 				max_live_ = gstl::max( max_live_, created_ - destroyed_ );				
 			}
 
+			static void check_throw( long& value )
+			{
+				if( !--value )
+				{
+					throw test_exception();
+				}
+			}
+
 		public:
+			class test_exception
+			{};
+
+			//statistics methods
 			static long creations()
 			{ 
 				return created_; 
@@ -95,9 +111,23 @@ namespace gstl
 				le_compared_ = 0;
 				max_live_ = 0;
 				eq_compared_ = 0;
+
+				//throw counters should be set to -1 to prevent throwing
+				throw_ctor_ = -1;
+				throw_assign_ = -1;
 			}
 
-		public:
+			//set throw counters method
+			static void set_throw_ctor( long val )
+			{
+				throw_ctor_ = val;
+			}
+
+			static void set_throw_assign( long val )
+			{
+				throw_assign_ = val;
+			}
+
 			// constructor
 			operations_tracer( const value_type& v = 0 )
 				: value_( v ),
@@ -105,6 +135,7 @@ namespace gstl
 			{
 				++created_;
 				update_max_live();
+				check_throw( throw_ctor_ );
 			}
 
 			// copy constructor
@@ -112,8 +143,9 @@ namespace gstl
 				: value_( b.value_ ),
 				generation_( b.generation_ + 1 )
 			{
-					++created_;
-					update_max_live();
+				++created_;
+				update_max_live();
+				check_throw( throw_ctor_ );
 			}
 
 			// destructor
@@ -128,6 +160,7 @@ namespace gstl
 			{
 				++assigned_;
 				value_ = rhs.value_;
+				check_throw( throw_assign_ );
 				return *this;
 			}
 
@@ -168,6 +201,12 @@ namespace gstl
 
 		template<class T>
 		long operations_tracer<T>::max_live_ = 0;
+
+		template<class T>
+		long operations_tracer<T>::throw_ctor_ = -1;
+
+		template<class T>
+		long operations_tracer<T>::throw_assign_ = -1;
 	}
 }
 

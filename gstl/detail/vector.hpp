@@ -329,10 +329,13 @@ namespace gstl
 				//Insert them past the end of existent items
 				iterator new_end = uninitialized_copy( first, last, vec_end );
 				
-				//put new items on their position
-				reverse( position, vec_end );
-				reverse( vec_end, new_end );
-				reverse( position, new_end );
+				if( vec_end != position )
+				{
+					//put new items on their position
+					reverse( position, vec_end );
+					reverse( vec_end, new_end );
+					reverse( position, new_end );
+				}
 			}
 			set_size( new_size );
 			return result_pos;
