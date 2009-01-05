@@ -23,47 +23,42 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 BOOST_AUTO_TEST_CASE( test_construction_throw )
 {
-// 	typedef typename container_type::value_type value_type;
-// 	value_type arr[] = { 1, 2, 3 };
-// 	value_type arr2[] = { 7, 7, 7, 7, 7 };
-// 	value_type val = arr2[0];
-// 	size_t arr2_len = GSTL_ARRAY_LEN( arr2 );
-// 
-// 	//Default constructor
-// 	container_type cont1;
-// 	BOOST_CHECK_EQUAL( cont1.size(), sz_null );
-// 
-// 
-// 	//Iterators constructor
-// 	container_type cont2( arr, GSTL_ARRAY_END( arr ) );
-// 	BOOST_CHECK_EQUAL( cont2.size(), sz_three );
-// 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
-// 
-// 	//Fill constructor
-// 	container_type cont3( arr2_len, val );
-// 	BOOST_CHECK_EQUAL( cont3.size(), arr2_len );
-// 	BOOST_CHECK_EQUAL_COLLECTIONS( cont3.begin(), cont3.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-// 
-// 	//Integral Iterator constructor
-// 	container_type cont4( (int)arr2_len, val );
-// 	BOOST_CHECK_EQUAL( cont4.size(), arr2_len );
-// 	BOOST_CHECK_EQUAL_COLLECTIONS( cont4.begin(), cont4.end(), arr2, GSTL_ARRAY_END( arr2 ) );
-// 
-// 	//Copy constructor
-// 	container_type cont5( cont2 );
-// 	BOOST_CHECK_EQUAL( cont5.size(), cont2.size() );
-// 	BOOST_CHECK_EQUAL_COLLECTIONS( cont5.begin(), cont5.end(), cont2.begin(), cont2.end() );
-
-
 	typedef traced_container_type container_type;
 	typedef container_type::value_type value_type;
+	value_type::clear();
+
 	value_type arr[] = { 1, 2, 3, 4, 5 };
+	value_type val = arr[0];
+	size_t arr_len = GSTL_ARRAY_LEN( arr );
 
 	const long throw_on = 3;
+	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 
+	//Iterators constructor
 	value_type::clear();
 	value_type::set_throw_ctor( throw_on );
-	BOOST_CHECK_THROW( container_type( arr, GSTL_ARRAY_END( arr ) ), value_type::test_exception );
+	BOOST_CHECK_THROW( container_type test_cont( arr, GSTL_ARRAY_END( arr ) ), value_type::test_exception );
+	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
+	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
+
+	//Fill constructor
+	value_type::clear();
+	value_type::set_throw_ctor( throw_on );
+	BOOST_CHECK_THROW( container_type test_cont( arr_len, val ), value_type::test_exception );
+	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
+	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
+
+	//Integral Iterator constructor
+	value_type::clear();
+	value_type::set_throw_ctor( throw_on );
+	BOOST_CHECK_THROW( container_type test_cont( (int)arr_len, val ), value_type::test_exception );
+	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
+	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
+
+	//Copy constructor
+	value_type::clear();
+	value_type::set_throw_ctor( throw_on );
+	BOOST_CHECK_THROW( container_type test_cont( cont ), value_type::test_exception );
 	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
 	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
 }

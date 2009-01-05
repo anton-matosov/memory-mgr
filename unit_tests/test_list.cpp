@@ -33,7 +33,7 @@ class list_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
-	typedef gstl::list<tracer_type>				traced_list_type;
+	typedef gstl::list<tracer_type>				traced_container_type;
 
 };
 
@@ -68,6 +68,9 @@ typedef boost::mpl::list< /**/std_list/**/, gstl_list/**/, memory_mgr_list/**/, 
 #include "detail/test_front.hpp"
 
 #include "detail/test_push_pop_front.hpp"
+
+//#include "detail/test_construction_throw.hpp"
+//#include "detail/test_assign_throw.hpp"
 
 BOOST_AUTO_TEST_SUITE_END()
 

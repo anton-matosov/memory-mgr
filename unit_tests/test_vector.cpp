@@ -73,6 +73,8 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 	BOOST_AUTO_TEST_CASE( test_objects_validness )
 	{
 		typedef traced_container_type::value_type value_type;
+		value_type::clear();
+
 		value_type arr[] = { 1, 2, 3, 4, 5, 6, 7 };
 		value_type arr2[] = { 7, 7, 7, 7 };
 		value_type val = arr2[0];
