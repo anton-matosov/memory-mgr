@@ -165,6 +165,10 @@ namespace memory_mgr
 		};
 		
 
+		/**
+		   @brief Returns the number of the first bit in the 'x' that is set to 1
+		   @details Uses int_log2 to find the bit id
+		*/
 		template <typename T>
 		static inline  int lowest_bit(T x) 
 		{
@@ -176,6 +180,55 @@ namespace memory_mgr
 
 		}
 
+		template <typename T>
+		static inline  int lowest_bit2(T x) 
+		{
+			assert(x != 0); // PRE
+
+			//  Lookup table that tells how many contiguous LOW order bits are clear in a byte
+			static const char bitsClearLow[] =
+					  { -1,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						6,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						7,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						6,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0 };
+			
+			enum
+			{
+				numBytes = sizeof( T ),
+				bitsInByte = 8			
+			};
+			int result = -1;
+			for( size_t i = 0; i < numBytes && result < 0; ++i )
+			{
+				unsigned char val = (x >> (i*bitsInByte)) & 0xFF;
+				if( val )
+				{
+					result = bitsClearLow[val];
+					if( result >= 0 )
+					{
+						result+=(i*(bitsInByte));
+					}
+					
+				}
+				
+			}
+
+			return result;
+			
+						
+		}
 	}//math
 
 }//memory_mgr

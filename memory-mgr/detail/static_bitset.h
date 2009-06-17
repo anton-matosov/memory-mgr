@@ -35,6 +35,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/type_manip.h>
 #include <memory-mgr/detail/math.h>
+#include <boost/type_traits/make_unsigned.hpp>
 
 namespace memory_mgr
 {
@@ -112,9 +113,9 @@ namespace memory_mgr
 		template< class BlockType, int BitsCount >
 		struct array_traits
 		{
-			typedef BlockType		block_type;
-			typedef block_type&		block_ref_type;
-			typedef const block_type&	const_block_ref_type;
+			typedef typename boost::make_unsigned<BlockType>::type	block_type;
+			typedef block_type&								block_ref_type;
+			typedef const block_type&						const_block_ref_type;
 
 			
 			typedef block_type*		block_ptr_type;
@@ -404,14 +405,18 @@ namespace memory_mgr
 				return npos;
 			}
 
-
+			//Calculate the first block id to start search with
  			size_type first_block = block_index( bit_hint );
+			//Calculate the first free bit id in the first block
  			size_type lowest_bit = bit_hint - first_block * bits_per_block; //bit_index( bit_hint );
 
+			//Check if the bit specified in the hint is really free
 			if( !unchecked_test( first_block, bit_hint ) )
 			{
+				//If not find, another one
 				lowest_bit = do_find_from(first_block);
 			}
+
 			size_type blk = first_block;
 			size_type ind = lowest_bit;
 			ptrdiff_t left = count;
@@ -516,7 +521,7 @@ namespace memory_mgr
 		{ return (this->m_bits[block_ind] & unchecked_bit_mask(bit_ind)) != 0; }
 
 
-		//Find first block with at list one bit set to 1
+		//Find first block with at least one bit set to 1
 		inline size_type find_first_block( size_type from ) const
 		{
 			// skip null blocks
@@ -527,6 +532,7 @@ namespace memory_mgr
 			return from;
 		}
 
+		//finds the first bit set to 1
 		inline size_type do_find_from( size_type& first_block ) const
 		{
 			first_block = find_first_block( first_block );
@@ -539,6 +545,7 @@ namespace memory_mgr
 			return math::lowest_bit(this->m_bits[first_block]);
 		}
 
+		//finds the next bit set to 1
 		inline size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
 		{
 			if ( bit_ind >= num_bits )
