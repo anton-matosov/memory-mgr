@@ -95,13 +95,14 @@ namespace memory_mgr
 		// deallocate object at ptr, ignore size
 		inline void deallocate( pointer ptr, size_type size )
 		{	
-			mgr_type::instance().deallocate( get_offset_internal( ptr ), size );
+			mgr_type::instance().deallocate( get_mgr_pointer( ptr ), size );
 		}
 
 		// allocate array of count elements
 		inline pointer allocate(size_type count)
 		{	
-			return pointer( mgr_type::instance().allocate( count * sizeof(value_type) ) );
+			return pointer( memory_mgr::detail::to_offset( mgr_type::instance().allocate( count * sizeof(value_type) ),
+				mgr_type::instance() ) );
 		}
 
 		// allocate array of count elements, ignore hint
@@ -130,6 +131,11 @@ namespace memory_mgr
 			return (0 < count ? count : 1);
 		}
 
+	private:
+		typename manager_traits<mgr_type>::block_id_type get_mgr_pointer( pointer ptr )
+		{
+			return manager_traits<mgr_type>::block_id_converter_type::to_block_id( get_offset_internal( ptr ), mgr_type::instance() );
+		}
 	};
 
 	// offset_allocator TEMPLATE OPERATORS
