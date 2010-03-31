@@ -23,28 +23,31 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 
-bool test_memory_manager( const int op_repeat, const int per_alloc, const int test_repeat );
-bool test_managed_base( const int op_repeat, const int per_alloc, const int test_repeat );
-bool test_offset_pointer( const int op_repeat, const int per_alloc, const int test_repeat );
-bool test_math( const int op_repeat, const int per_alloc, const int test_repeat );
 
-int main(int /*argc*/, char* /*argv*/[])
+
+namespace
 {
-	const int op_repeat = 5;
-	const int per_alloc = 10000;
-	const int test_repeat = 10;
+	long double test_boost_interprocess( const int op_repeat, const int per_alloc )
+	{
+		op_repeat;
+		per_alloc;
+		return 1.;
+	}
 
-	/**
-	   @todo Get rid of this stub!!!
-	*/
-	alloc_mgr::instance();
+	void run_all_tests( const int op_repeat, const int per_alloc, const int test_repeat )
+	{
+		run_perf_test( "", "",
+			test_boost_interprocess, op_repeat, per_alloc, test_repeat );
+	}
 
-	//test_math( op_repeat, per_alloc, test_repeat );
-	test_memory_manager( op_repeat, per_alloc, test_repeat );
-	test_managed_base( op_repeat, per_alloc, test_repeat );
-	test_offset_pointer( op_repeat, per_alloc, test_repeat );
-
-	MGR_PRINT_RESULTS;
-	return std::cin.get();
 }
 
+
+bool test_interprocess( const int op_repeat, const int per_alloc, const int test_repeat )
+{	
+	print_perf_test_header<memmgr_type>( L"Testing boost interprocess library",
+		0, 0, 0 );
+	run_all_tests( op_repeat, per_alloc, test_repeat );
+
+	return true;
+}

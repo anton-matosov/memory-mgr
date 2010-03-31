@@ -117,7 +117,7 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR new( mem_mgr( mgr ) ) test_type;
+			TEST_TRACK_PTR = new( mem_mgr( mgr ) ) test_type;
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -141,7 +141,7 @@ namespace
 		
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR new test_class;
+			TEST_TRACK_PTR = new test_class;
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -169,7 +169,7 @@ namespace
 		
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR new( mem_mgr<MemMgr>() ) test_type;
+			TEST_TRACK_PTR = new( mem_mgr<MemMgr>() ) test_type;
 		}
 		TEST_SPLIT_LOOP;
 		{

@@ -215,7 +215,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_boost_interprocess.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_managed_base.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test_math.cpp"
 				>
 			</File>
 			<File

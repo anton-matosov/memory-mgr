@@ -119,19 +119,19 @@ public:
 
 #define  TEST_START_LOOP( op_repeat_count, alloc_count, pointer_type )\
 	memory_mgr::perf_timer timer__;\
-	int op_repeat_count__ = op_repeat_count;\
-	int loop_outer__ = op_repeat_count__;\
-	int alloc_count__ = alloc_count;\
-	int full_repeat_count__ = alloc_count__ * op_repeat_count__;\
+	size_t op_repeat_count__ = op_repeat_count;\
+	size_t loop_outer__ = op_repeat_count__;\
+	size_t alloc_count__ = alloc_count;\
+	size_t full_repeat_count__ = alloc_count__ * op_repeat_count__;\
 	double accum__ = 0.0;\
 	pointer_type *ptr_storage__ = new pointer_type[alloc_count__ + 1];ptr_storage__;\
 	timer__.start();\
 	while( loop_outer__-- ){\
-		int loop_inner__ = alloc_count__;\
+		size_t loop_inner__ = alloc_count__;\
 		while( loop_inner__-- ){
 
 #define TEST_GET_TRACKED_PTR ptr_storage__[loop_inner__]
-#define TEST_TRACK_PTR TEST_GET_TRACKED_PTR =
+#define TEST_TRACK_PTR TEST_GET_TRACKED_PTR
 #define TEST_ITERATION_NUMBER loop_inner__
 
 

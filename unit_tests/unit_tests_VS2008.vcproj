@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_math.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_memory_manager.cpp"
 				>
 			</File>

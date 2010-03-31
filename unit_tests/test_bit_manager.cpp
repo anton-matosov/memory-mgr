@@ -25,7 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "stdafx.h"
 #include <memory-mgr/detail/bit_manager.h>
 
-typedef unsigned char block_type;
+typedef char block_type;
 static const size_t bits_count = 32;
 typedef memory_mgr::detail::bit_manager<block_type, bits_count> bit_manager;
 typedef bit_manager::size_type ptr_type;

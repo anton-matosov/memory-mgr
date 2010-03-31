@@ -24,6 +24,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "stdafx.h"
 #include <memory-mgr/offset_pointer.h>
 
+#ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
+#	include <boost/interprocess/managed_shared_memory.hpp>
+#	include <boost/interprocess/shared_memory_object.hpp>
+#	include <boost/interprocess/segment_manager.hpp>
+#endif //INCLUDE_BOOST_INTERPROCESS_TESTS
 
 #ifdef STD_NEW
 #	define GC_ALLOC_DECLARED
@@ -73,6 +78,77 @@ namespace
 	}
 	//////////////////////////////////////////////////////////////////////////
 
+#ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
+
+	namespace bi = boost::interprocess;
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// boost interprocess library
+	//////////////////////////////////////////////////////////////////////////
+	long double test_boost_interprocess( const int op_repeat, const int per_alloc )
+	{
+		enum
+		{
+			chunk_size = 4
+		};
+
+		//Remove shared memory on construction and destruction
+		struct shm_remove
+		{
+			shm_remove() { bi::shared_memory_object::remove("MySharedMemory"); }
+			~shm_remove(){ bi::shared_memory_object::remove("MySharedMemory"); }
+		} remover;
+
+		//Managed memory segment that allocates portions of a shared memory
+		//segment with the default management algorithm
+		bi::managed_shared_memory managed_shm( bi::create_only,"MySharedMemory", per_alloc * chunk_size * 8 );
+
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		{
+			TEST_TRACK_PTR = managed_shm.allocate( chunk_size );
+		}
+		TEST_SPLIT_LOOP_STOP_TIMER;
+		{
+			managed_shm.deallocate( TEST_GET_TRACKED_PTR );
+		}
+		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+
+	long double test_boost_interprocess_dealloc( const int op_repeat, const int per_alloc )
+	{
+		enum
+		{
+			chunk_size = 4
+		};
+
+		//Remove shared memory on construction and destruction
+		struct shm_remove
+		{
+			shm_remove() { bi::shared_memory_object::remove("MySharedMemory"); }
+			~shm_remove(){ bi::shared_memory_object::remove("MySharedMemory"); }
+		} remover;
+
+		//Managed memory segment that allocates portions of a shared memory
+		//segment with the default management algorithm
+		bi::managed_shared_memory managed_shm( bi::create_only,"MySharedMemory", per_alloc * chunk_size * 8 );
+
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		{
+			TEST_TRACK_PTR = managed_shm.allocate( chunk_size );
+		}
+		TEST_SPLIT_LOOP;
+		{
+			managed_shm.deallocate( TEST_GET_TRACKED_PTR );
+		}
+		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+	//////////////////////////////////////////////////////////////////////////
+#endif //INCLUDE_BOOST_INTERPROCESS_TESTS
 
 	//////////////////////////////////////////////////////////////////////////
 	// alloc/dealloc managers
@@ -87,7 +163,7 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR static_cast<pointer_type>( mgr.allocate( chunk_size ) );
+			TEST_TRACK_PTR = static_cast<pointer_type>( mgr.allocate( chunk_size ) );
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -132,7 +208,7 @@ namespace
 		
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR static_cast<pointer_type>( MemMgr::instance().allocate( chunk_size ) );
+			TEST_TRACK_PTR = static_cast<pointer_type>( MemMgr::instance().allocate( chunk_size ) );
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -155,7 +231,7 @@ namespace
 	{		
 		TEST_START_LOOP( op_repeat, per_alloc, int* );
 		{
-			TEST_TRACK_PTR (int*)malloc(chunk_size);
+			TEST_TRACK_PTR = (int*)malloc(chunk_size);
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
@@ -175,7 +251,7 @@ namespace
 		
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR static_cast<pointer_type>( malloc(chunk_size) );
+			TEST_TRACK_PTR = static_cast<pointer_type>( malloc(chunk_size) );
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -196,6 +272,16 @@ namespace
 	{
 		typedef memory_mgr::manager_traits<shared_mgr>::offset_type offset_type;
 
+#ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
+		//////////////////////////////////////////////////////////////////////////
+		// Boost Interprocess
+		run_perf_test( simple_alloc_category, "boost interprocess alloc",
+			test_boost_interprocess, op_repeat, per_alloc, test_repeat );
+		run_perf_test( alloc_dealloc_category, "boost interprocess alloc/dealloc",
+			test_boost_interprocess_dealloc, op_repeat, per_alloc, test_repeat );
+#endif //INCLUDE_BOOST_INTERPROCESS_TESTS
+
+		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
@@ -275,6 +361,8 @@ namespace
 			test_std_new<int>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "malloc",
 			test_malloc, op_repeat, per_alloc, test_repeat );
+
+
 	}
 
 }
