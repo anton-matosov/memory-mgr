@@ -34,6 +34,8 @@ namespace memory_mgr
 
 #define MGR_BIND_PARAM( name ) MGR_BIND_PARAM_NAME( name )<>
 
+#define MGR_BINDED( T, name ) ::memory_mgr::params_binder< T, MGR_BIND_PARAM( name ) >
+
 //This class should be a template class because otherwise it will be impossible
 //to define static variable in the header file
 #define MGR_DECLARE_BIND_PARAM( name, type, param_value )	\

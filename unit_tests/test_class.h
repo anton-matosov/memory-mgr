@@ -35,7 +35,22 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/pointer_convert.h>
+#include <memory-mgr/params_binder.h>
+#include <memory-mgr/sync/named_mutex.h>
 
+MGR_DECLARE_BIND_PARAM( MutexName, const char*, "Default memory sync" );
+typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName ) def_named_mutex;
+
+
+struct my_mutex
+	:public memory_mgr::sync::named_mutex
+{
+	my_mutex()
+		:memory_mgr::sync::named_mutex( "mutex name" )
+	{
+
+	}
+};
 
 typedef memory_mgr::singleton_manager
 < 
@@ -46,8 +61,8 @@ typedef memory_mgr::singleton_manager
 			memory_mgr::size_tracking
 			< 
 				memory_mgr::pointer_convert
-				< 
-					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+				<
+					memory_mgr::memory_manager<size_t, 1024 * 1024, 4, size_t, def_named_mutex> 
 				>
 			>
 		>
