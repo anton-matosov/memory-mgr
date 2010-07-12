@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_CRITICAL_SECTION_HEADER
-#define MGR_CRITICAL_SECTION_HEADER
+#ifndef MGR_NAMED_MUTEX_HEADER
+#define MGR_NAMED_MUTEX_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -35,18 +35,25 @@ namespace memory_mgr
 	namespace sync
 	{
 		//-------------------------------------
-		class critical_section
+		class named_mutex
 		{
 		public:
-			inline critical_section()	{ osapi::initialize_critical_section(&m_cs); }
-			inline ~critical_section()	{ osapi::delete_critical_section	(&m_cs); }
-			inline void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
-			inline void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
-		private:
-			mutable osapi::critical_section m_cs;
+			inline named_mutex( const std::string& name )
+			{ m_mutex = osapi::create_mutex( name ); }
 
-			critical_section(const critical_section &);
-			critical_section & operator=(const critical_section &);
+			inline ~named_mutex()
+			{ osapi::release_mutex( m_mutex ); }
+
+			inline void Enter() const
+			{ osapi::lock_mutex( m_mutex ); }
+
+			inline void Leave() const
+			{ osapi::release_mutex( m_mutex ); }
+		private:
+			mutable osapi::mutex_handle_t m_mutex;
+
+			named_mutex(const named_mutex &);
+			named_mutex & operator=(const named_mutex &);
 		};
 
 	}//sync
