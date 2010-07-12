@@ -1149,7 +1149,7 @@ namespace boost
                     return result;
             }
             throw_exception(bad_lexical_cast(typeid(Source), typeid(Target)));
-            return Target(); // normally never reached (throw_exception)
+            //return Target(); // normally never reached (throw_exception)
         }
     }
 

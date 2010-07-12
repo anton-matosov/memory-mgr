@@ -981,7 +981,7 @@ switch_fp_exceptions( bool on_off )
 int
 execution_monitor::catch_signals( unit_test::callback0<int> const& F )
 {
-    _invalid_parameter_handler old_iph;
+    _invalid_parameter_handler old_iph = 0;
 
     if( !p_catch_system_errors )
         _set_se_translator( &detail::seh_catch_preventer );
