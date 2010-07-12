@@ -121,7 +121,7 @@ namespace memory_mgr
 		inline void destroy(pointer ptr)
 		{	
 			ptr;//VS 2008 warning
-			(&*ptr)->~value_type();
+			(*ptr).~value_type();
 		}
 
 		// estimate maximum array size
