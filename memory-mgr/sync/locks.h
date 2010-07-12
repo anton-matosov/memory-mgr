@@ -91,12 +91,12 @@ namespace memory_mgr
 				lock( const object_level_lockable &c ) 
 					: m_lackable(c)
 				{ 
-					m_lackable.m_sync_object.Enter();
+					m_lackable.m_sync_object.enter();
 				};
 
 				~lock()
 				{ 
-					m_lackable.m_sync_object.Leave();
+					m_lackable.m_sync_object.leave();
 				};
 
 			private:
@@ -129,12 +129,12 @@ namespace memory_mgr
 			public:
 				lock()
 				{
-					sm_sync_object.Enter();
+					sm_sync_object.enter();
 				}
 
 				~lock()
 				{
-					sm_sync_object.Leave();
+					sm_sync_object.leave();
 				}
 			};
 		};

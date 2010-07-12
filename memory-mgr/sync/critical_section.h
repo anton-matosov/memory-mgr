@@ -40,8 +40,8 @@ namespace memory_mgr
 		public:
 			inline critical_section()	{ osapi::initialize_critical_section(&m_cs); }
 			inline ~critical_section()	{ osapi::delete_critical_section	(&m_cs); }
-			inline void Enter() const	{ osapi::enter_critical_section		(&m_cs); }
-			inline void Leave() const	{ osapi::leave_critical_section		(&m_cs); }
+			inline void enter() const	{ osapi::enter_critical_section		(&m_cs); }
+			inline void leave() const	{ osapi::leave_critical_section		(&m_cs); }
 		private:
 			mutable osapi::critical_section m_cs;
 

@@ -38,8 +38,8 @@ namespace memory_mgr
 		public:
 			pseudo_sync()	{}
 			~pseudo_sync()	{}
-			void Enter() const	{}
-			void Leave() const	{}
+			void enter() const	{}
+			void leave() const	{}
 		private:
 			pseudo_sync(const pseudo_sync &);
 			pseudo_sync & operator=(const pseudo_sync &);

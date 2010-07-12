@@ -44,10 +44,10 @@ namespace memory_mgr
 			inline ~named_mutex()
 			{ osapi::release_mutex( m_mutex ); }
 
-			inline void Enter() const
+			inline void enter() const
 			{ osapi::lock_mutex( m_mutex ); }
 
-			inline void Leave() const
+			inline void leave() const
 			{ osapi::release_mutex( m_mutex ); }
 		private:
 			mutable osapi::mutex_handle_t m_mutex;
