@@ -67,6 +67,22 @@ namespace memory_mgr
 	};
 
 	/**
+	   @brief Memory offset traits for size_t type
+	*/
+	template<>
+	struct offset_traits<std::ptrdiff_t>
+	{
+		/**
+		   @brief type passed as template parameter
+		*/
+		typedef std::ptrdiff_t		offset_type;
+
+		/**
+		   @brief Value that represents invalid offset, like NULL for pointers
+		*/
+		static const offset_type	invalid_offset = static_cast< offset_type >(1);
+	};
+	/**
 	@brief Memory offset traits for size_t type
 	*/
 	template<class T>

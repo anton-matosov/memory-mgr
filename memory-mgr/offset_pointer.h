@@ -260,13 +260,13 @@ namespace memory_mgr
 		return offset_pointer<T, Mgr>( get_pointer_internal(ptr) + n );
 	}
 	
-	template<class T, class Mgr>
+	template<class Mgr, class T>
 	static inline void delete_( offset_pointer<T, Mgr>& ptr )
 	{
 		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
-	template<class T, class Mgr>
+	template<class Mgr, class T>
 	static inline void delete_array( offset_pointer<T, Mgr>& ptr )
 	{
 		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
