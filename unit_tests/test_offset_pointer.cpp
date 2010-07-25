@@ -24,8 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include "test_class.h"
 #include <memory-mgr/heap_segment.h>
-#include <memory-mgr/offset_pointer.h>
-#include <memory-mgr/self_offset_ptr.h>
+#include <memory-mgr/offset_ptr.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/new.h>
 
@@ -51,34 +50,24 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
-template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
-template class memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr >;
-template class memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr >;
-
-
-template class memory_mgr::self_offset_ptr< builtin_type >;
-template class memory_mgr::self_offset_ptr< base_test_class >;
-template class memory_mgr::self_offset_ptr< derived_test_class >;
+template class memory_mgr::offset_ptr< builtin_type >;
+template class memory_mgr::offset_ptr< base_test_class >;
+template class memory_mgr::offset_ptr< derived_test_class >;
 
 BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	
-	typedef memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr > builtin_ptr;
-	typedef memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr > base_class_ptr;
-	typedef memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr > derived_class_ptr;
+	typedef memory_mgr::offset_ptr< builtin_type > builtin_ptr;
+	typedef memory_mgr::offset_ptr< base_test_class > base_class_ptr;
+	typedef memory_mgr::offset_ptr< derived_test_class > derived_class_ptr;
 
-	typedef memory_mgr::self_offset_ptr< builtin_type > builtin_self_ptr;
-	typedef memory_mgr::self_offset_ptr< base_test_class > base_class_self_ptr;
-	typedef memory_mgr::self_offset_ptr< derived_test_class > derived_class_self_ptr;
-
-	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr,
-								builtin_self_ptr, base_class_self_ptr, derived_class_self_ptr > pointer_types;
+	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr > pointer_types;
 
 
 	BOOST_AUTO_TEST_CASE( test_indirect_self_get )
 	{
 		struct self_link
 		{
-			typedef memory_mgr::self_offset_ptr<self_link> link_type;
+			typedef memory_mgr::offset_ptr<self_link> link_type;
 			link_type link_;
 
 			static void set_link( link_type node, link_type link )

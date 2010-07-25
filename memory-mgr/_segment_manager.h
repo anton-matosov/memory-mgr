@@ -59,7 +59,7 @@ namespace memory_mgr
 	{
 		typedef storage_policy<MemMgr, SegmentsCount> base_type;
 		typedef typename base_type::size_type					size_type;
-		typedef typename base_type::offset_type					offset_type;
+		typedef typename base_type::block_offset_type			block_offset_type;
 		typedef typename base_type::segment_data_type			segment_data_type;
 		typedef typename base_type::segment_ptr_type			segment_ptr_type;
 		typedef typename base_type::segment_type				segment_type;
@@ -94,12 +94,12 @@ namespace memory_mgr
 		size_type m_curr_segment;
 		lockable_type	m_lockable;
 
-		static inline offset_type add_seg_id_to_offset( offset_type offset, size_type seg_id )
+		static inline block_offset_type add_seg_id_to_offset( block_offset_type offset, size_type seg_id )
 		{
 			return offset | (seg_id << offset_bits);
 		}
 
-		static inline size_type seg_id_by_offset( offset_type offset )
+		static inline size_type seg_id_by_offset( block_offset_type offset )
 		{
 			return offset >> offset_bits;
 		}
@@ -118,7 +118,7 @@ namespace memory_mgr
 			segment_ptr_type segment = get_segment(m_curr_segment);
 
 			lock_type lock( get_lockable() );
-			offset_type offset = segment->allocate( size, std::nothrow_t() );
+			block_offset_type offset = segment->allocate( size, std::nothrow_t() );
 			size_type seg_id = m_curr_segment + 1;
 
 			while ( offset == offset_traits<offset_type>::invalid_offset &&

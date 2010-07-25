@@ -34,16 +34,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 typedef memory_mgr::singleton_manager
 < 
-	//memory_mgr::size_tracking
-	//<
-		memory_mgr::pointer_convert
-		< 
-			memory_mgr::heap_segment
-			< 
-				memory_mgr::memory_manager<size_t, 1234 * 321, 4> 
-			> 
-		>
-	//>
+	memory_mgr::heap_segment
+	< 
+		memory_mgr::memory_manager<size_t, 1234 * 321, 4> 
+	> 
 > alloc_mgr;
 
 MGR_DECLARE_MANAGER_CLASS(allocator_manager, alloc_mgr);

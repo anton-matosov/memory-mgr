@@ -77,7 +77,11 @@ namespace memory_mgr
 			*/
 			typedef typename bitset_t::size_type			size_type;
 
-			typedef size_type aux_data_type;
+			/**
+			   @brief auxiliary data type that is used to store bit id hint
+			*/
+			typedef size_type								aux_data_type;
+
 			/**
 			   @brief compile time computed constants
 			*/

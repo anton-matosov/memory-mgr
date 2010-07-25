@@ -51,11 +51,6 @@ namespace memory_mgr
 	struct size_tracking_tag{};
 
 	/**
-	   @brief Memory manager with pointer conversion capability tag
-	*/
-	struct pointer_conversion_tag{};
-
-	/**
 	   @brief Tag for memory manager with capability to allocate named objects 
 	*/
 	struct named_objects_manager_tag{};

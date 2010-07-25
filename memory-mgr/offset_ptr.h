@@ -31,31 +31,32 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/cmp_helper.h>
 #include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/pointer_convert.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/new.h>
+
+#include <boost/type_traits/add_reference.hpp>
 
 namespace memory_mgr
 {	
 	/**
 		@brief		Offset pointer class.
-		@details	Smart pointer class which stores offset between the base address
-					of the memory segment and the object. This allows to put this pointer
-					to the shared memory and/or memory mapped file mapped to the different base 
-					addresses.
+		@details	Smart pointer class which stores offset between 'this' and object it points.
+					This allows to put this pointer	to the shared memory and/or
+					memory mapped file which are mapped to the different base 
+					addresses in different processes.
 
 		@note		Declaration examples:
-					self_offset_ptr<char>		char_ptr;
-					self_offset_ptr<const char>	const_char_ptr;
+					offset_ptr<char>		char_ptr;
+					offset_ptr<const char>	const_char_ptr;
 	*/
 	template< class T >
-	class self_offset_ptr 
-		: public detail::cmp_helper< self_offset_ptr< T > >
+	class offset_ptr 
+		: public detail::cmp_helper< offset_ptr< T > >
 	{		
 	public:
 		typedef std::ptrdiff_t							offset_type;
 
-		typedef self_offset_ptr							self_type;		
+		typedef offset_ptr							self_type;		
 		typedef self_type&								self_ref_type;
 		typedef const self_type							const_self_type;
 		typedef const_self_type&						const_self_ref_type;
@@ -65,10 +66,10 @@ namespace memory_mgr
 		typedef value_type*			pointer;
 		typedef const value_type*	const_pointer;
 
-		typedef value_type&			reference;
-		typedef const value_type&	const_reference;
+		typedef typename boost::add_reference<value_type>::type			reference;
+		typedef typename boost::add_reference<const value_type>::type	const_reference;
 
-		typedef std::ptrdiff_t		difference_type;
+		typedef std::ptrdiff_t						difference_type;
 		
 		typedef std::random_access_iterator_tag		iterator_category;
 
@@ -91,24 +92,24 @@ namespace memory_mgr
 
 		//Default constructor
 		//Constructs null pointer
-		inline self_offset_ptr()
+		inline offset_ptr()
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{}
 
 		//Construct pointer from offset
-// 		inline explicit self_offset_ptr( const offset_type offset )
+// 		inline explicit offset_ptr( const offset_type offset )
 // 			:m_offset( offset )
 // 		{}
 
 		//Copy constructor
-		inline self_offset_ptr( const self_offset_ptr& ptr )
+		inline offset_ptr( const offset_ptr& ptr )
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{
 			do_set_pointer( ptr.get() );
 		}
 
 		//Pointer constructor
-		inline self_offset_ptr( const_pointer p )
+		inline offset_ptr( const_pointer p )
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{
 			do_set_pointer(p);	
@@ -116,7 +117,7 @@ namespace memory_mgr
 
 		//Polymorph copy constructor
 		template < typename U >
-		inline self_offset_ptr( const self_offset_ptr< U >& ptr )
+		inline offset_ptr( const offset_ptr< U >& ptr )
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{
 			do_set_pointer( ptr.get() );
@@ -126,13 +127,13 @@ namespace memory_mgr
 
 		//////////////////////////////////////////////////////////////////////////
 		//Polymorph copy operators
-		inline self_offset_ptr& operator=( const_pointer p )			
+		inline offset_ptr& operator=( const_pointer p )			
 		{
 			do_set_pointer(p);				
 			return *this;
 		}
 
-		inline self_offset_ptr& operator=( const self_offset_ptr& ptr )			
+		inline offset_ptr& operator=( const offset_ptr& ptr )			
 		{
 			do_set_pointer( ptr.get() );
 			return *this;
@@ -140,7 +141,7 @@ namespace memory_mgr
 
 		//Polymorph copy operator
 		template < typename U >
-		inline self_offset_ptr& operator=( const self_offset_ptr< U >& ptr )			
+		inline offset_ptr& operator=( const offset_ptr< U >& ptr )			
 		{
 			STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 			do_set_pointer( ptr.get() );
@@ -336,20 +337,20 @@ namespace memory_mgr
 	};
 
 	template< class T >
-	static inline self_offset_ptr<T> operator+( typename self_offset_ptr<T>::difference_type n, const self_offset_ptr<T>& ptr )
+	static inline offset_ptr<T> operator+( typename offset_ptr<T>::difference_type n, const offset_ptr<T>& ptr )
 	{
-		return self_offset_ptr<T>( get_pointer_internal(ptr) + n );
+		return offset_ptr<T>( get_pointer_internal(ptr) + n );
 	}
 
 	//For compatibility with delete_, new_ operators
 	template<class Mgr, class T>
-	static inline void delete_( self_offset_ptr<T>& ptr )
+	static inline void delete_( offset_ptr<T>& ptr )
 	{
 		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class Mgr, class T>
-	static inline void delete_array( self_offset_ptr<T>& ptr )
+	static inline void delete_array( offset_ptr<T>& ptr )
 	{
 		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}

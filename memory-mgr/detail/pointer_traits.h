@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <memory-mgr/offset_pointer.h>
+#include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr
 {
@@ -40,8 +40,8 @@ namespace memory_mgr
 		typedef T									value_type;
 		typedef pointer_traits< value_type, manager_type >		self_type;
 
-		typedef				offset_pointer< value_type, manager_type >			pointer;
-		typedef				offset_pointer< const  value_type, manager_type >	const_pointer;
+		typedef				offset_ptr< value_type, manager_type >			pointer;
+		typedef				offset_ptr< const  value_type, manager_type >	const_pointer;
 		typedef typename	pointer::reference									reference;
 		typedef	typename	pointer::const_reference 							const_reference;
 

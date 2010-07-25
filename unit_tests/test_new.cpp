@@ -32,11 +32,11 @@ memory_mgr::singleton_manager
 < 
 	memory_mgr::named_objects
 	<
-		seg_heap_sz_pt_mgr
+		heap_sz_mgr
 	>
->	sing_name_seg_heap_pt_mgr_type;
+>	sing_name_heap_mgr_type;
 
-MGR_DECLARE_MANAGER_CLASS( sing_name_seg_heap_pt_mgg, sing_name_seg_heap_pt_mgr_type );
+MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
 
 
 BOOST_AUTO_TEST_SUITE( test_new )
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	typedef int builtin_type;
 
-	typedef boost::mpl::list< sing_name_seg_heap_pt_mgg > managers_list;
+	typedef boost::mpl::list< sing_name_heap_mgr > managers_list;
 
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, managers_list )

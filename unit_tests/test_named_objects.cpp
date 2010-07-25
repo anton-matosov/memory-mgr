@@ -27,8 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/named_objects.h>
 #include <memory-mgr/shared_segment.h>
-#include <memory-mgr/segment_manager.h>
-#include <memory-mgr/offset_pointer.h>
+//#include <memory-mgr/segment_manager.h>
+#include <memory-mgr/offset_ptr.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/detail/offset_traits.h>
@@ -37,46 +37,29 @@ typedef  memory_mgr::named_objects
 <
 	memory_mgr::size_tracking
 	<
-		memory_mgr::pointer_convert
-		< 
-			memory_mgr::segment_manager
-			<
-				memory_mgr::shared_segment
-				< 
-					memory_mgr::memory_manager<size_t, 1024, 4> 
-				>,
-				2
-			>
-		>
-	>
-> name_sz_pt_shared_mgr_type;
-
-typedef  memory_mgr::named_objects
-<
-	memory_mgr::pointer_convert
-	< 
 		memory_mgr::shared_segment
 		< 
-			memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-		> 
+			memory_mgr::memory_manager<size_t, 1024, 4> 
+		>		
 	>
-> name_pt_shared_mgr_type;
+> name_sz_shared_mgr_type;
 
 typedef  memory_mgr::named_objects
 <
 	memory_mgr::shared_segment
 	< 
 		memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-	>
+	> 
+	
 > name_shared_mgr_type;
 
-MGR_DECLARE_MANAGER_CLASS( name_sz_pt_shared_mgr, name_sz_pt_shared_mgr_type );
-MGR_DECLARE_MANAGER_CLASS( name_pt_shared_mgr, name_pt_shared_mgr_type );
+
+MGR_DECLARE_MANAGER_CLASS( name_sz_shared_mgr, name_sz_shared_mgr_type );
 MGR_DECLARE_MANAGER_CLASS( name_shared_mgr, name_shared_mgr_type );
 
 BOOST_AUTO_TEST_SUITE( test_named_objects )
 
-	typedef boost::mpl::list< name_sz_pt_shared_mgr, name_pt_shared_mgr, name_shared_mgr > managers_list;
+	typedef boost::mpl::list< name_sz_shared_mgr, name_shared_mgr > managers_list;
 
 	const char* name1 = "name1";
 	const char* name2 = "name2";
@@ -85,20 +68,22 @@ BOOST_AUTO_TEST_SUITE( test_named_objects )
 	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	{
 		//typedef mgr_type::object_type object_type;
-		typedef typename memory_mgr::manager_traits<mgr_type>::block_id_type	block_id_type;
 		typedef typename memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
-		const block_id_type inv_off = memory_mgr::offset_traits<block_id_type>::invalid_offset;
+		const void* null = NULL;
 		const size_type obj_size = 4;
 
 		mgr_type mgr1;
 		//BOOST_CHECK( mgr1.is_free() );
 
-		block_id_type p1, p2, p11, p22;
+		void* p1;
+		void* p2;
+		void* p11;
+		void* p22;
 
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
 		p1 = mgr1.allocate( obj_size, name1 );
-		BOOST_CHECK_NE( p1, inv_off );
+		BOOST_CHECK_NE( p1, null );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
 		
 
@@ -106,21 +91,22 @@ BOOST_AUTO_TEST_SUITE( test_named_objects )
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
 		p2 = mgr2.allocate( obj_size, name2 );
-		BOOST_CHECK_NE( p2, inv_off );
+		BOOST_CHECK_NE( p2, null );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
 
 		p11 = mgr2.allocate( obj_size, name1 );
-		BOOST_CHECK_NE( p11, inv_off );
+		BOOST_CHECK_NE( p11, null );
 
 		p22 = mgr1.allocate( obj_size, name2 );
-		BOOST_CHECK_NE( p22, inv_off );
+		BOOST_CHECK_NE( p22, null );
 
 		//BOOST_CHECK_EQUAL( p1, p11 );
 		//BOOST_CHECK_EQUAL( p2, p22 );
 		BOOST_CHECK_NE( p1, p22 );
 		BOOST_CHECK_NE( p2, p11 );
 
+		//Object points to the first mapped segment, not to the second one that is validated.
 		mgr2.deallocate( p11, obj_size );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );

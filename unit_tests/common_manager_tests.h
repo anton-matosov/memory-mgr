@@ -55,7 +55,6 @@ namespace test
 		typedef MemMgr										mgr_type;
 		typedef ValueType									value_type;
 		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
-		typedef typename traits_type::offset_type			offset_type;
 		typedef typename traits_type::chunk_type			chunk_type;
 		typedef typename Allocator::template rebind<value_type>::other		allocator;
 
@@ -135,12 +134,10 @@ namespace test
 	{
 		typedef MemMgr										memmgr_type;
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
-		typedef typename traits_type::block_id_type			block_id_type;
 
-		block_id_type null_ptr = memory_mgr::offset_traits<block_id_type>::invalid_offset;
-
+		void* p = NULL;
 		BOOST_CHECKPOINT( "before deallocation of null ptr" );
-		mgr.deallocate( null_ptr, 0 );
+		mgr.deallocate( p, 0 );
 		BOOST_CHECKPOINT( "after deallocation of null ptr" );
 	}
 

@@ -42,7 +42,6 @@ namespace memory_mgr
 		template
 			<
 				class MemMgr,
-				class PointerConvSupp,
 				class SizeTrackingSupp
 			>
 		struct new_helpers
@@ -87,8 +86,7 @@ namespace memory_mgr
 		implements PointerConverterConcept and SizeTrackingConcept
 		*/
 		template< class MemMgr >
-		struct new_helpers<MemMgr, yes_type,
-			yes_type>
+		struct new_helpers<MemMgr, yes_type>
 		{
 			typedef MemMgr mgr_type;
 
@@ -221,7 +219,7 @@ namespace memory_mgr
 			/**
 			@brief Implementation of global operator delete_arr
 			@details deallocates memory that was allocated by new[] operator
-			and calls destructors of array objects
+			and calls destructor of array objects
 			@param	p	pointer memory that was allocated by new[] operator 
 			@param	mgr memory manager that was used for memory allocation
 			@exception newer throws
@@ -267,14 +265,6 @@ namespace memory_mgr
 			typedef MemMgr mgr_type;
 
 			/**
-			@brief Pointer conversion category check result
-			*/
-			typedef ::memory_mgr::is_category_supported
-				<
-				mgr_type, typename ::memory_mgr::pointer_conversion_tag
-				> pointer_conv_check;
-
-			/**
 			@brief Size tracking category check result
 			*/
 			typedef ::memory_mgr::is_category_supported
@@ -288,8 +278,7 @@ namespace memory_mgr
 			typedef new_helpers
 				<
 				mgr_type,
-				typename size_tracking_check::result,
-				typename pointer_conv_check::result
+				typename size_tracking_check::result
 				> new_helper_type;
 
 			/**
@@ -307,8 +296,6 @@ namespace memory_mgr
 			mem_mgr_helper( mgr_type& mgr )
 				:m_mgr( mgr )
 			{
-				STATIC_ASSERT( pointer_conv_check::value, 
-					Memory_manager_does_not_implement_pointer_convertion_concept );
 				STATIC_ASSERT( size_tracking_check::value, 
 					Memory_manager_does_not_implement_size_tracking_concept );
 			}

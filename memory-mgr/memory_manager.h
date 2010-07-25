@@ -117,7 +117,6 @@ namespace memory_mgr
 		class ChunkType, 
 		size_t MemorySize,
  		size_t ChunkSize,
-		class OffsetType = size_t,
 		class SyncObj = sync::critical_section
 	>
 	class memory_manager
@@ -193,16 +192,16 @@ namespace memory_mgr
 		typedef typename lockable_type::lock_type			lock_type;
 
 		/**
-		   @brief memory offset type passed as template parameter
+		   @brief memory offset type that is used to store offset from the base segment address
 		*/
-		typedef OffsetType									offset_type;
+		typedef size_t										block_offset_type;
 		
 		/**
 		@brief	memory block id type
 		@details objects of this type identify memory blocks
 		e.g. objects of this type are retured by allocate method
 		*/
-		typedef offset_type									block_id_type;
+		typedef block_offset_type							block_id_type;
 
 		/**
 		   @brief Default constructor, declared only to
@@ -237,11 +236,10 @@ namespace memory_mgr
 		   @exception bad_alloc if manager went out of memory
 		   @return offset in bytes from memory base address.
 		*/
-		inline offset_type allocate( size_type size )
+		inline void* allocate( size_type size )
 		{			
 			return do_allocate( size, helpers::throw_bad_alloc );
 		}
-
 
 		/**
 		   @brief Call this method to allocate memory block
@@ -250,9 +248,9 @@ namespace memory_mgr
 		                   function
 		   
 		   @exception newer  throws
-		   @return offset in bytes from memory base address.          
+		   @return pointer to the allocated memory
 		*/
-		inline offset_type allocate( size_type size, const std::nothrow_t& /*nothrow*/ )/*throw()*/
+		inline void* allocate( size_type size, const std::nothrow_t& /*nothrow*/ )/*throw()*/
 		{			
 			return do_allocate( size, helpers::do_nothing );
 		}
@@ -263,22 +261,17 @@ namespace memory_mgr
 		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
- 		inline void deallocate( const offset_type offset, size_type size )
+ 		inline void deallocate( const void* ptr, size_type size )
  		{
-			if( offset != offset_traits<offset_type>::invalid_offset )
-			{
-				lock_type lock( get_lockable() );
- 				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
-			}
+			do_deallocate( pointer_to_offset( ptr ), size );
  		}
-
 
 		/**
 		   @add_comments
 		*/
-		inline void* offset_to_pointer( offset_type offset )
+		inline void* offset_to_pointer( block_offset_type offset )
 		{
-			if( offset == offset_traits<offset_type>::invalid_offset )
+			if( offset == offset_traits<block_offset_type>::invalid_offset )
 			{
 				return 0;
 			}
@@ -288,7 +281,7 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		inline offset_type pointer_to_offset( const void* ptr )
+		inline block_offset_type pointer_to_offset( const void* ptr )
 		{
 			if( ptr )
 			{
@@ -296,7 +289,7 @@ namespace memory_mgr
 				assert(ptr < ( m_offset_base + memory_size ) && "Invalid pointer value" );
 				return detail::diff( ptr, m_offset_base );
 			}
-			return offset_traits<offset_type>::invalid_offset;
+			return offset_traits<block_offset_type>::invalid_offset;
 		}
 
 		/**
@@ -349,12 +342,12 @@ namespace memory_mgr
 		   @exception newer  throws
 		   @return pointer to memory base address                               
 		*/
-		inline const char* get_offset_base( const offset_type /*offset*/ = 0 ) const
+		inline const char* get_offset_base( const block_offset_type /*offset*/ = 0 ) const
 		{
 			return m_offset_base;
 		}
 
-		inline char* get_offset_base( offset_type /*offset*/ = 0 )
+		inline char* get_offset_base( block_offset_type /*offset*/ = 0 )
 		{
 			return m_offset_base;
 		}
@@ -428,17 +421,33 @@ namespace memory_mgr
 		   but by itself method never throws
 		*/
 		template< class OnNoMemory >
-		inline offset_type do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
+		inline void* do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{
 			lock_type lock( get_lockable() );
 			size_type chunk_ind = m_bitmgr.allocate( chunks_required( size ) );
 			if( chunk_ind == bitmgr_type::npos )
 			{
 				OnNoMemoryOp();
-				return offset_traits<offset_type>::invalid_offset;
+				return 0;
 			}
-			return calc_offset( chunk_ind );
+			return offset_to_pointer( calc_offset( chunk_ind ) );
 		}
+
+		
+		/**
+		   @brief Call this method to deallocate memory block
+		   @param offset  offset returned by allocate method
+		   @param size   size of memory block in bytes
+		   @exception newer  throws
+		*/
+ 		inline void do_deallocate( const block_offset_type offset, size_type size )
+ 		{
+			if( offset != offset_traits<block_offset_type>::invalid_offset )
+			{
+				lock_type lock( get_lockable() );
+ 				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
+			}
+ 		}
 
 		/**
 		@brief Bit Manager used to store information about allocated

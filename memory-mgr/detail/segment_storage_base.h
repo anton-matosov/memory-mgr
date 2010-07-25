@@ -71,10 +71,10 @@ namespace memory_mgr
 
 			typedef char*			seg_base_type;
 
-			typedef typename manager_traits<segment_type>::size_type		size_type;
-			typedef typename manager_traits<segment_type>::offset_type		offset_type;
-			typedef std::pair<seg_base_type, size_type>						segment_data_type;
-			typedef size_type												seg_id_type;
+			typedef typename manager_traits<segment_type>::size_type			size_type;
+			typedef typename manager_traits<segment_type>::block_offset_type	block_offset_type;
+			typedef std::pair<seg_base_type, size_type>							segment_data_type;
+			typedef size_type													seg_id_type;
 
 			/**
 			@brief Type of synchronization object passed as template

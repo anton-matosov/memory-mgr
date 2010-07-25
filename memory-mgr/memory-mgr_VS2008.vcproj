@@ -148,6 +148,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\_segment_manager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\allocator.h"
 				>
 			</File>
@@ -192,19 +196,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\offset_pointer.h"
+				RelativePath=".\offset_ptr.h"
 				>
 			</File>
 			<File
 				RelativePath=".\params_binder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\pointer_convert.h"
-				>
-			</File>
-			<File
-				RelativePath=".\segment_manager.h"
 				>
 			</File>
 			<File

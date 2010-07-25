@@ -77,16 +77,9 @@ namespace memory_mgr
 			
 			/**
 			   @brief type that used to store memory offset
-			   @see memory_manager::offset_type
+			   @see memory_manager::block_offset_type
 			*/
-			typedef typename manager_traits<mgr_type>::offset_type		offset_type;
-
-
-			/**
-			@brief	memory block id type
-			@see	@see memory_manager::block_id_type
-			*/
-			typedef typename manager_traits<mgr_type>::block_id_type	block_id_type;
+			typedef typename manager_traits<mgr_type>::block_offset_type	block_offset_type;
 
 			/**
 			@brief Type of synchronization object passed as template
@@ -146,12 +139,12 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return base address of the memory segment for specified offset
 			*/
-			inline const char* get_offset_base( const offset_type offset = 0 ) const
+			inline const char* get_offset_base( const block_offset_type offset = 0 ) const
 			{
 				return m_mgr.get_offset_base( offset );
 			}
 
-			inline char* get_offset_base( offset_type offset = 0 )
+			inline char* get_offset_base( block_offset_type offset = 0 )
 			{
 				return m_mgr.get_offset_base( offset );
 			}
@@ -183,7 +176,7 @@ namespace memory_mgr
 			  
 			   @return pointer to the memory location to which offset points to
 			*/
-			inline void* offset_to_pointer( offset_type offset )
+			inline void* offset_to_pointer( block_offset_type offset )
 			{
 				return m_mgr.offset_to_pointer( offset );
 			}
@@ -196,7 +189,7 @@ namespace memory_mgr
 			  
 			   @return (description of return value) 
 			*/
-			inline offset_type pointer_to_offset( const void* ptr )
+			inline block_offset_type pointer_to_offset( const void* ptr )
 			{
 				return m_mgr.pointer_to_offset( ptr );
 			}

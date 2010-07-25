@@ -70,21 +70,9 @@ namespace memory_mgr
 		typedef typename manager_type::size_type			size_type;
 		
 		/**
-		   @brief memory offset type passed as template parameter
+		   @brief memory offset type
 		*/
-		typedef typename manager_type::offset_type			offset_type;
-
-		/**
-		@brief	memory block id type
-		@details objects of this type identify memory blocks
-		e.g. objects of this type are retured by allocate method
-		*/
-		typedef typename manager_type::block_id_type		block_id_type;
-
-		/**
-		   @add_comments
-		*/
-		typedef block_id_converter<manager_type>			block_id_converter_type;
+		typedef typename manager_type::block_offset_type	block_offset_type;
 
 		/**
 		@brief Type of synchronization object passed as template

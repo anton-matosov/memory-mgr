@@ -27,6 +27,7 @@ bool test_memory_manager( const int op_repeat, const int per_alloc, const int te
 bool test_managed_base( const int op_repeat, const int per_alloc, const int test_repeat );
 bool test_offset_pointer( const int op_repeat, const int per_alloc, const int test_repeat );
 bool test_math( const int op_repeat, const int per_alloc, const int test_repeat );
+bool test_multithreaded_alloc_dealloc( const int op_repeat, const int per_alloc, const int test_repeat );
 
 int main(int /*argc*/, char* /*argv*/[])
 {
@@ -40,9 +41,10 @@ int main(int /*argc*/, char* /*argv*/[])
 	alloc_mgr::instance();
 
 	//test_math( op_repeat, per_alloc, test_repeat );
-	test_memory_manager( op_repeat, per_alloc, test_repeat );
-	test_managed_base( op_repeat, per_alloc, test_repeat );
-	test_offset_pointer( op_repeat, per_alloc, test_repeat );
+	test_multithreaded_alloc_dealloc( op_repeat, per_alloc, test_repeat );
+	//test_memory_manager( op_repeat, per_alloc, test_repeat );
+	//test_managed_base( op_repeat, per_alloc, test_repeat );
+	//test_offset_pointer( op_repeat, 1000000, test_repeat );
 
 	MGR_PRINT_RESULTS;
 	return std::cin.get();

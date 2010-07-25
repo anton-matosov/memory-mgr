@@ -35,7 +35,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/managed_base.h>
 #include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/segment_manager.h>
+//#include <memory-mgr/segment_manager.h>
 #include <memory-mgr/sync/pseudo_sync.h>
 
 #include <memory-mgr/params_binder.h>
@@ -50,10 +50,8 @@ static const size_t segments_count = 1024;
 MGR_DECLARE_BIND_PARAM( MutexName2, const char*, "Default memory sync 2" );
 typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName2 ) def_named_mutex2;
 
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, size_t, memory_mgr::sync::pseudo_sync > memmgr_type;
-typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, size_t, memory_mgr::sync::pseudo_sync > memmgr_small_type;
-
-typedef memmgr_type::offset_type offset_type;
+typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, def_named_mutex2 > memmgr_type;
+typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, def_named_mutex2 > memmgr_small_type;
 
 typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
 
@@ -71,94 +69,51 @@ typedef memory_mgr::heap_segment
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment
 <
-	memory_mgr::pointer_convert
-	< 
-		memmgr_type
-	>
-> heap_pt_mgr;
-
-//////////////////////////////////////////////////////////////////////////
-typedef memory_mgr::heap_segment
-<
-	memory_mgr::size_tracking
-	< 
-		memory_mgr::pointer_convert
-		< 
-			memmgr_type
-		> 
-	>
-> heap_sz_pt_mgr;
+	memmgr_type
+> heap_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-typedef memory_mgr::segment_manager
-< 
-	memory_mgr::heap_segment
-	<
-		memmgr_small_type
-	>
-	,
-	segments_count
-> seg_heap_mgr;
+// typedef memory_mgr::segment_manager
+// < 
+// 	memory_mgr::heap_segment
+// 	<
+// 		memmgr_small_type
+// 	>
+// 	,
+// 	segments_count
+// > seg_heap_mgr;
 
 
-typedef memory_mgr::size_tracking
-<
-	memory_mgr::segment_manager
-	< 
-		memory_mgr::heap_segment
-		<
-			memmgr_small_type
-		>
-		,
-		segments_count
-	> 
-> seg_heap_sz_mgr;
+// typedef memory_mgr::size_tracking
+// <
+// 	memory_mgr::segment_manager
+// 	< 
+// 		memory_mgr::heap_segment
+// 		<
+// 			memmgr_small_type
+// 		>
+// 		,
+// 		segments_count
+// 	> 
+// > seg_heap_sz_mgr;
 
-typedef memory_mgr::pointer_convert
-<
-	memory_mgr::segment_manager
-	< 
-		memory_mgr::heap_segment
-		<
-			memmgr_small_type
-		>
-		,
-		segments_count
-	> 
-> seg_heap_pt_mgr;
-
-typedef memory_mgr::size_tracking
-<
-	memory_mgr::pointer_convert
-	< 
-		memory_mgr::segment_manager
-		< 
-			memory_mgr::heap_segment
-			<
-				memmgr_small_type
-			>
-			,
-			segments_count
-		> 
-	>
-> seg_heap_sz_pt_mgr;
-
-typedef memory_mgr::singleton_manager
-< 
-	seg_heap_sz_pt_mgr
-> sing_seg_heap_sz_pt_mgr;
+// 
+// typedef memory_mgr::singleton_manager
+// < 
+// 	seg_heap_sz_mgr
+// > sing_seg_heap_sz_mgr;
 //////////////////////////////////////////////////////////////////////////
-
-typedef memory_mgr::segment_manager
-< 
-	memory_mgr::shared_segment
-	<
-		memmgr_small_type
-	>
-	,
-	segments_count
-> seg_shared_mgr;
+// 
+// typedef memory_mgr::segment_manager
+// < 
+// 	memory_mgr::shared_segment
+// 	<
+// 		memmgr_small_type
+// 	>
+// 	,
+// 	segments_count
+// > seg_shared_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -168,12 +123,9 @@ typedef memory_mgr::shared_segment
 <
 	memory_mgr::size_tracking
 	< 
-		memory_mgr::pointer_convert
-		< 
-			memmgr_type
-		> 
+		memmgr_type
 	>
-> shared_sz_pt_mgr;
+> shared_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::singleton_manager
@@ -182,13 +134,10 @@ typedef memory_mgr::singleton_manager
 	< 
 		memory_mgr::size_tracking
 		< 
-			memory_mgr::pointer_convert
-			< 
-				memmgr_type
-			> 
+			memmgr_type
 		>
 	>
-> sing_heap_sz_pt_mgr;
+> sing_heap_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::singleton_manager
@@ -197,13 +146,10 @@ typedef memory_mgr::singleton_manager
 	< 
 		memory_mgr::size_tracking
 		< 
-			memory_mgr::pointer_convert
-			< 
-				memmgr_type
-			> 
+			memmgr_type 
 		>
 	>
-> sing_shared_sz_pt_mgr;
+> sing_shared_sz_mgr;
 
 
 #endif//MGR_MANAGERS_HEADER

@@ -61,7 +61,7 @@ namespace memory_mgr
 			};
 			typedef typename base_type::segment_ptr_type		segment_ptr_type;
 			typedef typename base_type::size_type				size_type;
-			typedef typename base_type::offset_type				offset_type;
+			typedef typename base_type::block_offset_type		block_offset_type;
 
 			segment_storage_vector()
 			{}

@@ -205,26 +205,26 @@ namespace
 		//////////////////////////////////////////////////////////////////////////
 		// new class
 		//////////////////////////////////////////////////////////////////////////
-		run_perf_test( new_class_category, "new class heap sz pt mgr",
- 			test_new_mem_mgr<heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
- 		run_perf_test( new_class_category, "new class shared sz pt mgr",
-			test_new_mem_mgr<shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_class_category, "new class shared seg sz pt mgr",
-			test_new_mem_mgr<seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_class_category, "new class heap sz mgr",
+ 			test_new_mem_mgr<heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
+ 		run_perf_test( new_class_category, "new class shared sz mgr",
+			test_new_mem_mgr<shared_sz_mgr>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_class_category, "new class shared seg sz mgr",
+// 			test_new_mem_mgr<seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
  
-		run_perf_test( new_class_category, "new class sing heap sz pt mgr",
-			test_new_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_class_category, "new class sing shared sz pt mgr",
-			test_new_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_class_category, "new class sing heap seg sz pt mgr",
-			test_new_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_class_category, "new class sing heap sz mgr",
+			test_new_singleton_mem_mgr<sing_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_class_category, "new class sing shared sz mgr",
+			test_new_singleton_mem_mgr<sing_shared_sz_mgr>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_class_category, "new class sing heap seg sz mgr",
+// 			test_new_singleton_mem_mgr<sing_seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 
- 		run_perf_test( new_class_category, "new managed class sing heap sz pt mgr",
- 			test_new_managed_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
- 		run_perf_test( new_class_category, "new managed class sing shared sz pt mgr",
-			test_new_managed_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_class_category, "new managed class sing seg heap sz pt mgr",
-			test_new_managed_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+ 		run_perf_test( new_class_category, "new managed class sing heap sz mgr",
+ 			test_new_managed_singleton_mem_mgr<sing_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
+ 		run_perf_test( new_class_category, "new managed class sing shared sz mgr",
+			test_new_managed_singleton_mem_mgr<sing_shared_sz_mgr>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_class_category, "new managed class sing seg heap sz mgr",
+// 			test_new_managed_singleton_mem_mgr<sing_seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
  
 		run_perf_test( new_class_category, "std new class",
 			test_std_new<test_class_type>, op_repeat, per_alloc, test_repeat );
@@ -232,26 +232,26 @@ namespace
 		//////////////////////////////////////////////////////////////////////////
 		// new/delete class
 		//////////////////////////////////////////////////////////////////////////
-		run_perf_test( new_delete_class_category, "new/delete class heap sz pt mgr",
-			test_new_delete_mem_mgr<heap_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete class shared sz pt mgr",
-			test_new_delete_mem_mgr<shared_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete class heap seg sz pt mgr",
-			test_new_delete_mem_mgr<seg_heap_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete class heap sz mgr",
+			test_new_delete_mem_mgr<heap_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete class shared sz mgr",
+			test_new_delete_mem_mgr<shared_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_delete_class_category, "new/delete class heap seg sz mgr",
+// 			test_new_delete_mem_mgr<seg_heap_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
 
-		run_perf_test( new_delete_class_category, "new/delete class sing heap sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_heap_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete class sing shared sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_shared_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete class sing heap seg sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete class sing heap sz mgr",
+			test_new_delete_singleton_mem_mgr<sing_heap_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete class sing shared sz mgr",
+			test_new_delete_singleton_mem_mgr<sing_shared_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_delete_class_category, "new/delete class sing heap seg sz mgr",
+// 			test_new_delete_singleton_mem_mgr<sing_seg_heap_sz_mgr, test_class_type>, op_repeat, per_alloc, test_repeat );
 
-		run_perf_test( new_delete_class_category, "new/delete managed class sing heap sz pt mgr",
-			test_new_delete_managed_singleton_mem_mgr<sing_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete managed class sing shared sz pt mgr",
-			test_new_delete_managed_singleton_mem_mgr<sing_shared_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_class_category, "new/delete managed class sing seg heap sz pt mgr",
-			test_new_delete_managed_singleton_mem_mgr<sing_seg_heap_sz_pt_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete managed class sing heap sz mgr",
+			test_new_delete_managed_singleton_mem_mgr<sing_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_class_category, "new/delete managed class sing shared sz mgr",
+			test_new_delete_managed_singleton_mem_mgr<sing_shared_sz_mgr>, op_repeat, per_alloc, test_repeat );
+// 		run_perf_test( new_delete_class_category, "new/delete managed class sing seg heap sz mgr",
+// 			test_new_delete_managed_singleton_mem_mgr<sing_seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( new_delete_class_category, "std new/delete class",
 			test_std_new_delete<test_class_type>, op_repeat, per_alloc, test_repeat );
@@ -259,15 +259,15 @@ namespace
 		//////////////////////////////////////////////////////////////////////////
 		// new/delete int
 		//////////////////////////////////////////////////////////////////////////
-		run_perf_test( new_delete_int_category, "new/delete int heap sz pt mgr",
-			test_new_delete_mem_mgr<heap_sz_pt_mgr, int>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_int_category, "new/delete int shared sz pt mgr",
-			test_new_delete_mem_mgr<shared_sz_pt_mgr, int>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_int_category, "new/delete int heap sz mgr",
+			test_new_delete_mem_mgr<heap_sz_mgr, int>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_int_category, "new/delete int shared sz mgr",
+			test_new_delete_mem_mgr<shared_sz_mgr, int>, op_repeat, per_alloc, test_repeat );
 
-		run_perf_test( new_delete_int_category, "new/delete int sing heap sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_heap_sz_pt_mgr, int>, op_repeat, per_alloc, test_repeat );
-		run_perf_test( new_delete_int_category, "new/delete int sing shared sz pt mgr",
-			test_new_delete_singleton_mem_mgr<sing_shared_sz_pt_mgr, int>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_int_category, "new/delete int sing heap sz mgr",
+			test_new_delete_singleton_mem_mgr<sing_heap_sz_mgr, int>, op_repeat, per_alloc, test_repeat );
+		run_perf_test( new_delete_int_category, "new/delete int sing shared sz mgr",
+			test_new_delete_singleton_mem_mgr<sing_shared_sz_mgr, int>, op_repeat, per_alloc, test_repeat );
 
 		run_perf_test( new_delete_int_category, "std new/delete int",
 			test_std_new_delete<int>, op_repeat, per_alloc, test_repeat );

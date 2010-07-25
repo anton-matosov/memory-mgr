@@ -111,7 +111,7 @@ Other library changes:
  - updated projects configuration
  - removed size_tracking and pointer_convert decorator from required for allocators
  - added offset_allocator class that works with offset_pointers
- - changed typedefs names in offset_pointer to match std iterator requirements
+ - changed typedefs names in offset_ptr to match std iterator requirements
  - renamed free method into is_free to prevent name conflicts when crt alloc debug is enabled
  - updated allocator classes and pointer_traits according to the requirements of Generic STL library
  - refactored allocator class to have base class for singleton manager and member manager
@@ -232,30 +232,30 @@ Version 1.1.5 (svn rev. 270, June 01, 2008):
  
 *****************************************************************************************************************  
 Version 1.0.0 (svn rev. 103, March 03, 2008):
- - implemented offset_pointer unit tests 
+ - implemented offset_ptr unit tests 
  - implemented size_tracking for offset and pointer managers
  - implemented new[]/delete[] operators for managed_base
- - implementation of offset_pointer finished
+ - implementation of offset_ptr finished
 	* all manager_types are supported
 	* destruction works correctly
  - operator new[]/do_delete_arr works with non class types correctly now
  - implemented new/do_delete and new[]/do_delete_arr operators
    to allocate any data type variables
- - implemented offset_pointer's polymorphic constructors
- - implemented get_offset and get_poiner friend functions for offset_pointer
+ - implemented offset_ptr's polymorphic constructors
+ - implemented get_offset and get_poiner friend functions for offset_ptr
  - fixed manager_traits to reflect real category tags
  - moved offset_to_pointer and pointer_to_offset methods to ptr_helpers.h
  - fixed memory_manager::free method
- - implemented all offset_pointer operators
+ - implemented all offset_ptr operators
  - moved size_cast to ptr_helpers.h
  - implemented is_class type_manip
  - fixed operators <= and >= in cmp_helper
- - made offset_pointer constructor with single offset parameter "explicit"
+ - made offset_ptr constructor with single offset parameter "explicit"
  - added TEST_OPERATOR_PRINT macro
  - implemented shared memory segment allocators (win and posix)
  - removed simple_ptr
  - removed unnecessary includes from heap_segment.h
- - added required includes to offset_pointer.h, test_class.h, 
+ - added required includes to offset_ptr.h, test_class.h, 
    manager_category.h and memory_segment.h
  - implemented shared_segment unit tests
  - fixed unit tests names
@@ -326,7 +326,7 @@ Version 0.8.0 (svn rev. 64):
  - updated unit tests to fit new architecture
  - generalized static_bitset adn bit_manager output operators
  - fixed output in test_bit_manager and test_static_bitset
- - implemented offset_pointer which can be used as pointer for shared memory
+ - implemented offset_ptr which can be used as pointer for shared memory
  - implemented manager_traits - traits class for memory managers
  - categorized memory managers and memory segments
    

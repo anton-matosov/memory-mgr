@@ -43,7 +43,6 @@ namespace memory_mgr
 			typedef MemMgr												mgr_type;
 			typedef manager_traits<mgr_type>							traits_type;
 			typedef typename traits_type::size_type						size_type;
-			typedef typename traits_type::block_id_converter_type		converter;
 
 			inline member_allocator_impl( mgr_type* mgr = 0 )
 				:m_mgr( mgr )
@@ -57,13 +56,13 @@ namespace memory_mgr
 			inline void* allocate(size_type size)
 			{	
 				assert( m_mgr );
-				return to_pointer<void>( m_mgr->allocate( size ), *m_mgr );
+				return m_mgr->allocate( size );
 			}
 
 			inline void deallocate( void* ptr, size_type size )
 			{
 				assert( m_mgr );
-				m_mgr->deallocate( converter::to_block_id( ptr, *m_mgr ), size );
+				m_mgr->deallocate( ptr, size );
 			}
 
 			bool equal( const member_allocator_impl& rhs ) const /*throw()*/

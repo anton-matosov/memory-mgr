@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/offset_ptr.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
@@ -44,15 +45,14 @@ namespace memory_mgr
 		template<class MemMgr>
 		struct named_allocator_traits
 		{
-			typedef MemMgr						mgr_type;
-			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
+			typedef MemMgr								mgr_type;
+			typedef offset_ptr<void>					pointer;
 			typedef member_allocator<char, mgr_type>	allocator_type;
-			//typedef std::allocator<char>		allocator_type;
 
 			typedef std::basic_string< char, std::char_traits<char>, allocator_type>	string_type;
 			typedef std::less<string_type>												compare_type;
-			typedef std::map< string_type, offset_type, compare_type, allocator_type>	map_type;
-			typedef std::pair< const string_type, offset_type >							map_item_type;
+			typedef std::map< string_type, pointer, compare_type, allocator_type>		map_type;
+			typedef std::pair< const string_type, pointer >								map_item_type;
 		};
 
 		template<class MemMgr, class TraitsT >
@@ -62,7 +62,7 @@ namespace memory_mgr
 		public:
 			typedef TraitsT	traits_type;
 			typedef	typename traits_type::allocator_type	allocator_type;
-			typedef	typename traits_type::offset_type		offset_type;
+			typedef	typename traits_type::pointer			pointer;
 			typedef	typename traits_type::string_type		string_type;
 			typedef	typename traits_type::map_type			map_type;
 			typedef	typename traits_type::compare_type		compare_type;
@@ -95,23 +95,23 @@ namespace memory_mgr
 				return m_objects->find( name ) != m_objects->end();
 			}
 
-			void add_object( const char* name, const offset_type offset )
+			void add_object( const char* name, const pointer offset )
 			{
 				string_type object_name( name, m_alloc );
 				assert( !is_exists( object_name ) );
 				(*m_objects)[ object_name ] = offset;
 			}
 
-			const offset_type get_object( const char* name )
+			const pointer get_object( const char* name )
 			{
 				string_type object_name( name, m_alloc );
-				offset_type offset = offset_traits<offset_type>::invalid_offset;
+				pointer ptr;
 				typename map_type::const_iterator fres = m_objects->find( object_name );
 				if( fres != m_objects->end() )
 				{
-					offset = fres->second;
+					ptr = fres->second;
 				}
-				return offset;
+				return ptr;
 			}
 
 			const void remove_object( const char* name )
@@ -120,11 +120,10 @@ namespace memory_mgr
 				m_objects->erase( object_name );
 			}
 
-			const void remove_object( const offset_type ptr )
+			const void remove_object( const pointer ptr )
 			{
-				const offset_type offset = ptr;
 				typename map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
-					std::bind2nd( std::ptr_fun( &equal_second_val<offset_type> ), offset ) );
+					std::bind2nd( std::ptr_fun( &equal_second_val<pointer> ), ptr ) );
 				if( fres != m_objects->end() )
 				{
 					m_objects->erase( fres );

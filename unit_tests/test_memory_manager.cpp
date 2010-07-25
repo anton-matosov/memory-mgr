@@ -34,18 +34,18 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 	const size_t memory_size = 256;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
-	typedef memmgr_type::offset_type offset_type;
+	typedef void* pointer;
 
 	BOOST_AUTO_TEST_CASE( test_alloc_dealloc )
 	{	
 		std::vector<chunk_type> memory( memory_size );
 		memmgr_type mgr( &*memory.begin() );
 		const memmgr_type::size_type obj_size = 4;
-		offset_type p1 = mgr.allocate( obj_size );
-		offset_type p2 = mgr.allocate( obj_size );
-		offset_type p3 = mgr.allocate( obj_size );
-		offset_type p4 = mgr.allocate( obj_size );
-		offset_type p5 = mgr.allocate( obj_size );
+		pointer p1 = mgr.allocate( obj_size );
+		pointer p2 = mgr.allocate( obj_size );
+		pointer p3 = mgr.allocate( obj_size );
+		pointer p4 = mgr.allocate( obj_size );
+		pointer p5 = mgr.allocate( obj_size );
 
 		test::check_pointers( p1, p2, p3, p4, p5 );
 
@@ -75,15 +75,15 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 		memmgr_type mgr( &*memory.begin() );
 
 		size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
-		offset_type null_ptr = memory_mgr::offset_traits<offset_type>::invalid_offset;
+		pointer null_ptr = memory_mgr::offset_traits<pointer>::invalid_offset;
 					
-		offset_type p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
+		pointer p_inval1 = mgr.allocate( allocable_memory + 1, std::nothrow_t() );
 		BOOST_CHECK( p_inval1 == null_ptr );
 		
-		offset_type p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
+		pointer p_valid = mgr.allocate( allocable_memory, std::nothrow_t() );
 		BOOST_CHECK( p_valid != null_ptr );
 		
-		offset_type p_inval2 = mgr.allocate( 1, std::nothrow_t() );
+		pointer p_inval2 = mgr.allocate( 1, std::nothrow_t() );
 		BOOST_CHECK( p_inval2 == null_ptr );
 
 		BOOST_CHECK( p_valid != null_ptr
@@ -107,14 +107,13 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
 		try
 		{
-			memory_mgr::manager_traits< memmgr_type >::offset_type ptr;
+			void* ptr;
 			void* upper_bound = memory_mgr::detail::char_cast( mgr.get_segment_base() )
 				+ memory_mgr::manager_traits< memmgr_type >::memory_size;
 			for( size_t i = 0; i <  memory_mgr::manager_traits< memmgr_type >::num_chunks; ++i )
 			{
 				ptr = mgr.allocate( memory_mgr::manager_traits< memmgr_type >::chunk_size );
-				void* p = memory_mgr::detail::offset_to_pointer( ptr, mgr );
-				BOOST_CHECK_MESSAGE( p < upper_bound, "returned pointer is out of upper segment bound" );
+				BOOST_CHECK_MESSAGE( ptr < upper_bound, "returned pointer is out of upper segment bound" );
 			}
 		}
 		catch( std::bad_alloc& )

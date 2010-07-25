@@ -101,7 +101,7 @@ namespace memory_mgr
 		// allocate array of count elements
 		inline pointer allocate(size_type count)
 		{	
-			return pointer( memory_mgr::detail::to_offset( mgr_type::instance().allocate( count * sizeof(value_type) ),
+			return pointer( memory_mgr::detail::to_pointer<value_type>( mgr_type::instance().allocate( count * sizeof(value_type) ),
 				mgr_type::instance() ) );
 		}
 

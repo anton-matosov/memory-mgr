@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_SUITE( test_memory_segment )
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( alloc_dealloc, mgr_type, managers_list )
 	{
-		typedef typename memory_mgr::manager_traits<mgr_type>::offset_type	offset_type;
+		typedef void*	pointer_type;
 		typedef typename memory_mgr::manager_traits<mgr_type>::size_type	size_type;
 
 		const size_type obj_size = 4;
@@ -50,11 +50,11 @@ BOOST_AUTO_TEST_SUITE( test_memory_segment )
 		BOOST_CHECK( mgr.is_free() );
 
 		
-		offset_type p1 = mgr.allocate( obj_size );
-		offset_type p2 = mgr.allocate( obj_size );
-		offset_type p3 = mgr.allocate( obj_size );
-		offset_type p4 = mgr.allocate( obj_size );
-		offset_type p5 = mgr.allocate( obj_size );
+		pointer_type p1 = mgr.allocate( obj_size );
+		pointer_type p2 = mgr.allocate( obj_size );
+		pointer_type p3 = mgr.allocate( obj_size );
+		pointer_type p4 = mgr.allocate( obj_size );
+		pointer_type p5 = mgr.allocate( obj_size );
 
 
 		test::check_pointers( p1, p2, p3, p4, p5 );

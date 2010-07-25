@@ -45,6 +45,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
+#define MGR_STR( expr ) #expr
+#define MGR_STRINGIZE( expr ) MGR_STR( expr )
+#define MGR_MESSAGE(desc) message(__FILE__ "(" MGR_STRINGIZE(__LINE__) "):" MGR_STRINGIZE(desc) )
+
 namespace memory_mgr
 {
 	/**

@@ -31,7 +31,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
-#include <memory-mgr/pointer_convert.h>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
@@ -55,12 +54,6 @@ namespace memory_mgr
 			*/
 			typedef typename base_type::size_type			size_type;
 
-
-			/**
-			@brief	memory block id type
-			@see	@see memory_manager::block_id_type
-			*/
-			typedef typename base_type::block_id_type		block_id_type;
 
 			/**
 			   @brief Size of auxiliary data required to store size
@@ -158,12 +151,6 @@ namespace memory_mgr
 			   @see static_bitset::size_type
 			*/
 			typedef typename impl_base_type::size_type			size_type;
-
-			/**
-			@brief	memory block id type
-			@see	@see memory_manager::block_id_type
-			*/
-			typedef typename impl_base_type::block_id_type		block_id_type;
 			
 			/**
 			  @brief Call this method to allocate memory block
@@ -171,7 +158,7 @@ namespace memory_mgr
 			  @exception bad_alloc if manager went out of memory
 			  @return pointer to allocated memory block
 			*/
-			inline block_id_type allocate( size_type size )
+			inline void* allocate( size_type size )
 			{			
 				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size ), size );
@@ -186,7 +173,7 @@ namespace memory_mgr
 			   @exception newer  throws
 			   @return pointer to allocated memory block         
 			*/
-			inline block_id_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
 				size += this->aux_data_size;
 				return store_size( this->m_mgr.allocate( size, nothrow ), size );
@@ -198,12 +185,13 @@ namespace memory_mgr
 			   @param size   this value is ignored
 			   @exception newer  throws
 			*/
-			inline void deallocate( block_id_type ptr, size_type /*size*/ = 0)
+			inline void deallocate( void* ptr, size_type /*size*/ = 0)
 			{
 				if( ptr )
 				{
-					assert( ptr >= this->m_mgr.get_ptr_base(ptr) && "Invalid pointer value");
-					assert( ptr < ( this->m_mgr.get_ptr_base(ptr) + manager_traits<mgr_type>::memory_size )  && "Invalid pointer value" );
+					char* ptr_base = this->m_mgr.get_ptr_base(ptr);
+					assert( (ptr >= ptr_base) && "Invalid pointer value");
+					assert( (ptr < ( ptr_base + manager_traits<mgr_type>::memory_size ))  && "Invalid pointer value" );
 
 					size_type *ps = detail::size_cast( ptr );
 					--ps;
@@ -211,118 +199,6 @@ namespace memory_mgr
 				}
 			}
 		};
-
-		/**
-		   @brief Size tracking implementation for memory manager that doesn't support PointerConverterConcept
-		*/
-		template< class MemMgr >
-		class size_tracking_impl<
-			MemMgr,
-			no_type /* PointerConverterConcept is not supported*/ >
-			: public size_tracking_impl< 
-				pointer_convert< MemMgr >,
-				yes_type /* PointerConverterConcept is supported*/
-			>
-		{
-			/**
-			   @brief Decorating memory manager class using pointer_convert decorator,
-			   @details	so now internally we can use implementation of size tracking for
-					memory managers that supports PointerConverterConcept
-			*/
-			typedef pointer_convert< MemMgr >				mgr_type;
-
-			/**
-			   @brief size tracking implementation base class
-			   @details this class is size tracking implementation
-						that supports PointerConverterConcept, it implements main functionality
-						of size tracking
-			*/
-			typedef size_tracking_impl< 
-				mgr_type,
-				yes_type /* PointerConverterConcept supported*/
-			>	impl_base_type;
-		protected:
-			/**
-			   @brief Default constructor, creates memory manager 
-			   @remarks Can be used only if decorates memory manager with 
-						attached memory segment
-			   @see memory_manager::memory_segment                        
-			*/
-			inline size_tracking_impl()
-			{}
-
-			/**
-			   @brief Protected constructor, simply passes parameters to base class' constructor
-			  
-			   @param	segment_base	Pointer to memory which will be managed by
-									manager
-			   @exception newer throws
-			*/
-			inline explicit size_tracking_impl( void* segment_base )
-				:impl_base_type( segment_base )
-			{}
-		public:
-			/**
-			   @brief Type used to store size, commonly std::size_t
-			   @see static_bitset::size_type
-			*/
-			typedef typename impl_base_type::size_type				size_type;
-			
-			/**
-			   @brief type that used to store memory offset
-			   @see memory_manager::offset_type
-			*/
-			typedef typename manager_traits<mgr_type>::offset_type	offset_type;
-
-			/**
-			@brief	memory block id type
-			@see	@see memory_manager::block_id_type
-			*/
-			typedef offset_type										block_id_type;
-
-			/**
-			   @brief Call this method to allocate memory block
-			   @param size size of memory block in bytes
-			   @exception bad_alloc if manager went out of memory
-			   @return offset in bytes from memory base address.
-			*/
-			inline block_id_type allocate( size_type size )
-			{	
-				//Just calls allocate method of size tracking implementation that supports PointerConverterConcept
-				//and converts returned pointer to offset
-				return detail::pointer_to_offset( impl_base_type::allocate( size ), this->m_mgr );
-			}
-
-			/**
-			   @brief Call this method to allocate memory block
-			   @param size    size of memory block in bytes 
-			   @param nothrow  unused parameter, just to overload existing
-				function
-
-			   @exception newer  throws
-			   @return offset in bytes from memory base address.          
-			*/
-			inline block_id_type allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
-			{		
-				//Calls allocate method of size tracking implementation that supports PointerConverterConcept
-				//and converts returned pointer to offset
-				return detail::pointer_to_offset( impl_base_type::allocate( size, nothrow ), this->m_mgr );
-			}
-
-			/**
-			   @brief Call this method to deallocate memory block
-			   @param offset  offset returned by allocate method
-			   @param size   this value is ignored
-			   @exception newer  throws
-			*/
-			inline void deallocate( const block_id_type offset, size_type /*size*/ = 0 )
-			{
-				//Converts passed offset into pointer and calls deallocate method
-				//of size tracking implementation that supports PointerConverterConcept
-				impl_base_type::deallocate( detail::offset_to_pointer( offset, this->m_mgr ) );
-			}
-		};
-
 	}
 
 	/**
@@ -340,7 +216,7 @@ namespace memory_mgr
 		: public detail::size_tracking_impl
 		< 
 			MemMgr, 
-			typename is_category_supported<MemMgr, pointer_conversion_tag>::result 
+			yes_type 
 		>
 	{
 		/**
@@ -354,7 +230,7 @@ namespace memory_mgr
 		typedef detail::size_tracking_impl
 		< 
 			mgr_type, 
-			typename is_category_supported<MemMgr, pointer_conversion_tag>::result 
+			yes_type
 		>	impl_type;
 
 	public:
