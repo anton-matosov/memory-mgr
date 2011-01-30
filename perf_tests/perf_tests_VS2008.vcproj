@@ -263,6 +263,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\test_mt.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\win_perf_timer.cpp"
 				>
 			</File>

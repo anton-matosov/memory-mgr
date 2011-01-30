@@ -136,12 +136,15 @@ public:
 
 #define TEST_SPLIT_LOOP_STOP_TIMER } timer__.stop();{ TEST_SPLIT_LOOP
 
-#define  TEST_END_LOOP( out_stream )\
+#define  TEST_END_LOOP_NO_PRINT\
 		}\
 	}\
 	timer__.stop();\
 	accum__ = timer__.elapsed_mcs();\
-	delete[] ptr_storage__;\
+	delete[] ptr_storage__;
+
+#define  TEST_END_LOOP( out_stream )\
+	TEST_END_LOOP_NO_PRINT\
 	out_stream << L"Full time: " << std::fixed << accum__ << L" mcs";\
 	out_stream << L"\tRepeat count: " << alloc_count__;\
 	out_stream << L"\tOperation time: " << std::fixed << accum__ * 1000.0 / full_repeat_count__ << L" Ns\n";\

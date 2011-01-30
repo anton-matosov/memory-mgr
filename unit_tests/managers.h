@@ -43,7 +43,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 typedef int chunk_type;
 static const size_t chunk_size = 4;
-static const size_t memory_size = 4 * 1024 * 1024;
+static const size_t memory_size = 200 * 1024 * 1024;
 static const size_t memory_size_small = 32 * 1024;
 static const size_t segments_count = 1024;
 

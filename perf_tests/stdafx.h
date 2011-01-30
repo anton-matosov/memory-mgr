@@ -15,7 +15,7 @@
 #include "detail/test.h"
 #include "test_templates.h"
 
-#define INCLUDE_BOOST_INTERPROCESS_TESTS
+//#define INCLUDE_BOOST_INTERPROCESS_TESTS
 
 
 

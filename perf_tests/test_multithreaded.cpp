@@ -22,6 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
+#include "detail/test_mt.h"
 #include <memory-mgr/offset_ptr.h>
 
 #ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
@@ -32,18 +33,20 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	include <boost/shared_ptr.hpp>
 namespace bi = boost::interprocess;
 
+bi::managed_shared_memory* managed_shm;
 #endif //INCLUDE_BOOST_INTERPROCESS_TESTS
 
 namespace
 {
 	typedef sing_heap_sz_mgr mem_mgr_t;
 
+	enum{ num_test_threads = 25, start_delay = 0 };
+
 	long double test_malloc_free( const int op_repeat, const int per_alloc )
 	{
 		typedef int* pointer_type;
 
-
-		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
+		TEST_START_LOOP_MT( op_repeat, per_alloc, pointer_type );
 		{
 			TEST_TRACK_PTR = static_cast<pointer_type>( malloc(chunk_size) );
 		}
@@ -51,11 +54,11 @@ namespace
 		{
 			free( TEST_GET_TRACKED_PTR );
 		}
-		TEST_END_LOOP( std::wcout );
+		TEST_END_LOOP_MT;
 
+		TEST_START_MT_TESTS( num_test_threads, start_delay );
 
-
-		return TEST_ELAPCED_MCS;
+		return TEST_ELAPCED_MCS_MT;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -64,12 +67,12 @@ namespace
 	template<class MemMgr, class PointerType >
 	long double test_alloc_dealloc_mem_mgr( const int op_repeat, const int per_alloc )
 	{
-		MemMgr mgr;
+		MemMgr mem_mgr;
 
 		typedef PointerType pointer_type;
 		TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, pointer_type );
 
-		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
+		TEST_START_LOOP_MT_2( op_repeat, per_alloc, pointer_type, MemMgr& mgr );
 		{
 			TEST_TRACK_PTR = static_cast<pointer_type>( mgr.allocate( chunk_size ) );
 		}
@@ -77,10 +80,11 @@ namespace
 		{
 			mgr.deallocate( TEST_GET_TRACKED_PTR, chunk_size );
 		}
-		TEST_END_LOOP( std::wcout );
+		TEST_END_LOOP_MT;
 
+		TEST_START_MT_TESTS_2( num_test_threads, start_delay, mem_mgr );
 
-		return TEST_ELAPCED_MCS;
+		return TEST_ELAPCED_MCS_MT;
 	}
 
 #ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
@@ -100,19 +104,22 @@ namespace
 
 		//Managed memory segment that allocates portions of a shared memory
 		//segment with the default management algorithm
-		bi::managed_shared_memory managed_shm( bi::create_only,"MySharedMemory", per_alloc * chunk_size * 8 );
+		managed_shm = new bi::managed_shared_memory ( bi::create_only,"MySharedMemory", per_alloc * chunk_size * 8 * num_test_threads );
 
-		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		TEST_START_LOOP_MT( op_repeat, per_alloc, void* );
 		{
-			TEST_TRACK_PTR = managed_shm.allocate( chunk_size );
+			TEST_TRACK_PTR = managed_shm->allocate( chunk_size );
 		}
 		TEST_SPLIT_LOOP;
 		{
-			managed_shm.deallocate( TEST_GET_TRACKED_PTR );
+			managed_shm->deallocate( TEST_GET_TRACKED_PTR );
 		}
-		TEST_END_LOOP( std::wcout );
+		TEST_END_LOOP_MT( std::wcout );
 
-		return TEST_ELAPCED_MCS;
+		TEST_START_MT_TESTS( num_test_threads, start_delay );
+
+		delete managed_shm;
+		return TEST_ELAPCED_MCS_MT;
 	}
 #endif //INCLUDE_BOOST_INTERPROCESS_TESTS
 
