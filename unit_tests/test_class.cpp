@@ -24,7 +24,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include "test_class.h"
 
-test_class::test_class() :m_i(0)
+test_class::test_class( int i/* = 0*/ )
+ :m_i(i)
 {
 
 }
@@ -39,7 +40,7 @@ void test_class::set( int i )
 	m_i = i;
 }
 
-int test_class::get()
+int test_class::get() const
 {
 	return m_i;
 }

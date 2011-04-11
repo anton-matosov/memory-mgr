@@ -65,24 +65,29 @@ typedef memory_mgr::singleton_manager
 	>
 >	def_heap_mgr;
 
-class test_class: public memory_mgr::managed_base< def_heap_mgr >
+class test_class
+	: public memory_mgr::managed_base< def_heap_mgr >
 {
-	int m_i,m_i1,m_i2,m_i3,m_i4;
+	int m_i,
+		m_i1,
+		m_i2,
+		m_i3,
+		m_i4;
 public:
 	typedef memory_mgr::managed_base< def_heap_mgr > base_t;
 	typedef base_t::mem_mgr mem_mgr;
 
-	test_class();
+	test_class( int i = 0 );
 	~test_class();
 
 	void set( int i );
-	int get();
+	int get() const;
 };
 
 typedef int builtin_type;
 
 class base_test_class 
-	:public memory_mgr::managed_base<def_heap_mgr>
+	: public memory_mgr::managed_base<def_heap_mgr>
 {
 	int i_;
 public:

@@ -34,21 +34,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace test
 {
-// 	class mgr_allocator
-// 	{
-// 	public:
-// 		inline void deallocate( void* ptr, size_type size )
-// 		{
-// 			m_mgr->deallocate( ptr, size );
-// 		}
-// 
-// 		// allocate array of count elements
-// 		inline void* allocate(size_type size)
-// 		{	
-// 			return m_mgr->allocate( size );
-// 		}
-// 	};
-
 	template<class MemMgr, class ValueType, class Allocator>
 	void test_data_validness_impl()
 	{
@@ -58,7 +43,7 @@ namespace test
 		typedef typename traits_type::chunk_type			chunk_type;
 		typedef typename Allocator::template rebind<value_type>::other		allocator;
 
-		STATIC_ASSERT( traits_type::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_low );
+		STATIC_ASSERT( traits_type::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_small );
 
 		std::vector<chunk_type> memory( traits_type::memory_size );
 		mgr_type mgr( &*memory.begin() );
