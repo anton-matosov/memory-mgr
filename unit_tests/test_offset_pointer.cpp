@@ -29,25 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/new.h>
 
 
-// namespace
-// {
-// 	typedef memory_mgr::singleton_manager
-// 	< 
-// 		memory_mgr::size_tracking
-// 		<
-// 			memory_mgr::pointer_convert
-// 			< 
-// 				memory_mgr::heap_segment
-// 				< 
-// 					memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
-// 				> 
-// 			>
-// 		>
-// 	> sz_heap_mgr;
-// 
-// 
-// }
-
 MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
 template class memory_mgr::offset_ptr< builtin_type >;

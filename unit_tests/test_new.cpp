@@ -58,13 +58,16 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		using memory_mgr::new_;
 		using memory_mgr::mem_mgr;
 
-		int* p1 = new_<int>( mgr )();
-		int* p2 = new_<int>( mgr )( 2 );
+		int* p1 = new_<int>( mgr );
+		const int* p2 = new_<int>( mgr )( 2 );
 
-		int* p3 = new_<int, mgr_type>()();
-		int* p4 = new_<int, mgr_type>( 4 );
+		int* p3 = new_<int, mgr_type>();
+		const int* p4 = new_<int, mgr_type>( 4 );
 
-		int* p5 = new( mem_mgr(mgr) ) int( 5 ); 
+		int* p5 = new( mem_mgr(mgr) ) int( 5 );
+
+		const int* arr_ptr = new( mem_mgr(mgr) ) const int( 5 );
+		const void* void_arr_ptr = new( mem_mgr(mgr) ) const int( 5 );
 
 		test::check_pointers( p1, p2, p3, p4, p5 );
 
@@ -74,12 +77,8 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		delete_<mgr_type>( p4 );
 		delete_( p5, mgr );
 
-		//base_test_class* p6 = new_<derived_test_class>( mgr )( 5 );
-		//delete_( p6, mem_mgr(mgr) );
-
-
-		//derived_test_class* arr1 = new_<derived_test_class>( mgr )[ 15 ];
-		//delete_array( arr1, mem_mgr(mgr) );
+		::delete_array( arr_ptr, mem_mgr(mgr) );
+		::delete_array<mgr_type>( void_arr_ptr );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )
@@ -138,6 +137,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		}
 	}
 
+#if 0 //Named new is no longer supported
 	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete_named, mgr_type, managers_list )
 	{
 		const builtin_type* null_ptr = 0;
@@ -187,11 +187,12 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_EQUAL( arr2, arr22 );
 		BOOST_CHECK_NE( arr11, arr22 );
 
-		delete_( ptr11, mem_mgr<mgr_type>() );
+		//delete_named( ptr11, mem_mgr<mgr_type>() );
 		delete_( ptr2, mem_mgr<mgr_type>() );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
 	}
+#endif
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
 	{

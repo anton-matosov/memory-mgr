@@ -67,6 +67,8 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 		
 		mgr.allocate( allocable_memory );
 		BOOST_CHECK_THROW( mgr.allocate( allocable_memory ), std::bad_alloc );
+		BOOST_CHECK_THROW( mgr.allocate( allocable_memory ), std::bad_alloc );
+		BOOST_CHECK_THROW( mgr.allocate( allocable_memory ), std::bad_alloc );
 	}
 
 	BOOST_AUTO_TEST_CASE( test_out_of_memory_nothrow )

@@ -44,6 +44,7 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 
 	typedef boost::mpl::list< shared_mgr_type > managers_list;
 
+#if 0 //Such a behavior is no longer allowed
 	BOOST_AUTO_TEST_CASE_TEMPLATE( shared_segment_alloc_dealloc, mgr_type, managers_list )
 	{
 		typedef memory_mgr::manager_traits<mgr_type> 	traits_type;
@@ -93,6 +94,7 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 
 		BOOST_CHECK( mgr.is_free() );
 	}
+#endif
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
 	{

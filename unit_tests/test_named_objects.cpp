@@ -76,44 +76,54 @@ BOOST_AUTO_TEST_SUITE( test_named_objects )
 		mgr_type mgr1;
 		//BOOST_CHECK( mgr1.is_free() );
 
-		void* p1;
-		void* p2;
-		void* p11;
-		void* p22;
+		void* p1_m1;
+		void* p1_m2;
+
+		void* p2_m2;
+		void* p2_m1;
 
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
-		p1 = mgr1.allocate( obj_size, name1 );
-		BOOST_CHECK_NE( p1, null );
+		p1_m1 = mgr1.allocate( obj_size, name1 );
+		BOOST_CHECK_NE( p1_m1, null );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
 		
 
 		mgr_type mgr2;
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
-		p2 = mgr2.allocate( obj_size, name2 );
-		BOOST_CHECK_NE( p2, null );
+		p2_m2 = mgr2.allocate( obj_size, name2 );
+		BOOST_CHECK_NE( p2_m2, null );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
 
-		p11 = mgr2.allocate( obj_size, name1 );
-		BOOST_CHECK_NE( p11, null );
+		p1_m2 = mgr2.allocate( obj_size, name1 );
+		BOOST_CHECK_NE( p1_m2, null );
 
-		p22 = mgr1.allocate( obj_size, name2 );
-		BOOST_CHECK_NE( p22, null );
+		p2_m1 = mgr1.allocate( obj_size, name2 );
+		BOOST_CHECK_NE( p2_m1, null );
 
 		//BOOST_CHECK_EQUAL( p1, p11 );
 		//BOOST_CHECK_EQUAL( p2, p22 );
-		BOOST_CHECK_NE( p1, p22 );
-		BOOST_CHECK_NE( p2, p11 );
+		BOOST_CHECK_NE( p1_m1, p2_m1 );
+		BOOST_CHECK_NE( p2_m2, p1_m2 );
 
 		//Object points to the first mapped segment, not to the second one that is validated.
-		mgr2.deallocate( p11, obj_size );
+		mgr2.deallocate( p1_m2, obj_size, name1 );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), true );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
+
+		mgr1.deallocate( p1_m1, obj_size, name1 );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
-		mgr1.deallocate( p22, obj_size );
+
+
+		mgr1.deallocate( p2_m1, obj_size, name2 );
+		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
+		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
+
+		mgr2.deallocate( p2_m2, obj_size, name2 );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
-
 		//BOOST_CHECK( mgr1.is_free() );
 	}
 

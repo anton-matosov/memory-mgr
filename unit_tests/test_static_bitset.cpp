@@ -43,10 +43,11 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 		BOOST_CHECK_EQUAL(  bitset.test(0), true );
 
 		bitset.set(1,3);
-		BOOST_CHECK_EQUAL(  bitset.test(1,3), true );
+		BOOST_CHECK_EQUAL(  bitset.test(1, 3), true );
 
 		bitset.set(6,5);
-		BOOST_CHECK_EQUAL(  bitset.test(6,5), true );
+		BOOST_CHECK_EQUAL(  bitset.test(6, 5), true );
+
 
 		typename bitset_type::size_type pos = bitset.find_first();
 		BOOST_CHECK_EQUAL(  pos, sz_null );
@@ -72,6 +73,9 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 
 		bitset.set( 0, bitset_type::num_bits );
 		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_type::num_bits ), true );
+
+		bitset.set(0, bitset_type::npos);
+		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_type::npos), true );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();
