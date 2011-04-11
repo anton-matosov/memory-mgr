@@ -109,22 +109,24 @@ public:
 	~perf_test_manager();
 };
 
-#define TEST_PRINT_MEM_INFO( op_repeat_count, alloc_count, memmgr_type, object_type )\
-	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";\
-	std::wcout << L"Required memory: " << op_repeat_count * alloc_count * (sizeof( object_type ) + memory_mgr::manager_traits<memmgr_type>::memory_overhead ) << L"\n";
+#define TEST_PRINT_MEM_INFO( op_repeat_count, alloc_count, memmgr_type, object_type )					\
+	std::wcout << L"Memory size: " << memory_mgr::manager_traits<memmgr_type>::memory_size << L"\n";	\
+	std::wcout << L"Required memory: " << op_repeat_count * alloc_count * (sizeof( object_type )		\
+				+ memory_mgr::manager_traits<memmgr_type>::memory_overhead ) << L"\n";
 
 
-#define  TEST_START_LOOP( op_repeat_count, alloc_count, pointer_type )\
-	memory_mgr::perf_timer timer__;\
-	size_t op_repeat_count__ = op_repeat_count;\
-	size_t loop_outer__ = op_repeat_count__;\
-	size_t alloc_count__ = alloc_count;\
-	size_t full_repeat_count__ = alloc_count__ * op_repeat_count__;\
-	double accum__ = 0.0;\
+#define  TEST_START_LOOP( op_repeat_count, alloc_count, pointer_type )				\
+	memory_mgr::perf_timer timer__;													\
+	size_t op_repeat_count__ = op_repeat_count;										\
+	size_t loop_outer__ = op_repeat_count__;										\
+	size_t alloc_count__ = alloc_count;												\
+	size_t full_repeat_count__ = alloc_count__ * op_repeat_count__;					\
+	(void)full_repeat_count__;														\
+	double accum__ = 0.0;															\
 	pointer_type *ptr_storage__ = new pointer_type[alloc_count__ + 1];ptr_storage__;\
-	timer__.start();\
-	while( loop_outer__-- ){\
-		size_t loop_inner__ = alloc_count__;\
+	timer__.start();																\
+	while( loop_outer__-- ){														\
+		size_t loop_inner__ = alloc_count__;										\
 		while( loop_inner__-- ){
 
 #define TEST_GET_TRACKED_PTR ptr_storage__[loop_inner__]
@@ -136,18 +138,19 @@ public:
 
 #define TEST_SPLIT_LOOP_STOP_TIMER } timer__.stop();{ TEST_SPLIT_LOOP
 
-#define  TEST_END_LOOP_NO_PRINT\
-		}\
-	}\
-	timer__.stop();\
-	accum__ = timer__.elapsed_mcs();\
+#define  TEST_END_LOOP_NO_PRINT			\
+		}								\
+	}									\
+	timer__.stop();						\
+	accum__ = timer__.elapsed_mcs();	\
 	delete[] ptr_storage__;
 
-#define  TEST_END_LOOP( out_stream )\
-	TEST_END_LOOP_NO_PRINT\
-	out_stream << L"Full time: " << std::fixed << accum__ << L" mcs";\
-	out_stream << L"\tRepeat count: " << alloc_count__;\
-	out_stream << L"\tOperation time: " << std::fixed << accum__ * 1000.0 / full_repeat_count__ << L" Ns\n";\
+#define  TEST_END_LOOP( out_stream )										\
+	TEST_END_LOOP_NO_PRINT													\
+	out_stream << L"Full time: " << std::fixed << accum__ << L" mcs";		\
+	out_stream << L"\tRepeat count: " << alloc_count__;						\
+	out_stream << L"\tOperation time: " <<									\
+		std::fixed << accum__ * 1000.0 / full_repeat_count__ << L" Ns\n";	\
 
 #define TEST_ACCUMULATE_RESULT accum__ = timer__.elapsed_mcs();
 #define TEST_ELAPCED_MCS accum__ / op_repeat_count__

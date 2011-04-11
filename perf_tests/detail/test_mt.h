@@ -31,7 +31,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test.h"
 #include <numeric>
 
-#pragma comment( lib, "boost_thread-vc90-mt-1_44.lib" )
 #include <boost/thread.hpp>
 
 namespace perf_tests
@@ -93,12 +92,16 @@ namespace perf_tests
 			return TEST_ELAPCED_MCS;\
 			} };
 
-#define TEST_START_MT_TESTS_IMPL( num_threads, start_delay, test_func__ )\
-	for( int i = 0; i < num_threads; ++i )\
-{\
-	threads_holder__.create_thread( test_func__ );\
-	if(start_delay) { boost::this_thread::sleep( boost::posix_time::milliseconds( start_delay ) ); }\
-}\
+#define TEST_START_MT_TESTS_IMPL( num_threads, start_delay, test_func__ )					\
+	for( int i = 0; i < num_threads; ++i )													\
+	{																						\
+		threads_holder__.create_thread( test_func__ );										\
+		__pragma(warning(suppress:4127))													\
+		if( start_delay )																	\
+		{																					\
+			boost::this_thread::sleep( boost::posix_time::milliseconds( start_delay ) );	\
+		}																					\
+	}																						\
 	threads_holder__.join_all();
 
 #define TEST_START_MT_TESTS( num_threads, start_delay )\
