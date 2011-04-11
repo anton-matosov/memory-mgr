@@ -39,7 +39,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/detail/helpers.h>
 
-#define BOOST_ALL_NO_LIB
 #include <boost/tuple/tuple.hpp>	//For boost::tie
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
@@ -48,6 +47,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_STR( expr ) #expr
 #define MGR_STRINGIZE( expr ) MGR_STR( expr )
 #define MGR_MESSAGE(desc) message(__FILE__ "(" MGR_STRINGIZE(__LINE__) "):" MGR_STRINGIZE(desc) )
+
+#define MGR_INLINE inline
 
 namespace memory_mgr
 {

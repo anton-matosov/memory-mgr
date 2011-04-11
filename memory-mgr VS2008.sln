@@ -18,9 +18,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf_tests", "perf_tests\perf_tests_VS2008.vcproj", "{58975002-C388-401F-B159-301B5DF09350}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{947CCF66-6339-4725-BDDB-809FB66F85EF} = {947CCF66-6339-4725-BDDB-809FB66F85EF}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost_test", "boost\boost_test.vcproj", "{947CCF66-6339-4725-BDDB-809FB66F85EF}"
 EndProject
