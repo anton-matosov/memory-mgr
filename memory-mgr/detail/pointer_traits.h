@@ -36,14 +36,14 @@ namespace memory_mgr
  	template<class T, class MemMgr>
  	struct pointer_traits
  	{
-		typedef MemMgr								manager_type;
-		typedef T									value_type;
+		typedef MemMgr											manager_type;
+		typedef T												value_type;
 		typedef pointer_traits< value_type, manager_type >		self_type;
 
 		typedef				offset_ptr< value_type, manager_type >			pointer;
 		typedef				offset_ptr< const  value_type, manager_type >	const_pointer;
-		typedef typename	pointer::reference									reference;
-		typedef	typename	pointer::const_reference 							const_reference;
+		typedef typename	pointer::reference								reference;
+		typedef	typename	pointer::const_reference 						const_reference;
 
 		template<class Other>
 		struct rebind

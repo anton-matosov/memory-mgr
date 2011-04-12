@@ -39,7 +39,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	enum array_type{ static_array, dynamic_array, custom_array };
+	enum array_type{ static_array, dynamic_array, external_buffer };
 	namespace detail
 	{
 		template<size_t BitsPerBlock>
@@ -118,7 +118,7 @@ namespace memory_mgr
 			typedef const block_type&						const_block_ref_type;
 
 			
-			typedef block_type*		block_ptr_type;
+			typedef block_type*			block_ptr_type;
 			typedef const block_type*	const_block_ptr_type;
 
 			/**
@@ -143,25 +143,7 @@ namespace memory_mgr
 		struct array< BlockType, BitsCount, static_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
-			typedef typename array_traits::block_type		block_type;
-			typedef typename array_traits::block_ref_type		block_ref_type;
-			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
-
-			typedef typename array_traits::block_ptr_type		block_ptr_type;
-			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
-				
-			/**
-			   @brief compile time computed constants
-			*/
-			enum
-			{			
-				bits_per_block	=	array_traits::bits_per_block,
-				num_bits		=	array_traits::num_bits,
-				num_blocks		=	array_traits::num_blocks,
-				max_bits		=	array_traits::max_bits,
-				memory_usage	=	array_traits::memory_usage
-			};
-			
+						
 			block_type m_bits[num_blocks];
 		};
 
@@ -170,72 +152,82 @@ namespace memory_mgr
 		struct array< BlockType, BitsCount, dynamic_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
-			typedef typename array_traits::block_type		block_type;
-			typedef typename array_traits::block_ref_type		block_ref_type;
-			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
-
-			typedef typename array_traits::block_ptr_type		block_ptr_type;
-			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
-
-			/**
-			   @brief compile time computed constants
-			*/
-			enum
-			{			
-				bits_per_block	=	array_traits::bits_per_block,
-				num_bits	=	array_traits::num_bits,
-				num_blocks	=	array_traits::num_blocks,
-				max_bits	=	array_traits::max_bits,
-				memory_usage	=	array_traits::memory_usage
-			};
-			
+						
 			array()
 				:m_bits( 0 )
-			{ this->m_bits = new block_type[num_blocks]; }
+			{
+				construct();
+			}
+
+			array( const array& rhs )
+				:m_bits( 0 )
+			{
+				construct();
+				*this = rhs;
+			}
+
+
+			array& operator=( const array& rhs )
+			{
+				if( this != &rhs )
+				{
+					copy( rhs );
+				}
+				return *this;
+			}
 
 			~array()
-			{ delete[] this->m_bits; }
+			{
+				delete[] this->m_bits;
+			}
 
 			block_type* m_bits;
+
+		private:
+			void construct()
+			{
+				this->m_bits = new block_type[num_blocks];
+			}
+
+			void destruct()
+			{
+				delete[] this->m_bits;
+			}
+
+			void copy( const array& rhs )
+			{
+				for( int i = 0; i < num_blocks; ++i )
+				{
+					this->m_bits[i] = rhs.m_bits[i];
+				}
+			}
 		};
 
 		//Array specializations for custom array
 		template< class BlockType, size_t BitsCount >
-		struct array< BlockType, BitsCount, custom_array> : public array_traits<BlockType, BitsCount>
+		struct array< BlockType, BitsCount, external_buffer> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
-			typedef typename array_traits::block_type		block_type;
-			typedef typename array_traits::block_ref_type		block_ref_type;
-			typedef typename array_traits::const_block_ref_type	const_block_ref_type;
-
-			typedef typename array_traits::block_ptr_type		block_ptr_type;
-			typedef typename array_traits::const_block_ptr_type	const_block_ptr_type;
-			
-			/**
-			   @brief compile time computed constants
-			*/
-			enum {			
-				bits_per_block	=	array_traits::bits_per_block,
-				num_bits		=	array_traits::num_bits,
-				num_blocks		=	array_traits::num_blocks,
-				max_bits		=	array_traits::max_bits,
-				memory_usage	=	array_traits::memory_usage
-			};
 			
 			array( block_ptr_type arr_ptr )
 				:m_bits( arr_ptr )
-			{}
+			{
 
-			block_type* m_bits;		
+			}
+
+			block_type* m_bits;
+
+		private:
+			//noncopyable
+			array( const array& );
+			array& operator=( const array& );
 		};
 
 	}
 
 	template< class BlockType, size_t BitsCount, array_type StaticArr = static_array >
 	class static_bitset: public detail::array< BlockType, BitsCount, StaticArr >
-	{		
-		static_bitset( const static_bitset& );
-		static_bitset& operator=( const static_bitset& );
+	{
 	public:	
 		typedef static_bitset	self_type;		
 		typedef self_type&	self_ref_type;

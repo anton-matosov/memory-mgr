@@ -76,6 +76,11 @@ namespace memory_mgr
 		{
 			return static_cast< size_t* >( p );
 		}
+
+		static inline const size_t* size_cast( const void* p )
+		{
+			return static_cast< const size_t* >( p );
+		}
 	}// namespace detail
 
 }// namespace memory_mgr
