@@ -67,9 +67,8 @@ namespace memory_mgr
 		typedef detail::named_allocator<MemMgr, named_allocator_traits>		named_allocator_type;
 
 		typedef typename named_allocator_type::string_type					string_type;
-		typedef	typename named_allocator_type::pointer						pointer;
 
-		named_allocator_type	m_alloc;
+		named_allocator_type	m_named_alloc;
 
 	public:
 		/**
@@ -81,9 +80,9 @@ namespace memory_mgr
 
 		/**
 		@brief type that used to store memory offset
-		@see memory_manager::offset_type
+		@see named_allocator_type::block_offset_type
 		*/
-		typedef typename manager_traits<mgr_type>::block_offset_type	block_offset_type;
+		typedef typename named_allocator_type::block_offset_type	block_offset_type;
 	
 		/**
 		@brief Type of synchronization object passed as template
@@ -103,7 +102,7 @@ namespace memory_mgr
 		@see memory_manager::memory_segment                        
 		*/
 		inline named_objects()
-			:m_alloc( base_type::m_mgr )
+			:m_named_alloc( base_type::m_mgr )
 		{}
 
 		/**
@@ -115,33 +114,57 @@ namespace memory_mgr
 		*/
 		inline named_objects( void* segment_base )
 			:base_type( segment_base ),
-			m_alloc( base_type::m_mgr )
+			m_named_alloc( base_type::m_mgr )
 		{}
 
 		bool is_exists( const char* name )
 		{
 			lock_type lock( this->get_lockable() );
-			return this->m_alloc.is_exists( name );
+			return this->m_named_alloc.is_exists( name );
 		}
 
 		inline void* allocate( size_type size, const char* name )
 		{
 			lock_type lock( this->get_lockable() );
-			pointer ptr = this->m_alloc.get_object( name );
-			if( ! ptr )
+			void* ptr = 0;
+			block_offset_type offset = this->m_named_alloc.get_object( name );
+			if( offset ==  offset_traits<block_offset_type>::invalid_offset )
 			{
 				ptr = this->m_mgr.allocate( size );
-				this->m_alloc.add_object( name, ptr );
+				m_named_alloc.add_object( name, detail::pointer_to_offset( ptr, *this ) );
 			}
-			return ptr.get();
+			else
+			{
+				ptr = detail::offset_to_pointer( offset, *this );
+			}
+			return ptr;
 		}
 
 		inline void deallocate( const void* p, size_type size, const char* name )
 		{
 			lock_type lock( this->get_lockable() );
-			this->m_alloc.remove_object( name );
-			this->m_mgr.deallocate( p, size );
+			if( this->m_named_alloc.remove_object( name ) )
+			{
+				this->m_mgr.deallocate( p, size );
+			}
 		}
+
+		/**
+ 		@brief Call this method to deallocate memory block owned by named object
+ 		@param p  pointer to memory block, returned by allocate method
+ 		@param size   size of memory block in bytes
+ 		@exception newer  throws
+ 		*/
+		inline void deallocate_named( void* p, size_type size )
+		{
+			lock_type lock( this->get_lockable() );
+			if( this->m_named_alloc.remove_object( detail::pointer_to_offset( p, *this ) ) )
+			{
+				this->m_mgr.deallocate( p, size );
+			}
+		}
+
+
  		/**
  		@brief Call this method to allocate memory block
  		@param size size of memory block in bytes
@@ -173,9 +196,10 @@ namespace memory_mgr
  		@param size   size of memory block in bytes
  		@exception newer  throws
  		*/
- 		inline void deallocate( void* p, size_type size = 0 )
+ 		inline void deallocate( const void* p, size_type size = 0 )
  		{
-			this->m_alloc.remove_object( p );
+			assert( ! this->m_named_alloc.is_exists( detail::pointer_to_offset( p, *this ) )
+				&& "\n!!!You are trying to delete named object via unnamed deallocate operation!!!!" );
  			this->m_mgr.deallocate( p, size );
  		}
 	};

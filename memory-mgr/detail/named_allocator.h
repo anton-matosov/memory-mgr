@@ -34,7 +34,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator.h>
-#include <memory-mgr/offset_ptr.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
@@ -42,17 +41,62 @@ namespace memory_mgr
 {
 	namespace detail
 	{
+		class named_object
+		{
+		public:
+			typedef size_t	block_offset_type;
+
+			named_object()
+				: m_ref_count(1)
+			{
+			}
+
+			block_offset_type get_offset() const
+			{
+				return m_offset; 
+			}
+			
+			void set_offset(block_offset_type offset) 
+			{
+				m_offset = offset;
+			}
+
+			unsigned int inc_ref_count()
+			{
+				return ++m_ref_count;
+			}
+			
+			unsigned int dec_ref_count() 
+			{
+				return --m_ref_count;
+			}
+
+			unsigned int get_ref_count() const
+			{
+				return m_ref_count;
+			}
+
+			bool operator < (const named_object& other) const
+			{
+				return m_offset < other.m_offset;
+			}
+
+		private:
+			block_offset_type		m_offset;
+			unsigned int	m_ref_count;
+		};
+
 		template<class MemMgr>
 		struct named_allocator_traits
 		{
-			typedef MemMgr								mgr_type;
-			typedef offset_ptr<void>					pointer;
-			typedef member_allocator<char, mgr_type>	allocator_type;
+			typedef MemMgr																mgr_type;
+			typedef typename manager_traits<MemMgr>::block_offset_type					block_offset_type;
+			typedef member_allocator<char, mgr_type>									allocator_type;
 
 			typedef std::basic_string< char, std::char_traits<char>, allocator_type>	string_type;
 			typedef std::less<string_type>												compare_type;
-			typedef std::map< string_type, pointer, compare_type, allocator_type>		map_type;
-			typedef std::pair< const string_type, pointer >								map_item_type;
+			typedef std::map< string_type, named_object, compare_type, allocator_type>	map_type;
+			typedef typename map_type::value_type										map_item_type;
 		};
 
 		template<class MemMgr, class TraitsT >
@@ -62,7 +106,7 @@ namespace memory_mgr
 		public:
 			typedef TraitsT	traits_type;
 			typedef	typename traits_type::allocator_type	allocator_type;
-			typedef	typename traits_type::pointer			pointer;
+			typedef	typename traits_type::block_offset_type	block_offset_type;
 			typedef	typename traits_type::string_type		string_type;
 			typedef	typename traits_type::map_type			map_type;
 			typedef	typename traits_type::compare_type		compare_type;
@@ -95,53 +139,84 @@ namespace memory_mgr
 				return m_objects->find( name ) != m_objects->end();
 			}
 
-			void add_object( const char* name, const pointer offset )
+			bool is_exists( const block_offset_type offset )
+			{
+				return find_by_offset( offset ) != m_objects->end();
+			}
+
+			void add_object( const char* name, const block_offset_type offset )
 			{
 				string_type object_name( name, m_alloc );
 				assert( !is_exists( object_name ) );
-				(*m_objects)[ object_name ] = offset;
+				
+				(*m_objects)[ object_name ].set_offset(offset);
 			}
 
-			const pointer get_object( const char* name )
+			const block_offset_type get_object( const char* name )
 			{
+				block_offset_type offset = offset_traits<block_offset_type>::invalid_offset;
+
 				string_type object_name( name, m_alloc );
-				pointer ptr;
-				typename map_type::const_iterator fres = m_objects->find( object_name );
+				typename map_type::iterator fres = m_objects->find( object_name );
 				if( fres != m_objects->end() )
 				{
-					ptr = fres->second;
+					named_object& obj = fres->second;
+					offset = obj.get_offset();
+					obj.inc_ref_count();
 				}
-				return ptr;
+
+				return offset;
 			}
 
-			const void remove_object( const char* name )
+			const bool remove_object( const char* name )
 			{
+				bool deleted = false;
 				string_type object_name( name, m_alloc );
-				m_objects->erase( object_name );
+				typename map_type::iterator fres = m_objects->find( object_name );
+				
+				deleted = do_remove( fres );
+
+				return deleted;
 			}
 
-			const void remove_object( const pointer ptr )
+			typename map_type::iterator find_by_offset( const block_offset_type offset )
 			{
-				typename map_type::iterator fres = std::find_if( m_objects->begin(), m_objects->end(), 
-					std::bind2nd( std::ptr_fun( &equal_second_val<pointer> ), ptr ) );
-				if( fres != m_objects->end() )
-				{
-					m_objects->erase( fres );
-				}
+				return std::find_if( m_objects->begin(), m_objects->end(), 
+						std::bind2nd( std::ptr_fun( &equal_second_val ), offset ) );
 			}
+
+			const bool remove_object( const block_offset_type offset )
+			{
+				bool deleted = false;
+
+				deleted = do_remove( find_by_offset( offset ) );
+
+				return deleted;
+			}
+
 		private:
 			allocator_type m_alloc;
 			map_type* m_objects;
 
-			static bool less_second( const map_item_type& x, const map_item_type& y )
+			static bool equal_second_val( const map_item_type x, const block_offset_type val )
 			{
-				return x.second < y.second;
+				return x.second.get_offset() == val;
 			}
 
-			template<class ValT>
-			static bool equal_second_val( const map_item_type x, const ValT val )
+			bool do_remove( typename map_type::iterator fres ) 
 			{
-				return x.second == val;
+				bool deleted = false;
+				if( fres != m_objects->end() )
+				{
+					named_object& obj = fres->second;
+
+					if ( 0 == obj.dec_ref_count() )
+					{
+						m_objects->erase( fres );
+						deleted = true;
+					}
+				}
+				return deleted;
 			}
 		};
 	}
