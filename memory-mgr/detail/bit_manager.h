@@ -45,7 +45,7 @@ namespace memory_mgr
 			enum {result = ( (value / base) * base) + (value % base ? base : 0)};
 		};
 
-		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = custom_array };
+		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = external_buffer };
 		template< class ChunkType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
