@@ -34,8 +34,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/new.h>
 
-#include <boost/type_traits/add_reference.hpp>
-
 namespace memory_mgr
 {	
 	/**
@@ -46,8 +44,10 @@ namespace memory_mgr
 					addresses in different processes.
 
 		@note		Declaration examples:
-					offset_ptr<char>		char_ptr;
-					offset_ptr<const char>	const_char_ptr;
+					offset_ptr<char>		char_ptr; // char*
+					offset_ptr<const char>	const_char_ptr; // const char*
+					const offset_ptr<char>		char_const_ptr; // char* const
+					const offset_ptr<const char>	const_char_const_ptr; // const char* const
 	*/
 	template< class T >
 	class offset_ptr 
@@ -66,8 +66,8 @@ namespace memory_mgr
 		typedef value_type*			pointer;
 		typedef const value_type*	const_pointer;
 
-		typedef typename boost::add_reference<value_type>::type			reference;
-		typedef typename boost::add_reference<const value_type>::type	const_reference;
+		typedef value_type&			reference;
+		typedef const value_type&	const_reference;
 
 		typedef std::ptrdiff_t						difference_type;
 		
@@ -95,11 +95,6 @@ namespace memory_mgr
 		inline offset_ptr()
 			:m_offset( offset_traits<offset_type>::invalid_offset )
 		{}
-
-		//Construct pointer from offset
-// 		inline explicit offset_ptr( const offset_type offset )
-// 			:m_offset( offset )
-// 		{}
 
 		//Copy constructor
 		inline offset_ptr( const offset_ptr& ptr )
@@ -286,12 +281,9 @@ namespace memory_mgr
 		{  
 			return this->get_pointer_internal();
 		}
-	private:
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-		//__declspec(noinline) //this workaround is needed for msvc-8.0 and msvc-9.0
-#endif
-		void do_set_pointer( const_pointer ptr )
+	private:
+		inline void do_set_pointer( const_pointer ptr )
 		{
 			//offset == invalid_offset1 && ptr != 0 is not legal for this pointer
 			if( ptr == NULL )
@@ -305,11 +297,13 @@ namespace memory_mgr
 			}
 		}
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-		//__declspec(noinline) //this workaround is needed for msvc-8.0 and msvc-9.0
-#endif
-		const_pointer do_get_pointer() const
-		{  
+		inline pointer get_pointer_internal() const
+		{
+			return unconst_pointer( do_get_pointer() );
+		}
+
+		inline const_pointer do_get_pointer() const
+		{
 			if( m_offset == offset_traits<offset_type>::invalid_offset )
 			{
 				return 0;
@@ -317,23 +311,12 @@ namespace memory_mgr
 			return static_cast<const_pointer>( detail::shift( this, m_offset ) );	
 		}
 
-		void inc_offset(std::ptrdiff_t bytes)
-		{  m_offset += bytes;   }
-
-		void dec_offset(std::ptrdiff_t bytes)
-		{  m_offset -= bytes;   }
-
-		offset_type m_offset; //Distance between this object and pointed address
-
 		static inline pointer unconst_pointer( const_pointer ptr )
 		{
 			return const_cast<pointer>( ptr );
 		}
 
-		inline pointer get_pointer_internal() const
-		{
-			return unconst_pointer( do_get_pointer() );
-		}
+		offset_type m_offset; //Distance between this object and pointed address
 	};
 
 	template< class T >
@@ -343,16 +326,41 @@ namespace memory_mgr
 	}
 
 	//For compatibility with delete_, new_ operators
-	template<class Mgr, class T>
-	static inline void delete_( offset_ptr<T>& ptr )
+	template<class T, class MemMgr>
+	inline void delete_( const offset_ptr<T>& ptr, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr )
 	{
-		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
+		::delete_( get_pointer_internal(ptr), mgr );
 	}
 
-	template<class Mgr, class T>
-	static inline void delete_array( offset_ptr<T>& ptr )
+
+	template<class T, class MemMgr>
+	inline void delete_( const offset_ptr<T>& ptr, MemMgr& mgr )
 	{
-		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
+		::delete_( get_pointer_internal(ptr), memory_mgr::mem_mgr(mgr) );
+	}
+
+	template<class MemMgr, class T>
+	inline void delete_( const offset_ptr<T>& ptr )
+	{
+		::delete_( get_pointer_internal(ptr), memory_mgr::mem_mgr<MemMgr>() );
+	}
+
+	template<class T, class MemMgr>
+	inline void delete_array( const offset_ptr<T>& ptr, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr )
+	{
+		::delete_array( get_pointer_internal(ptr), mgr );
+	}
+
+	template<class T, class MemMgr>
+	inline void delete_array( const offset_ptr<T>& ptr, MemMgr& mgr )
+	{
+		::delete_array( get_pointer_internal(ptr), memory_mgr::mem_mgr( mgr ) );
+	}
+
+	template<class MemMgr, class T>
+	inline void delete_array( const offset_ptr<T>& ptr )
+	{
+		::delete_array( get_pointer_internal(ptr), memory_mgr::mem_mgr<MemMgr>() );
 	}
 }
 

@@ -126,12 +126,12 @@ namespace memory_mgr
 	<
 		class SingletonManager
 	>
-	static inline detail::mem_mgr_helper< typename manager_traits< SingletonManager >::base_manager_type > mem_mgr()
+	static inline detail::mem_mgr_wrapper< typename manager_traits< SingletonManager >::base_manager_type > mem_mgr()
 	{
 		typedef SingletonManager mgr_type;
 		typedef is_category_supported< mgr_type, singleton_manager_tag > singleton_support;
 		STATIC_ASSERT( singleton_support::value, Memeory_manager_must_implement_singleton_concept );
-		return detail::mem_mgr_helper< typename manager_traits< mgr_type >::base_manager_type >( mgr_type::instance() );
+		return detail::mem_mgr_wrapper< typename manager_traits< mgr_type >::base_manager_type >( mgr_type::instance() );
 	};
 }
 

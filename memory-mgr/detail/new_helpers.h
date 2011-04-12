@@ -170,37 +170,37 @@ namespace memory_mgr
 			@details Delete helper is required because C++ compiler uses memory for arrays
 			in different manner for class array and non class arrays
 			*/
-			template<class T, bool IsClass = type_manip::is_class< T >::value >
+			template<bool IsClass = type_manip::is_class< T >::value>
 			struct delete_helper{};
 
+			typedef std::pair<const void*, size_t> ptr_and_count_pair;
 			/**
 			@brief Delete helper class for arrays of class objects
 			*/
-			template<class T>
-			struct delete_helper<T, true>
+			template<>
+			struct delete_helper<true>
 			{
 
 				/**
 				@brief Call this method to get real base pointer 
 				of memory block and number of array objects				  
-				@param	p	pointer to array's memory
-				@exception newer throws				  
+				@param	p	pointer received in the delete[] call			  
 				@return std::pair<real base pointer of memory block, number of array objects>
 				*/
-				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
+				static inline ptr_and_count_pair get_ptr_and_count( const void* p )
 				{
-					size_t* count = size_cast(p) - 1;
-					return std::make_pair( count, *count );
+					const size_t* count = size_cast(p) - 1;
+					return ptr_and_count_pair( count, *count );
 				}
 			};
 
 			/**
 			@brief Delete helper class for arrays of non class objects
-			@note Makes an assumption on the implementation of the size_tracking decorator
-			retrieves the size of memory block from the address right before acquired pointer
+			@note Returns zero as a count, because there is no need to call destructor for the
+			built in types
 			*/
-			template<class T>
-			struct delete_helper<T, false>
+			template<>
+			struct delete_helper<false>
 			{
 				/**
 				@brief Call this method to get real base pointer 
@@ -209,17 +209,16 @@ namespace memory_mgr
 				@exception newer throws				  
 				@return std::pair<real base pointer of memory block, number of array objects>
 				*/
-				static inline std::pair<void*, size_t> get_ptr_and_count( T* p )
+				static inline ptr_and_count_pair get_ptr_and_count( const void* p )
 				{
-					size_t* size = size_cast(p) - 1;
-					return std::make_pair( p, *size / sizeof( T ) );
+					return ptr_and_count_pair( p, 0 );
 				}
 			};
 
 			/**
 			@brief Implementation of global operator delete_arr
 			@details deallocates memory that was allocated by new[] operator
-			and calls destructor of array objects
+			and calls destructor of array objects, if needed
 			@param	p	pointer memory that was allocated by new[] operator 
 			@param	mgr memory manager that was used for memory allocation
 			@exception newer throws
@@ -227,37 +226,36 @@ namespace memory_mgr
 			template<class T>
 			static inline void delete_arr_impl( T* p, mgr_type& mgr )
 			{				
-				std::pair<void*, size_t> ptr_n_count = 
-					delete_helper<T,
-					type_manip::is_class< T >::value //VC8
-					>::get_ptr_and_count(p);
+				ptr_and_count_pair ptr_and_count = 
+					delete_helper< type_manip::is_class< T >::value >::get_ptr_and_count( p );
 
-				destroy( p, ptr_n_count.second );
+				destroy( p, ptr_and_count.second );
 
-				return mgr.deallocate( ptr_n_count.first );
+				return mgr.deallocate( ptr_and_count.first );
 			}
 
-			static inline void delete_arr_impl( void* p, mgr_type& mgr )
-			{
-				return mgr.deallocate( p );
-			}
+			///A destructor of void can't be called, so we need to treat void* array in different manner
+ 			static inline void delete_arr_impl( const void* p, mgr_type& mgr )
+ 			{
+ 				return mgr.deallocate( p );
+ 			}
 		};
 
 
 		/**
-		-		   @brief Helper class for global overloaded new/delete operators
-		@details stores reference to memory manager and verifies memory manager class
+		@brief Helper class for global overloaded new/delete operators
+		@details stores reference to memory manager and validates memory manager class
 		@tparam MemMgr Memory manager type that should be checked,
 		must implement PointerConverterConcept and SizeTrackingConcept
 		*/
 		template<class MemMgr> 
-		class mem_mgr_helper
+		class mem_mgr_wrapper
 		{
 			/**
 			@brief Private copy operator. Declared to prevent warning messages
 			@details Declared by not defined
 			*/
-			mem_mgr_helper& operator=( const mem_mgr_helper& );
+			mem_mgr_wrapper& operator=( const mem_mgr_wrapper& );
 		public:
 			/**
 			@brief Memory manager type that should be checked
@@ -281,11 +279,6 @@ namespace memory_mgr
 				typename size_tracking_check::result
 				> new_helper_type;
 
-			/**
-			@brief Reference to memory manager
-			@details that was passed as constructor parameter
-			*/
-			mutable mgr_type& m_mgr;
 
 			/**
 			@brief Constructor, stores reference to memory manager
@@ -293,12 +286,23 @@ namespace memory_mgr
 			support required categories
 			@param mgr reference to memory manager that should be used by new/delete operators
 			*/
-			mem_mgr_helper( mgr_type& mgr )
+			mem_mgr_wrapper( mgr_type& mgr )
 				:m_mgr( mgr )
 			{
 				STATIC_ASSERT( size_tracking_check::value, 
 					Memory_manager_does_not_implement_size_tracking_concept );
 			}
+
+			mgr_type& get() const
+			{
+				return m_mgr;
+			}
+		private:			
+			/**
+			@brief Reference to memory manager
+			@details that was passed as constructor parameter
+			*/
+			mutable mgr_type& m_mgr;
 		};
 
 
@@ -312,10 +316,10 @@ namespace memory_mgr
 	@return helper object that should be passed as parameter to operator new
 	*/	
 	template<class MemMgr>
-	static inline detail::mem_mgr_helper<MemMgr> mem_mgr( MemMgr& mgr )
+	static inline detail::mem_mgr_wrapper<MemMgr> mem_mgr( MemMgr& mgr )
 	{
 		typedef MemMgr mgr_type;
-		return detail::mem_mgr_helper<mgr_type>( mgr );
+		return detail::mem_mgr_wrapper<mgr_type>( mgr );
 	};
 
 	/**
