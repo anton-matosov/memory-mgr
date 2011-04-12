@@ -29,3 +29,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/allocator.h>
 
+
+#define BOOST_TEST_MODULE memory_mgr_unit_tests
+#include <boost/test/auto_unit_test.hpp>
+
+
+boost::unit_test::test_suite* init_unit_test_suite( int, char* [] )
+{
+	return 0;
+}

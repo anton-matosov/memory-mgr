@@ -19,8 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf_tests", "perf_tests\pe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost_test", "boost\boost_test.vcproj", "{947CCF66-6339-4725-BDDB-809FB66F85EF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,10 +41,6 @@ Global
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Debug|Win32.Build.0 = Debug|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.ActiveCfg = Release|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.Build.0 = Release|Win32
-		{947CCF66-6339-4725-BDDB-809FB66F85EF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{947CCF66-6339-4725-BDDB-809FB66F85EF}.Debug|Win32.Build.0 = Debug|Win32
-		{947CCF66-6339-4725-BDDB-809FB66F85EF}.Release|Win32.ActiveCfg = Release|Win32
-		{947CCF66-6339-4725-BDDB-809FB66F85EF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
