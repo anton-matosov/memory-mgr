@@ -31,175 +31,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
+#include <memory-mgr/detail/aux_data_decorator.h>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 namespace memory_mgr
 {
-	namespace detail
-	{
-		/**
-		   @brief Base class for size_tracking implementation classes
-		   @tparam MemMgr memory_manager class, with or w/o decorators
-		*/
-		template< class MemMgr >
-		class size_tracking_impl_base
-			:public decorator_base<MemMgr>
-		{
-			typedef decorator_base<MemMgr> base_type;
-		protected:
-			/**
-			   @brief Type used to store size, commonly std::size_t
-			   @see static_bitset::size_type
-			*/
-			typedef typename base_type::size_type			size_type;
-
-
-			/**
-			   @brief Size of auxiliary data required to store size
-			*/
-			enum{ aux_data_size = sizeof( size_type ) };
-
-			/**
-			   @brief Default constructor, creates memory manager 
-			   @remarks Can be used only if decorates memory manager with 
-						attached memory segment
-			   @see memory_manager::memory_segment                        
-			*/
-			inline size_tracking_impl_base()
-			{}
-
-			/**
-			   @missing_comments 
-			*/
-			inline explicit size_tracking_impl_base( void* segment_base )
-				:base_type( segment_base )
-			{}
-			
-			/**
-			   @brief Puts memory block size at the beginning of memory block
-			  
-			   @param	ptr	pointer to allocated memory block
-			   @param	size	size of allocated memory block 
-			   @exception newer throws
-			  
-			   @return pointer to first byte after stored size
-			*/
-			inline void* store_size( void* ptr, size_type size )
-			{
-				//Store size
-				if( ptr )
-				{
-					size_type* psize = detail::size_cast( ptr );
-					*psize = size;
-					return ++psize;
-				}
-				return ptr;
-			}
-
-		};
-
-		/**
-		   @brief Base class for size tracking implementation template classes specializations
-		*/
-		template<class MemMgr, class pointer_conv_flag >
-		class size_tracking_impl;
-
-		/**
-		   @brief Size tracking implementation for memory manager that supports PointerConverterConcept
-		*/
-		template< class MemMgr >
-		class size_tracking_impl<
-			MemMgr,
-			yes_type /* PointerConverterConcept supported*/ >
-			: public size_tracking_impl_base< MemMgr >
-		{
-			/**
-			   @brief Memory manager class that should be decorated
-			*/
-			typedef MemMgr								mgr_type;
-
-			/**
-			   @brief size tracking implementation base class
-			*/
-			typedef size_tracking_impl_base< mgr_type >	impl_base_type;
-
-		protected:
-			/**
-			   @brief Default constructor, creates memory manager 
-			   @remarks Can be used only if decorates memory manager with 
-						attached memory segment
-			   @see memory_manager::memory_segment                        
-			*/
-			inline size_tracking_impl()
-			{}
-
-			/**
-			   @brief Protected constructor, simply passes parameters to base class' constructor
-			  
-			   @param	segment_base	Pointer to memory which will be managed by
-									manager
-			   @exception newer throws
-			*/
-			inline explicit size_tracking_impl( void* segment_base )
-				:impl_base_type( segment_base )
-			{}
-
-		public:
-			/**
-			   @brief Type used to store size, commonly std::size_t
-			   @see static_bitset::size_type
-			*/
-			typedef typename impl_base_type::size_type			size_type;
-			
-			/**
-			  @brief Call this method to allocate memory block
-			  @param size size of memory block in bytes
-			  @exception bad_alloc if manager went out of memory
-			  @return pointer to allocated memory block
-			*/
-			inline void* allocate( size_type size )
-			{			
-				size += this->aux_data_size;
-				return store_size( this->m_mgr.allocate( size ), size );
-			}
-
-			/**
-			   @brief Call this method to allocate memory block
-			   @param size    size of memory block in bytes 
-			   @param nothrow  unused parameter, just to overload existing
-							   function
-			   
-			   @exception newer  throws
-			   @return pointer to allocated memory block         
-			*/
-			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
-			{
-				size += this->aux_data_size;
-				return store_size( this->m_mgr.allocate( size, nothrow ), size );
-			}
-
-			/**
-			   @brief Call this method to deallocate memory block
-			   @param ptr  pointer to memory block, returned by allocate method
-			   @param size   this value is ignored
-			   @exception newer  throws
-			*/
-			inline void deallocate( void* ptr, size_type /*size*/ = 0)
-			{
-				if( ptr )
-				{
-					char* ptr_base = this->m_mgr.get_ptr_base(ptr);
-					assert( (ptr >= ptr_base) && "Invalid pointer value");
-					assert( (ptr < ( ptr_base + manager_traits<mgr_type>::memory_size ))  && "Invalid pointer value" );
-
-					size_type *ps = detail::size_cast( ptr );
-					--ps;
-					this->m_mgr.deallocate( ps, *ps );
-				}
-			}
-		};
-	}
 
 	/**
 	   @brief Size tracking decorator for memory manager.
@@ -207,31 +44,21 @@ namespace memory_mgr
 	   deallocating them there is no need to specify size of memory
 	   block
 	   @tparam MemMgr  memory_manager class, with or w/o decorators,
-					must support MemoryManagerConcept.
-	                If supports PointerConverterConcept then tracking
-	                operations will work faster                    
+					must support MemoryManagerConcept.               
 	*/
 	template< class MemMgr >
-	class size_tracking 
-		: public detail::size_tracking_impl
-		< 
-			MemMgr, 
-			yes_type 
-		>
+	class size_tracking
+		: public detail::aux_data_decorator< MemMgr, typename manager_traits<MemMgr>::size_type >
 	{
 		/**
 		   @brief Memory manager class that should be decorated
 		*/
-		typedef MemMgr									mgr_type;
+		typedef MemMgr								mgr_type;
 
 		/**
-		   @brief Size tracking implementation type
+		   @brief size tracking implementation base class
 		*/
-		typedef detail::size_tracking_impl
-		< 
-			mgr_type, 
-			yes_type
-		>	impl_type;
+		typedef aux_data_decorator< mgr_type, typename manager_traits<MemMgr>::size_type >	impl_base_type;
 
 	public:
 		/**
@@ -244,15 +71,57 @@ namespace memory_mgr
 		{}
 
 		/**
-		   @brief Constructor, creates memory manager with specified
-		   base address
-		   @param segment_base  Pointer to memory which will be managed by
-		                    manager
-		   @see memory_manager::memory_manager                        
+		   @brief Protected constructor, simply passes parameters to base class' constructor
+		  
+		   @param	segment_base	Pointer to memory which will be managed by
+								manager
+		   @exception newer throws
 		*/
 		inline explicit size_tracking( void* segment_base )
-			:impl_type( segment_base )
+			:impl_base_type( segment_base )
 		{}
+		
+		/**
+		  @brief Call this method to allocate memory block
+		  @param size size of memory block in bytes
+		  @exception bad_alloc if manager went out of memory
+		  @return pointer to allocated memory block
+		*/
+		inline void* allocate( size_type size )
+		{
+			void* ptr = impl_base_type::allocate( size );
+			return this->store_aux_data( ptr, size );
+		}
+
+		/**
+		   @brief Call this method to allocate memory block
+		   @param size    size of memory block in bytes 
+		   @param nothrow  unused parameter, just to overload existing
+						   function
+		   
+		   @exception newer  throws
+		   @return pointer to allocated memory block         
+		*/
+		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
+		{
+			void* ptr = impl_base_type::allocate( size, nothrow );
+			return this->store_aux_data( ptr, size );
+		}
+
+		/**
+		   @brief Call this method to deallocate memory block
+		   @param ptr  pointer to memory block, returned by allocate method
+		   @param size   this value is ignored
+		   @exception newer  throws
+		*/
+		inline void deallocate( const void* ptr, size_type size = 0)
+		{
+			if( ptr )
+			{
+				this->get_aux_data( ptr, &size );
+			}
+			impl_base_type::deallocate( ptr, size );
+		}
 	};
 
 	/**
@@ -280,7 +149,7 @@ namespace memory_mgr
 
 		enum
 		{
-			memory_overhead = base_traits::memory_overhead + sizeof( typename base_traits::size_type ) /**< memory overhead per allocated memory block in bytes*/
+			memory_overhead = base_traits::memory_overhead + size_tracking< MemMgr >::aux_data_size /**< memory overhead per allocated memory block in bytes*/
 		};
 	};
 }

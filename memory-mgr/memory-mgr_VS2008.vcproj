@@ -232,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\aux_data_decorator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\bit_manager.h"
 				>
 			</File>
@@ -269,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\offset_traits.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\operator_new.h"
 				>
 			</File>
 			<File
