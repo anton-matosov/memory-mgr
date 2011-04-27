@@ -29,6 +29,19 @@ test_class::test_class( int i/* = 0*/ )
 {
 
 }
+test_class::test_class( int i, int j )
+:m_i(i),
+m_i1( j )
+{
+
+}
+test_class::test_class( int i, int j, int& ref )
+:m_i(i),
+m_i1( j ),
+m_i2( ref )
+{
+
+}
 
 test_class::~test_class()
 {

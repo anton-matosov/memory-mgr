@@ -78,6 +78,8 @@ public:
 	typedef base_t::mem_mgr mem_mgr;
 
 	test_class( int i = 0 );
+	test_class( int i, int j );
+	test_class( int i, int j, int& ref );
 	~test_class();
 
 	void set( int i );
