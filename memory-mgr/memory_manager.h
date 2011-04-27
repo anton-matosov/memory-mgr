@@ -28,13 +28,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#define MEMORY_MGR_DEBUG_MEMORY
+
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/detail/bit_manager.h>
+#include <memory-mgr/detail/offset_traits.h>
+#include <memory-mgr/detail/decorator_base.h>
+#include <memory-mgr/detail/ptr_casts.h>
 #include <memory-mgr/sync/critical_section.h>
 #include <memory-mgr/sync/locks.h>
-#include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/decorator_base.h>
 
 /**
    @brief Main namespace
@@ -148,42 +151,17 @@ namespace memory_mgr
 		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
 
 	public:
-		/**
-		   @brief Type of this
-		*/
+		
 		typedef memory_manager								self_type;
-		/**
-		   @brief memory manager category tag
-		*/
+
 		typedef memory_manager_tag							manager_category;
 
-		/**
-			@brief memory block type
-			@see static_bitset::block_type
-		*/
 		typedef typename bitmgr_type::chunk_type			chunk_type;
-
-		/**
-		   @brief memory block pointer type
-		   @see static_bitset::block_ptr_type
-		*/
 		typedef typename bitmgr_type::chunk_ptr_type		chunk_ptr_type;
 
-		/**
-		   @brief Type used to store size, commonly std::size_t
-		   @see static_bitset::size_type
-		*/
 		typedef typename bitmgr_type::size_type				size_type;
 		
-		/**
-		   @brief Type of synchronization object passed as template
-		   parameter                                               
-		*/
 		typedef SyncObj										sync_object_type;
-
-		/**
-		@brief lockable type, used for synchronization
-		*/
 		typedef typename sync::object_level_lockable<sync_object_type> lockable_type;
 
 		/**
@@ -334,36 +312,36 @@ namespace memory_mgr
 			m_bitmgr.clear();
 		}
 
-		
-		/**
-		   @brief Call this method to get memory base address from which offset
-		   is calculated
-		   @param offset offset for which base address should be returned
-		   @exception newer  throws
-		   @return pointer to memory base address                               
-		*/
-		inline const char* get_offset_base( const block_offset_type /*offset*/ = 0 ) const
-		{
-			return m_offset_base;
-		}
 
-		inline char* get_offset_base( block_offset_type /*offset*/ = 0 )
-		{
-			return m_offset_base;
-		}
-
-		/**
-		   @add_comments
-		*/
-		inline const char* get_ptr_base( const void* /*ptr*/ ) const
-		{
-			return m_offset_base;
-		}
-
-		inline char* get_ptr_base( void* /*ptr*/ ) const
-		{
-			return m_offset_base;
-		}
+// 		/**
+// 		   @brief Call this method to get memory base address from which offset
+// 		   is calculated
+// 		   @param offset offset for which base address should be returned
+// 		   @exception newer  throws
+// 		   @return pointer to memory base address                               
+// 		*/
+// 		inline const char* get_offset_base( const block_offset_type /*offset*/ = 0 ) const
+// 		{
+// 			return m_offset_base;
+// 		}
+// 
+// 		inline char* get_offset_base( block_offset_type /*offset*/ = 0 )
+// 		{
+// 			return m_offset_base;
+// 		}
+// 
+// 		/**
+// 		   @add_comments
+// 		*/
+// 		inline const char* get_ptr_base( const void* /*ptr*/ ) const
+// 		{
+// 			return m_offset_base;
+// 		}
+// 
+// 		inline char* get_ptr_base( void* /*ptr*/ ) const
+// 		{
+// 			return m_offset_base;
+// 		}
 
 		inline lockable_type& get_lockable()
 		{
@@ -440,11 +418,12 @@ namespace memory_mgr
 		   @param size   size of memory block in bytes
 		   @exception newer  throws
 		*/
- 		inline void do_deallocate( const block_offset_type offset, size_type size )
+ 		inline void do_deallocate( block_offset_type offset, size_type size )
  		{
 			if( offset != offset_traits<block_offset_type>::invalid_offset )
 			{
 				lock_type lock( get_lockable() );
+
  				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
 			}
  		}
@@ -473,16 +452,17 @@ namespace memory_mgr
    @brief Helper macros, using it you can easily create derived class from memory manager
    @details 
 */
-#define MGR_DECLARE_MANAGER_CLASS(name, manager_type)\
-	struct name:\
-		public manager_type\
-	{};\
-	namespace memory_mgr{\
-		template<>\
-		struct manager_traits<name>:\
-			public manager_traits<manager_type>\
-		{};\
+#define MGR_DECLARE_MANAGER_CLASS(name, manager_type)	\
+	struct name:										\
+		public manager_type								\
+	{};													\
+	namespace memory_mgr{								\
+		template<>										\
+		struct manager_traits<name>:					\
+			public manager_traits<manager_type>			\
+		{};												\
 	}
+
 }
 
 
