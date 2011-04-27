@@ -37,30 +37,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
-	template<class T, class MemMgr>
-	class new_c
+	template<class T>
+	class new_constructor
 	{
-		typedef MemMgr			mgr_type;
 		typedef T				object_type;
 		typedef object_type*	object_pointer_type;
-		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
-		typedef typename manager_traits<mgr_type>::size_type	size_type;
 
 		object_pointer_type m_object;
-		mgr_type*			m_mgr;
 	public:
-		new_c( const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr  )
-			:m_object( 0 ),
-			m_mgr( &mgr.get() )
+		new_constructor( object_pointer_type object )
+			:m_object( object )
 		{
 
-		}
-
-		void allocate( size_type n = 1 )
-		{
-			size_type required_size = sizeof( object_type ) * n;
-			m_object = static_cast<object_pointer_type>( 
-				helper_type::new_impl( required_size, *m_mgr ) );
 		}
 
 		operator object_pointer_type()
@@ -70,9 +58,8 @@ namespace memory_mgr
 
 		object_pointer_type operator()()
 		{
-			if( !m_object )
+			if( m_object )
 			{
-				allocate();
 				new( m_object ) object_type();
 			}
 			return m_object;
@@ -81,9 +68,8 @@ namespace memory_mgr
 		template<class T1>
 		object_pointer_type operator()( T1 v1 )
 		{
-			if( !m_object )
+			if( m_object )
 			{
-				allocate();
 				new( m_object ) object_type( v1 );
 			}
 			return m_object;
@@ -93,42 +79,159 @@ namespace memory_mgr
 		template<class T1, class T2>
 		object_pointer_type operator()( T1 v1, T2 v2 )
 		{
-			if( !m_object )
+			if( m_object )
 			{
-				allocate();
 				new( m_object ) object_type( v1, v2 );
-			}
-			return m_object;
-		}
-
-		object_pointer_type operator[]( size_t n )
-		{
-			if( !m_object )
-			{
-				allocate( n );
-				helper_type::construct( m_object, n );
 			}
 			return m_object;
 		}
 	};
 
+
 	template<class T, class MemMgr>
-	new_c<T, MemMgr> new_( MemMgr& mgr )
+	class new_proxy
 	{
-		return new_c<T, MemMgr>( mem_mgr( mgr ) );
-	}
+		typedef MemMgr			mgr_type;
+		//typedef typename manager_traits< MemMgr >::base_manager_type mgr_type;
+		typedef T				object_type;
+		typedef object_type*	object_pointer_type;
+		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
+		typedef typename manager_traits<mgr_type>::size_type	size_type;
 
-	template<class T, class SingMemMgr>
-	new_c<T, typename manager_traits< SingMemMgr >::base_manager_type> new_()
-	{
-		return new_c<T, typename manager_traits< SingMemMgr >::base_manager_type>( mem_mgr<SingMemMgr>() );
-	}
+		typedef new_constructor<object_type> new_constructor;
 
-	template<class T, class SingMemMgr, class T1>
-	T* new_( T1 v1 )
-	{
-		return new_c<T, typename manager_traits< SingMemMgr >::base_manager_type>( mem_mgr<SingMemMgr>() )( v1 );
-	}
+		object_pointer_type m_object;
+		mgr_type*			m_mgr;
+		size_t m_num_items;
+		std::string m_object_name;
+	public:
+		new_proxy( const new_proxy& old_proxy, size_t num_items )
+			:m_object( old_proxy.m_object ),
+			m_num_items( num_items ),
+			m_mgr( old_proxy.m_mgr ),
+			m_object_name( old_proxy.m_object_name )
+		{
+		}
+
+		new_proxy( const char* object_name )
+		   :m_object( 0 ),
+		   m_mgr( &mgr_type::instance() ),
+		   m_num_items( 1 ),
+		   m_object_name( object_name == NULL ? "" : object_name )
+		{
+
+		}
+
+ 		new_proxy( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr, const char* object_name  )
+ 			:m_object( 0 ),
+ 			m_mgr( &mgr.get() ),
+			m_num_items( 1 ),
+			m_object_name( object_name == NULL ? "" : object_name )
+ 		{
+ 
+ 		}
+
+		object_pointer_type operator()()
+		{
+			allocate();
+			object_pointer_type object = m_object;
+
+			for( size_t i = 0; i < m_num_items; ++i )
+			{
+				::new( object + i ) object_type();
+			}
+
+			return m_object;
+		}
+
+		template<class T1>
+		object_pointer_type operator()( T1 v1 )
+		{
+			allocate();
+			object_pointer_type object = m_object;
+
+			for( size_t i = 0; i < m_num_items; ++i )
+			{
+				::new( object + i ) object_type( v1 );
+			}
+
+			return m_object;
+		}
+
+
+		template<class T1, class T2>
+		object_pointer_type operator()( T1 v1, T2 v2 )
+		{
+			allocate();
+			object_pointer_type object = m_object;
+
+			for( size_t i = 0; i < m_num_items; ++i )
+			{
+				::new( object + i ) object_type( v1, v2 );
+			}
+
+			return m_object;
+		}
+
+		template<class T1, class T2>
+		object_pointer_type operator()( T1 v1, T2 v2, T2 v3 )
+		{
+			allocate();
+			object_pointer_type object = m_object;
+
+			for( size_t i = 0; i < m_num_items; ++i )
+			{
+				::new( object + i ) object_type( v1, v2, v3 );
+			}
+
+			return m_object;
+		}
+
+		new_proxy operator[]( size_t num_items )
+		{			
+			return new_proxy( *this, num_items );
+		}
+
+		void allocate()
+		{
+			if( ! m_object )
+			{
+				m_object = static_cast<object_pointer_type>( allocate_named_or_unnamed() );
+			}
+		}
+
+		void* allocate_named_or_unnamed()
+		{
+			size_type required_size = sizeof( object_type ) * m_num_items;
+			if( m_object_name.empty() )
+			{
+				return helper_type::allocate( required_size, *m_mgr );
+			}
+			else
+			{
+				return helper_type::allocate( required_size, *m_mgr, m_object_name.c_str() );
+			}
+		}
+	};
+
+ 	template<class T, class MemMgr>
+ 	new_proxy<T, MemMgr> new_( MemMgr& mgr, const char* object_name = 0 )
+ 	{
+ 		return new_proxy<T, MemMgr>( mem_mgr( mgr ), object_name );
+ 	}
+ 
+ 	template<class T, class SingMemMgr>
+ 	new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type> new_( const char* object_name = 0 )
+ 	{
+ 		return new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type>
+			( mem_mgr<SingMemMgr>(), object_name );
+ 	}
+
+// 	template<class T, class SingMemMgr, class T1>
+// 	T* new_( T1 v1 )
+// 	{
+// 		return new_allocator<T, typename manager_traits< SingMemMgr >::base_manager_type>( mem_mgr<SingMemMgr>() )( v1 );
+// 	}
 }
 
 
@@ -146,7 +249,7 @@ inline void delete_( T* p, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mg
 		typedef MemMgr mgr_type;
 		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
 
-		helper_type::delete_impl( p, mgr.get() );
+		helper_type::destroy_and_deallocate( p, mgr.get() );
 	}
 }
 
@@ -177,7 +280,8 @@ inline void delete_array( T* p, const memory_mgr::detail::mem_mgr_wrapper<MemMgr
 		typedef MemMgr mgr_type;
 		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
 		
-		helper_type::delete_arr_impl( p, mgr.get() );
+//#error This deletion is incorrect if object is class and was constructed with new_()
+		helper_type::destroy_and_deallocate_array( p, mgr.get() );
 	}
 }
 

@@ -51,8 +51,12 @@ namespace memory_mgr
 		static inline size_t calc_full_size( void* p, size_t size )
 		{
 #ifdef _MSC_VER
-			size = *size_cast(p) * size;
-			return size + sizeof( size_t );
+			const size_t size_of_items_count = sizeof( size_t );
+			size_t size_of_single_item = size;
+			size_t items_count = *size_cast(p);
+			size_t size_of_all_array_items = items_count * size_of_single_item;
+
+			return size_of_all_array_items + size_of_items_count;
 #else
 			return size;
 #endif
@@ -64,7 +68,7 @@ namespace memory_mgr
 	/**
 	   @brief 
 	   @details 
-	   @tparam MemMgr Memory manager class, must support PointerConverterConcept, SingletonManagerConcept
+	   @tparam MemMgr Memory manager class, must support SingletonManagerConcept
 	*/
 	template< class MemMgr >
 	class managed_base
@@ -78,27 +82,12 @@ namespace memory_mgr
 
 		typedef MemMgr mem_mgr;
 	public:
-		/**
-		   @brief Overloaded operator new, allocates memory block in memory managed by mem_mgr
-		   @param size size of memory block required to store object of derived class,
-						this parameter is passed by compiler automatically
-		   @exception bad_alloc if manager went out of memory
-		   @return pointer to allocated memory block
-		*/
+		
 		static inline void* operator new( size_t size )/*throw( std::bad_alloc )*/
 		{
 			return mem_mgr::instance().allocate( size );			
 		}
 
-		/**
-		   @brief Overloaded operator new, allocates memory block in memory managed by mem_mgr
-		   @param size size of memory block required to store object of derived class,
-					this parameter is passed by compiler automatically
-		   @param nothrow  unused parameter, just to overload existing
-		                   function
-		   @exception newer  throws
-		   @return pointer to allocated memory block
-		*/
 		static inline void* operator new( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
 			return mem_mgr::instance().allocate( size, nothrow );			
@@ -106,153 +95,46 @@ namespace memory_mgr
 
 		/**
 		   @brief Overloaded placement operator new
-		   @param p pointer to memory where to place object
-		   @exception newer  throws
-		   @return pointer passed as second parameter
 		*/
-		static inline void* operator new(  size_t, void* p ) /*throw()*/
+		static inline void* operator new( size_t, void* p ) /*throw()*/
 		{
 			return p;
 		}
 		
-		/**
-		   @brief Overloaded operator new for named objects,
-					allocates memory block in memory managed by mem_mgr
-		   @param size size of memory block required to store object of derived class,
-					this parameter is passed by compiler automatically
-		   @param name name of the object
-		   @exception bad_alloc if manager went out of memory
-		   @return pointer to allocated memory block
-		*/
-		static inline void* operator new( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
+		static void operator delete(void*, size_t, void*)
 		{
-			/**
-			   @todo implement correct logic in this method
-			   mem_mgr::instance().allocate( size, name );
-			*/
-			//STATIC_ASSERT( false, named_objects_not_supported );
-			STATIC_ASSERT( (is_category_supported< mem_mgr, named_objects_manager_tag>::value),		
-				Memory_manager_does_not_implement_named_objects_concept );
-			return mem_mgr::instance().allocate( size, name.get_name() );
+
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		/**
-		   @brief Overloaded operator delete, deallocates memory block in memory managed by mem_mgr
-		   @param p pointer to memory block
-		   @param size size of memory block that should be deallocated
-		   @exception newer throws
-		   @remark all parameters are passed by compiler automatically
-		*/
 		static inline void operator delete( void* p, size_t size )
 		{
 			mem_mgr::instance().deallocate( p, size );
 		}
 
-		/**
-		@brief Overloaded operator delete for named objects,
-		deallocates memory block in memory managed by mem_mgr
 
-		@param p pointer to memory block
-		@param size size of memory block that should be deallocated
-		@param name name of the object that should be deallocated
-		@exception newer  throws
-		@remark all parameters are passed by compiler automatically
-		*/
-		static inline void operator delete( void* p, const object_name& /*name*/ )
-		{
-			STATIC_ASSERT( (is_category_supported< mem_mgr, size_tracking_tag>::value),				
-				Memory_manager_does_not_implement_size_tracking_concept );
-			mem_mgr::instance().deallocate( p, 0 );
-		}
-
-		//////////////////////////////////////////////////////////////////////////
-		/**
-		   @brief Overloaded operator new[], allocates memory block in memory managed by mem_mgr
-		   @param size size of memory block required to store array of objects of derived class,
-						this parameter is passed by compiler automatically
-		   @exception bad_alloc if manager went out of memory
-		   @return pointer to allocated memory block
-		*/
 		static inline void* operator new[]( size_t size )/*throw( std::bad_alloc )*/
 		{			
 			return mem_mgr::instance().allocate( size );			
 		}
 
-		/**
-		   @brief Overloaded operator new[], allocates memory block in memory managed by mem_mgr
-		   @exception newer  throws
-		   @return pointer to allocated memory block
-		*/
 		static inline void* operator new[]( size_t size, const std::nothrow_t& nothrow ) /*throw()*/
 		{
-			
 			return mem_mgr::instance().allocate( size, nothrow );			
 		}
 
 		/**
 		   @brief Overloaded placement operator new[]
-		   @param p pointer to memory where to place object
-		   @exception newer  throws
-		   @return pointer passed as second parameter
 		*/
 		static inline void* operator new[](  size_t, void* p ) /*throw()*/
 		{
 			return p;
 		}
 
-		/**
-		   @brief Overloaded operator new[] for named objects,
-					allocates memory block in memory managed by mem_mgr
-		   @param size size of memory block required to store object of derived class,
-					this parameter is passed by compiler automatically
-		   @param name name of the object that should be allocated
-		   @exception bad_alloc if manager went out of memory
-		   @return pointer to allocated memory block
-		*/
-		static inline void* operator new[]( size_t size, const object_name& name )/*throw( std::bad_alloc )*/
-		{
-			name;
-			/**
-			   @todo implement correct logic in this method
-			   mem_mgr::instance().allocate( size, name );
-			*/
-			STATIC_ASSERT( false, named_objects_not_supported );
-			return 0;
-		}
-
-		//////////////////////////////////////////////////////////////////////////
-		/**
-		   @brief Overloaded operator delete[], deallocates memory block in memory managed by mem_mgr
-		   @param p pointer to memory block
-		   @param size size of memory block that should be deallocated
-		   @exception newer throws
-		   @remark all parameters are passed by compiler automatically
-		*/
 		static inline void operator delete[]( void* p, size_t size )
 		{
 			mem_mgr::instance().deallocate( p, detail::calc_full_size( p, size) );
 		}
 
-		/**
-		   @brief Overloaded operator delete[] for named objects,
-					deallocates memory block in memory managed by mem_mgr
-		   @param p pointer to memory block
-		   @param size size of memory block that should be deallocated
-		   @param name name of the object that should be deallocated
-		   @exception newer  throws
-		   @remark all parameters are passed by compiler automatically
-		*/
-		static inline void operator delete[]( void* p, size_t size, const object_name& name )
-		{
-			p;
-			name;
-			/**
-			   @todo implement correct logic in this method
-			   mem_mgr::instance().deallocate( size, name );
-			*/
-			STATIC_ASSERT( false, named_objects_not_supported );
-		}
 	};
 	
 	

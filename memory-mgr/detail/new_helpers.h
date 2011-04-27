@@ -50,7 +50,7 @@ namespace memory_mgr
 			@brief Bomb-method for global new, generates compile time error if called
 			*/
 			typedef MemMgr mgr_type;
-			static inline void* new_impl( size_t /*size*/, mgr_type& /*mgr*/ )
+			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
@@ -58,7 +58,7 @@ namespace memory_mgr
 			/**
 			@brief Bomb-method for global new for named objects, generates compile time error if called
 			*/
-			static inline void* new_impl( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
+			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
@@ -66,7 +66,7 @@ namespace memory_mgr
 			/**
 			@brief Bomb-method for global delete_, generates compile time error if called
 			*/
-			static inline void delete_impl( void* /*p*/, mgr_type& /*mgr*/ )
+			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
@@ -74,7 +74,7 @@ namespace memory_mgr
 			/**
 			@brief Bomb-method for global delete_arr, generates compile time error if called
 			*/
-			static inline void delete_arr_impl( void* /*p*/, mgr_type& /*mgr*/ )
+			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}			
@@ -130,7 +130,7 @@ namespace memory_mgr
 			@exception bad_alloc if manager went out of memory
 			@return pointer to allocated memory block  
 			*/
-			static inline void* new_impl( size_t size, mgr_type& mgr )
+			static inline void* allocate( size_t size, mgr_type& mgr )
 			{
 				return mgr.allocate( size );
 			}
@@ -143,7 +143,7 @@ namespace memory_mgr
 			@exception bad_alloc if manager went out of memory
 			@return pointer to allocated memory block  
 			*/
-			static inline void* new_impl( size_t size, mgr_type& mgr, const char* name )
+			static inline void* allocate( size_t size, mgr_type& mgr, const char* name )
 			{
 				STATIC_ASSERT( (is_category_supported< mgr_type, named_objects_manager_tag>::value),		
 					Memory_manager_does_not_implement_named_objects_concept );
@@ -159,7 +159,7 @@ namespace memory_mgr
 			@exception newer throws
 			*/
 			template<class T>
-			static inline void delete_impl( T* p, mgr_type& mgr )
+			static inline void destroy_and_deallocate( T* p, mgr_type& mgr )
 			{
 				p->~T();
 				return mgr.deallocate( p );
@@ -224,7 +224,7 @@ namespace memory_mgr
 			@exception newer throws
 			*/
 			template<class T>
-			static inline void delete_arr_impl( T* p, mgr_type& mgr )
+			static inline void destroy_and_deallocate_array( T* p, mgr_type& mgr )
 			{				
 				ptr_and_count_pair ptr_and_count = 
 					delete_helper< type_manip::is_class< T >::value >::get_ptr_and_count( p );
@@ -235,7 +235,7 @@ namespace memory_mgr
 			}
 
 			///A destructor of void can't be called, so we need to treat void* array in different manner
- 			static inline void delete_arr_impl( const void* p, mgr_type& mgr )
+ 			static inline void destroy_and_deallocate_array( const void* p, mgr_type& mgr )
  			{
  				return mgr.deallocate( p );
  			}

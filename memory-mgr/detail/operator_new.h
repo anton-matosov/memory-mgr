@@ -43,7 +43,7 @@ inline void* operator new( size_t size, const memory_mgr::detail::mem_mgr_wrappe
 {
 	typedef typename memory_mgr::detail::mem_mgr_wrapper<MemMgr>::new_helper_type helper_type;
 	
-	return helper_type::new_impl( size, mgr.get() );
+	return helper_type::allocate( size, mgr.get() );
 }
 
 /**
@@ -59,7 +59,7 @@ inline void* operator new[]( size_t size, const memory_mgr::detail::mem_mgr_wrap
 {
 	typedef typename memory_mgr::detail::mem_mgr_wrapper<MemMgr>::new_helper_type helper_type;
 
-	return helper_type::new_impl( size + sizeof( size_t ), mgr.get() );
+	return helper_type::allocate( size + sizeof( size_t ), mgr.get() );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ inline void operator delete( void* p, const memory_mgr::detail::mem_mgr_wrapper<
 	{
 		typedef typename memory_mgr::detail::mem_mgr_wrapper<MemMgr>::new_helper_type helper_type;
 
-		helper_type::delete_impl( p, mgr.get() );
+		helper_type::destroy_and_deallocate( p, mgr.get() );
 	}
 }
 
@@ -97,7 +97,7 @@ inline void operator delete[]( void* p, const memory_mgr::detail::mem_mgr_wrappe
 	{
 		typedef typename memory_mgr::detail::mem_mgr_wrapper<MemMgr>::new_helper_type helper_type;
 
-		helper_type::delete_arr_impl( p, mgr.get() );
+		helper_type::destroy_and_deallocate_array( p, mgr.get() );
 	}
 }
 

@@ -58,16 +58,17 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		using memory_mgr::new_;
 		using memory_mgr::mem_mgr;
 
-		int* p1 = new_<int>( mgr );
+		int* p1 = new_<int>( mgr, "" )();
 		const int* p2 = new_<int>( mgr )( 2 );
 
-		int* p3 = new_<int, mgr_type>();
-		const int* p4 = new_<int, mgr_type>( 4 );
+		int* p3 = new_<int, mgr_type>()();
+		const int* p4 = new_<int, mgr_type>()( 4 );
 
 		int* p5 = new( mem_mgr(mgr) ) int( 5 );
 
-		const int* arr_ptr = new( mem_mgr(mgr) ) const int( 5 );
-		const void* void_arr_ptr = new( mem_mgr(mgr) ) const int( 5 );
+		const int* arr_ptr = new( mem_mgr(mgr) ) const int[5];
+		const void* void_arr_ptr = new_<int, mgr_type>()[15]( 12345 );
+		const test_class* class_arr_ptr = new_<test_class, mgr_type>()[15]( 12345, 123, *p1 );
 
 		test::check_pointers( p1, p2, p3, p4, p5 );
 
@@ -77,8 +78,24 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		delete_<mgr_type>( p4 );
 		delete_( p5, mgr );
 
+		//const int* p4 = mgr_type::new_<int>()( 4 );
+		//mgr_type::delete_( p4 );
+
+// 		class memory_object
+// 		{
+// 			offset_ptr<char> name_;
+// 			size_t objectSize_;
+// 		};
+ 		struct size_and_flags
+ 		{
+ 			enum flags{ named, unnamed, size_tracked };
+ 			flags m_flags: 3;
+ 			size_t m_size: 29;
+ 		};
+
 		::delete_array( arr_ptr, mem_mgr(mgr) );
 		::delete_array<mgr_type>( void_arr_ptr );
+		::delete_array<mgr_type>( class_arr_ptr );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )
