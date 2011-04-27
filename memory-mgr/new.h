@@ -33,8 +33,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/new_helpers.h>
 #include <memory-mgr/singleton_manager.h>
 
-#include <memory-mgr/detail/operator_new.h>
-
 namespace memory_mgr
 {
 	template<class T>
@@ -252,7 +250,6 @@ inline void delete_( T* p, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mg
 		helper_type::destroy_and_deallocate( p, mgr.get() );
 	}
 }
-
 
 template<class T, class MemMgr>
 inline void delete_( T* p, MemMgr& mgr )

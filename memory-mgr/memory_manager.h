@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#define MEMORY_MGR_DEBUG_MEMORY
+//#define MEMORY_MGR_DEBUG_MEMORY
 
 #include <memory-mgr/detail/ptr_helpers.h>
 #include <memory-mgr/detail/bit_manager.h>

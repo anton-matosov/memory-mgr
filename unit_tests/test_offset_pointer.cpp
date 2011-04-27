@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 				node->link_ = link;
 			}
 		};
-		self_link::link_type head = new( mem_mgr<ptr_mem_mgr>() ) self_link();
+		self_link::link_type head =  memory_mgr::new_<self_link, ptr_mem_mgr>()();
 
 
 		self_link::set_link( head, head );
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 		derived_class_ptr derived_ptr2( new derived_test_class(1) );
 
 		//TEST_PRINT( L"Creating builtin_type()" );
-		builtin_ptr ptr1( new( mem_mgr<ptr_mem_mgr>() ) builtin_type() );
+		builtin_ptr ptr1( memory_mgr::new_<builtin_type, ptr_mem_mgr>()() );
 
 		//TEST_PRINT( L"Constructing base_ptr from derived_ptr" );
 		base_class_ptr base_ptr( derived_ptr );
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	BOOST_AUTO_TEST_CASE( test_operators )
 	{
 		//SUBTEST_START( L"operators" );	
-		builtin_ptr ptr( new( mem_mgr<ptr_mem_mgr>() ) builtin_type[5] );
+		builtin_ptr ptr( memory_mgr::new_<builtin_type, ptr_mem_mgr>()[5]() );
 
 
 		//TEST_OPERATOR_PRINT( L"+, non method" );

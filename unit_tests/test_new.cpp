@@ -51,11 +51,11 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	typedef boost::mpl::list< sing_name_heap_mgr > managers_list;
 
+	using memory_mgr::new_;
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, managers_list )
 	{
 		typename memory_mgr::manager_traits< mgr_type >::base_manager_type& mgr = mgr_type::instance();
-		using memory_mgr::new_;
 		using memory_mgr::mem_mgr;
 
 		int* p1 = new_<int>( mgr, "" )();
@@ -64,9 +64,9 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		int* p3 = new_<int, mgr_type>()();
 		const int* p4 = new_<int, mgr_type>()( 4 );
 
-		int* p5 = new( mem_mgr(mgr) ) int( 5 );
+		int* p5 = new_<int>( mgr )( 5 );
 
-		const int* arr_ptr = new( mem_mgr(mgr) ) const int[5];
+		const int* arr_ptr = new_<int, mgr_type>()[5]();
 		const void* void_arr_ptr = new_<int, mgr_type>()[15]( 12345 );
 		const test_class* class_arr_ptr = new_<test_class, mgr_type>()[15]( 12345, 123, *p1 );
 
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 // 		};
  		struct size_and_flags
  		{
- 			enum flags{ named, unnamed, size_tracked };
+ 			enum flags{ unnamed = 0, named = 1, size_tracked = 1 << 1 };
  			flags m_flags: 3;
  			size_t m_size: 29;
  		};
@@ -96,6 +96,24 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		::delete_array( arr_ptr, mem_mgr(mgr) );
 		::delete_array<mgr_type>( void_arr_ptr );
 		::delete_array<mgr_type>( class_arr_ptr );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_delete_from_base, mgr_type, managers_list )
+	{
+		const base_test_class* base_ptr = new_<derived_test_class, mgr_type>()( 2 );
+
+		::delete_<mgr_type>( base_ptr );
+		BOOST_REQUIRE_MESSAGE( (! memory_mgr::is_category_supported<
+			mgr_type, memory_mgr::memory_debugging_tag>::value),
+			"Deletion validation can't be performed when memory debbuging is enabled" );
+		
+		int* base_class_data = ((int*)base_ptr) + 1 /*vmptr_ size*/;
+		BOOST_CHECK_EQUAL( *base_class_data, 0xB );
+
+		//Derived class data
+		BOOST_CHECK_EQUAL( *(base_class_data + 1), 0xD );
+		BOOST_CHECK_EQUAL( *(base_class_data + 2), 0xD );
+
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )
@@ -110,7 +128,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		for( int i = 0; i < 1000; ++i )
 		{
-			int* p = new( mem_mgr<mgr_type>() ) int();
+			int* p =  new_<int, mgr_type>()();
 			BOOST_CHECK( p != 0 );
 			int val = rand();
 			*p = val;
@@ -138,7 +156,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		for( int i = 0; i < 1000; ++i )
 		{
-			int* p = new( mem_mgr<mgr_type>() ) int[3];
+			int* p = new_<int, mgr_type>()[3]();
 			BOOST_CHECK( p != 0 );
 			int val = rand();
 			*p = val;

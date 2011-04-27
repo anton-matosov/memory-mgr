@@ -42,7 +42,7 @@ namespace memory_mgr
 		template
 			<
 				class MemMgr,
-				class SizeTrackingSupp
+				class SizeTrackingSupported
 			>
 		struct new_helpers
 		{
@@ -159,18 +159,22 @@ namespace memory_mgr
 			@exception newer throws
 			*/
 			template<class T>
-			static inline void destroy_and_deallocate( T* p, mgr_type& mgr )
+			static inline void destroy_and_deallocate( const T* p, mgr_type& mgr )
 			{
 				p->~T();
 				return mgr.deallocate( p );
 			}
 
+			static inline void destroy_and_deallocate( const void* p, mgr_type& mgr )
+			{
+				return mgr.deallocate( p );
+			}
 			/**
 			@brief Base class for delete helpers template classes specializations
 			@details Delete helper is required because C++ compiler uses memory for arrays
 			in different manner for class array and non class arrays
 			*/
-			template<bool IsClass = type_manip::is_class< T >::value>
+			template<bool IsClass>
 			struct delete_helper{};
 
 			typedef std::pair<const void*, size_t> ptr_and_count_pair;
@@ -180,17 +184,11 @@ namespace memory_mgr
 			template<>
 			struct delete_helper<true>
 			{
-
-				/**
-				@brief Call this method to get real base pointer 
-				of memory block and number of array objects				  
-				@param	p	pointer received in the delete[] call			  
-				@return std::pair<real base pointer of memory block, number of array objects>
-				*/
-				static inline ptr_and_count_pair get_ptr_and_count( const void* p )
+				template<class T>
+				static inline size_t get_objects_count( const T* p )
 				{
-					const size_t* count = size_cast(p) - 1;
-					return ptr_and_count_pair( count, *count );
+					const size_t* full_size = size_cast(p) - 1;
+					return *full_size / sizeof(T);
 				}
 			};
 
@@ -202,16 +200,9 @@ namespace memory_mgr
 			template<>
 			struct delete_helper<false>
 			{
-				/**
-				@brief Call this method to get real base pointer 
-				of memory block and number of array objects				  
-				@param	p	pointer to array's memory
-				@exception newer throws				  
-				@return std::pair<real base pointer of memory block, number of array objects>
-				*/
-				static inline ptr_and_count_pair get_ptr_and_count( const void* p )
+				static inline size_t get_objects_count( const void* /*p*/ )
 				{
-					return ptr_and_count_pair( p, 0 );
+					return 0;
 				}
 			};
 
@@ -224,14 +215,14 @@ namespace memory_mgr
 			@exception newer throws
 			*/
 			template<class T>
-			static inline void destroy_and_deallocate_array( T* p, mgr_type& mgr )
+			static inline void destroy_and_deallocate_array( const T* p, mgr_type& mgr )
 			{				
-				ptr_and_count_pair ptr_and_count = 
-					delete_helper< type_manip::is_class< T >::value >::get_ptr_and_count( p );
+				size_t objects_count = 
+					delete_helper< type_manip::is_class< T >::value >::get_objects_count( p );
 
-				destroy( p, ptr_and_count.second );
+				destroy( p, objects_count );
 
-				return mgr.deallocate( ptr_and_count.first );
+				return mgr.deallocate( p );
 			}
 
 			///A destructor of void can't be called, so we need to treat void* array in different manner

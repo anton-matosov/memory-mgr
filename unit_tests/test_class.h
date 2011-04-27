@@ -98,7 +98,9 @@ public:
 	{}
 
 	virtual ~base_test_class()
-	{}
+	{
+		i_ = 0xB;
+	}
 
 	int Get() const { return i_; }
 	void Set( int i ){ i_ = i; }
@@ -108,11 +110,23 @@ class derived_test_class
 	: public base_test_class
 {
 	int i2_;
+	int i3_;
+	int i4_;
+	int i5_;
 public:
 	derived_test_class( int i = 0 )
 		:base_test_class(i),
 		i2_(i + 1)
 	{}
+
+	~derived_test_class()
+	{
+		Set( 0xD );
+		i2_ = 0xD;
+		i3_ = 0xD;
+		i4_ = 0xD;
+		i5_ = 0xD;
+	}
 };
 
 #endif //MGR_TEST_CLASS_UNIT_HEADER
