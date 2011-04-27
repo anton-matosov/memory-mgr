@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\memory_debug.h"
+				>
+			</File>
+			<File
 				RelativePath=".\memory_manager.h"
 				>
 			</File>

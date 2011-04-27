@@ -40,6 +40,8 @@ namespace memory_mgr
 	*/
 	struct memory_manager_tag{};
 
+	struct memory_debugging_tag{};
+
 	/**
 	   @brief Singleton memory manager tag
 	*/

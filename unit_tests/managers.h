@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/shared_segment.h>
 #include <memory-mgr/new.h>
 #include <memory-mgr/size_tracking.h>
+#include <memory-mgr/memory_debug.h>
 #include <memory-mgr/managed_base.h>
 #include <memory-mgr/singleton_manager.h>
 //#include <memory-mgr/segment_manager.h>
@@ -53,8 +54,11 @@ typedef memory_mgr::sync::critical_section critical_section;
 MGR_DECLARE_BIND_PARAM( MutexName2, const char*, "Default memory sync 2" );
 typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName2 ) def_named_mutex2;
 
-typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section > memmgr_type;
-typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, critical_section > memmgr_small_type;
+typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section > memmgr_type_base;
+typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, critical_section > memmgr_small_type_base;
+
+typedef memory_mgr::memory_debug< memmgr_type_base > memmgr_type;
+typedef memory_mgr::memory_debug< memmgr_small_type_base > memmgr_small_type;
 
 typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
 
