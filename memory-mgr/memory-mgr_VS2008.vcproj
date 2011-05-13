@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=".;$(SolutionDir)"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -103,6 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".;$(SolutionDir)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -396,6 +398,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\smart_ptr\scoped_array.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\smart_ptr\scoped_ptr.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\smart_ptr\shared_array.hpp"
 				>
 			</File>
@@ -624,6 +634,18 @@
 				</Filter>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\temp.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="0"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

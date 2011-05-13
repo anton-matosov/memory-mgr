@@ -1,8 +1,11 @@
 #ifndef MEMORY_MGR_SMART_PTR_SCOPED_ARRAY_HPP_INCLUDED
 #define MEMORY_MGR_SMART_PTR_SCOPED_ARRAY_HPP_INCLUDED
 
+//  This file is the adaptation for Generic Memory Manager library
+// 
 //  (C) Copyright Greg Colvin and Beman Dawes 1998, 1999.
 //  Copyright (c) 2001, 2002 Peter Dimov
+//  (C) Copyright Anton Matosov 2011.
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +14,7 @@
 //  http://www.boost.org/libs/smart_ptr/scoped_array.htm
 //
 
+#include <memory-mgr/offset_ptr.h>
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/config.hpp>   // in case ptrdiff_t not in std
@@ -39,7 +43,8 @@ template<class T> class scoped_array // noncopyable
 {
 private:
 
-    T * px;
+	typedef offset_ptr<T> pointer;
+	pointer px;
 
     scoped_array(scoped_array const &);
     scoped_array & operator=(scoped_array const &);
@@ -53,37 +58,38 @@ public:
 
     typedef T element_type;
 
-    explicit scoped_array( T * p = 0 ) : px( p ) // never throws
+    explicit scoped_array( T * p = 0 ) // never throws
+		: px( p )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_array_constructor_hook( px );
+        boost::sp_array_constructor_hook( &*px );
 #endif
     }
 
     ~scoped_array() // never throws
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_array_destructor_hook( px );
+		boost::sp_array_destructor_hook( &*px );
 #endif
-        boost::checked_array_delete( px );
+		boost::checked_array_delete( &*px );
     }
 
     void reset(T * p = 0) // never throws
     {
-        BOOST_ASSERT( p == 0 || p != px ); // catch self-reset errors
+        BOOST_ASSERT( p == 0 || p != get() ); // catch self-reset errors
         this_type(p).swap(*this);
     }
 
     T & operator[](std::ptrdiff_t i) const // never throws
     {
-        BOOST_ASSERT( px != 0 );
+        BOOST_ASSERT( px.is_not_null() );
         BOOST_ASSERT( i >= 0 );
         return px[i];
     }
 
     T * get() const // never throws
     {
-        return px;
+        return &*px;
     }
 
 // implicit conversion to "bool"
@@ -91,7 +97,7 @@ public:
 
     void swap(scoped_array & b) // never throws
     {
-        T * tmp = b.px;
+        pointer tmp = b.px;
         b.px = px;
         px = tmp;
     }

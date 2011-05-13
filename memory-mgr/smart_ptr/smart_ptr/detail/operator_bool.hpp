@@ -10,7 +10,7 @@
 
     operator bool () const
     {
-        return px != 0;
+        return px.is_not_null() ;
     }
 
 #elif defined( _MANAGED )
@@ -23,7 +23,7 @@
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == 0? 0: unspecified_bool;
+        return px.is_null() ? 0: unspecified_bool;
     }
 
 #elif \
@@ -35,16 +35,16 @@
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == 0? 0: &this_type::get;
+        return px.is_null() ? 0: &this_type::get;
     }
 
 #else
 
-    typedef T * this_type::*unspecified_bool_type;
+    typedef pointer this_type::*unspecified_bool_type;
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == 0? 0: &this_type::px;
+        return px.is_null() ? 0: &this_type::px;
     }
 
 #endif
@@ -52,5 +52,5 @@
     // operator! is redundant, but some compilers need it
     bool operator! () const // never throws
     {
-        return px == 0;
+        return px.is_null() ;
     }
