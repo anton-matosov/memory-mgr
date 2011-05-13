@@ -7,7 +7,7 @@
 //
 //  (C) Copyright Greg Colvin and Beman Dawes 1998, 1999.
 //  Copyright (c) 2001, 2002 Peter Dimov
-//  (C) Copyright Anton Matosov 2011.
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at

@@ -7,11 +7,14 @@
 # pragma once
 #endif
 
-//
+
+//  This file is the adaptation for Generic Memory Manager library
+// 
 //  detail/sp_counted_base_w32.hpp
 //
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov and Multi Media Ltd.
 //  Copyright 2004-2005 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at

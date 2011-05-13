@@ -42,6 +42,8 @@ namespace memory_mgr
 
 namespace detail
 {
+using boost::detail::sp_counted_base;
+using boost::detail::sp_typeinfo;
 
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
 
@@ -58,7 +60,7 @@ class shared_count
 {
 private:
 
-	boost::detail::sp_counted_base * pi_;
+    sp_counted_base * pi_;
 
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
     int id_;

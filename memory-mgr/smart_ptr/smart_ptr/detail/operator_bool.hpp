@@ -1,6 +1,9 @@
 //  This header intentionally has no include guards.
 //
+//  This file is the adaptation for Generic Memory Manager library
+// 
 //  Copyright (c) 2001-2009 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 //  Distributed under the Boost Software License, Version 1.0.
 //  See accompanying file LICENSE_1_0.txt or copy at

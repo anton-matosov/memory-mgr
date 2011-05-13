@@ -59,7 +59,8 @@ private:
 
 public:
 
-    explicit sp_counted_impl_p( X * px ): px_( px )
+    explicit sp_counted_impl_p( X * px )
+		: px_( px )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
         boost::sp_scalar_constructor_hook( px, sizeof(X), this );
@@ -78,19 +79,6 @@ public:
     {
         return 0;
     }
-
-#if defined(BOOST_SP_USE_STD_ALLOCATOR)
-
-    void * operator new( std::size_t )
-    {
-        return std::allocator<this_type>().allocate( 1, static_cast<this_type *>(0) );
-    }
-
-    void operator delete( void * p )
-    {
-        std::allocator<this_type>().deallocate( static_cast<this_type *>(p), 1 );
-    }
-#endif
 };
 
 //
@@ -131,21 +119,6 @@ public:
     {
         return ti == BOOST_SP_TYPEID(D)? &reinterpret_cast<char&>( del ): 0;
     }
-
-#if defined(BOOST_SP_USE_STD_ALLOCATOR)
-
-    void * operator new( std::size_t )
-    {
-        return std::allocator<this_type>().allocate( 1, static_cast<this_type *>(0) );
-    }
-
-    void operator delete( void * p )
-    {
-        std::allocator<this_type>().deallocate( static_cast<this_type *>(p), 1 );
-    }
-
-#endif
-
 };
 
 template<class P, class D, class A>

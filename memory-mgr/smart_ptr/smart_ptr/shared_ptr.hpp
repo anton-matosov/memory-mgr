@@ -1,11 +1,13 @@
 #ifndef MEMORY_MGR_SMART_PTR_SHARED_PTR_HPP_INCLUDED
 #define MEMORY_MGR_SMART_PTR_SHARED_PTR_HPP_INCLUDED
 
-//
+//  This file is the adaptation for Generic Memory Manager library
+// 
 //  shared_ptr.hpp
 //
 //  (C) Copyright Greg Colvin and Beman Dawes 1998, 1999.
 //  Copyright (c) 2001-2008 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -33,11 +35,11 @@
 #include <memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp>
 
-#include <memory-mgr/offset_ptr.hpp>
+#include <memory-mgr/offset_ptr.h>
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
 #include <memory-mgr/smart_ptr/smart_ptr/detail/spinlock_pool.hpp>
-#include <boost/memory_order.hpp>
+#include <memory-mgr/smart_ptr/smart_ptr/memory_order.hpp>
 #endif
 
 #include <algorithm>            // for std::swap
