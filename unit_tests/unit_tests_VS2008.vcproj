@@ -262,6 +262,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\test_shared_ptr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_shared_segment.cpp"
 				>
 			</File>
