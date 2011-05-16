@@ -7,16 +7,18 @@
 # pragma once
 #endif
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  boost/detail/atomic_count.hpp - thread/SMP safe reference counter
 //
 //  Copyright (c) 2001, 2002 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  typedef <implementation-defined> boost::detail::atomic_count;
+//  typedef <implementation-defined> memory_mgr::detail::atomic_count;
 //
 //  atomic_count a(n);
 //

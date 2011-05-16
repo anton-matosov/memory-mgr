@@ -1,10 +1,12 @@
 #ifndef MEMORY_MGR_SMART_PTR_WEAK_PTR_HPP_INCLUDED
 #define MEMORY_MGR_SMART_PTR_WEAK_PTR_HPP_INCLUDED
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  weak_ptr.hpp
 //
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -63,7 +65,7 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( weak_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak_ptr( weak_ptr<Y> const & r, typename memory_mgr::detail::sp_enable_if_convertible<Y,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
@@ -79,20 +81,20 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( weak_ptr<Y> && r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak_ptr( weak_ptr<Y> && r, typename memory_mgr::detail::sp_enable_if_convertible<Y,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
     weak_ptr( weak_ptr<Y> && r )
 
 #endif
-    : px( r.lock().get() ), pn( static_cast< boost::detail::weak_count && >( r.pn ) ) // never throws
+    : px( r.lock().get() ), pn( static_cast< memory_mgr::detail::weak_count && >( r.pn ) ) // never throws
     {
         r.px = 0;
     }
 
     // for better efficiency in the T == Y case
-    weak_ptr( weak_ptr && r ): px( r.px ), pn( static_cast< boost::detail::weak_count && >( r.pn ) ) // never throws
+    weak_ptr( weak_ptr && r ): px( r.px ), pn( static_cast< memory_mgr::detail::weak_count && >( r.pn ) ) // never throws
     {
         r.px = 0;
     }
@@ -110,7 +112,7 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak_ptr( shared_ptr<Y> const & r, typename memory_mgr::detail::sp_enable_if_convertible<Y,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
@@ -154,7 +156,7 @@ public:
 
     shared_ptr<T> lock() const // never throws
     {
-        return shared_ptr<element_type>( *this, boost::detail::sp_nothrow_tag() );
+        return shared_ptr<element_type>( *this, memory_mgr::detail::sp_nothrow_tag() );
     }
 
     long use_count() const // never throws
@@ -183,7 +185,7 @@ public:
         pn.swap(other.pn);
     }
 
-    void _internal_assign(T * px2, boost::detail::shared_count const & pn2)
+    void _internal_assign(T * px2, memory_mgr::detail::shared_count const & pn2)
     {
         px = px2;
         pn = pn2;
@@ -206,8 +208,9 @@ private:
 
 #endif
 
-    T * px;                       // contained pointer
-    boost::detail::weak_count pn; // reference counter
+	typedef offset_ptr<T> pointer;
+    pointer px;                       // contained pointer
+    memory_mgr::detail::weak_count pn; // reference counter
 
 };  // weak_ptr
 

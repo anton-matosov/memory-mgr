@@ -182,35 +182,50 @@ public:
 
     typedef T element_type;
     typedef T value_type;
-    typedef T * pointer;
-    typedef typename boost::detail::shared_ptr_traits<T>::reference reference;
+    typedef offset_ptr<T> pointer;
+    typedef typename memory_mgr::detail::shared_ptr_traits<T>::reference reference;
 
     shared_ptr(): px(0), pn() // never throws in 1.30+
     {
     }
 
     template<class Y>
+    explicit shared_ptr( offset_ptr<Y> p ): px( p ), pn( p ) // Y must be complete
+    {
+        memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
+    }
+
+    template<class Y>
     explicit shared_ptr( Y * p ): px( p ), pn( p ) // Y must be complete
     {
-        boost::detail::sp_enable_shared_from_this( this, p, p );
+        memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
 
     //
     // Requirements: D's copy constructor must not throw
     //
     // shared_ptr will release p by calling d(p)
-    //
+	//
+	template<class Y, class D> shared_ptr(offset_ptr<Y> p, D d): px(p), pn(p, d)
+	{
+		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
+	}
 
     template<class Y, class D> shared_ptr(Y * p, D d): px(p), pn(p, d)
     {
-        boost::detail::sp_enable_shared_from_this( this, p, p );
+        memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
 
     // As above, but with allocator. A's copy constructor shall not throw.
 
+	template<class Y, class D, class A> shared_ptr( offset_ptr<Y> p, D d, A a ): px( p ), pn( p, d, a )
+	{
+		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
+	}
+
     template<class Y, class D, class A> shared_ptr( Y * p, D d, A a ): px( p ), pn( p, d, a )
     {
-        boost::detail::sp_enable_shared_from_this( this, p, p );
+        memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
 
 //  generated copy constructor, destructor are fine
@@ -223,7 +238,7 @@ public:
     }
 
     template<class Y>
-    shared_ptr( weak_ptr<Y> const & r, boost::detail::sp_nothrow_tag ): px( 0 ), pn( r.pn, boost::detail::sp_nothrow_tag() ) // never throws
+    shared_ptr( weak_ptr<Y> const & r, memory_mgr::detail::sp_nothrow_tag ): px( 0 ), pn( r.pn, memory_mgr::detail::sp_nothrow_tag() ) // never throws
     {
         if( !pn.empty() )
         {
@@ -234,7 +249,7 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    shared_ptr( shared_ptr<Y> const & r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    shared_ptr( shared_ptr<Y> const & r, typename memory_mgr::detail::sp_enable_if_convertible<Y,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
@@ -252,26 +267,26 @@ public:
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, boost::detail::static_cast_tag): px(static_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::static_cast_tag): px(static_cast<element_type *>(r.px)), pn(r.pn)
     {
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, boost::detail::const_cast_tag): px(const_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::const_cast_tag): px(const_cast<element_type *>(r.px)), pn(r.pn)
     {
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, boost::detail::dynamic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::dynamic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
     {
         if(px == 0) // need to allocate new counter -- the cast failed
         {
-            pn = boost::detail::shared_count();
+            pn = memory_mgr::detail::shared_count();
         }
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, boost::detail::polymorphic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::polymorphic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
     {
         if(px == 0)
         {
@@ -285,18 +300,18 @@ public:
     explicit shared_ptr(std::auto_ptr<Y> & r): px(r.get()), pn()
     {
         Y * tmp = r.get();
-        pn = boost::detail::shared_count(r);
-        boost::detail::sp_enable_shared_from_this( this, tmp, tmp );
+        pn = memory_mgr::detail::shared_count(r);
+        memory_mgr::detail::sp_enable_shared_from_this( this, tmp, tmp );
     }
 
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    explicit shared_ptr( Ap r, typename boost::detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
+    explicit shared_ptr( Ap r, typename memory_mgr::detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
     {
         typename Ap::element_type * tmp = r.get();
-        pn = boost::detail::shared_count( r );
-        boost::detail::sp_enable_shared_from_this( this, tmp, tmp );
+        pn = memory_mgr::detail::shared_count( r );
+        memory_mgr::detail::sp_enable_shared_from_this( this, tmp, tmp );
     }
 
 
@@ -335,7 +350,7 @@ public:
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    typename boost::detail::sp_enable_if_auto_ptr< Ap, shared_ptr & >::type operator=( Ap r )
+    typename memory_mgr::detail::sp_enable_if_auto_ptr< Ap, shared_ptr & >::type operator=( Ap r )
     {
         this_type( r ).swap( *this );
         return *this;
@@ -359,7 +374,7 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    shared_ptr( shared_ptr<Y> && r, typename boost::detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    shared_ptr( shared_ptr<Y> && r, typename memory_mgr::detail::sp_enable_if_convertible<Y,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
@@ -422,12 +437,12 @@ public:
     T * operator-> () const // never throws
     {
         BOOST_ASSERT(px != 0);
-        return px;
+        return &*px;
     }
 
     T * get() const // never throws
     {
-        return px;
+        return &*px;
     }
 
 // implicit conversion to "bool"
@@ -477,8 +492,8 @@ private:
 
 #endif
 
-    T * px;                     // contained pointer
-    boost::detail::shared_count pn;    // reference counter
+    pointer px;                     // contained pointer
+    detail::shared_count pn;    // reference counter
 
 };  // shared_ptr
 
@@ -515,34 +530,34 @@ template<class T> inline void swap(shared_ptr<T> & a, shared_ptr<T> & b)
 
 template<class T, class U> shared_ptr<T> static_pointer_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::static_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::static_cast_tag());
 }
 
 template<class T, class U> shared_ptr<T> const_pointer_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::const_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::const_cast_tag());
 }
 
 template<class T, class U> shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::dynamic_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::dynamic_cast_tag());
 }
 
 // shared_*_cast names are deprecated. Use *_pointer_cast instead.
 
 template<class T, class U> shared_ptr<T> shared_static_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::static_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::static_cast_tag());
 }
 
 template<class T, class U> shared_ptr<T> shared_dynamic_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::dynamic_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::dynamic_cast_tag());
 }
 
 template<class T, class U> shared_ptr<T> shared_polymorphic_cast(shared_ptr<U> const & r)
 {
-    return shared_ptr<T>(r, boost::detail::polymorphic_cast_tag());
+    return shared_ptr<T>(r, memory_mgr::detail::polymorphic_cast_tag());
 }
 
 template<class T, class U> shared_ptr<T> shared_polymorphic_downcast(shared_ptr<U> const & r)
@@ -628,7 +643,7 @@ template<class T> inline bool atomic_is_lock_free( shared_ptr<T> const * /*p*/ )
 
 template<class T> shared_ptr<T> atomic_load( shared_ptr<T> const * p )
 {
-    boost::detail::spinlock_pool<2>::scoped_lock lock( p );
+    memory_mgr::detail::spinlock_pool<2>::scoped_lock lock( p );
     return *p;
 }
 
@@ -639,7 +654,7 @@ template<class T> inline shared_ptr<T> atomic_load_explicit( shared_ptr<T> const
 
 template<class T> void atomic_store( shared_ptr<T> * p, shared_ptr<T> r )
 {
-    boost::detail::spinlock_pool<2>::scoped_lock lock( p );
+    memory_mgr::detail::spinlock_pool<2>::scoped_lock lock( p );
     p->swap( r );
 }
 
@@ -650,7 +665,7 @@ template<class T> inline void atomic_store_explicit( shared_ptr<T> * p, shared_p
 
 template<class T> shared_ptr<T> atomic_exchange( shared_ptr<T> * p, shared_ptr<T> r )
 {
-    boost::detail::spinlock & sp = boost::detail::spinlock_pool<2>::spinlock_for( p );
+    memory_mgr::detail::spinlock & sp = memory_mgr::detail::spinlock_pool<2>::spinlock_for( p );
 
     sp.lock();
     p->swap( r );
@@ -666,7 +681,7 @@ template<class T> shared_ptr<T> atomic_exchange_explicit( shared_ptr<T> * p, sha
 
 template<class T> bool atomic_compare_exchange( shared_ptr<T> * p, shared_ptr<T> * v, shared_ptr<T> w )
 {
-    boost::detail::spinlock & sp = boost::detail::spinlock_pool<2>::spinlock_for( p );
+    memory_mgr::detail::spinlock & sp = memory_mgr::detail::spinlock_pool<2>::spinlock_for( p );
 
     sp.lock();
 

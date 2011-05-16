@@ -7,8 +7,10 @@
 # pragma once
 #endif
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  Copyright (c) 2008 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 //  Distributed under the Boost Software License, Version 1.0.
 //  See accompanying file LICENSE_1_0.txt or copy at
@@ -70,7 +72,7 @@ public:
     {
         for( unsigned k = 0; !try_lock(); ++k )
         {
-            boost::detail::yield( k );
+            memory_mgr::detail::yield( k );
         }
     }
 

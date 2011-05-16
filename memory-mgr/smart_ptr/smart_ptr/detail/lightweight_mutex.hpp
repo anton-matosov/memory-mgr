@@ -7,18 +7,20 @@
 # pragma once
 #endif
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  boost/detail/lightweight_mutex.hpp - lightweight mutex
 //
 //  Copyright (c) 2002, 2003 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  typedef <unspecified> boost::detail::lightweight_mutex;
+//  typedef <unspecified> memory_mgr::detail::lightweight_mutex;
 //
-//  boost::detail::lightweight_mutex is a header-only implementation of
+//  memory_mgr::detail::lightweight_mutex is a header-only implementation of
 //  a subset of the Mutex concept requirements:
 //
 //  http://www.boost.org/doc/html/threads/concepts.html#threads.concepts.Mutex

@@ -445,6 +445,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\smart_ptr\smart_ptr\memory_order.hpp"
+					>
+				</File>
+				<File
 					RelativePath=".\smart_ptr\smart_ptr\scoped_array.hpp"
 					>
 				</File>

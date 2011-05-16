@@ -7,11 +7,13 @@
 # pragma once
 #endif
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  detail/sp_counted_impl.hpp
 //
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov and Multi Media Ltd.
 //  Copyright 2004-2005 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -24,6 +26,7 @@
 # error BOOST_SP_USE_QUICK_ALLOCATOR is not supported by the current addoptation.
 #endif
 
+#include <memory-mgr/offset_ptr.h>
 #include <boost/checked_delete.hpp>
 #include <boost/smart_ptr/detail/sp_counted_base.hpp>
 
@@ -50,7 +53,8 @@ class sp_counted_impl_p
 {
 private:
 
-    X * px_;
+	typedef offset_ptr<X> pointer;
+    pointer px_;
 
     sp_counted_impl_p( sp_counted_impl_p const & );
     sp_counted_impl_p & operator= ( sp_counted_impl_p const & );
@@ -63,16 +67,16 @@ public:
 		: px_( px )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px, sizeof(X), this );
+        boost::sp_scalar_constructor_hook( &*px, sizeof(X), this );
 #endif
     }
 
     virtual void dispose() // nothrow
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( px_, sizeof(X), this );
+        boost::sp_scalar_destructor_hook( &*px_, sizeof(X), this );
 #endif
-        boost::checked_delete( px_ );
+        boost::checked_delete( &*px_ );
     }
 
 	virtual void * get_deleter( boost::detail::sp_typeinfo const & )

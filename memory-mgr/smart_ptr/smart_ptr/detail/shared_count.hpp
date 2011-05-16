@@ -7,11 +7,13 @@
 # pragma once
 #endif
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  detail/shared_count.hpp
 //
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov and Multi Media Ltd.
 //  Copyright 2004-2005 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -28,6 +30,7 @@
 #include <boost/smart_ptr/detail/sp_counted_base.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/bad_weak_ptr.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_impl.hpp>
+#include <memory-mgr/offset_ptr.h>
 #include <boost/detail/workaround.hpp>
 // In order to avoid circular dependencies with Boost.TR1
 // we make sure that our include of <memory> doesn't try to
@@ -59,8 +62,8 @@ class weak_count;
 class shared_count
 {
 private:
-
-    sp_counted_base * pi_;
+	typedef offset_ptr<sp_counted_base> pointer;
+    pointer pi_;
 
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
     int id_;
@@ -159,7 +162,7 @@ public:
         try
         {
             pi_ = a2.allocate( 1, static_cast< impl_type* >( 0 ) );
-            new( static_cast< void* >( pi_ ) ) impl_type( p, d, a );
+            new( static_cast< void* >( &*pi_ ) ) impl_type( p, d, a );
         }
         catch(...)
         {
@@ -167,7 +170,7 @@ public:
 
             if( pi_ != 0 )
             {
-                a2.deallocate( static_cast< impl_type* >( pi_ ), 1 );
+                a2.deallocate( static_cast< impl_type* >( &*pi_ ), 1 );
             }
 
             throw;
@@ -247,7 +250,7 @@ public:
 
     shared_count & operator= (shared_count const & r) // nothrow
     {
-        sp_counted_base * tmp = r.pi_;
+        pointer tmp = r.pi_;
 
         if( tmp != pi_ )
         {
@@ -261,7 +264,7 @@ public:
 
     void swap(shared_count & r) // nothrow
     {
-        sp_counted_base * tmp = r.pi_;
+        pointer tmp = r.pi_;
         r.pi_ = pi_;
         pi_ = tmp;
     }
@@ -288,12 +291,12 @@ public:
 
     friend inline bool operator<(shared_count const & a, shared_count const & b)
     {
-        return std::less<sp_counted_base *>()( a.pi_, b.pi_ );
+        return std::less<pointer>()( a.pi_, b.pi_ );
     }
 
     void * get_deleter( sp_typeinfo const & ti ) const
     {
-        return pi_? pi_->get_deleter( ti ): 0;
+        return pi_.is_not_null() ? pi_->get_deleter( ti ): 0;
     }
 };
 
@@ -302,7 +305,8 @@ class weak_count
 {
 private:
 
-    sp_counted_base * pi_;
+	typedef offset_ptr<sp_counted_base> pointer;
+	pointer pi_;
 
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
     int id_;
@@ -359,7 +363,7 @@ public:
 
     weak_count & operator= (shared_count const & r) // nothrow
     {
-        sp_counted_base * tmp = r.pi_;
+        pointer tmp = r.pi_;
 
         if( tmp != pi_ )
         {
@@ -373,7 +377,7 @@ public:
 
     weak_count & operator= (weak_count const & r) // nothrow
     {
-        sp_counted_base * tmp = r.pi_;
+        pointer tmp = r.pi_;
 
         if( tmp != pi_ )
         {
@@ -387,19 +391,19 @@ public:
 
     void swap(weak_count & r) // nothrow
     {
-        sp_counted_base * tmp = r.pi_;
+        pointer tmp = r.pi_;
         r.pi_ = pi_;
         pi_ = tmp;
     }
 
     long use_count() const // nothrow
     {
-        return pi_ != 0? pi_->use_count(): 0;
+        return pi_.is_not_null() ? pi_->use_count(): 0;
     }
 
     bool empty() const // nothrow
     {
-        return pi_ == 0;
+        return pi_.is_null();
     }
 
     friend inline bool operator==(weak_count const & a, weak_count const & b)
@@ -409,7 +413,7 @@ public:
 
     friend inline bool operator<(weak_count const & a, weak_count const & b)
     {
-        return std::less<sp_counted_base *>()(a.pi_, b.pi_);
+        return std::less<pointer>()(a.pi_, b.pi_);
     }
 };
 

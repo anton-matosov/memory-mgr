@@ -1,10 +1,12 @@
 #ifndef MEMORY_MGR_SMART_PTR_INTRUSIVE_PTR_HPP_INCLUDED
 #define MEMORY_MGR_SMART_PTR_INTRUSIVE_PTR_HPP_INCLUDED
 
+//  This file is the adaptation for Generic Memory Manager library
 //
 //  intrusive_ptr.hpp
 //
 //  Copyright (c) 2001, 2002 Peter Dimov
+//  Copyright (c) 2011 Anton (shikin) Matosov
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -77,7 +79,7 @@ public:
     template<class U>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    intrusive_ptr( intrusive_ptr<U> const & rhs, typename boost::detail::sp_enable_if_convertible<U,T>::type = boost::detail::sp_empty() )
+    intrusive_ptr( intrusive_ptr<U> const & rhs, typename memory_mgr::detail::sp_enable_if_convertible<U,T>::type = memory_mgr::detail::sp_empty() )
 
 #else
 
