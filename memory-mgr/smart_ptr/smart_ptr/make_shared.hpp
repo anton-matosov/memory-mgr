@@ -104,11 +104,11 @@ template< class T > T&& sp_forward( T & t )
 //
 // Used even when variadic templates are available because of the new T() vs new T issue
 
-template< class T > boost::shared_ptr< T > make_shared()
+template< class T > memory_mgr::shared_ptr< T > make_shared()
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -118,14 +118,14 @@ template< class T > boost::shared_ptr< T > make_shared()
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
-template< class T, class A > boost::shared_ptr< T > allocate_shared( A const & a )
+template< class T, class A > memory_mgr::shared_ptr< T > allocate_shared( A const & a )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -135,18 +135,18 @@ template< class T, class A > boost::shared_ptr< T > allocate_shared( A const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 #if defined( BOOST_HAS_VARIADIC_TMPL ) && defined( BOOST_HAS_RVALUE_REFS )
 
 // Variadic templates, rvalue reference
 
-template< class T, class Arg1, class... Args > boost::shared_ptr< T > make_shared( Arg1 && arg1, Args && ... args )
+template< class T, class Arg1, class... Args > memory_mgr::shared_ptr< T > make_shared( Arg1 && arg1, Args && ... args )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -156,14 +156,14 @@ template< class T, class Arg1, class... Args > boost::shared_ptr< T > make_share
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
-template< class T, class A, class Arg1, class... Args > boost::shared_ptr< T > allocate_shared( A const & a, Arg1 && arg1, Args && ... args )
+template< class T, class A, class Arg1, class... Args > memory_mgr::shared_ptr< T > allocate_shared( A const & a, Arg1 && arg1, Args && ... args )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -173,7 +173,7 @@ template< class T, class A, class Arg1, class... Args > boost::shared_ptr< T > a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 #else
@@ -181,11 +181,11 @@ template< class T, class A, class Arg1, class... Args > boost::shared_ptr< T > a
 // C++03 version
 
 template< class T, class A1 >
-boost::shared_ptr< T > make_shared( A1 const & a1 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -195,15 +195,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1 )
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -213,15 +213,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1 )
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -231,15 +231,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2 )
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -249,15 +249,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -267,15 +267,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3 
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -285,15 +285,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -303,15 +303,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -321,15 +321,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4, class A5 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -339,15 +339,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4, class A5 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -357,15 +357,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4, class A5, class A6 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -375,15 +375,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4, class A5, class A6 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -393,15 +393,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -411,15 +411,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4, class A5, class A6, class A7 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -429,15 +429,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -447,15 +447,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -465,15 +465,15 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9 >
-boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8, A9 const & a9 )
+memory_mgr::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8, A9 const & a9 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -483,15 +483,15 @@ boost::shared_ptr< T > make_shared( A1 const & a1, A2 const & a2, A3 const & a3,
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 template< class T, class A, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9 >
-boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8, A9 const & a9 )
+memory_mgr::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a2, A3 const & a3, A4 const & a4, A5 const & a5, A6 const & a6, A7 const & a7, A8 const & a8, A9 const & a9 )
 {
-    boost::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = boost::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
@@ -501,7 +501,7 @@ boost::shared_ptr< T > allocate_shared( A const & a, A1 const & a1, A2 const & a
     T * pt2 = static_cast< T* >( pv );
 
     memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return boost::shared_ptr< T >( pt, pt2 );
+    return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
 #endif

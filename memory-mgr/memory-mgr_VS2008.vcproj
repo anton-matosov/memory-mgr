@@ -516,6 +516,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\smart_ptr\smart_ptr\detail\make_shared_preprocessor.hpp"
+						>
+					</File>
+					<File
 						RelativePath=".\smart_ptr\smart_ptr\detail\operator_bool.hpp"
 						>
 					</File>
