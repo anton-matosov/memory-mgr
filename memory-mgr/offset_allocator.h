@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
-#include <memory-mgr/detail/pointer_traits.h>
+#include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr
 {
@@ -43,12 +43,10 @@ namespace memory_mgr
 		typedef T									value_type;
 		typedef offset_allocator< value_type, mgr_type >	self_type;
 
-		typedef pointer_traits<T>					pointer_traits_type;
-
-		typedef typename pointer_traits_type::pointer				pointer;
-		typedef typename pointer_traits_type::const_pointer			const_pointer;
-		typedef typename pointer_traits_type::reference				reference;
-		typedef typename pointer_traits_type::const_reference		const_reference;
+		typedef typename offset_ptr<T> pointer;
+		typedef typename offset_ptr<const T> const_pointer;
+		typedef typename pointer::reference reference;
+		typedef typename pointer::const_reference const_reference;
 
 		typedef typename manager_traits<mgr_type>::size_type	size_type;
 		typedef ptrdiff_t										difference_type;

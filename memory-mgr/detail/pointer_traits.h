@@ -28,41 +28,18 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/detail/pointer_traits.hpp>
 #include <memory-mgr/offset_ptr.h>
 
-namespace memory_mgr
+namespace gstl
 {
-	//Offset pointer traits class
+
  	template<class T>
- 	struct pointer_traits
+	struct pointer_traits<memory_mgr::offset_ptr< T > >
+		:public pointer_traits<T>
  	{
-
-		typedef T												value_type;
-		typedef pointer_traits< value_type >		self_type;
-
-		typedef				offset_ptr< value_type >			pointer;
-		typedef				offset_ptr< const  value_type >		const_pointer;
-		typedef typename	pointer::reference					reference;
-		typedef	typename	pointer::const_reference 			const_reference;
-
-		template<class Other>
-		struct rebind
-		{	// convert an pointer_traits<T> to an pointer_traits <Other>
-			typedef typename pointer_traits<Other> other;
-		};
-
-		static pointer null_ptr;
-
-		static inline bool is_null( const_pointer ptr )
-		{
-			return ptr.is_null();
-		}
  	};
  
- 	template<class T>
- 	typename pointer_traits<T>::pointer pointer_traits<T>::null_ptr = typename pointer_traits<T>::pointer();
-
-		
 }
 
 
