@@ -25,7 +25,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <iostream>
 #include <string>
 
-#define BOOST_ALL_NO_LIB
+#define BOOST_TEST_MODULE gstl_unit_tests
+#include <boost/test/auto_unit_test.hpp>
+
 #ifdef max
 #	undef max
 #endif

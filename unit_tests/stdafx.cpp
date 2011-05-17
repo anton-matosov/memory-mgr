@@ -21,10 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#define BOOST_TEST_NO_LIB
-#define BOOST_TEST_MODULE gstl_unit_tests
-#include <boost/test/auto_unit_test.hpp>
-//#include <boost/test/included/unit_test.hpp>
 #include "stdafx.h"
 
 
