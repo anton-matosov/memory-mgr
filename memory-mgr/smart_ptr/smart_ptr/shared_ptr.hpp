@@ -190,13 +190,13 @@ public:
     }
 
     template<class Y>
-    explicit shared_ptr( offset_ptr<Y> p ): px( p ), pn( p ) // Y must be complete
+    explicit shared_ptr(const offset_ptr<Y>& p ): px( p ), pn( p ) // Y must be complete
     {
         memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
     }
 
     template<class Y>
-    explicit shared_ptr( Y * p ): px( p ), pn( p ) // Y must be complete
+    explicit shared_ptr( Y * p ): px( p ), pn( offset_ptr<Y>(p) ) // Y must be complete
     {
         memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
@@ -206,24 +206,32 @@ public:
     //
     // shared_ptr will release p by calling d(p)
 	//
-	template<class Y, class D> shared_ptr(offset_ptr<Y> p, D d): px(p), pn(p, d)
+	template<class Y, class D>
+	shared_ptr(const offset_ptr<Y>& p, D d)
+		: px(p), pn(p, d)
 	{
 		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
 	}
 
-    template<class Y, class D> shared_ptr(Y * p, D d): px(p), pn(p, d)
+    template<class Y, class D>
+	shared_ptr(Y * p, D d)
+		: px(p), pn(offset_ptr<Y>(p), d)
     {
         memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
 
     // As above, but with allocator. A's copy constructor shall not throw.
 
-	template<class Y, class D, class A> shared_ptr( offset_ptr<Y> p, D d, A a ): px( p ), pn( p, d, a )
+	template<class Y, class D, class A>
+	shared_ptr(const offset_ptr<Y>& p, D d, A a )
+		: px( p ), pn( p, d, a )
 	{
 		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
 	}
 
-    template<class Y, class D, class A> shared_ptr( Y * p, D d, A a ): px( p ), pn( p, d, a )
+    template<class Y, class D, class A>
+	shared_ptr( Y * p, D d, A a )
+		: px( p ), pn( offset_ptr<Y>(p), d, a )
     {
         memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
     }
@@ -231,7 +239,8 @@ public:
 //  generated copy constructor, destructor are fine
 
     template<class Y>
-    explicit shared_ptr(weak_ptr<Y> const & r): pn(r.pn) // may throw
+    explicit shared_ptr(weak_ptr<Y> const & r)
+		: pn(r.pn) // may throw
     {
         // it is now safe to copy r.px, as pn(r.pn) did not throw
         px = r.px;

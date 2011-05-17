@@ -28,7 +28,7 @@
 
 #include <memory-mgr/offset_ptr.h>
 #include <boost/checked_delete.hpp>
-#include <boost/smart_ptr/detail/sp_counted_base.hpp>
+#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp>
 
 
 #include <memory>           // std::allocator
@@ -63,7 +63,7 @@ private:
 
 public:
 
-    explicit sp_counted_impl_p( X * px )
+    explicit sp_counted_impl_p( pointer px )
 		: px_( px )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
@@ -116,7 +116,7 @@ public:
 
     virtual void dispose() // nothrow
     {
-        del( ptr );
+        del( &*ptr );
     }
 
     virtual void * get_deleter( boost::detail::sp_typeinfo const & ti )
@@ -150,7 +150,7 @@ public:
 
     virtual void dispose() // nothrow
     {
-        d_( p_ );
+        d_( &*p_ );
     }
 
     virtual void destroy() // nothrow

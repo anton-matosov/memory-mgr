@@ -27,7 +27,7 @@
 #include <boost/config.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
-#include <boost/smart_ptr/detail/sp_counted_base.hpp>
+#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/bad_weak_ptr.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_impl.hpp>
 #include <memory-mgr/offset_ptr.h>
@@ -45,7 +45,6 @@ namespace memory_mgr
 
 namespace detail
 {
-using boost::detail::sp_counted_base;
 using boost::detail::sp_typeinfo;
 
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
@@ -80,7 +79,8 @@ public:
     {
     }
 
-    template<class Y> explicit shared_count( Y * p ): pi_( 0 )
+    template<class Y>
+	explicit shared_count( offset_ptr<Y> p ): pi_( 0 )
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
         , id_(shared_count_id)
 #endif
@@ -93,7 +93,7 @@ public:
         }
         catch(...)
         {
-            boost::checked_delete( p );
+            boost::checked_delete( &*p );
             throw;
         }
 
@@ -103,7 +103,7 @@ public:
 
         if( pi_ == 0 )
         {
-            boost::checked_delete( p );
+            boost::checked_delete( &*p );
             boost::throw_exception( std::bad_alloc() );
         }
 
@@ -130,7 +130,7 @@ public:
         }
         catch(...)
         {
-            d(p); // delete p
+            d(&*p); // delete p
             throw;
         }
 
@@ -166,7 +166,7 @@ public:
         }
         catch(...)
         {
-            d( p );
+            d( &*p );
 
             if( pi_ != 0 )
             {

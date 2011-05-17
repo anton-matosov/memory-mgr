@@ -36,7 +36,7 @@ namespace memory_mgr
 
 namespace detail
 {
-
+using boost::detail::sp_typeinfo;
 class sp_counted_base
 {
 private:

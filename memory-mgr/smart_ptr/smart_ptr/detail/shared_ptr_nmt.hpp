@@ -18,6 +18,8 @@
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
+#include <memory-mgr/offset_ptr.h>
+
 
 #ifndef BOOST_NO_AUTO_PTR
 # include <memory>          // for std::auto_ptr
@@ -72,7 +74,7 @@ public:
     {
         if(--*pn == 0)
         {
-            boost::checked_delete(px);
+            boost::checked_delete(&*px);
             delete pn;
         }
     }
@@ -107,25 +109,25 @@ public:
 
     void reset(T * p = 0)
     {
-        BOOST_ASSERT(p == 0 || p != px);
+        BOOST_ASSERT(p == 0 || p != &*px);
         shared_ptr(p).swap(*this);
     }
 
     T & operator*() const  // never throws
     {
-        BOOST_ASSERT(px != 0);
+        BOOST_ASSERT(px.is_not_null());
         return *px;
     }
 
     T * operator->() const  // never throws
     {
-        BOOST_ASSERT(px != 0);
-        return px;
+        BOOST_ASSERT(px.is_not_null());
+        return &*px;
     }
 
     T * get() const  // never throws
     {
-        return px;
+        return &*px;
     }
 
     long use_count() const  // never throws
@@ -146,7 +148,7 @@ public:
 
 private:
 
-    T * px;            // contained pointer
+    offset_ptr<T> px;            // contained pointer
     count_type * pn;   // ptr to reference counter
 };
 
