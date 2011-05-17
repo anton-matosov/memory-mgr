@@ -49,17 +49,17 @@ typedef std::list<test_value_type>		std_list;
 
 typedef gstl::list<test_value_type>		gstl_list;
 typedef gstl::list<test_value_type,
-	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, ptr_alloc_mgr> >			memory_mgr_vector;
 typedef gstl::list<test_value_type,
 	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 
 typedef gstl::queue<test_value_type, std_list>		gstl_std_list_queue;
-// typedef gstl::queue<test_value_type, gstl_list>		gstl_vec_queue;
-// typedef gstl::queue<test_value_type, memory_mgr_vector>		gstl_memory_mgr_vec_queue;
-// typedef gstl::queue<test_value_type, memory_mgr_off_vector>		gstl_memory_mgr_off_vec_queue;
+ typedef gstl::queue<test_value_type, gstl_list>		gstl_vec_queue;
+ typedef gstl::queue<test_value_type, memory_mgr_vector>		gstl_memory_mgr_vec_queue;
+ typedef gstl::queue<test_value_type, memory_mgr_off_vector>		gstl_memory_mgr_off_vec_queue;
 
-typedef boost::mpl::list< /**/std_queue/**/, gstl_std_list_queue/**, 
-			gstl_memory_mgr_vec_queue/**, gstl_memory_mgr_off_vec_queue/**/> t_list;
+typedef boost::mpl::list< /**/std_queue/**/, gstl_std_list_queue/**/, 
+			gstl_vec_queue, gstl_memory_mgr_vec_queue/**/, gstl_memory_mgr_off_vec_queue/**/> t_list;
 
 
 #include "detail/test_wrapper_construction.hpp"

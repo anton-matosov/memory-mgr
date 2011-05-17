@@ -50,8 +50,7 @@ namespace gstl
 		<
 			class T,
 			class Alloc,
-			class Traits = default_sequence_traits<T>,
-			class PtrTraits = typename Alloc::pointer_traits_type
+			class Traits = default_sequence_traits<T>
 		>
 		class dynamic_buffer
 		{
@@ -60,7 +59,6 @@ namespace gstl
 
 			typedef dynamic_buffer							self_type;
 			typedef typename Alloc::template rebind<T>::other	allocator_type;
-
 
 			typedef typename allocator_type::value_type			value_type;
 			typedef typename allocator_type::pointer			pointer;
@@ -72,16 +70,15 @@ namespace gstl
 			typedef typename allocator_type::difference_type	difference_type;
 
 			typedef Traits										traits_type;
-			typedef PtrTraits									ptr_traits;
 
-			pointer			buffer_;
+			pointer	buffer_;
 			size_type		size_;
 			size_type		reserved_;
 			allocator_type	alloc_;
 
 
 			dynamic_buffer( const allocator_type& alloc = allocator_type() )
-				:buffer_( ptr_traits::null_ptr ),
+				:buffer_(),
 				size_(0),
 				reserved_(0),
 				alloc_( alloc )
@@ -90,7 +87,7 @@ namespace gstl
 			
 			~dynamic_buffer()
 			{
-				alloc_.deallocate( buffer_, reserved_ );
+				alloc_.deallocate( &*buffer_, reserved_ );
 			}
 
 			void reserve( size_type n = 0 )
@@ -104,9 +101,9 @@ namespace gstl
 					n = floor( n, min_buff_size );
 					pointer new_buffer = alloc_.allocate( n );
 					
-					if( !ptr_traits::is_null( buffer_ ) )
+					if( !! buffer_ )
 					{
-						traits_type::move( alloc_.address( new_buffer ), get_buffer(), size_ );
+						traits_type::move( &*new_buffer, get_buffer(), size_ );
 					}
 					reset_buffer( new_buffer, size_, n );
 				}
@@ -119,17 +116,17 @@ namespace gstl
 
 			value_type* get_buffer()
 			{
-				return alloc_.address( buffer_ );
+				return &*buffer_;
 			}
 
 			const value_type* get_buffer() const
 			{
-				return alloc_.address( buffer_ );
+				return &*buffer_;
 			}
 
 			void throw_out_of_range() const
 			{
-				throw std::out_of_range( "invalid position" );
+				throw std::out_of_range( __FUNCTION__ " invalid position" );
 			}
 
 			void throw_length_error() const
@@ -137,13 +134,14 @@ namespace gstl
 				throw std::length_error( "invalid length" );
 			}
 
-			void reset_buffer( pointer new_buffer, size_type new_size, size_type new_reserved )
+			void reset_buffer( pointer new_buffer,
+				size_type new_size, size_type new_reserved )
 			{
 				if( new_buffer != buffer_ )
 				{
 					pointer old_buffer = buffer_;
 					buffer_ = new_buffer;
-					alloc_.deallocate( old_buffer, reserved_ );
+					alloc_.deallocate( &*old_buffer, reserved_ );
 					reserved_ = new_reserved;
 					set_size( new_size );
 				}
@@ -170,7 +168,7 @@ namespace gstl
 					rhs = tmp;
 
 					//Prevent destroying of the swapped buffer
-					tmp.buffer_ = ptr_traits::null_ptr;
+					tmp.buffer_ = pointer();
 					tmp.reserved_ = 0;
 				}
 			}

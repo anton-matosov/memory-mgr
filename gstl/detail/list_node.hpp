@@ -41,8 +41,7 @@ namespace gstl
 		template
 			<
 				class T,
-				class Alloc = allocator<T>,
-				class PtrTraits = typename Alloc::pointer_traits_type
+				class Alloc = allocator<T>
 			>
 		class list_node
 		{
@@ -62,18 +61,13 @@ namespace gstl
 			typedef typename allocator_type::size_type			size_type;
 			typedef typename allocator_type::difference_type	difference_type;
 
-			typedef PtrTraits									ptr_traits;
-
-			typedef typename ptr_traits::template rebind<self_type>::other	node_ptr_traits;
-
-
-			typedef typename node_ptr_traits::pointer					node_pointer;
-			typedef typename node_ptr_traits::const_pointer				node_const_pointer;
+			typedef typename node_allocator_type::pointer			node_pointer;
+			typedef typename node_allocator_type::const_pointer		node_const_pointer;
 
 			typedef typename Alloc::template 
-								rebind<node_pointer>::other				node_ptr_allocator_type;
+								rebind<node_pointer>::other			node_ptr_allocator_type;
 
-			typedef typename node_ptr_allocator_type::reference			node_ptr_reference;
+			typedef typename node_ptr_allocator_type::reference		node_ptr_reference;
 
 			//////////////////////////////////////////////////////////////////////////
 			// There should be no constructor/destructor

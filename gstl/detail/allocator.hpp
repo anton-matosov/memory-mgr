@@ -28,7 +28,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <gstl/detail/pointer_traits.hpp>
 // 
 // 
 // #ifdef _DEBUG
@@ -44,13 +43,13 @@ namespace gstl
 	{
 	public:
 		typedef T									value_type;
-		typedef pointer_traits<T>					pointer_traits_type;
+
 		typedef allocator< value_type >				self_type;
 
-		typedef typename pointer_traits_type::pointer				pointer;
-		typedef typename pointer_traits_type::const_pointer			const_pointer;
-		typedef typename pointer_traits_type::reference				reference;
-		typedef typename pointer_traits_type::const_reference		const_reference;
+		typedef value_type*			pointer;
+		typedef const value_type* 	const_pointer;
+		typedef value_type&			reference;
+		typedef const value_type&	const_reference;
 		
 		typedef size_t								size_type;
 		typedef ptrdiff_t							difference_type;

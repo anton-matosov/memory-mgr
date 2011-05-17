@@ -48,7 +48,7 @@ typedef std::stack<test_value_type>		std_stack;
 
 typedef gstl::vector<test_value_type>	gstl_vector;
 typedef gstl::vector<test_value_type,
-	memory_mgr::allocator<test_value_type, ptr_alloc_mgr>, gstl::pointer_traits<test_value_type> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, ptr_alloc_mgr> >			memory_mgr_vector;
 typedef gstl::vector<test_value_type,
 	memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 

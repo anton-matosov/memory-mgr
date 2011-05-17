@@ -42,8 +42,7 @@ namespace gstl
 		template
 		<
 			class T,
-			class Alloc,
-			class PtrTraits
+			class Alloc
 		>
 		class list_base
 		{
@@ -51,10 +50,10 @@ namespace gstl
 
 			//////////////////////////////////////////////////////////////////////////
 			//Node types
-			typedef detail::list_node<T, Alloc, PtrTraits>		node_type;
+			typedef detail::list_node<T, Alloc>					node_type;
 			typedef typename node_type::node_allocator_type		node_allocator_type;
 			typedef typename node_type::node_ptr_allocator_type	node_ptr_allocator_type;
-			typedef typename node_type::node_ptr_traits			node_ptr_traits;
+
 			typedef typename node_type::node_pointer			node_pointer;
 			typedef typename node_type::node_const_pointer		node_const_pointer;
 			typedef typename node_type::node_ptr_reference		node_ptr_reference;
@@ -62,7 +61,6 @@ namespace gstl
 			//////////////////////////////////////////////////////////////////////////
 			//Standard types
 			typedef list_base									self_type;
-			typedef typename node_type::ptr_traits				ptr_traits;
 
 			typedef typename node_type::allocator_type			allocator_type;
 
@@ -87,7 +85,7 @@ namespace gstl
 				:alloc_( alloc ),
 				node_alloc_( alloc ),
 				node_ptr_alloc_( alloc ),
-				tail_( node_ptr_traits::null_ptr ),
+				tail_( node_pointer() ),
 				size_( 0 )
 			{
 				//This initialization can't be performed in the
@@ -97,7 +95,7 @@ namespace gstl
 
 			~list_base()
 			{
-				GSTL_ASSERT( !node_ptr_traits::is_null( tail_ ) );
+				GSTL_ASSERT( !! tail_ );
 				node_ptr_alloc_.destroy( &_next( tail_ ) );
 				node_ptr_alloc_.destroy( &_prev( tail_ ) );
 				node_alloc_.deallocate( tail_, 1 );
@@ -105,7 +103,7 @@ namespace gstl
 
 			void _free_node( node_pointer node )
 			{
-				GSTL_ASSERT( !node_ptr_traits::is_null( node ) );	
+				GSTL_ASSERT( !! node );	
 
 				//Automatically will call destructor for value_
 				this->node_alloc_.destroy( node );

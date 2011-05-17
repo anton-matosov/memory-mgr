@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="gstl"
 	ProjectGUID="{317AB518-3AB8-4F87-9977-E413EDA3F859}"
 	RootNamespace="BitManager"

@@ -31,7 +31,7 @@ typedef gstl::string gstl_string;
 
 //String with custom allocator and explicit passing of pointer traits
 typedef gstl::basic_string<char, gstl::char_traits<char>,
-	memory_mgr::allocator<char, ptr_alloc_mgr>, gstl::pointer_traits<char> > memory_mgr_string;
+	memory_mgr::allocator<char, ptr_alloc_mgr> > memory_mgr_string;
 
 typedef gstl::basic_string<char, gstl::char_traits<char>,
 	memory_mgr::offset_allocator<char, off_alloc_mgr> > memory_mgr_off_string;
@@ -59,6 +59,34 @@ BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
 typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**/, memory_mgr_off_string/**/> t_list;
 		
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
+	{
+		string_type s("aaazzz");
+		s.resize(3);
+
+		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
+		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
+	}
+
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_with_reconstruction, string_type, t_list )
+	{
+		{
+			string_type s("aaazzz");
+		}
+		string_type z;
+		z.resize(3);
+		BOOST_CHECK_EQUAL( "", z.c_str() );
+		BOOST_CHECK_EQUAL( 0u, strlen( z.c_str() ) );
+
+		memcpy(const_cast<char*>( z.data() ),"bbb", 3);
+		BOOST_CHECK_EQUAL( "bbb", z.c_str() );
+		BOOST_CHECK_EQUAL( 3u, strlen( z.c_str() ) );
+
+	}
+
+
  	BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, string_type, t_list )
  	{
 		typedef typename string_type::value_type char_type;

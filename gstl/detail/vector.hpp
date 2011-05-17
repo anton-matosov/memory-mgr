@@ -45,20 +45,18 @@ namespace gstl
 	template
 		<
 			class T,
-			class Alloc = allocator<T>,
-			class PtrTraits = typename Alloc::pointer_traits_type
+			class Alloc = allocator<T>
 		>
 	class vector
-		:public detail::dynamic_buffer<T, Alloc, detail::default_sequence_traits<T>, PtrTraits>
+		:public detail::dynamic_buffer<T, Alloc, detail::default_sequence_traits<T> >
 	{
 	public:
 		typedef detail::dynamic_buffer<T, Alloc,
-			detail::default_sequence_traits<T>, PtrTraits>	base_type;
+			detail::default_sequence_traits<T> >	base_type;
 		typedef base_type							internal_buffer_type;
 
 		// types:
 		typedef vector								self_type;
-		typedef typename base_type::ptr_traits		ptr_traits;
 
 		typedef typename base_type::allocator_type	allocator_type;
 
@@ -366,52 +364,52 @@ namespace gstl
 
 
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator==( const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator==( const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return ( lhs.size() == rhs.size() ) && gstl::equal( lhs.begin(), lhs.end(), rhs.begin() );
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator< (const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator< (const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return gstl::lexicographical_compare( lhs.begin(), lhs.end(),
 				rhs.begin(), rhs.end());
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator!=( const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator!=( const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return rel_ops::operator !=( lhs, rhs );
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator>( const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator>( const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return rel_ops::operator >( lhs, rhs );
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator>=( const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator>=( const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return rel_ops::operator >=( lhs, rhs );
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	bool operator<=( const vector<value_type, allocator, pointer_traits>& lhs,
-		const vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	bool operator<=( const vector<value_type, allocator>& lhs,
+		const vector<value_type, allocator>& rhs )
 	{
 		return rel_ops::operator <=( lhs, rhs );
 	}
 
-	template<class value_type, class allocator, class pointer_traits>
-	void swap( vector<value_type, allocator, pointer_traits>& lhs,
-		vector<value_type, allocator, pointer_traits>& rhs )
+	template<class value_type, class allocator>
+	void swap( vector<value_type, allocator>& lhs,
+		vector<value_type, allocator>& rhs )
 	{
 		lhs.swap( rhs );
 	}

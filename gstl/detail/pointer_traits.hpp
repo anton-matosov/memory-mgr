@@ -28,45 +28,67 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <gstl/detail/allocator.hpp>
-
 namespace gstl
 {
-	template<class T> 
+	template<class T>
 	struct pointer_traits
 	{
-	public:
-		typedef T									value_type;
-		typedef pointer_traits< value_type >		self_type;
+		typedef T value_type;
 
-		typedef value_type*								pointer;
-		typedef const value_type*						const_pointer;
-		typedef value_type&								reference;
-		typedef const value_type&						const_reference;
+		typedef value_type*			pointer;
+		typedef const value_type* 	const_pointer;
+		typedef value_type&			reference;
+		typedef const value_type&	const_reference;
 
 		template<class Other>
 		struct rebind
 		{	// convert an pointer_traits<T> to an pointer_traits <Other>
-			typedef typename pointer_traits< Other > other;
+			typedef typename pointer_traits<Other> other;
 		};
-
-		static pointer null_ptr;
-
-		static inline bool is_null( const_pointer ptr )
-		{
-			return ptr == null_ptr;
-		}
 	};
 
-
-// 	template<class T> 
-// 	struct pointer_traits<T*>
-// 		:public pointer_traits<T>
-// 	{};
-
+	template<class T>
+	struct pointer_traits<const T>
+		:public pointer_traits<T>
+	{
+	};
 
 	template<class T>
-	typename pointer_traits<T>::pointer pointer_traits<T>::null_ptr = 0;
+	struct pointer_traits<volatile T>
+		:public pointer_traits<T>
+	{
+	};
+
+	template<class T>
+	struct pointer_traits<T*>
+		:public pointer_traits<T>
+	{
+	};
+
+	template<class T>
+	struct pointer_traits<const T*>
+		:public pointer_traits<T>
+	{
+	};
+
+	template<class T>
+	struct pointer_traits< T* const>
+		:public pointer_traits<T>
+	{
+	};
+
+	template<class T>
+	struct pointer_traits<volatile T*>
+		:public pointer_traits<T>
+	{
+	};
+
+	template<class T>
+	struct pointer_traits<T* volatile>
+		:public pointer_traits<T>
+	{
+	};
+
 }
 
 #endif GSTL_POINTER_TRAITS_HEADER
