@@ -69,6 +69,9 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	{
 		ptr_type null_ptr;
 
+		BOOST_CHECKPOINT( "dereferencing null ptr" );
+		&*null_ptr;
+
 		BOOST_CHECKPOINT( "before deletion of null ptr" );
 		delete_<ptr_mem_mgr>( null_ptr );
 		BOOST_CHECKPOINT( "after deletion of null ptr" );
