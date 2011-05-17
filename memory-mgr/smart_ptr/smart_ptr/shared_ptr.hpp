@@ -189,37 +189,6 @@ public:
     {
     }
 
-    template<class Y>
-    explicit shared_ptr(const offset_ptr<Y>& p ): px( p ), pn( p ) // Y must be complete
-    {
-        memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
-    }
-
-    template<class Y>
-    explicit shared_ptr( Y * p ): px( p ), pn( offset_ptr<Y>(p) ) // Y must be complete
-    {
-        memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
-    }
-
-    //
-    // Requirements: D's copy constructor must not throw
-    //
-    // shared_ptr will release p by calling d(p)
-	//
-	template<class Y, class D>
-	shared_ptr(const offset_ptr<Y>& p, D d)
-		: px(p), pn(p, d)
-	{
-		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
-	}
-
-    template<class Y, class D>
-	shared_ptr(Y * p, D d)
-		: px(p), pn(offset_ptr<Y>(p), d)
-    {
-        memory_mgr::detail::sp_enable_shared_from_this( this, p, p );
-    }
-
     // As above, but with allocator. A's copy constructor shall not throw.
 
 	template<class Y, class D, class A>
@@ -414,17 +383,6 @@ public:
     void reset() // never throws in 1.30+
     {
         this_type().swap(*this);
-    }
-
-    template<class Y> void reset(Y * p) // Y must be complete
-    {
-        BOOST_ASSERT(p == 0 || p != px); // catch self-reset errors
-        this_type(p).swap(*this);
-    }
-
-    template<class Y, class D> void reset( Y * p, D d )
-    {
-        this_type( p, d ).swap( *this );
     }
 
     template<class Y, class D, class A> void reset( Y * p, D d, A a )

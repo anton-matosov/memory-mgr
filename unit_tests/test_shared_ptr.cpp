@@ -45,17 +45,11 @@ template class memory_mgr::weak_ptr<int>;
 // 
 namespace
 {
-	typedef memory_mgr::singleton_manager
-			< 
-				memory_mgr::named_objects
-				<
-					heap_sz_mgr
-				>
-			>	sing_name_heap_mgr_type2;
+	typedef memory_mgr::named_objects<heap_sz_mgr> name_heap_mgr_type;
 
-
-
+	typedef memory_mgr::singleton_manager<name_heap_mgr_type> sing_name_heap_mgr_type2;
 }
+MGR_DECLARE_MANAGER_CLASS( name_heap_mgr, name_heap_mgr_type );
 MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr2, sing_name_heap_mgr_type2 );
 
 template<class MemMgr>
@@ -73,9 +67,6 @@ BOOST_AUTO_TEST_SUITE( test_shared_ptr )
 
 BOOST_AUTO_TEST_CASE( test_create_delete )
 {
-	memory_mgr::shared_ptr<int> int_p( new int() );
-	memory_mgr::shared_ptr<int> int_pd( memory_mgr::new_<int, sing_name_heap_mgr2>()(),
-		deleter_impl<sing_name_heap_mgr2>() );
  	memory_mgr::shared_ptr<int> int_pda( memory_mgr::new_<int, sing_name_heap_mgr2>()(),
  		deleter_impl<sing_name_heap_mgr2>(), memory_mgr::offset_allocator<int, sing_name_heap_mgr2>() );
  	*int_pda = 10;
@@ -84,21 +75,40 @@ BOOST_AUTO_TEST_CASE( test_create_delete )
  	memory_mgr::shared_ptr<int> int_pda2( weak_int.lock() );
 }
 
-BOOST_AUTO_TEST_CASE( test_make_shared )
+BOOST_AUTO_TEST_CASE( test_make_shared_singleton )
 {
+	typedef sing_name_heap_mgr2 mem_mgr;
 	using memory_mgr::make_shared;
 	using memory_mgr::shared_ptr;
 
-	shared_ptr<int> int_p  = make_shared<int>();
-	shared_ptr<int> int_p1 = make_shared<int>( 123 );
-	shared_ptr<int> int_p2 = make_shared<int>( 123, 123 );
-	shared_ptr<int> int_p3 = make_shared<int>( 123, 123, 123 );
-	shared_ptr<int> int_p4 = make_shared<int>( 123, 123, 123, 123 );
-	shared_ptr<int> int_p5 = make_shared<int>( 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p6 = make_shared<int>( 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p7 = make_shared<int>( 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p8 = make_shared<int>( 123, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p9 = make_shared<int>( 123, 123, 123, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p  = make_shared<int, mem_mgr>();
+	shared_ptr<int> int_p1 = make_shared<int, mem_mgr>( 123 );
+	shared_ptr<int> int_p2 = make_shared<int, mem_mgr>( 123, 123 );
+	shared_ptr<int> int_p3 = make_shared<int, mem_mgr>( 123, 123, 123 );
+	shared_ptr<int> int_p4 = make_shared<int, mem_mgr>( 123, 123, 123, 123 );
+	shared_ptr<int> int_p5 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p6 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p7 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p8 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p9 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123, 123, 123 );
+}
+
+BOOST_AUTO_TEST_CASE( test_make_shared )
+{
+	name_heap_mgr mem_mgr;
+	using memory_mgr::make_shared;
+	using memory_mgr::shared_ptr;
+
+	shared_ptr<int> int_p  = make_shared<int>(mem_mgr);
+	shared_ptr<int> int_p1 = make_shared<int>(mem_mgr, 123 );
+	shared_ptr<int> int_p2 = make_shared<int>(mem_mgr, 123, 123 );
+	shared_ptr<int> int_p3 = make_shared<int>(mem_mgr, 123, 123, 123 );
+	shared_ptr<int> int_p4 = make_shared<int>(mem_mgr, 123, 123, 123, 123 );
+	shared_ptr<int> int_p5 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p6 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p7 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p8 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123, 123 );
+	shared_ptr<int> int_p9 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123, 123, 123 );
 }
 
 BOOST_AUTO_TEST_CASE( test_allocate_shared )
