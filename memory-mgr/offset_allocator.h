@@ -43,7 +43,7 @@ namespace memory_mgr
 		typedef T									value_type;
 		typedef offset_allocator< value_type, mgr_type >	self_type;
 
-		typedef pointer_traits<T, MemMgr>				pointer_traits_type;
+		typedef pointer_traits<T>					pointer_traits_type;
 
 		typedef typename pointer_traits_type::pointer				pointer;
 		typedef typename pointer_traits_type::const_pointer			const_pointer;

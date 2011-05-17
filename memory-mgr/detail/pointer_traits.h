@@ -33,12 +33,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace memory_mgr
 {
 	//Offset pointer traits class
- 	template<class T, class MemMgr>
+ 	template<class T>
  	struct pointer_traits
  	{
-		typedef MemMgr											manager_type;
+
 		typedef T												value_type;
-		typedef pointer_traits< value_type, manager_type >		self_type;
+		typedef pointer_traits< value_type >		self_type;
 
 		typedef				offset_ptr< value_type >			pointer;
 		typedef				offset_ptr< const  value_type >		const_pointer;
@@ -48,7 +48,7 @@ namespace memory_mgr
 		template<class Other>
 		struct rebind
 		{	// convert an pointer_traits<T> to an pointer_traits <Other>
-			typedef typename pointer_traits< Other, manager_type > other;
+			typedef typename pointer_traits<Other> other;
 		};
 
 		static pointer null_ptr;
@@ -59,8 +59,8 @@ namespace memory_mgr
 		}
  	};
  
- 	template< class T, class MemMgr >
- 	typename pointer_traits<T,MemMgr>::pointer pointer_traits<T,MemMgr>::null_ptr = typename pointer_traits< T, MemMgr >::pointer();
+ 	template<class T>
+ 	typename pointer_traits<T>::pointer pointer_traits<T>::null_ptr = typename pointer_traits<T>::pointer();
 
 		
 }
