@@ -140,6 +140,12 @@ namespace memory_mgr
 			return ptr;
 		}
 
+		inline bool remove_object( const char* name )
+		{
+			lock_type lock( this->get_lockable() );
+			return this->m_named_alloc.remove_object( name );
+		}
+
 		inline void deallocate( const void* p, size_type size, const char* name )
 		{
 			lock_type lock( this->get_lockable() );

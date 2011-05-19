@@ -31,7 +31,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/cmp_helper.h>
 #include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/manager_traits.h>
 #include <memory-mgr/new.h>
 
 namespace memory_mgr

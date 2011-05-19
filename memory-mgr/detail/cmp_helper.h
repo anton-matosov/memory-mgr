@@ -35,23 +35,23 @@ namespace memory_mgr
 		template< class ClassToHelp >
 		class cmp_helper
 		{
-			typedef ClassToHelp op_type;
-			inline const op_type& get_lhs() const
+			typedef ClassToHelp rhs_operand_type;
+			inline const rhs_operand_type& get_lhs() const
 			{
-				return static_cast<const op_type&>( *this );
+				return static_cast<const rhs_operand_type&>( *this );
 			}
 		public:
-			inline bool operator!=( const op_type& rhs ) const
+			inline bool operator!=( const rhs_operand_type& rhs ) const
 			{
 				return !( get_lhs() == rhs);
 			}
 
-			inline bool operator<=( const op_type& rhs ) const
+			inline bool operator<=( const rhs_operand_type& rhs ) const
 			{
 				return !(get_lhs() > rhs);
 			}
 
-			inline bool operator>=( const op_type& rhs ) const
+			inline bool operator>=( const rhs_operand_type& rhs ) const
 			{
 				return !(get_lhs() < rhs);
 			}
