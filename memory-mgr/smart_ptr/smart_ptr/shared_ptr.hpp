@@ -397,13 +397,13 @@ public:
 
     reference operator* () const // never throws
     {
-        BOOST_ASSERT(px != 0);
+        BOOST_ASSERT( !! px );
         return *px;
     }
 
     T * operator-> () const // never throws
     {
-        BOOST_ASSERT(px != 0);
+        BOOST_ASSERT( !! px );
         return &*px;
     }
 

@@ -95,13 +95,13 @@ public:
 
     T & operator*() const // never throws
     {
-        BOOST_ASSERT( px.is_not_null() );
+        BOOST_ASSERT(  !! px  );
         return *px;
     }
 
     T * operator->() const // never throws
     {
-        BOOST_ASSERT( px.is_not_null() );
+        BOOST_ASSERT(  !! px  );
         return &*px;
     }
 

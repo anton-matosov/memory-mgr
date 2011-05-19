@@ -101,7 +101,7 @@ public:
 
         pi_ = new sp_counted_impl_p<Y>( p );
 
-        if( pi_ == 0 )
+        if( ! pi_ )
         {
             boost::checked_delete( &*p );
             boost::throw_exception( std::bad_alloc() );
@@ -138,7 +138,7 @@ public:
 
         pi_ = new sp_counted_impl_pd<P, D>(p, d);
 
-        if(pi_ == 0)
+        if( ! pi_ )
         {
             d(p); // delete p
             boost::throw_exception(std::bad_alloc());
@@ -168,7 +168,7 @@ public:
         {
             d( &*p );
 
-            if( pi_ != 0 )
+            if( !! pi_ )
             {
                 a2.deallocate( static_cast< impl_type* >( &*pi_ ), 1 );
             }
@@ -180,7 +180,7 @@ public:
 
         pi_ = a2.allocate( 1, static_cast< impl_type* >( 0 ) );
 
-        if( pi_ != 0 )
+        if( !! pi_ )
         {
             new( static_cast< void* >( pi_ ) ) impl_type( p, d, a );
         }
@@ -205,7 +205,7 @@ public:
     {
 #ifdef BOOST_NO_EXCEPTIONS
 
-        if( pi_ == 0 )
+        if( ! pi_ )
         {
             boost::throw_exception(std::bad_alloc());
         }
@@ -219,7 +219,7 @@ public:
 
     ~shared_count() // nothrow
     {
-        if( pi_ != 0 ) pi_->release();
+        if( !! pi_ ) pi_->release();
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
         id_ = 0;
 #endif
@@ -230,7 +230,7 @@ public:
         , id_(shared_count_id)
 #endif
     {
-        if( pi_ != 0 ) pi_->add_ref_copy();
+        if( !! pi_ ) pi_->add_ref_copy();
     }
 
 #if defined( BOOST_HAS_RVALUE_REFS )
@@ -254,8 +254,8 @@ public:
 
         if( tmp != pi_ )
         {
-            if( tmp != 0 ) tmp->add_ref_copy();
-            if( pi_ != 0 ) pi_->release();
+            if( !! tmp ) tmp->add_ref_copy();
+            if( !! pi_ ) pi_->release();
             pi_ = tmp;
         }
 
@@ -271,7 +271,7 @@ public:
 
     long use_count() const // nothrow
     {
-        return pi_ != 0? pi_->use_count(): 0;
+        return pi_ ? pi_->use_count(): 0;
     }
 
     bool unique() const // nothrow
@@ -281,7 +281,7 @@ public:
 
     bool empty() const // nothrow
     {
-        return pi_ == 0;
+        return ! pi_;
     }
 
     friend inline bool operator==(shared_count const & a, shared_count const & b)
@@ -296,7 +296,7 @@ public:
 
     void * get_deleter( sp_typeinfo const & ti ) const
     {
-        return pi_.is_not_null() ? pi_->get_deleter( ti ): 0;
+        return ( !! pi_ ) ? pi_->get_deleter( ti ): 0;
     }
 };
 
@@ -328,7 +328,7 @@ public:
         , id_(weak_count_id)
 #endif
     {
-        if(pi_ != 0) pi_->weak_add_ref();
+        if( !! pi_) pi_->weak_add_ref();
     }
 
     weak_count(weak_count const & r): pi_(r.pi_) // nothrow
@@ -336,7 +336,7 @@ public:
         , id_(weak_count_id)
 #endif
     {
-        if(pi_ != 0) pi_->weak_add_ref();
+        if( !! pi_) pi_->weak_add_ref();
     }
 
 // Move support
@@ -355,7 +355,7 @@ public:
 
     ~weak_count() // nothrow
     {
-        if(pi_ != 0) pi_->weak_release();
+        if( !! pi_) pi_->weak_release();
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
         id_ = 0;
 #endif
@@ -367,8 +367,8 @@ public:
 
         if( tmp != pi_ )
         {
-            if(tmp != 0) tmp->weak_add_ref();
-            if(pi_ != 0) pi_->weak_release();
+            if( !! tmp ) tmp->weak_add_ref();
+            if( !! pi_ ) pi_->weak_release();
             pi_ = tmp;
         }
 
@@ -381,8 +381,8 @@ public:
 
         if( tmp != pi_ )
         {
-            if(tmp != 0) tmp->weak_add_ref();
-            if(pi_ != 0) pi_->weak_release();
+            if( !! tmp ) tmp->weak_add_ref();
+            if( !! pi_) pi_->weak_release();
             pi_ = tmp;
         }
 
@@ -398,12 +398,12 @@ public:
 
     long use_count() const // nothrow
     {
-        return pi_.is_not_null() ? pi_->use_count(): 0;
+        return ( !! pi_ ) ? pi_->use_count(): 0;
     }
 
     bool empty() const // nothrow
     {
-        return pi_.is_null();
+        return ! pi_;
     }
 
     friend inline bool operator==(weak_count const & a, weak_count const & b)
@@ -422,7 +422,7 @@ inline shared_count::shared_count( weak_count const & r ): pi_( r.pi_ )
         , id_(shared_count_id)
 #endif
 {
-    if( pi_ == 0 || !pi_->add_ref_lock() )
+    if( !! pi_ || !pi_->add_ref_lock() )
     {
         boost::throw_exception( boost::bad_weak_ptr() );
     }
@@ -433,7 +433,7 @@ inline shared_count::shared_count( weak_count const & r, sp_nothrow_tag ): pi_( 
         , id_(shared_count_id)
 #endif
 {
-    if( pi_ != 0 && !pi_->add_ref_lock() )
+    if(  !! pi_ && !pi_->add_ref_lock() )
     {
         pi_ = 0;
     }

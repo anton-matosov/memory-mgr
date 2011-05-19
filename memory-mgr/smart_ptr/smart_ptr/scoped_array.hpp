@@ -82,7 +82,7 @@ public:
 
     T & operator[](std::ptrdiff_t i) const // never throws
     {
-        BOOST_ASSERT( px.is_not_null() );
+        BOOST_ASSERT(  !! px  );
         BOOST_ASSERT( i >= 0 );
         return px[i];
     }
