@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/block_id_converter.h>
+#include <memory-mgr/detail/polymorphic_allocator.h>
 
 namespace memory_mgr
 {
@@ -38,6 +39,7 @@ namespace memory_mgr
 	{
 		template<class MemMgr>
 		class member_allocator_impl
+			:public detail::polymorphic_allocator
 		{
 		public:
 			typedef MemMgr												mgr_type;
@@ -49,7 +51,6 @@ namespace memory_mgr
 			{
  				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value)
 					, invalid_memory_manager_class );
-
 			}
 
 			// allocate array of count elements
@@ -65,9 +66,9 @@ namespace memory_mgr
 				m_mgr->deallocate( ptr, size );
 			}
 
-			bool equal( const member_allocator_impl& rhs ) const /*throw()*/
+			bool equal( const polymorphic_allocator& rhs ) const /*throw()*/
 			{
-				return m_mgr == rhs.m_mgr;
+				return m_mgr == static_cast<const member_allocator_impl&>(rhs).m_mgr;
 			}
 		private:
 			mgr_type* m_mgr;

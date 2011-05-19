@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_SUITE( test_shared_ptr )
 BOOST_AUTO_TEST_CASE( test_create_delete )
 {
  	memory_mgr::shared_ptr<int> int_pda( memory_mgr::new_<int, sing_name_heap_mgr2>()(),
- 		deleter_impl<sing_name_heap_mgr2>(), memory_mgr::offset_allocator<int, sing_name_heap_mgr2>() );
+ 		deleter_impl<sing_name_heap_mgr2>(), memory_mgr::allocator<int, sing_name_heap_mgr2>() );
  	*int_pda = 10;
  
  	memory_mgr::weak_ptr<int> weak_int = int_pda;
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE( test_allocate_shared )
 {
 	using memory_mgr::allocate_shared;
 	using memory_mgr::shared_ptr;
-	memory_mgr::offset_allocator<int, sing_name_heap_mgr2> alloc;
+	memory_mgr::allocator<int, sing_name_heap_mgr2> alloc;
 
 	shared_ptr<int> int_p  = allocate_shared<int>( alloc );
 	shared_ptr<int> int_p1 = allocate_shared<int>( alloc, 123 );

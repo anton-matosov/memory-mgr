@@ -28,47 +28,26 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/offset_ptr.h>
+#include <memory-mgr/allocator.h>
 
 namespace memory_mgr
 {
 
-	template< class T,	class MemMgr >
+	
+	template< class T, class MemMgr >
 	class offset_allocator
+		:public allocator<T, MemMgr, detail::offset_pointers<T> >
 	{
 	public:
-		typedef MemMgr								mgr_type;
-		typedef T									value_type;
-		typedef offset_allocator< value_type, mgr_type >	self_type;
+		typedef allocator<T, MemMgr, detail::offset_pointers<T> > base_type;
 
-		typedef typename offset_ptr<T> pointer;
-		typedef typename offset_ptr<const T> const_pointer;
-		typedef typename pointer::reference reference;
-		typedef typename pointer::const_reference const_reference;
-
-		typedef typename manager_traits<mgr_type>::size_type	size_type;
-		typedef ptrdiff_t										difference_type;
+		typedef offset_allocator	self_type;
 
 		template<class Other>
 		struct rebind
 		{	// convert an offset_allocator<T> to an offset_allocator <Other>
 			typedef typename memory_mgr::offset_allocator< Other, mgr_type > other;
 		};
-
-		// return address of mutable val
-		inline value_type* address( pointer val ) const
-		{	
-			return &*val;
-		}
-
-		// return address of nonmutable val
-		inline const value_type* address( const_pointer val ) const
-		{	
-			return &*val;
-		}
-
 		// construct default offset_allocator (do nothing)
 		inline offset_allocator()
 		{
@@ -89,45 +68,6 @@ namespace memory_mgr
 		{	// assign from a related offset_allocator (do nothing)
 			return (*this);
 		}
-
-		// deallocate object at ptr, ignore size
-		inline void deallocate( pointer ptr, size_type size )
-		{	
-			mgr_type::instance().deallocate( &*ptr, size );
-		}
-
-		// allocate array of count elements
-		inline pointer allocate(size_type count)
-		{	
-			return static_cast<value_type*>(
-				mgr_type::instance().allocate( count * sizeof(value_type) ) );
-		}
-
-		// allocate array of count elements, ignore hint
-		inline pointer allocate(size_type count, const void *)
-		{	
-			return allocate(count);
-		}
-
-		// construct object at ptr with value val
-		inline void construct(pointer ptr, const_reference val)
-		{	
-			::new (&*ptr) value_type(val);
-		}
-
-		// destroy object at ptr
-		inline void destroy(pointer ptr)
-		{	
-			ptr;//VS 2008 warning
-			(*ptr).~value_type();
-		}
-
-		// estimate maximum array size
-		inline size_type max_size() const 
-		{	
-			size_type count = manager_traits<mgr_type>::allocable_memory / sizeof( value_type );
-			return (0 < count ? count : 1);
-		}
 	};
 
 	// offset_allocator TEMPLATE OPERATORS
@@ -145,6 +85,8 @@ namespace memory_mgr
 		return false;
 	}
 
+//offset_allocator is deprecated, please use 'allocator' class instead
+#pragma deprecated( offset_allocator )
 }
 
 #endif //MGR_OFFSET_ALLOCATOR_HEADER

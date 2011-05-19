@@ -30,104 +30,130 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
-#include <memory-mgr/detail/allocator_base.h>
+#include <memory-mgr/allocator_decorator.h>
+#include <memory-mgr/detail/mgr_impl_allocator.h>
 #include <memory-mgr/detail/member_allocator_impl.h>
 
 #include <memory-mgr/detail/singleton_allocator_impl.h>
+#include <memory-mgr/smart_ptr/make_shared.hpp>
 
 namespace memory_mgr
 {
+	
+#define MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( allocator_type )				\
+	template<class Other>																\
+	struct rebind																		\
+	{	/*convert an allocator<T> to an allocator <Other>*/								\
+		typedef allocator_type< Other, mgr_type, pointers_types > other;				\
+	};																					\
+																						\
+	template<class other>																\
+	inline allocator_type( const allocator_type<other, mgr_type,						\
+										pointers_types>& rhs )							\
+		:base_type( rhs )																\
+	{	/*construct from a related allocator*/											\
+	}																					\
+																						\
+	template<class other>																\
+	inline allocator_type& operator=( const allocator_type<other, mgr_type,				\
+										pointers_types>& rhs )							\
+	{	/*assign from a related allocator*/												\
+		base_type::operator =( rhs );													\
+		return (*this);																	\
+	}
+						
+#define MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator_type )					\
+		/*allocator TEMPLATE OPERATORS*/										\
+		template<class T, class U, class mem_mgr, class Ptrs >					\
+		inline bool operator==(const allocator_type<T, mem_mgr, Ptrs>& lhs,		\
+					const allocator_type<U, mem_mgr, Ptrs>& rhs) /*throw()*/	\
+		{	/*test for allocator equality (always true)*/						\
+			return lhs.equal( rhs );											\
+		}																		\
+																				\
+		template<class T, class U, class mem_mgr, class Ptrs >					\
+		inline bool operator!=(const allocator_type<T, mem_mgr, Ptrs>& lhs,		\
+			const allocator_type<U, mem_mgr, Ptrs>& rhs) /*throw()*/			\
+		{	/*test for allocator inequality (always false)*/					\
+			return std::rel_ops::operator !=( lhs, rhs );						\
+		}
 
-	template< class T,	class MemMgr >
+
+	template< class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
 	class allocator
-		:public detail::allocator_base<T, MemMgr, detail::singleton_allocator_impl< MemMgr > >
+		:public detail::mgr_impl_allocator<T, MemMgr, detail::singleton_allocator_impl< MemMgr >, RebindPointersFrom >
 	{
 	public:
-		typedef detail::allocator_base<T, MemMgr, detail::singleton_allocator_impl< MemMgr > > base_type;
+		typedef detail::mgr_impl_allocator<T, MemMgr, detail::singleton_allocator_impl< MemMgr >, RebindPointersFrom > base_type;
+		
+		typedef allocator	self_type;
 
-		typedef typename base_type::mgr_type		mgr_type;
-		typedef typename base_type::value_type		value_type;
-		typedef allocator< value_type, mgr_type >	self_type;
+		allocator()
+		{
 
-		typedef typename base_type::pointer				pointer;
-		typedef typename base_type::const_pointer		const_pointer;
-		typedef typename base_type::reference			reference;
-		typedef typename base_type::const_reference		const_reference;
-		typedef typename base_type::size_type			size_type;
-		typedef typename base_type::difference_type		difference_type;
+		}
+
+		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( allocator )
+	};
+	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator );
+
+	template<class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T>>
+	class polymorphic_allocator
+		:public allocator_decorator<T, RebindPointersFrom>
+	{
+	public:
+		typedef typename MemMgr		mgr_type;
+		typedef allocator_decorator<T, RebindPointersFrom> base_type;
+		typedef detail::singleton_allocator_impl<MemMgr> impl_type;
+
+		typedef polymorphic_allocator	self_type;
 
 		// construct default allocator (do nothing)
-		inline allocator()
+		inline polymorphic_allocator()
+			: base_type( make_shared<impl_type, mgr_type>() )
 		{
 		}
 
-		template<class Other>
-		struct rebind
-		{	// convert an allocator<T> to an allocator <Other>
-			typedef allocator< Other, mgr_type > other;
-		};
-
-		template<class other>
-		inline allocator( const allocator<other, mgr_type>& rhs ) /*throw()*/
-			:base_type( rhs )
-		{	// construct from a related allocator
-		}
-
-		template<class other>
-		inline self_type& operator=( const allocator<other, mgr_type>& rhs )
-		{	// assign from a related allocator
-			base_type::operator =( rhs );
-			return (*this);
-		}
+		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( polymorphic_allocator )
 	};
+	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( polymorphic_allocator );
 
-	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator );
-
-	template< class T,	class MemMgr >
+	template< class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
 	class member_allocator
-		:public detail::allocator_base<T, MemMgr, detail::member_allocator_impl< MemMgr > >
+		:public detail::mgr_impl_allocator<T, MemMgr, detail::member_allocator_impl< MemMgr >, RebindPointersFrom >
 	{
 	public:
-		typedef detail::allocator_base<T, MemMgr, detail::member_allocator_impl< MemMgr > > base_type;
+		typedef detail::mgr_impl_allocator<T, MemMgr, detail::member_allocator_impl< MemMgr >, RebindPointersFrom > base_type;
 
 		typedef typename base_type::mgr_type		mgr_type;
-		typedef typename base_type::value_type		value_type;
-		typedef member_allocator< value_type, mgr_type >	self_type;
-
-		typedef typename base_type::pointer				pointer;
-		typedef typename base_type::const_pointer		const_pointer;
-		typedef typename base_type::reference			reference;
-		typedef typename base_type::const_reference		const_reference;
-		typedef typename base_type::size_type			size_type;
-		typedef typename base_type::difference_type		difference_type;
-
 		// construct allocator from pointer to manager
 		inline member_allocator( mgr_type* mgr = 0 )
 			:base_type( mgr )
 		{
 		}
 
-		template<class Other>
-		struct rebind
-		{	// convert an allocator<T> to an allocator <Other>
-			typedef member_allocator< Other, mgr_type > other;
-		};
-
-		template<class other>
-		inline member_allocator( const member_allocator<other, mgr_type>& rhs ) /*throw()*/
-			:base_type( rhs )
-		{	// construct from a related allocator
-		}
-
-		template<class other>
-		inline self_type& operator=( const member_allocator<other, mgr_type>& rhs )
-		{	// assign from a related allocator
-			base_type::operator =( rhs );
-			return (*this);
-		}
+		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( member_allocator )
 	};
-
 	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( member_allocator );
+
+	template< class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
+	class polymorphic_member_allocator
+		:public allocator_decorator<T, RebindPointersFrom>
+	{
+	public:
+		typedef MemMgr mgr_type;
+		typedef allocator_decorator<T, RebindPointersFrom> base_type;
+		typedef detail::member_allocator_impl< MemMgr > impl_type;
+
+		// construct allocator from pointer to manager
+		inline polymorphic_member_allocator( mgr_type* mgr = 0 )
+			:base_type( mgr ? make_shared<impl_type>( *mgr, mgr ) : base_type::pimpl_type() )
+		{
+		}
+
+		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( polymorphic_member_allocator )
+	};
+	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( polymorphic_member_allocator );
 }
 
 #endif //MGR_ALLOCATOR_HEADER

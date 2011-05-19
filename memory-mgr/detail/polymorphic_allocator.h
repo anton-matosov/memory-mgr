@@ -21,54 +21,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SINGLETON_ALLOCATOR_IMPL_HEADER
-#define MGR_SINGLETON_ALLOCATOR_IMPL_HEADER
+#ifndef MGR_POLYMORPHIC_ALLOCATOR_HEADER
+#define MGR_POLYMORPHIC_ALLOCATOR_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/detail/polymorphic_allocator.h>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
-		template<class MemMgr>
-		class singleton_allocator_impl
-			:public detail::polymorphic_allocator
+		class polymorphic_allocator
 		{
 		public:
-			typedef MemMgr								mgr_type;
-			typedef typename manager_traits<mgr_type>::size_type	size_type;
+			typedef size_t size_type;
 
-			inline singleton_allocator_impl()
+			virtual ~polymorphic_allocator() = 0
 			{
-				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
-					(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
-
 			}
 
 			// allocate array of count elements
-			inline void* allocate(size_type size)
-			{	
-				return mgr_type::instance().allocate( size );
-			}
+			virtual void* allocate(size_type size) = 0;
 
-			inline void deallocate( void* ptr, size_type size )
-			{
-				mgr_type::instance().deallocate( ptr, size );
-			}
+			virtual void deallocate( void* ptr, size_type size ) = 0;
 
-			bool equal( const polymorphic_allocator& /*rhs*/ ) const /*throw()*/
-			{
-				return true;
-			}
+			virtual bool equal( const polymorphic_allocator& rhs ) const /*throw()*/ = 0;
+
 		};
-
 	}
 }
 
-#endif //MGR_SINGLETON_ALLOCATOR_IMPL_HEADER
+#endif //MGR_POLYMORPHIC_ALLOCATOR_HEADER
+

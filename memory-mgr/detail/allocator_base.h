@@ -28,33 +28,64 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
+#include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
+		template<class T>
+		class offset_pointers
+		{
+		public:
+			typedef typename offset_ptr<T> pointer;
+			typedef typename offset_ptr<const T> const_pointer;
+			typedef typename pointer::reference reference;
+			typedef typename pointer::const_reference const_reference;
 
-		template< class T,	class MemMgr, class AllocImpl >
+			template<class Other>
+			struct rebind
+			{
+				typedef offset_pointers<Other> other;
+			};
+		};
+
+		template<class T, class RebindPointersFrom = detail::offset_pointers<T> >
 		class allocator_base
 		{
-			typedef AllocImpl							impl_type;
 		public:
-			impl_type	m_impl;
+			typedef T								value_type;
+			typedef allocator_base< value_type >	self_type;
 
-			typedef MemMgr								mgr_type;
-			typedef T									value_type;
-			typedef allocator_base< value_type, mgr_type, impl_type >	self_type;
+			typedef value_type* raw_pointer;
+			typedef const value_type* const_raw_pointer;
 
-			typedef value_type*								pointer;
-			typedef const value_type*						const_pointer;
-			typedef value_type&								reference;
-			typedef const value_type&						const_reference;
+			typedef RebindPointersFrom pointers_types;
+			typedef typename pointers_types::template rebind<value_type>::other ptr_types;
 
-			typedef typename manager_traits<mgr_type>::size_type	size_type;
-			typedef ptrdiff_t										difference_type;
+			typedef typename ptr_types::pointer pointer;
+			typedef typename ptr_types::const_pointer const_pointer;
+			typedef typename ptr_types::reference reference;
+			typedef typename ptr_types::const_reference const_reference;
 
+			typedef size_t size_type;
+			typedef ptrdiff_t difference_type;
+
+			// construct default allocator (do nothing)
+			inline allocator_base()
+			{
+			}
+
+			template<class other>
+			inline allocator_base( const allocator_base<other, RebindPointersFrom>& /*rhs*/ ) /*throw()*/
+			{	// construct from a related allocator
+			}
+
+			template<class other>
+			inline self_type& operator=( const allocator_base<other, RebindPointersFrom>& /*rhs*/ )
+			{	// assign from a related allocator
+				return (*this);
+			}
 
 			// return address of mutable val
 			inline pointer address( reference val ) const
@@ -69,104 +100,53 @@ namespace memory_mgr
 			}
 
 			// return address of mutable val
-			inline pointer address( pointer val ) const
+			inline raw_pointer address( pointer val ) const
 			{	
-				return val;
+				return &*val;
 			}
 
 			// return address of nonmutable val
-			inline const_pointer address( const_pointer val ) const
+			inline const_raw_pointer address( const_pointer val ) const
 			{	
-				return val;
-			}
-
-			// construct default allocator (do nothing)
-			inline allocator_base()
-			{
-			}
-
-			// construct allocator from pointer to manager
-			inline allocator_base( mgr_type* mgr )
-				:m_impl( mgr )
-			{
-			}
-
-			template<class other>
-			inline allocator_base( const allocator_base<other, mgr_type, impl_type>& rhs ) /*throw()*/
-				:m_impl( rhs.m_impl )
-			{	// construct from a related allocator
-			}
-
-			template<class other>
-			inline self_type& operator=( const allocator_base<other, mgr_type, impl_type>& rhs )
-			{	// assign from a related allocator
-				m_impl = rhs.m_impl;
-				return (*this);
-			}
-
-			// deallocate object at ptr, ignore size
-			inline void deallocate( pointer ptr, size_type count )
-			{
-				m_impl.deallocate( &*ptr, count * sizeof(value_type) );
-			}
-
-			// allocate array of count elements
-			inline pointer allocate(size_type count)
-			{	
-				return static_cast<pointer>( m_impl.allocate( count * sizeof(value_type) ) );
-			}
-
-			// allocate array of count elements, ignore hint
-			inline pointer allocate(size_type count, const void *)
-			{	
-				return (allocate(count));
+				return &*val;
 			}
 
 			// construct object at ptr with value val
-			inline void construct(pointer ptr, const_reference val)
+			inline void construct( pointer ptr, const_reference val )
 			{	
 				::new (&*ptr) value_type(val);
 			}
+// 
+// 			// construct object at ptr with value val
+// 			template<class T1>
+// 			inline void construct(pointer ptr, const T1& a1)
+// 			{	
+// 				::new (&*ptr) value_type(a1);
+// 			}
+// 
+// 			// construct object at ptr with value val
+// 			template<class T1, class T2>
+// 			inline void construct(pointer ptr, const T1& a1, const T2& a2)
+// 			{	
+// 				::new (&*ptr) value_type(a1, a2);
+// 			}
 
 			// destroy object at ptr
 			inline void destroy(pointer ptr)
 			{	
 				ptr;//VS 2008 warning
-				(&*ptr)->~value_type();
+				(*ptr).~value_type();
 			}
 
 			// estimate maximum array size
 			inline size_type max_size() const 
 			{	
-				size_type count = manager_traits<mgr_type>::allocable_memory / sizeof( value_type );
-				return (0 < count ? count : 1);
-			}
-
-			template<class other>
-			bool equal( const allocator_base<other, mgr_type, impl_type>& rhs ) const /*throw()*/
-			{
-				return m_impl.equal( rhs.m_impl );
+				size_type count = size_type(-1) / sizeof (value_type);
+				return 0 < count ? count : 1;
 			}
 		};
 
 	}
 
 }
-						
-#define MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator_type )			\
-		/*allocator TEMPLATE OPERATORS*/								\
-		template<class T, class U, class mem_mgr >						\
-		inline bool operator==(const allocator_type<T, mem_mgr>& lhs,	\
-					const allocator_type<U, mem_mgr>& rhs) /*throw()*/	\
-		{	/*test for allocator equality (always true)*/				\
-			return lhs.equal( rhs );									\
-		}																\
-																		\
-		template<class T, class U, class mem_mgr >						\
-		inline bool operator!=(const allocator_type<T, mem_mgr>& lhs,	\
-			const allocator_type<U, mem_mgr>& rhs) /*throw()*/			\
-		{	/*test for allocator inequality (always false)*/			\
-			return std::rel_ops::operator !=( lhs, rhs );				\
-		}
-
 #endif //MGR_ALLOCATOR_BASE_HEADER

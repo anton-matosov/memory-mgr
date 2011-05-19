@@ -28,9 +28,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/offset_allocator.h>
+#include "managers.h"
 #include <string>
 #include <vector>
 #include <map>
+#include <boost/unordered_map.hpp>
 
 typedef memory_mgr::singleton_manager
 < 
@@ -44,51 +47,69 @@ MGR_DECLARE_MANAGER_CLASS(allocator_manager, alloc_mgr);
 
 //////////////////////////////////////////////////////////////////////////
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-				allocator_manager> > string_type;
+				allocator_manager, std::allocator<void> > > string_type;
 
 template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-				allocator_manager> >;
+				allocator_manager, std::allocator<void> > >;
+
+typedef memory_mgr::allocator<int, allocator_manager, std::allocator<void> > allocator;
+typedef memory_mgr::member_allocator<int, heap_mgr, std::allocator<void> > member_alloc;
+typedef memory_mgr::polymorphic_allocator<int, allocator_manager, std::allocator<void> > poly_alloc;
+typedef memory_mgr::polymorphic_member_allocator<int, heap_mgr, std::allocator<void> > poly_member_alloc;
+//////////////////////////////////////////////////////////////////////////
+typedef std::vector<int, memory_mgr::allocator_decorator<int, std::allocator<void> > > decor_alloc_vector_type;
+typedef std::vector<int, allocator > vector_type;
+typedef std::vector<int, member_alloc > member_alloc_vector_type;
+typedef std::vector<int, poly_member_alloc> poly_member_alloc_vector_type;
+
+template class std::vector<int, allocator >;
 
 //////////////////////////////////////////////////////////////////////////
-typedef std::vector<int, memory_mgr::allocator<int, 
-allocator_manager> > vector_type;
+typedef memory_mgr::allocator< std::pair<int, int>, allocator_manager, std::allocator<void> > map_allocator;
+//typedef memory_mgr::offset_allocator< std::pair<int, int>, allocator_manager > map_offset_allocator;
 
-template class std::vector<int, memory_mgr::allocator<int, allocator_manager> >;
+typedef std::map<int, int, std::less<int>, map_allocator > map_type;
 
-//////////////////////////////////////////////////////////////////////////
-typedef std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<const int, int>, 
-	allocator_manager> > map_type;
+typedef boost::unordered_map<int, int, boost::hash<int>, std::equal_to<int>, map_allocator > unordered_map_type;
 
-template class std::map<int, int, std::less<int>,  memory_mgr::allocator< std::pair<int, int>, 
-	allocator_manager> >;
+template class std::map<int, int, std::less<int>, map_allocator >;
 
 BOOST_AUTO_TEST_SUITE( test_allocator )
 
-
-	BOOST_AUTO_TEST_CASE( unit_test )
-	{	
-	}
-
-	BOOST_AUTO_TEST_CASE( std_containers_test )
+	BOOST_AUTO_TEST_CASE( polymorphic_allocators )
 	{
-		{
-			const int items_count = 1000;
-			vector_type vec;
-			vec.resize( items_count );
-			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-			{
-				*it = rand() % items_count;
-			}
-			std::random_shuffle( vec.begin(), vec.end() );
-
-			map_type map;
-			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
-			{
-				map[ rand() % items_count ] = *it;
-			}
-		}
-		BOOST_CHECK( allocator_manager::instance().is_free() );
+ 		heap_mgr mgr;
+ 		poly_alloc polymorphic_allocator;
+ 		decor_alloc_vector_type decor_vec( polymorphic_allocator );
+ 		decor_vec.resize( 100 );
+ 		decor_vec.resize( 10 );
+ 
+ 		poly_member_alloc polymorphic_member_allocator(&mgr);
+ 		decor_alloc_vector_type decor_vec2( polymorphic_member_allocator );
+ 		decor_vec2.resize( 100 );
+ 		decor_vec2.resize( 10 );
 	}
+
+ 	BOOST_AUTO_TEST_CASE( std_containers_test )
+ 	{
+ 		{
+ 			const int items_count = 1000;
+ 			vector_type vec;
+ 			vec.resize( items_count );
+ 			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+ 			{
+ 				*it = rand() % items_count;
+ 			}
+ 			std::random_shuffle( vec.begin(), vec.end() );
+ 
+ 			unordered_map_type map;
+ 			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+ 			{
+ 				map[ rand() % items_count ] = *it;
+ 			}
+ 		}
+ 		BOOST_CHECK( allocator_manager::instance().is_free() );
+ 	}
 
 BOOST_AUTO_TEST_SUITE_END()
 
