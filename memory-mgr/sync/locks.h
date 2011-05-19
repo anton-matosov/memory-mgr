@@ -89,18 +89,18 @@ namespace memory_mgr
 			{
 			public:
 				lock( const object_level_lockable &c ) 
-					: m_lackable(c)
+					: m_lockable(c)
 				{ 
-					m_lackable.m_sync_object.enter();
+					m_lockable.m_sync_object.enter();
 				};
 
 				~lock()
 				{ 
-					m_lackable.m_sync_object.leave();
+					m_lockable.m_sync_object.leave();
 				};
 
 			private:
-				object_level_lockable const &m_lackable;
+				object_level_lockable const &m_lockable;
 
 				lock(const lock &c);
 				lock& operator=(const lock &c);
