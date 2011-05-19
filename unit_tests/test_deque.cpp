@@ -46,7 +46,7 @@ typedef int								test_value_type;
 typedef std::deque<test_value_type>		std_deque;
 typedef gstl::deque<test_value_type>		gstl_deque;
 typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, ptr_alloc_mgr> > memory_mgr_deque;
-typedef gstl::deque<test_value_type, memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_deque;
+typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_deque;
 
 typedef boost::mpl::list< /**/std_deque/**/, gstl_deque/**/, memory_mgr_deque/**/, memory_mgr_off_deque/**/> t_list;
 
