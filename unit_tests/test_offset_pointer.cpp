@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 		builtin_ptr ptr2 = ptr + 2;
 		//TEST_OPERATOR_PRINT( L"[]" );
 		builtin_ptr ptr3 = &ptr[3];
-		builtin_ptr ptr4 = ptr;//0
+		builtin_type* ptr4 = ptr.get();
 
 		BOOST_CHECK( ptr1 != ptr2 );;
 		BOOST_CHECK( ptr2 != ptr3 );
