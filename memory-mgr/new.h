@@ -32,198 +32,228 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/new_helpers.h>
 #include <memory-mgr/singleton_manager.h>
+#include <boost/shared_ptr.hpp>
 
 namespace memory_mgr
 {
-	template<class T>
-	class new_constructor
+	namespace detail
 	{
-		typedef T				object_type;
-		typedef object_type*	object_pointer_type;
-
-		object_pointer_type m_object;
-	public:
-		new_constructor( object_pointer_type object )
-			:m_object( object )
+		template<class T, class MemMgr>
+		class allocate_base
 		{
+		public:
+			typedef MemMgr			mgr_type;
 
-		}
+			typedef T				object_type;
+			typedef object_type*	object_pointer_type;
+			typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
+			typedef typename manager_traits<mgr_type>::size_type	size_type;
 
-		operator object_pointer_type()
-		{
-			return operator()();
-		}
-
-		object_pointer_type operator()()
-		{
-			if( m_object )
+			allocate_base( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
+				: m_mgr( &mgr.get() )
 			{
-				new( m_object ) object_type();
-			}
-			return m_object;
-		}
 
-		template<class T1>
-		object_pointer_type operator()( T1 v1 )
-		{
-			if( m_object )
-			{
-				new( m_object ) object_type( v1 );
-			}
-			return m_object;
-		}
-
-
-		template<class T1, class T2>
-		object_pointer_type operator()( T1 v1, T2 v2 )
-		{
-			if( m_object )
-			{
-				new( m_object ) object_type( v1, v2 );
-			}
-			return m_object;
-		}
-	};
-
-
-	template<class T, class MemMgr>
-	class new_proxy
-	{
-		typedef MemMgr			mgr_type;
-		//typedef typename manager_traits< MemMgr >::base_manager_type mgr_type;
-		typedef T				object_type;
-		typedef object_type*	object_pointer_type;
-		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
-		typedef typename manager_traits<mgr_type>::size_type	size_type;
-
-		typedef new_constructor<object_type> new_constructor;
-
-		object_pointer_type m_object;
-		mgr_type*			m_mgr;
-		size_t m_num_items;
-		std::string m_object_name;
-	public:
-		new_proxy( const new_proxy& old_proxy, size_t num_items )
-			:m_object( old_proxy.m_object ),
-			m_num_items( num_items ),
-			m_mgr( old_proxy.m_mgr ),
-			m_object_name( old_proxy.m_object_name )
-		{
-		}
-
-		new_proxy( const char* object_name )
-		   :m_object( 0 ),
-		   m_mgr( &mgr_type::instance() ),
-		   m_num_items( 1 ),
-		   m_object_name( object_name == NULL ? "" : object_name )
-		{
-
-		}
-
- 		new_proxy( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr, const char* object_name  )
- 			:m_object( 0 ),
- 			m_mgr( &mgr.get() ),
-			m_num_items( 1 ),
-			m_object_name( object_name == NULL ? "" : object_name )
- 		{
- 
- 		}
-
-		object_pointer_type operator()()
-		{
-			allocate();
-			object_pointer_type object = m_object;
-
-			for( size_t i = 0; i < m_num_items; ++i )
-			{
-				::new( object + i ) object_type();
 			}
 
-			return m_object;
-		}
+			virtual ~allocate_base() = 0
+			{
 
-		template<class T1>
-		object_pointer_type operator()( T1 v1 )
+			}
+
+			virtual void* allocate( size_t num_items )
+			{
+				size_type required_size = sizeof( object_type ) * num_items;
+				return allocate_impl( required_size, *m_mgr );
+			}
+		private:
+			virtual void* allocate_impl( size_t size, mgr_type& mgr ) = 0;
+
+			mgr_type*	m_mgr;
+		};
+
+		template<class T, class MemMgr>
+		class allocate_unnamed_impl
+			:public allocate_base<T, MemMgr>
 		{
-			allocate();
-			object_pointer_type object = m_object;
+			typedef allocate_base<T, MemMgr> base_type;
+		public:
 
-			for( size_t i = 0; i < m_num_items; ++i )
+			allocate_unnamed_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
+				: base_type( mgr )
 			{
-				::new( object + i ) object_type( v1 );
+
 			}
 
-			return m_object;
-		}
+		protected:
+			virtual void* allocate_impl( size_t size, mgr_type& mgr )
+			{
+				return helper_type::allocate( size, mgr );
+			}
+		};
 
-
-		template<class T1, class T2>
-		object_pointer_type operator()( T1 v1, T2 v2 )
+		template<class T, class MemMgr>
+		class allocate_named_impl
+			:public allocate_unnamed_impl<T, MemMgr>
 		{
-			allocate();
-			object_pointer_type object = m_object;
+			typedef allocate_unnamed_impl<T, MemMgr> base_type;
 
-			for( size_t i = 0; i < m_num_items; ++i )
+			std::string m_object_name;
+		public:
+
+			allocate_named_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr,
+				const char* object_name  )
+				: base_type( mgr ),
+				m_object_name( object_name == NULL ? "" : object_name )
 			{
-				::new( object + i ) object_type( v1, v2 );
+
 			}
 
-			return m_object;
-		}
+		protected:
+			virtual void* allocate_impl( size_t size, mgr_type& mgr )
+			{
+				if( m_object_name.empty() )
+				{
+					return base_type::allocate_impl( size, mgr );
+				}
+				else
+				{
+					return helper_type::allocate( size, mgr, m_object_name.c_str() );
+				}
+			}
+		};
 
-		template<class T1, class T2>
-		object_pointer_type operator()( T1 v1, T2 v2, T2 v3 )
+
+		template<class T, class MemMgr>
+		class new_proxy
 		{
-			allocate();
-			object_pointer_type object = m_object;
+			typedef MemMgr			mgr_type;
+			typedef T				object_type;
+			typedef object_type*	object_pointer_type;
 
-			for( size_t i = 0; i < m_num_items; ++i )
+			object_pointer_type m_object;
+			size_t		m_num_items;
+			boost::shared_ptr<allocate_base<T, MemMgr> > m_alloc;
+		public:
+			new_proxy( const new_proxy& old_proxy, size_t num_items )
+				:m_object( old_proxy.m_object ),
+				m_alloc( old_proxy.m_alloc ),
+				m_num_items( num_items )
 			{
-				::new( object + i ) object_type( v1, v2, v3 );
 			}
 
-			return m_object;
-		}
-
-		new_proxy operator[]( size_t num_items )
-		{			
-			return new_proxy( *this, num_items );
-		}
-
-		void allocate()
-		{
-			if( ! m_object )
+			new_proxy( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr, const char* object_name  )
+				:m_object( 0 ),
+				m_alloc( new allocate_named_impl<T, mgr_type>( mgr, object_name ) ),
+				m_num_items( 1 )
 			{
-				m_object = static_cast<object_pointer_type>( allocate_named_or_unnamed() );
-			}
-		}
 
-		void* allocate_named_or_unnamed()
-		{
-			size_type required_size = sizeof( object_type ) * m_num_items;
-			if( m_object_name.empty() )
-			{
-				return helper_type::allocate( required_size, *m_mgr );
 			}
-			else
+
+			new_proxy( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
+				:m_object( 0 ),
+				m_alloc( new allocate_unnamed_impl<T, mgr_type>( mgr ) ),
+				m_num_items( 1 )
 			{
-				return helper_type::allocate( required_size, *m_mgr, m_object_name.c_str() );
+
 			}
-		}
-	};
+
+			object_pointer_type operator()()
+			{
+				allocate();
+				object_pointer_type object = m_object;
+
+				for( size_t i = 0; i < m_num_items; ++i )
+				{
+					::new( object + i ) object_type();
+				}
+
+				return m_object;
+			}
+
+			template<class T1>
+			object_pointer_type operator()( T1 v1 )
+			{
+				allocate();
+				object_pointer_type object = m_object;
+
+				for( size_t i = 0; i < m_num_items; ++i )
+				{
+					::new( object + i ) object_type( v1 );
+				}
+
+				return m_object;
+			}
+
+
+			template<class T1, class T2>
+			object_pointer_type operator()( T1 v1, T2 v2 )
+			{
+				allocate();
+				object_pointer_type object = m_object;
+
+				for( size_t i = 0; i < m_num_items; ++i )
+				{
+					::new( object + i ) object_type( v1, v2 );
+				}
+
+				return m_object;
+			}
+
+			template<class T1, class T2>
+			object_pointer_type operator()( T1 v1, T2 v2, T2 v3 )
+			{
+				allocate();
+				object_pointer_type object = m_object;
+
+				for( size_t i = 0; i < m_num_items; ++i )
+				{
+					::new( object + i ) object_type( v1, v2, v3 );
+				}
+
+				return m_object;
+			}
+
+			new_proxy operator[]( size_t num_items )
+			{			
+				return new_proxy( *this, num_items );
+			}
+
+			void allocate()
+			{
+				if( ! m_object )
+				{
+					m_object = static_cast<object_pointer_type>( m_alloc->allocate( m_num_items ) );
+				}
+			}
+		};
+
+	}
 
  	template<class T, class MemMgr>
- 	new_proxy<T, MemMgr> new_( MemMgr& mgr, const char* object_name = 0 )
+	detail::new_proxy<T, MemMgr> new_( MemMgr& mgr )
  	{
- 		return new_proxy<T, MemMgr>( mem_mgr( mgr ), object_name );
+ 		return detail::new_proxy<T, MemMgr>( mem_mgr( mgr ) );
  	}
- 
+
+	template<class T, class MemMgr>
+	detail::new_proxy<T, MemMgr> new_( MemMgr& mgr, const char* object_name )
+	{
+		return detail::new_proxy<T, MemMgr>( mem_mgr( mgr ), object_name );
+	}
+
  	template<class T, class SingMemMgr>
- 	new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type> new_( const char* object_name = 0 )
+ 	detail::new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type> new_()
  	{
- 		return new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type>
-			( mem_mgr<SingMemMgr>(), object_name );
+ 		return detail::new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type>
+			( mem_mgr<SingMemMgr>() );
  	}
+
+	template<class T, class SingMemMgr>
+	detail::new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type> new_( const char* object_name )
+	{
+		return detail::new_proxy<T, typename manager_traits< SingMemMgr >::base_manager_type>
+			( mem_mgr<SingMemMgr>(), object_name );
+	}
 
 // 	template<class T, class SingMemMgr, class T1>
 // 	T* new_( T1 v1 )
