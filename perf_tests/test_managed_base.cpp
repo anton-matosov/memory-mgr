@@ -22,6 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
+#include <memory-mgr/new.h>
 
 namespace
 {
@@ -46,7 +47,7 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, char );
 		{
-			new( mem_mgr( mgr ) ) test_class2;
+			memory_mgr::new_<test_class2>( mgr )();
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
@@ -65,7 +66,7 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, char );
 		{
-			new( mem_mgr( MemMgr::instance() ) ) test_class2;
+			memory_mgr::new_<test_class2, MemMgr>()();
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
@@ -117,7 +118,7 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR = new( mem_mgr( mgr ) ) test_type;
+			TEST_TRACK_PTR = memory_mgr::new_<test_type>(mgr)();
 		}
 		TEST_SPLIT_LOOP;
 		{
@@ -169,7 +170,7 @@ namespace
 		
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
-			TEST_TRACK_PTR = new( mem_mgr<MemMgr>() ) test_type;
+			TEST_TRACK_PTR = memory_mgr::new_<test_type, MemMgr>()();
 		}
 		TEST_SPLIT_LOOP;
 		{

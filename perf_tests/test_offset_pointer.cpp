@@ -56,7 +56,7 @@ namespace
 
 	long double test_offset_pointer( const int op_repeat, const int per_alloc )
 	{
-		memory_mgr::offset_ptr<int> ptr( new( mem_mgr<mem_mgr_t>() ) int );
+		memory_mgr::offset_ptr<int> ptr( memory_mgr::new_<int, mem_mgr_t>()() );
 
 		TEST_START_LOOP( op_repeat, per_alloc, int );
 		{
