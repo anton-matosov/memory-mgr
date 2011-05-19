@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
+#include "common_manager_tests.h"
 
 
 BOOST_AUTO_TEST_SUITE( test_memory_segment )

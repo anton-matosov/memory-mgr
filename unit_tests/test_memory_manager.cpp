@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/detail/ptr_helpers.h>
+#include "common_manager_tests.h"
 
 BOOST_AUTO_TEST_SUITE( test_memory_manager )
 

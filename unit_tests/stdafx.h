@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_MAP_ALLOC
 //#define _CRTDBG_MAP_ALLOC_NEW
 
 
@@ -44,7 +44,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <map>
 #include <vector>
 #include <memory-mgr/config/config.h>
-#include "common_manager_tests.h"
 
 
 static const size_t sz_null = 0;

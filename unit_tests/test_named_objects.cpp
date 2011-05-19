@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/detail/offset_traits.h>
+#include "common_manager_tests.h"
 
 typedef  memory_mgr::named_objects
 <

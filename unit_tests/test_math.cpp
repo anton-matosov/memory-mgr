@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "StdAfx.h"
 #include <memory-mgr/detail/math.h>
+#include <boost/type_traits/make_unsigned.hpp>
 
 BOOST_AUTO_TEST_SUITE( test_math_module )
 

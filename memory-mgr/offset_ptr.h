@@ -50,7 +50,7 @@ namespace memory_mgr
 					const offset_ptr<const char>	const_char_const_ptr; // const char* const
 	*/
 	template< class T >
-	class offset_ptr 
+	class offset_ptr
 		: public detail::cmp_helper< offset_ptr< T > >
 	{		
 	public:
@@ -168,6 +168,13 @@ namespace memory_mgr
 		bool is_not_null() const
 		{ 
 			return !is_null();
+		}
+
+		typedef offset_type self_type::*unspecified_bool_type;
+
+		operator unspecified_bool_type() const // never throws
+		{
+			return is_null() ? 0: &self_type::m_offset;
 		}
 
 		bool operator!() const
@@ -320,7 +327,7 @@ namespace memory_mgr
 	};
 
 	template< class T >
-	static inline offset_ptr<T> operator+( typename offset_ptr<T>::difference_type n, const offset_ptr<T>& ptr )
+	inline offset_ptr<T> operator+( typename offset_ptr<T>::difference_type n, const offset_ptr<T>& ptr )
 	{
 		return offset_ptr<T>( get_pointer_internal(ptr) + n );
 	}

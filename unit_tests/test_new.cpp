@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "managers.h"
 #include <memory-mgr/new.h>
 #include <memory-mgr/named_objects.h>
+#include "common_manager_tests.h"
 
 typedef 
 memory_mgr::singleton_manager
@@ -38,6 +39,10 @@ memory_mgr::singleton_manager
 
 MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
 
+template class memory_mgr::detail::new_proxy<int, memory_mgr::named_objects
+<
+heap_sz_mgr
+> >;
 
 BOOST_AUTO_TEST_SUITE( test_new )
 
@@ -50,15 +55,16 @@ BOOST_AUTO_TEST_SUITE( test_new )
 	typedef int builtin_type;
 
 	typedef boost::mpl::list< sing_name_heap_mgr > managers_list;
+	typedef boost::mpl::list< sing_heap_sz_mgr, sing_name_heap_mgr > named_and_unnamed_managers_list;
 
 	using memory_mgr::new_;
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete, mgr_type, named_and_unnamed_managers_list )
 	{
 		typename memory_mgr::manager_traits< mgr_type >::base_manager_type& mgr = mgr_type::instance();
 		using memory_mgr::mem_mgr;
 
-		int* p1 = new_<int>( mgr, "" )();
+		int* p1 = new_<int>( mgr )();
 		const int* p2 = new_<int>( mgr )( 2 );
 
 		int* p3 = new_<int, mgr_type>()();

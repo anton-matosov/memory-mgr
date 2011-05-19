@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/shared_segment.h>
+#include "common_manager_tests.h"
 
 namespace
 {
