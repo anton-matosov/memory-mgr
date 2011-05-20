@@ -83,7 +83,7 @@ namespace memory_mgr
 		// allocate array of count elements
 		inline raw_pointer allocate(size_type count)
 		{	
-			return static_cast<pointer>( m_pimpl->allocate( count * sizeof(value_type) ) );
+			return static_cast<raw_pointer>( m_pimpl->allocate( count * sizeof(value_type) ) );
 		}
 
 		// allocate array of count elements, ignore hint
@@ -105,8 +105,8 @@ namespace memory_mgr
 			(&*ptr)->~value_type();
 		}
 
-		template<class other>
-		bool equal( const allocator_decorator<other>& rhs ) const /*throw()*/
+		template<class other, class RebindPointersFrom>
+		bool equal( const allocator_decorator<other, RebindPointersFrom>& rhs ) const /*throw()*/
 		{
 			return m_pimpl->equal( *rhs.get_pimpl() );
 		}
@@ -120,16 +120,16 @@ namespace memory_mgr
 		
 	};
 
-	template<class T, class U>
-	inline bool operator==(const allocator_decorator<T>& lhs,
-		const allocator_decorator<U>& rhs) /*throw()*/
+	template<class T, class U, class RebindPointersFrom>
+	inline bool operator==(const allocator_decorator<T, RebindPointersFrom>& lhs,
+		const allocator_decorator<U, RebindPointersFrom>& rhs) /*throw()*/
 	{
 		return lhs.equal( rhs );
 	}
 
-	template<class T, class U>
-	inline bool operator!=(const allocator_decorator<T>& lhs,
-		const allocator_decorator<U>& rhs) /*throw()*/
+	template<class T, class U, class RebindPointersFrom>
+	inline bool operator!=(const allocator_decorator<T, RebindPointersFrom>& lhs,
+		const allocator_decorator<U, RebindPointersFrom>& rhs) /*throw()*/
 	{
 		return std::rel_ops::operator !=( lhs, rhs );
 	}
