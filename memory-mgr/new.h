@@ -28,11 +28,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <memory-mgr/config/config.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/new_helpers.h>
 #include <memory-mgr/singleton_manager.h>
+
 #include <boost/shared_ptr.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/iteration/local.hpp>
 
 namespace memory_mgr
 {
@@ -60,6 +66,11 @@ namespace memory_mgr
 
 			}
 
+			virtual bool construction_needed()
+			{
+				return construction_needed_impl();
+			}
+
 			virtual void* allocate( size_t num_items )
 			{
 				size_type required_size = sizeof( object_type ) * num_items;
@@ -67,6 +78,7 @@ namespace memory_mgr
 			}
 		private:
 			virtual void* allocate_impl( size_t size, mgr_type& mgr ) = 0;
+			virtual bool construction_needed_impl() = 0;
 
 			mgr_type*	m_mgr;
 		};
@@ -89,6 +101,11 @@ namespace memory_mgr
 			{
 				return helper_type::allocate( size, mgr );
 			}
+
+			virtual bool construction_needed_impl()
+			{
+				return true;
+			}
 		};
 
 		template<class T, class MemMgr>
@@ -98,11 +115,13 @@ namespace memory_mgr
 			typedef allocate_unnamed_impl<T, MemMgr> base_type;
 
 			std::string m_object_name;
+			bool m_construction_needed;
 		public:
 
 			allocate_named_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr,
 				const char* object_name  )
 				: base_type( mgr ),
+				m_construction_needed( true ),
 				m_object_name( object_name == NULL ? "" : object_name )
 			{
 
@@ -117,8 +136,14 @@ namespace memory_mgr
 				}
 				else
 				{
+					m_construction_needed = ! mgr.is_exists( m_object_name.c_str() );
 					return helper_type::allocate( size, mgr, m_object_name.c_str() );
 				}
+			}
+
+			virtual bool construction_needed_impl()
+			{
+				return m_construction_needed;
 			}
 		};
 
@@ -157,61 +182,59 @@ namespace memory_mgr
 
 			}
 
-			object_pointer_type operator()()
+#define MGR_NEW_PROXY_CONSTRUCT_TEMPLATE(n)\
+	BOOST_PP_IF( n, template<, BOOST_PP_EMPTY() ) BOOST_PP_ENUM_PARAMS(n, typename A) BOOST_PP_IF( n, >, BOOST_PP_EMPTY() )
+
+#define MGR_NEW_PROXY_CONSTRUCT_PARM(J,I,D) BOOST_PP_CAT(A,I) BOOST_PP_CAT(a,I)
+
+#define MGR_NEW_PROXY_CONSTRUCT_PARMS(n) BOOST_PP_ENUM(n,MGR_NEW_PROXY_CONSTRUCT_PARM,BOOST_PP_EMPTY)
+
+#define MGR_NEW_PROXY_CONSTRUCT_ARGS(n) BOOST_PP_ENUM_PARAMS(n, a)
+
+
+#define BOOST_PP_LOCAL_LIMITS (0, MGR_MAX_NEW_PARAMETERS)
+			#define BOOST_PP_LOCAL_MACRO(n)														\
+				MGR_NEW_PROXY_CONSTRUCT_TEMPLATE(n)												\
+				object_pointer_type operator()(MGR_NEW_PROXY_CONSTRUCT_PARMS(n))				\
+				{																				\
+					allocate();																	\
+					object_pointer_type object = m_object;										\
+																								\
+					if( m_alloc->construction_needed() )										\
+					{																			\
+						for( size_t i = 0; i < m_num_items; ++i )								\
+						{																		\
+							::new( object + i ) object_type(MGR_NEW_PROXY_CONSTRUCT_ARGS(n));	\
+						}																		\
+					}																			\
+																								\
+					return m_object;															\
+				}
+		   #include BOOST_PP_LOCAL_ITERATE()
+
+#undef MGR_NEW_PROXY_CONSTRUCT_TEMPLATE_PARMS
+#undef MGR_NEW_PROXY_CONSTRUCT_PARM
+#undef MGR_NEW_PROXY_CONSTRUCT_PARMS
+#undef MGR_NEW_PROXY_CONSTRUCT_ARGS
+
+			/* Code to be generated if n==2
+			template<class A1, class A2>
+			object_pointer_type operator()( const A1& a1, const A2& a2 )
 			{
 				allocate();
 				object_pointer_type object = m_object;
 
-				for( size_t i = 0; i < m_num_items; ++i )
+				if( m_alloc->construction_needed() )
 				{
-					::new( object + i ) object_type();
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a1, a2 );
+					}
 				}
 
 				return m_object;
 			}
-
-			template<class T1>
-			object_pointer_type operator()( T1 v1 )
-			{
-				allocate();
-				object_pointer_type object = m_object;
-
-				for( size_t i = 0; i < m_num_items; ++i )
-				{
-					::new( object + i ) object_type( v1 );
-				}
-
-				return m_object;
-			}
-
-
-			template<class T1, class T2>
-			object_pointer_type operator()( T1 v1, T2 v2 )
-			{
-				allocate();
-				object_pointer_type object = m_object;
-
-				for( size_t i = 0; i < m_num_items; ++i )
-				{
-					::new( object + i ) object_type( v1, v2 );
-				}
-
-				return m_object;
-			}
-
-			template<class T1, class T2>
-			object_pointer_type operator()( T1 v1, T2 v2, T2 v3 )
-			{
-				allocate();
-				object_pointer_type object = m_object;
-
-				for( size_t i = 0; i < m_num_items; ++i )
-				{
-					::new( object + i ) object_type( v1, v2, v3 );
-				}
-
-				return m_object;
-			}
+			 **/
 
 			new_proxy operator[]( size_t num_items )
 			{			
