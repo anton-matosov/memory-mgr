@@ -86,16 +86,33 @@ namespace memory_mgr
 			unsigned int	m_ref_count;
 		};
 
+		template<class KeyT,
+		class MappedT,
+		class CompareT,
+		class AllocT >
+		class map_adapted
+			: public std::map<KeyT, MappedT, CompareT, AllocT>
+		{
+		public:
+			typedef std::map<KeyT, MappedT, CompareT, AllocT> base_type;
+
+			map_adapted( const AllocT& alloc )
+				:base_type( CompareT(), alloc )
+			{
+
+			}
+		};
+
 		template<class MemMgr>
 		struct named_allocator_traits
 		{
 			typedef MemMgr																mgr_type;
 			typedef typename manager_traits<MemMgr>::block_offset_type					block_offset_type;
-			typedef member_allocator<char, mgr_type>									allocator_type;
+			typedef allocator_decorator<char>											allocator_type;
 
 			typedef std::basic_string< char, std::char_traits<char>, allocator_type>	string_type;
 			typedef std::less<string_type>												compare_type;
-			typedef std::map< string_type, named_object, compare_type, allocator_type>	map_type;
+			typedef map_adapted< string_type, named_object, compare_type, allocator_type>	map_type;
 			typedef typename map_type::value_type										map_item_type;
 		};
 
@@ -111,25 +128,29 @@ namespace memory_mgr
 			typedef	typename traits_type::map_type			map_type;
 			typedef	typename traits_type::compare_type		compare_type;
 			typedef	typename traits_type::map_item_type		map_item_type;
+			typedef typename string_type::value_type		char_type;
+
+			typedef polymorphic_member_allocator<map_type, mgr_type> map_alloc_type;
 
 			named_allocator( mgr_type& mgr )
-				:m_alloc( &mgr )
+				:m_is_first_construct( mgr.is_free() ),
+				m_alloc( polymorphic_member_allocator<char_type, MemMgr>( &mgr ) )
 			{
-				if( mgr.is_free() )
+				if( m_is_first_construct )
 				{
-					typedef member_allocator<map_type, mgr_type> map_alloc_type;
 					map_alloc_type map_alloc( &mgr );
 					m_objects = map_alloc.allocate( 1 );
-					new( m_objects ) map_type( compare_type(), m_alloc );
+					::new( m_objects ) map_type( map_alloc );
 				}
 				else
 				{
-					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
-						is_category_supported< mgr_type, size_tracking_tag>::value ? 4 : 0, mgr ) );
+ 					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
+ 						is_category_supported< mgr_type, size_tracking_tag>::value ? 84 : 72, mgr ) );
 				}
+
 			}
 
-			bool is_exists( const char* name )
+			bool is_exists( const char_type* name )
 			{
 				return is_exists( string_type( name, m_alloc ) );
 			}
@@ -144,7 +165,7 @@ namespace memory_mgr
 				return find_by_offset( offset ) != m_objects->end();
 			}
 
-			void add_object( const char* name, const block_offset_type offset )
+			void add_object( const char_type* name, const block_offset_type offset )
 			{
 				string_type object_name( name, m_alloc );
 				assert( !is_exists( object_name ) );
@@ -152,7 +173,7 @@ namespace memory_mgr
 				(*m_objects)[ object_name ].set_offset(offset);
 			}
 
-			const block_offset_type get_object( const char* name )
+			const block_offset_type get_object( const char_type* name )
 			{
 				block_offset_type offset = offset_traits<block_offset_type>::invalid_offset;
 
@@ -168,7 +189,7 @@ namespace memory_mgr
 				return offset;
 			}
 
-			const bool remove_object( const char* name )
+			const bool remove_object( const char_type* name )
 			{
 				bool deleted = false;
 				string_type object_name( name, m_alloc );
@@ -195,6 +216,7 @@ namespace memory_mgr
 			}
 
 		private:
+			bool m_is_first_construct;
 			allocator_type m_alloc;
 			map_type* m_objects;
 
