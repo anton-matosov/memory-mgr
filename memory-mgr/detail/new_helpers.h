@@ -111,7 +111,7 @@ namespace memory_mgr
 			static inline void destroy( T* ptr )
 			{
 				ptr;//VS 2008 warning
-				(*ptr).~value_type();
+				(*ptr).~T();
 			}
 
 			template<class T>
