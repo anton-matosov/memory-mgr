@@ -43,7 +43,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <string>
 #include <map>
 #include <vector>
-#include <memory-mgr/config/config.h>
 
 
 static const size_t sz_null = 0;

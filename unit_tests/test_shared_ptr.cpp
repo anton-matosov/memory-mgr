@@ -33,7 +33,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <memory-mgr/smart_ptr/make_shared.hpp>
-#include <memory-mgr/offset_allocator.h>
 #include "managers.h"
 #include <memory-mgr/new.h>
 //template class memory_mgr::scoped_ptr<int>;

@@ -66,11 +66,11 @@ template class std::vector<int, allocator >;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::allocator< std::pair<int, int>, allocator_manager, std::allocator<void> > map_allocator;
-//typedef memory_mgr::offset_allocator< std::pair<int, int>, allocator_manager > map_offset_allocator;
+typedef memory_mgr::offset_allocator< std::pair<int, int>, allocator_manager > map_offset_allocator;
 
-typedef std::map<int, int, std::less<int>, map_allocator > map_type;
+typedef std::map<int, int, std::less<int>, map_offset_allocator > map_type;
 
-typedef boost::unordered_map<int, int, boost::hash<int>, std::equal_to<int>, map_allocator > unordered_map_type;
+typedef boost::unordered_map<int, int, boost::hash<int>, std::equal_to<int>, map_offset_allocator > unordered_map_type;
 
 template class std::map<int, int, std::less<int>, map_allocator >;
 

@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_class.h"
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/offset_ptr.h>
+#include <memory-mgr/offset_pointer.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/new.h>
 
@@ -34,6 +35,10 @@ MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 template class memory_mgr::offset_ptr< builtin_type >;
 template class memory_mgr::offset_ptr< base_test_class >;
 template class memory_mgr::offset_ptr< derived_test_class >;
+
+template class memory_mgr::offset_pointer< builtin_type, def_heap_mgr >;
+template class memory_mgr::offset_pointer< base_test_class, def_heap_mgr >;
+template class memory_mgr::offset_pointer< derived_test_class, def_heap_mgr >;
 
 BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	
