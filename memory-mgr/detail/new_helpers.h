@@ -108,9 +108,10 @@ namespace memory_mgr
 			}
 
 			template<class T>
-			static inline void destroy( T* p )
+			static inline void destroy( T* ptr )
 			{
-				p->~T();
+				ptr;//VS 2008 warning
+				(*ptr).~value_type();
 			}
 
 			template<class T>
