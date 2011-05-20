@@ -29,17 +29,35 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/offset_pointer.h>
 
 namespace memory_mgr
 {
+	namespace detail
+	{
+		template<class T, class MemMgr>
+		class old_offset_pointers
+		{
+		public:
+			typedef typename offset_pointer<T, MemMgr> pointer;
+			typedef typename offset_pointer<const T, MemMgr> const_pointer;
+			typedef typename pointer::reference reference;
+			typedef typename pointer::const_reference const_reference;
 
+			template<class Other>
+			struct rebind
+			{
+				typedef old_offset_pointers<Other, MemMgr> other;
+			};
+		};
+	}
 	
 	template< class T, class MemMgr >
 	class offset_allocator
-		:public allocator<T, MemMgr, detail::offset_pointers<T> >
+		:public allocator<T, MemMgr, detail::old_offset_pointers<T, MemMgr> >
 	{
 	public:
-		typedef allocator<T, MemMgr, detail::offset_pointers<T> > base_type;
+		typedef allocator<T, MemMgr, detail::old_offset_pointers<T, MemMgr> > base_type;
 
 		typedef offset_allocator	self_type;
 
@@ -85,8 +103,6 @@ namespace memory_mgr
 		return false;
 	}
 
-//offset_allocator is deprecated, please use 'allocator' class instead
-#pragma deprecated( offset_allocator )
 }
 
 #endif //MGR_OFFSET_ALLOCATOR_HEADER

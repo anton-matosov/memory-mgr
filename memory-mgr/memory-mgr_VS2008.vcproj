@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\offset_pointer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\offset_ptr.h"
 				>
 			</File>
