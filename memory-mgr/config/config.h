@@ -50,8 +50,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #define MGR_INLINE inline
 
-#define MGR_MAX_NEW_PARAMETERS 8
-
 namespace memory_mgr
 {
 	/**

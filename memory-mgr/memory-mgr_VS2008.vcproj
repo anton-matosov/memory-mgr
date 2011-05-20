@@ -289,6 +289,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\detail\new_proxy_operator_pp.h"
+					>
+				</File>
+				<File
 					RelativePath=".\detail\offset_traits.h"
 					>
 				</File>
@@ -666,6 +670,7 @@
 				>
 				<Tool
 					Name="VCCLCompilerTool"
+					GeneratePreprocessedFile="1"
 					UsePrecompiledHeader="0"
 				/>
 			</FileConfiguration>

@@ -182,60 +182,6 @@ namespace memory_mgr
 
 			}
 
-#define MGR_NEW_PROXY_CONSTRUCT_TEMPLATE(n)\
-	BOOST_PP_IF( n, template<, BOOST_PP_EMPTY() ) BOOST_PP_ENUM_PARAMS(n, typename A) BOOST_PP_IF( n, >, BOOST_PP_EMPTY() )
-
-#define MGR_NEW_PROXY_CONSTRUCT_PARM(J,I,D) BOOST_PP_CAT(A,I) BOOST_PP_CAT(a,I)
-
-#define MGR_NEW_PROXY_CONSTRUCT_PARMS(n) BOOST_PP_ENUM(n,MGR_NEW_PROXY_CONSTRUCT_PARM,BOOST_PP_EMPTY)
-
-#define MGR_NEW_PROXY_CONSTRUCT_ARGS(n) BOOST_PP_ENUM_PARAMS(n, a)
-
-
-#define BOOST_PP_LOCAL_LIMITS (0, MGR_MAX_NEW_PARAMETERS)
-			#define BOOST_PP_LOCAL_MACRO(n)														\
-				MGR_NEW_PROXY_CONSTRUCT_TEMPLATE(n)												\
-				object_pointer_type operator()(MGR_NEW_PROXY_CONSTRUCT_PARMS(n))				\
-				{																				\
-					allocate();																	\
-					object_pointer_type object = m_object;										\
-																								\
-					if( m_alloc->construction_needed() )										\
-					{																			\
-						for( size_t i = 0; i < m_num_items; ++i )								\
-						{																		\
-							::new( object + i ) object_type(MGR_NEW_PROXY_CONSTRUCT_ARGS(n));	\
-						}																		\
-					}																			\
-																								\
-					return m_object;															\
-				}
-		   #include BOOST_PP_LOCAL_ITERATE()
-
-#undef MGR_NEW_PROXY_CONSTRUCT_TEMPLATE_PARMS
-#undef MGR_NEW_PROXY_CONSTRUCT_PARM
-#undef MGR_NEW_PROXY_CONSTRUCT_PARMS
-#undef MGR_NEW_PROXY_CONSTRUCT_ARGS
-
-			/* Code to be generated if n==2
-			template<class A1, class A2>
-			object_pointer_type operator()( const A1& a1, const A2& a2 )
-			{
-				allocate();
-				object_pointer_type object = m_object;
-
-				if( m_alloc->construction_needed() )
-				{
-					for( size_t i = 0; i < m_num_items; ++i )
-					{
-						::new( object + i ) object_type( a1, a2 );
-					}
-				}
-
-				return m_object;
-			}
-			 **/
-
 			new_proxy operator[]( size_t num_items )
 			{			
 				return new_proxy( *this, num_items );
@@ -248,6 +194,8 @@ namespace memory_mgr
 					m_object = static_cast<object_pointer_type>( m_alloc->allocate( m_num_items ) );
 				}
 			}
+
+#include <memory-mgr/detail/new_proxy_operator_braces.h>
 		};
 
 	}

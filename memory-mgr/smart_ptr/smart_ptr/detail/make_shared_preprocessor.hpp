@@ -82,7 +82,6 @@ memory_mgr::shared_ptr< T > make_shared(MAKE_SHARED_PARMS)
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
-#include <memory-mgr/allocator.h>
 
 #define MAKE_SHARED_NUM_ARGS 10
 
