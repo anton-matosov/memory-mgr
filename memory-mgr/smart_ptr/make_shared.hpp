@@ -1,5 +1,5 @@
-#ifndef BOOST_MAKE_SHARED_HPP_INCLUDED
-#define BOOST_MAKE_SHARED_HPP_INCLUDED
+#ifndef MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED
+#define MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED
 
 //  make_shared.hpp
 //
@@ -14,4 +14,4 @@
 
 #include <memory-mgr/smart_ptr/smart_ptr/make_shared.hpp>
 
-#endif // #ifndef BOOST_MAKE_SHARED_HPP_INCLUDED
+#endif // #ifndef MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED

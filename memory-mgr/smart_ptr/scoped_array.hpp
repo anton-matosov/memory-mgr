@@ -1,5 +1,5 @@
-#ifndef BOOST_SCOPED_ARRAY_HPP_INCLUDED
-#define BOOST_SCOPED_ARRAY_HPP_INCLUDED
+#ifndef MEMORY_MGR_SCOPED_ARRAY_HPP_INCLUDED
+#define MEMORY_MGR_SCOPED_ARRAY_HPP_INCLUDED
 
 //  This file is the adaptation for Generic Memory Manager library
 //
@@ -18,4 +18,4 @@
 
 #include <memory-mgr/smart_ptr/smart_ptr/scoped_array.hpp>
 
-#endif  // #ifndef BOOST_SCOPED_ARRAY_HPP_INCLUDED
+#endif  // #ifndef MEMORY_MGR_SCOPED_ARRAY_HPP_INCLUDED

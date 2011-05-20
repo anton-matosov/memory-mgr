@@ -1,5 +1,5 @@
-#ifndef BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
-#define BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
+#ifndef MEMORY_MGR_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
+#define MEMORY_MGR_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
 
 //
 //  enable_shared_from_this2.hpp
@@ -129,4 +129,4 @@ public: // actually private, but avoids compiler template friendship issues
 
 } // namespace memory_mgr
 
-#endif  // #ifndef BOOST_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED
+#endif  // #ifndef MEMORY_MGR_ENABLE_SHARED_FROM_THIS2_HPP_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef BOOST_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
-#define BOOST_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
+#ifndef MEMORY_MGR_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
+#define MEMORY_MGR_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
 
 //
 //  This file is the adaptation for Generic Memory Manager library
@@ -17,4 +17,4 @@
 
 #include <memory-mgr/smart_ptr/smart_ptr/enable_shared_from_this.hpp>
 
-#endif  // #ifndef BOOST_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
+#endif  // #ifndef MEMORY_MGR_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED
