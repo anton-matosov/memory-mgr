@@ -420,7 +420,7 @@ inline shared_count::shared_count( weak_count const & r ): pi_( r.pi_ )
         , id_(shared_count_id)
 #endif
 {
-    if( !! pi_ || !pi_->add_ref_lock() )
+    if( ! pi_ || !pi_->add_ref_lock() )
     {
         boost::throw_exception( boost::bad_weak_ptr() );
     }
