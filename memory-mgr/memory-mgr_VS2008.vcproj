@@ -345,6 +345,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\detail\sp_typeinfo.hpp"
+					>
+				</File>
+				<File
 					RelativePath=".\detail\static_assert.h"
 					>
 				</File>

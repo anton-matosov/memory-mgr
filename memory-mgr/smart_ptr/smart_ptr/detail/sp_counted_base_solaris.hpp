@@ -20,7 +20,7 @@
 //  formulation
 //
 
-#include <boost/detail/sp_typeinfo.hpp>
+#include <memory-mgr/detail/sp_typeinfo.hpp>
 #include <atomic.h>
 
 namespace memory_mgr

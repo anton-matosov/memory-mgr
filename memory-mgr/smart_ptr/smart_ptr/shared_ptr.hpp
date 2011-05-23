@@ -107,7 +107,7 @@ template<> struct shared_ptr_traits<void const volatile>
 // enable_shared_from_this support
 
 template< class X, class Y, class T >
-inline void sp_enable_shared_from_this( boost::shared_ptr<X> const * ppx, Y const * py, boost::enable_shared_from_this< T > const * pe )
+inline void sp_enable_shared_from_this( memory_mgr::shared_ptr<X> const * ppx, Y const * py, memory_mgr::enable_shared_from_this< T > const * pe )
 {
     if( pe != 0 )
     {
@@ -116,7 +116,7 @@ inline void sp_enable_shared_from_this( boost::shared_ptr<X> const * ppx, Y cons
 }
 
 template< class X, class Y, class T >
-inline void sp_enable_shared_from_this( boost::shared_ptr<X> * ppx, Y const * py, boost::enable_shared_from_this2< T > const * pe )
+inline void sp_enable_shared_from_this( memory_mgr::shared_ptr<X> * ppx, Y const * py, memory_mgr::enable_shared_from_this2< T > const * pe )
 {
     if( pe != 0 )
     {
@@ -245,17 +245,17 @@ public:
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::static_cast_tag): px(static_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::static_cast_tag): px(static_cast<element_type *>(&*r.px)), pn(r.pn)
     {
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::const_cast_tag): px(const_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::const_cast_tag): px(const_cast<element_type *>(&*r.px)), pn(r.pn)
     {
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::dynamic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::dynamic_cast_tag): px(dynamic_cast<element_type *>(&*r.px)), pn(r.pn)
     {
         if(px == 0) // need to allocate new counter -- the cast failed
         {
@@ -264,7 +264,7 @@ public:
     }
 
     template<class Y>
-    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::polymorphic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
+    shared_ptr(shared_ptr<Y> const & r, memory_mgr::detail::polymorphic_cast_tag): px(dynamic_cast<element_type *>(&*r.px)), pn(r.pn)
     {
         if(px == 0)
         {
@@ -436,7 +436,7 @@ public:
         return pn < rhs.pn;
     }
 
-    void * _internal_get_deleter( boost::detail::sp_typeinfo const & ti ) const
+    void * _internal_get_deleter( memory_mgr::detail::sp_typeinfo const & ti ) const
     {
         return pn.get_deleter( ti );
     }

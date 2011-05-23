@@ -51,15 +51,15 @@ memory_mgr::shared_ptr< T > allocate_shared( const Alloc & alloc BOOST_PP_COMMA_
 template< typename T, class MemMgr MAKE_SHARED_TEMPLATE_PARMS>
 memory_mgr::shared_ptr< T > make_shared(MemMgr& mgr MAKE_SHARED_PARMS_TRAILING)
 {							
-	member_allocator<T, MemMgr> alloc( &mgr );
-	return allocate_shared<T>( alloc MAKE_SHARED_ARGS_TRAILING );
+	memory_mgr::member_allocator<T, MemMgr> alloc( &mgr );
+	return memory_mgr::allocate_shared<T>( alloc MAKE_SHARED_ARGS_TRAILING );
 }
 
 //Singleton Memory Manager version
 template< typename T, class MemMgr MAKE_SHARED_TEMPLATE_PARMS>
 memory_mgr::shared_ptr< T > make_shared(MAKE_SHARED_PARMS)
 {																	
-	return allocate_shared<T>( allocator<T, MemMgr>() MAKE_SHARED_ARGS_TRAILING );
+	return memory_mgr::allocate_shared<T>( memory_mgr::allocator<T, MemMgr>() MAKE_SHARED_ARGS_TRAILING );
 }
 
 #undef MAKE_SHARED_TEMPLATE_PARMS

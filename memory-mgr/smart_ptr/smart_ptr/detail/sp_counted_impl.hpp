@@ -67,19 +67,19 @@ public:
 		: px_( px )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( &*px, sizeof(X), this );
+        memory_mgr::sp_scalar_constructor_hook( &*px, sizeof(X), this );
 #endif
     }
 
     virtual void dispose() // nothrow
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( &*px_, sizeof(X), this );
+        memory_mgr::sp_scalar_destructor_hook( &*px_, sizeof(X), this );
 #endif
         boost::checked_delete( &*px_ );
     }
 
-	virtual void * get_deleter( boost::detail::sp_typeinfo const & )
+	virtual void * get_deleter( memory_mgr::detail::sp_typeinfo const & )
     {
         return 0;
     }
@@ -119,7 +119,7 @@ public:
         del( &*ptr );
     }
 
-    virtual void * get_deleter( boost::detail::sp_typeinfo const & ti )
+    virtual void * get_deleter( memory_mgr::detail::sp_typeinfo const & ti )
     {
         return ti == BOOST_SP_TYPEID(D)? &reinterpret_cast<char&>( del ): 0;
     }
@@ -163,7 +163,7 @@ public:
         a2.deallocate( this, 1 );
     }
 
-    virtual void * get_deleter( boost::detail::sp_typeinfo const & ti )
+    virtual void * get_deleter( memory_mgr::detail::sp_typeinfo const & ti )
     {
         return ti == BOOST_SP_TYPEID( D )? &reinterpret_cast<char&>( d_ ): 0;
     }

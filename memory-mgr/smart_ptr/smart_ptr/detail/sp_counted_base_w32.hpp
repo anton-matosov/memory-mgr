@@ -29,14 +29,14 @@
 
 #include <boost/detail/interlocked.hpp>
 #include <boost/detail/workaround.hpp>
-#include <boost/detail/sp_typeinfo.hpp>
+#include <memory-mgr/detail/sp_typeinfo.hpp>
 
 namespace memory_mgr
 {
 
 namespace detail
 {
-using boost::detail::sp_typeinfo;
+
 class sp_counted_base
 {
 private:

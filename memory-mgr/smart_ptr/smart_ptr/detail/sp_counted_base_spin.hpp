@@ -18,7 +18,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/detail/sp_typeinfo.hpp>
+#include <memory-mgr/detail/sp_typeinfo.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/spinlock_pool.hpp>
 
 namespace memory_mgr

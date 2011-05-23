@@ -63,7 +63,7 @@ public:
 		: px( p )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( &*px );
+        memory_mgr::sp_scalar_constructor_hook( &*px );
 #endif
     }
 
@@ -73,7 +73,7 @@ public:
 		: px( p.release() )
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( &*px );
+        memory_mgr::sp_scalar_constructor_hook( &*px );
 #endif
     }
 
@@ -82,7 +82,7 @@ public:
     ~scoped_ptr() // never throws
     {
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( &*px );
+        memory_mgr::sp_scalar_destructor_hook( &*px );
 #endif
 		boost::checked_delete( &*px );
     }

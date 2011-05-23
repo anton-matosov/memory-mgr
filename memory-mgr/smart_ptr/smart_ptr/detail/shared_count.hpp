@@ -45,8 +45,6 @@ namespace memory_mgr
 
 namespace detail
 {
-using boost::detail::sp_typeinfo;
-
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
 
 int const shared_count_id = 0x2C35F101;

@@ -24,7 +24,7 @@ class shared_container_iterator : public iterator_adaptor<
     typename Container::iterator> super_t;
 
   typedef typename Container::iterator iterator_t;
-  typedef boost::shared_ptr<Container> container_ref_t;
+  typedef memory_mgr::shared_ptr<Container> container_ref_t;
 
   container_ref_t container_ref;
 public:
@@ -39,7 +39,7 @@ public:
 template <typename Container>
 shared_container_iterator<Container>
 make_shared_container_iterator(typename Container::iterator iter,
-                               boost::shared_ptr<Container> const& container) {
+                               memory_mgr::shared_ptr<Container> const& container) {
   typedef shared_container_iterator<Container> iterator;
   return iterator(iter,container);
 }
@@ -50,7 +50,7 @@ template <typename Container>
 std::pair<
   shared_container_iterator<Container>,
   shared_container_iterator<Container> >
-make_shared_container_range(boost::shared_ptr<Container> const& container) {
+make_shared_container_range(memory_mgr::shared_ptr<Container> const& container) {
   return
     std::make_pair(
       make_shared_container_iterator(container->begin(),container),
