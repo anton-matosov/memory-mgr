@@ -289,7 +289,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\detail\new_proxy_operator_braces.h"
+					>
+				</File>
+				<File
 					RelativePath=".\detail\new_proxy_operator_pp.h"
+					>
+				</File>
+				<File
+					RelativePath=".\detail\offset_ptr_base.h"
 					>
 				</File>
 				<File
@@ -533,6 +541,10 @@
 					</File>
 					<File
 						RelativePath=".\smart_ptr\smart_ptr\detail\lwm_win32_cs.hpp"
+						>
+					</File>
+					<File
+						RelativePath=".\smart_ptr\smart_ptr\detail\make_shared_pp_pregenerated.hpp"
 						>
 					</File>
 					<File

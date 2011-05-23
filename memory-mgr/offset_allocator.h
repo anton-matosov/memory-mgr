@@ -41,8 +41,8 @@ namespace memory_mgr
 		public:
 			typedef typename offset_pointer<T, MemMgr> pointer;
 			typedef typename offset_pointer<const T, MemMgr> const_pointer;
-			typedef typename pointer::reference reference;
-			typedef typename pointer::const_reference const_reference;
+			typedef typename type_manip::add_reference<T>::type reference;
+			typedef typename type_manip::add_reference<const T>::type const_reference;
 
 			template<class Other>
 			struct rebind

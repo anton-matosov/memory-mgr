@@ -311,6 +311,31 @@ namespace memory_mgr
 				!conversion<const volatile B*, const volatile void*>::same_type &&
 				!conversion<const volatile B*, const volatile D*>::same_type) };
 		};
+
+		template <typename T>
+		struct add_reference
+		{
+			typedef T& type;
+		};
+
+		template<class T>
+		struct add_reference<T&>
+		{
+			typedef T& type;
+		};
+
+		template<>
+		struct add_reference<void>
+		{
+			typedef type2type<void> &type;
+		};
+
+		template<>
+		struct add_reference<const void>
+		{
+			typedef const type2type<const void> &type;
+		};
+
 	}
 }
 
