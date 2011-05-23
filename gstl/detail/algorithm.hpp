@@ -927,7 +927,7 @@ page 577
 	template<class T>
 	static inline const T min( const T& v1, const T& v2 )
 	{
-		return gstl::min( v1, v2, std::less<T>() );
+		return (gstl::min)( v1, v2, std::less<T>() );
 	}
 
 	template<class T, class Pred>

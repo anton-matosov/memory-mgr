@@ -179,7 +179,7 @@ namespace gstl
 		using base_type::reserve;
 		using base_type::empty;
 		
-		void resize(size_type sz, T c = T())
+		void resize(size_type sz, , const_reference c = value_type())
 		{
 			detail::container::resize( this, sz, c );
 		}
