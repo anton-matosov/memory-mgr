@@ -34,13 +34,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/offset_traits.h>
 #include "common_manager_tests.h"
 
+MGR_DECLARE_SEGMENT_NAME( segmentName, "shared segment" );
+MGR_DECLARE_SEGMENT_NAME( segmentNameTracked, "tracked shared segment" );
+
 typedef  memory_mgr::named_objects
 <
 	memory_mgr::size_tracking
 	<
 		memory_mgr::shared_segment
 		< 
-			memory_mgr::memory_manager<size_t, 1024, 4> 
+			memory_mgr::memory_manager<size_t, 1024 * 1024, 4>, MGR_SEGMENT_NAME( segmentNameTracked )
 		>		
 	>
 > name_sz_shared_mgr_type;
@@ -49,9 +52,8 @@ typedef  memory_mgr::named_objects
 <
 	memory_mgr::shared_segment
 	< 
-		memory_mgr::memory_manager<size_t, 1024 * 1024, 4> 
+		memory_mgr::memory_manager<size_t, 1024 * 1024, 4>, MGR_SEGMENT_NAME( segmentName )
 	> 
-	
 > name_shared_mgr_type;
 
 

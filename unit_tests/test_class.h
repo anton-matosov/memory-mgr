@@ -53,9 +53,9 @@ struct my_mutex
 
 typedef memory_mgr::singleton_manager
 < 
-	memory_mgr::heap_segment
+	memory_mgr::named_objects
 	< 
-		memory_mgr::named_objects
+		memory_mgr::heap_segment
 		< 
 			memory_mgr::size_tracking
 			< 
