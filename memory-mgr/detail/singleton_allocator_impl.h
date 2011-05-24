@@ -30,15 +30,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
-#include <memory-mgr/detail/polymorphic_allocator.h>
+#include <memory-mgr/detail/types.h>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
-		template<class MemMgr>
+		template<class MemMgr, class BaseType = detail::empty_type>
 		class singleton_allocator_impl
-			:public detail::polymorphic_allocator
+			:public BaseType
 		{
 		public:
 			typedef MemMgr								mgr_type;
@@ -62,7 +62,7 @@ namespace memory_mgr
 				mgr_type::instance().deallocate( ptr, size );
 			}
 
-			bool equal( const polymorphic_allocator& /*rhs*/ ) const /*throw()*/
+			bool equal( const BaseType& /*rhs*/ ) const /*throw()*/
 			{
 				return true;
 			}

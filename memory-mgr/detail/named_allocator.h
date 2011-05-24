@@ -33,7 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <map>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
-#include <memory-mgr/allocator.h>
+#include <memory-mgr/offset_allocator.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
@@ -106,14 +106,15 @@ namespace memory_mgr
 		template<class MemMgr>
 		struct named_allocator_traits
 		{
-			typedef MemMgr																mgr_type;
-			typedef typename manager_traits<MemMgr>::block_offset_type					block_offset_type;
-			typedef allocator_decorator<char>											allocator_type;
+			typedef singleton_manager<MemMgr> mgr_type;
 
-			typedef std::basic_string< char, std::char_traits<char>, allocator_type>	string_type;
-			typedef std::less<string_type>												compare_type;
-			typedef map_adapted< string_type, named_object, compare_type, allocator_type>	map_type;
-			typedef typename map_type::value_type										map_item_type;
+			typedef typename manager_traits<mgr_type>::block_offset_type block_offset_type;
+			typedef offset_allocator<char, mgr_type> allocator_type;
+
+			typedef std::basic_string< char, std::char_traits<char>, allocator_type> string_type;
+			typedef std::less<string_type> compare_type;
+			typedef map_adapted< string_type, named_object, compare_type, allocator_type> map_type;
+			typedef typename map_type::value_type map_item_type;
 		};
 
 		template<class MemMgr, class TraitsT >
@@ -130,22 +131,19 @@ namespace memory_mgr
 			typedef	typename traits_type::map_item_type		map_item_type;
 			typedef typename string_type::value_type		char_type;
 
-			typedef polymorphic_member_allocator<map_type, mgr_type> map_alloc_type;
-
 			named_allocator( mgr_type& mgr )
 				:m_is_first_construct( mgr.is_free() ),
-				m_alloc( polymorphic_member_allocator<char_type, MemMgr>( &mgr ) )
+				m_alloc()
 			{
 				if( m_is_first_construct )
 				{
-					map_alloc_type map_alloc( &mgr );
-					m_objects = map_alloc.allocate( 1 );
-					::new( m_objects ) map_type( map_alloc );
+					m_objects = (map_type*)mgr.allocate( sizeof( map_type ) );
+					::new( m_objects ) map_type( m_alloc );
 				}
 				else
 				{
- 					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
- 						is_category_supported< mgr_type, size_tracking_tag>::value ? 84 : 72, mgr ) );
+					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
+						is_category_supported< mgr_type, size_tracking_tag>::value ? 4 : 0, mgr ) );
 				}
 
 			}

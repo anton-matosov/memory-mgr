@@ -30,23 +30,22 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/memory_manager.h>
-#include <memory-mgr/block_id_converter.h>
-#include <memory-mgr/detail/polymorphic_allocator.h>
+#include <memory-mgr/detail/types.h>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
-		template<class MemMgr>
+		template<class MemMgr, class BaseType = detail::empty_type>
 		class member_allocator_impl
-			:public detail::polymorphic_allocator
+			:public BaseType
 		{
 		public:
 			typedef MemMgr												mgr_type;
 			typedef manager_traits<mgr_type>							traits_type;
 			typedef typename traits_type::size_type						size_type;
 
-			inline member_allocator_impl( mgr_type* mgr = 0 )
+			inline member_allocator_impl( mgr_type* mgr )
 				:m_mgr( mgr )
 			{
  				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value)
@@ -66,7 +65,7 @@ namespace memory_mgr
 				m_mgr->deallocate( ptr, size );
 			}
 
-			bool equal( const polymorphic_allocator& rhs ) const /*throw()*/
+			bool equal( const BaseType& rhs ) const /*throw()*/
 			{
 				return m_mgr == static_cast<const member_allocator_impl&>(rhs).m_mgr;
 			}

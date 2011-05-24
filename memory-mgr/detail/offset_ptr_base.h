@@ -60,6 +60,7 @@ namespace memory_mgr
 			typedef const value_type*	const_pointer;
 
 			typedef typename type_manip::add_reference<value_type>::type reference;
+			typedef typename type_manip::add_reference<const value_type>::type const_reference;
 
 			typedef std::ptrdiff_t						difference_type;
 			

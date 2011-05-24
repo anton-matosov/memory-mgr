@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/allocator_decorator.h>
 #include <memory-mgr/detail/mgr_impl_allocator.h>
 #include <memory-mgr/detail/member_allocator_impl.h>
+#include <memory-mgr/detail/polymorphic_allocator.h>
 
 #include <memory-mgr/detail/singleton_allocator_impl.h>
 #include <memory-mgr/smart_ptr/make_shared.hpp>
@@ -97,14 +98,14 @@ namespace memory_mgr
 	};
 	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator );
 
-	template<class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T>>
+	template<class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
 	class polymorphic_allocator
 		:public allocator_decorator<T, RebindPointersFrom>
 	{
 	public:
 		typedef typename MemMgr		mgr_type;
 		typedef allocator_decorator<T, RebindPointersFrom> base_type;
-		typedef detail::singleton_allocator_impl<MemMgr> impl_type;
+		typedef detail::singleton_allocator_impl<MemMgr, detail::polymorphic_allocator > impl_type;
 
 		typedef polymorphic_allocator	self_type;
 
@@ -127,7 +128,7 @@ namespace memory_mgr
 
 		typedef typename base_type::mgr_type		mgr_type;
 		// construct allocator from pointer to manager
-		inline member_allocator( mgr_type* mgr = 0 )
+		inline member_allocator( mgr_type* mgr )
 			:base_type( mgr )
 		{
 		}
@@ -143,10 +144,10 @@ namespace memory_mgr
 	public:
 		typedef MemMgr mgr_type;
 		typedef allocator_decorator<T, RebindPointersFrom> base_type;
-		typedef detail::member_allocator_impl< MemMgr > impl_type;
+		typedef detail::member_allocator_impl< MemMgr, detail::polymorphic_allocator > impl_type;
 
 		// construct allocator from pointer to manager
-		inline polymorphic_member_allocator( mgr_type* mgr = 0 )
+		inline polymorphic_member_allocator( mgr_type* mgr )
 			:base_type( mgr ? make_shared<impl_type>( *mgr, mgr ) : base_type::pimpl_type() )
 		{
 		}

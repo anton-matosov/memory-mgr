@@ -33,4 +33,15 @@ typedef unsigned short	ushort;
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
 
+namespace memory_mgr
+{
+	namespace detail
+	{
+		struct empty_type
+		{
+
+		};
+	}
+}
+
 #endif// MGR_TYPES_HEADER
