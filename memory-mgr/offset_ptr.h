@@ -103,6 +103,9 @@ namespace memory_mgr
 		}
 
 	private:
+		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		#endif
 		inline void do_set_pointer( const_pointer ptr )
 		{
 			//offset == invalid_offset1 && ptr != 0 is not legal for this pointer
@@ -117,6 +120,9 @@ namespace memory_mgr
 			}
 		}
 
+		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		#endif
 		inline const_pointer do_get_pointer() const
 		{
 			if( m_offset == offset_traits<offset_type>::invalid_offset )

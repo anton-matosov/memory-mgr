@@ -55,7 +55,8 @@ MGR_DECLARE_MANAGER_CLASS(heap_manager, alloc_mgr);
 
 typedef memory_mgr::allocator<char, heap_manager> char_allocator;
 
-typedef std::basic_string<char, std::char_traits<char>, char_allocator > string_type;
+//typedef std::basic_string<char, std::char_traits<char>, char_allocator > string_type;
+typedef std::string string_type;
 
 template<class T1, class T2>
 static inline bool less_second( const std::pair<T1, T2>& lhs, const std::pair<T1, T2>& rhs )

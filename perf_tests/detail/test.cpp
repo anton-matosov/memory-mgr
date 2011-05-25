@@ -60,7 +60,7 @@ void perf_test_manager::print_results()
 			time( &rawtime );
 			ptm = gmtime ( &rawtime );
 
-			std::basic_stringstream<char, std::char_traits<char>, char_allocator> date_time;
+			std::stringstream date_time;
 			date_time << 1900 + ptm->tm_year << '.'
 				<< ptm->tm_mon + 1  << '.'
 				<< ptm->tm_mday << ' '
