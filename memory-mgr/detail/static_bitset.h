@@ -473,11 +473,8 @@ namespace memory_mgr
 		}
 
 	private:
-		enum{
-			one = block_type(1),
-			block_max = static_cast<block_type>( ~block_type(0) )
-
-		};
+		static const block_type one = block_type(1);
+		static const block_type block_max = static_cast<block_type>( ~block_type(0) );
 
 		static inline size_type block_index(size_type pos) 
 		{ return pos / bits_per_block; }
@@ -492,9 +489,17 @@ namespace memory_mgr
 		{ return static_cast<block_type>( one << pos ); }
 		
 		static inline block_type bit_mask(size_type pos, size_type count) 
-		{ 
-			count = (count % bits_per_block) < count ? -1 : count;
-			return block_type( ((one << count ) - 1) << bit_index(pos) ); 
+		{
+			block_type bit_mask_for_count_bits = 0;
+ 			if( count < bits_per_block )
+ 			{
+ 				bit_mask_for_count_bits = ((one << count ) - 1);
+ 			}
+ 			else
+ 			{
+ 				bit_mask_for_count_bits = block_max;
+ 			}
+ 			return bit_mask_for_count_bits << bit_index(pos); 
 		}
 
 		static inline block_type higher_bit_mask(size_type pos) 
