@@ -263,6 +263,18 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		BOOST_CHECK_THROW( st.resize( st.max_size() + 1, ch ), std::length_error );	
 	}
 
+	//21.3.6 basic_string string operations
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_c_str, string_type, t_list )
+	{
+		/*
+		3 Returns: If size() is nonzero, the member returns a pointer to the initial element of an array whose first
+		size() elements equal the corresponding elements of the string controlled by *this. If size() is
+		zero, the member returns a non-null pointer that is copyable and can have zero added to it.
+		*/
+		string_type s;
+		BOOST_CHECK_EQUAL( s.c_str(), "" );
+		BOOST_CHECK_EQUAL( s.data(), "" );
+	}
 	
 	//21.3.3 basic_string capacity
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, string_type, t_list )
@@ -275,7 +287,7 @@ typedef boost::mpl::list< /**/std::string,/**/ gstl_string, memory_mgr_string/**
 		s.clear();
 		BOOST_CHECK_EQUAL( s.size(), sz_null );
 		BOOST_CHECK_GE( s.capacity(), sz_null );
-
+		BOOST_CHECK_EQUAL( s.c_str(), "" );
 	}
 
 	//21.3.3 basic_string capacity
