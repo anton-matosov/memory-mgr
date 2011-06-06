@@ -440,7 +440,20 @@ page 577
 		return mismatch( first1, last1, first2, 
 			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
 	}
-	
+
+	/**
+		@brief Return first position where two ranges differ
+		@note This is a safe version of the std::mismatch, it considers the end of second sequence
+	*/
+	template<class InputIterator1, class InputIterator2>
+	pair<InputIterator1, InputIterator2>
+		mismatch(InputIterator1 first1, InputIterator1 last1,
+		InputIterator2 first2, InputIterator2 last2)
+	{
+		return mismatch( first1, last1, first2, last2 
+			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
+	}
+
 	/**
 		@brief Return first position where two ranges differ
 	*/
@@ -459,6 +472,25 @@ page 577
 		return gstl::make_pair( first1, first2 );
 	}
 
+	/**
+		@brief Return first position where two ranges differ
+		@note This is a safe version of the std::mismatch, it considers the end of second sequence
+	*/
+	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+	pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1, InputIterator1 last1,
+						InputIterator2 first2, InputIterator2 last2, BinaryPredicate pred)
+	{
+		while( first1 != last1
+			&& first2 != last2 )
+		{
+			if( !pred( *first1, *first2) )
+			{
+				break;
+			}
+			++first1; ++first2;
+		}
+		return gstl::make_pair( first1, first2 );
+	}
 	/**
 		@brief Test whether the elements in two ranges are equal 
 		@details Compares the elements in the range [first1,last1)
