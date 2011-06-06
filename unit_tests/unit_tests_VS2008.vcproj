@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_named_allocator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_pointer_traits.cpp"
 				>
 			</File>

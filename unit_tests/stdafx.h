@@ -27,13 +27,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #define BOOST_TEST_MODULE gstl_unit_tests
 #include <boost/test/auto_unit_test.hpp>
-
-#ifdef max
-#	undef max
-#endif
-#ifdef min
-#	undef min
-#endif
+#include <boost/unordered_map.hpp>
 #include "test_common.hpp"
 
 static const size_t sz_null = 0;
