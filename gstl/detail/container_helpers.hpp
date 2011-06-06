@@ -40,16 +40,16 @@ namespace gstl
 		namespace container
 		{
 			template<class Container, class T>
-			void resize( Container* cont, typename Container::size_type n, T c = T() )
+			void resize( Container* cont, typename Container::size_type newSize, T fillWith )
 			{
-				if( n > cont->size() )
+				if( newSize > cont->size() )
 				{
-					cont->insert( cont->end(), n - cont->size(), c );
+					cont->insert( cont->end(), newSize - cont->size(), fillWith );
 				}
-				else if( n < cont->size() )
+				else if( newSize < cont->size() )
 				{
 					typename Container::iterator it = cont->begin();
-					advance( it, n );
+					advance( it, newSize );
 					cont->erase( it, cont->end() );
 				}
 			}
