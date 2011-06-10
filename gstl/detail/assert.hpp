@@ -30,12 +30,49 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <assert.h>
 
-#ifndef GSTL_ASSERT
+#ifndef GSTL_COMA
+#	define GSTL_COMA ,
+#endif
+
+#ifndef GSTL_DEBUG_EXPRESSION
 #	ifdef GSTL_DEBUG
-#		define GSTL_ASSERT( expression ) assert( expression )
+#		define GSTL_DEBUG_EXPRESSION( expression ) expression
+#	else
+#		define GSTL_DEBUG_EXPRESSION( expression )
+#	endif
+#endif
+
+
+#define GSTL_DO_STRINGIZE( __expr__ ) #__expr__
+#define GSTL_STRINGIZE( __expr__ ) GSTL_DO_STRINGIZE( __expr__ )
+
+#ifdef GSTL_ASSERT_EXCEPTION
+namespace gstl
+{
+	class assert_exception
+		:public std::exception
+	{
+	public:
+		assert_exception( const char* message )
+			:std::exception( message )
+		{
+
+		}
+	};
+}
+#endif
+
+#ifndef GSTL_ASSERT
+#	if defined(GSTL_DEBUG) && !defined(GSTL_ASSERT_EXCEPTION)
+#		define GSTL_ASSERT( expression ) GSTL_DEBUG_EXPRESSION( assert( expression ) )
+#	elif defined( GSTL_ASSERT_EXCEPTION )
+#		define GSTL_ASSERT( expression ) if( !(expression) )\
+								{ throw gstl::assert_exception( GSTL_STRINGIZE(expression) ); }
 #	else
 #		define GSTL_ASSERT( expression )
 #	endif
 #endif
+
+#define GSTL_NO_THROW
 
 #endif //GSTL_ASSERT_HEADER

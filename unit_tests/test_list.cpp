@@ -50,7 +50,7 @@ typedef gstl::list<test_value_type,
 typedef gstl::list<test_value_type,
 	memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_list;
 
-typedef boost::mpl::list< /**/std_list/**/, gstl_list/**/, memory_mgr_list/**/, memory_mgr_off_list/**/> t_list;
+typedef boost::mpl::list< /**std_list,/**/ gstl_list/**/, memory_mgr_list/**/, memory_mgr_off_list/**/> t_list;
 
 
 #include "detail/test_construction.hpp"
@@ -71,6 +71,22 @@ typedef boost::mpl::list< /**/std_list/**/, gstl_list/**/, memory_mgr_list/**/, 
 
 //#include "detail/test_construction_throw.hpp"
 //#include "detail/test_assign_throw.hpp"
+
+#ifdef GSTL_ASSERT_EXCEPTION
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_diff_containers, container_type, t_list )
+{
+	container_type container1;
+	container_type container2;
+
+	BOOST_CHECK_THROW( container1.begin() != container2.end(), gstl::assert_exception );
+	BOOST_CHECK_THROW( container1.end() != container2.begin(), gstl::assert_exception );
+
+	BOOST_CHECK_THROW( container1.rbegin() != container2.rend(), gstl::assert_exception );
+	BOOST_CHECK_THROW( container1.rend() != container2.rbegin(), gstl::assert_exception );
+}
+
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()
 

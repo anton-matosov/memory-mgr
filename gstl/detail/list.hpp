@@ -75,6 +75,9 @@ namespace gstl
 
 		//////////////////////////////////////////////////////////////////////////
 		//Iterator types
+		template <class NodePtrT, class ContainerT>
+		friend class detail::list_iterator;
+
 		typedef detail::declare_list_iterator<self_type>	iter_helper;
 
 		typedef typename iter_helper::iterator				iterator; //See 23.1
@@ -145,22 +148,22 @@ namespace gstl
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( base_type::_next( tail_ ) );
+			return iter_helper::build_iter( base_type::_next( tail_ ), this );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( this->_next( tail_ ) );
+			return iter_helper::build_const_iter( this->_next( tail_ ), this );
 		}
 
 		iterator end()
 		{
-			return iter_helper::build_iter( tail_ );
+			return iter_helper::build_iter( tail_, this );
 		}
 
 		const_iterator end() const
 		{
-			return iter_helper::build_const_iter( tail_ );
+			return iter_helper::build_const_iter( tail_, this );
 		}
 
 		reverse_iterator rbegin()

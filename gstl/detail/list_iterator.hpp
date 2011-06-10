@@ -29,7 +29,10 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/pointer_to_other.hpp>
 #include <gstl/detail/iterator_declarer.hpp>
+#include <gstl/detail/assert.hpp>
+#include <gstl/detail/helpers.hpp>
 
 namespace gstl
 {
@@ -49,6 +52,7 @@ namespace gstl
 
 			typedef NodePtrT								pointer_type;
 			typedef ContainerT								container_type;
+			typedef typename boost::pointer_to_other<NodePtrT, const ContainerT>::type container_pointer;
 		public:
 			typedef list_iterator							self_type;
 			typedef typename self_type::iterator_adaptor_	base_type;
@@ -58,23 +62,30 @@ namespace gstl
 				: base_type( 0 )
 			{}
 
-			explicit list_iterator( NodePtrT p )
+			explicit list_iterator( pointer_type p, container_pointer container )
 				: base_type( p )
-			{}
+				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( container ) )
+			{
+				gstl::helpers::unused_variable( container );
+				GSTL_ASSERT( !! this->container_ );
+			}
 
 			template <class OtherPtrT>
 			list_iterator( list_iterator<OtherPtrT, container_type> const& other,
 				typename boost::enable_if< boost::is_convertible<OtherPtrT, pointer_type>,
 				enabler >::type = enabler() )
 				: base_type( other.base() )
+				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( other.container_ ) )
 			{
-
 			}
 		private:
 			friend class boost::iterator_core_access;
 			void increment()
 			{
 				//TODO: Implement checking
+				GSTL_ASSERT( !! this->container_ );
+				GSTL_ASSERT( this->base() != this->container_->tail_ );
+
 				this->base_reference() = (*this->base()).next_;
 			}
 
@@ -88,6 +99,16 @@ namespace gstl
 			{ 
 				return (*this->base()).value_; 
 			}
+
+			bool equal(list_iterator const& other) const
+			{
+				GSTL_ASSERT( !! this->container_ );
+				GSTL_ASSERT( !! other.container_ );
+				GSTL_ASSERT( this->container_ == other.container_ );
+				return this->base() == other.base();
+			}
+
+			GSTL_DEBUG_EXPRESSION( container_pointer container_ );
 		};
 
 		template <class ContainerT>

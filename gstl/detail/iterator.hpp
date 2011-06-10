@@ -705,13 +705,13 @@ namespace gstl
 		typedef std::basic_streambuf<char_type, traits_type>	streambuf_type;
 		typedef std::basic_ostream<char_type, traits_type>		ostream_type;
 
-		ostreambuf_iterator( ostream_type& s ) throw()
+		ostreambuf_iterator( ostream_type& s ) GSTL_NO_THROW
 			:sbuf_( s.rdbuf() ),
 			fail_( false )
 		{
 			GSTL_ASSERT( sbuf_ != 0 );
 		}
-		ostreambuf_iterator( streambuf_type* s ) throw()
+		ostreambuf_iterator( streambuf_type* s ) GSTL_NO_THROW
 			:sbuf_( s ),
 			fail_( false )
 		{

@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/pointer_to_other.hpp>
 
 namespace gstl
 {
@@ -48,6 +49,7 @@ namespace gstl
 
 			typedef PointerType				pointer;
 			typedef ConstPointerType		const_pointer;
+			typedef typename boost::pointer_to_other<pointer, const container_type>::type container_const_pointer;
 
 			typedef IteratorT<pointer, container_type>			iterator;
 			typedef IteratorT<const_pointer, container_type>	const_iterator;
@@ -61,6 +63,18 @@ namespace gstl
 			static inline const_iterator build_const_iter( const_pointer p )
 			{
 				const_iterator it( p );
+				return it;
+			}
+
+			static inline iterator build_iter( pointer p, container_const_pointer cont )
+			{
+				iterator it( p, cont );
+				return it;
+			}
+
+			static inline const_iterator build_const_iter( const_pointer p, container_const_pointer cont )
+			{
+				const_iterator it( p, cont );
 				return it;
 			}
 		};
