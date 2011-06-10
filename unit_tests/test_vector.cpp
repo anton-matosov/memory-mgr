@@ -46,7 +46,7 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 	typedef gstl::vector<test_value_type,
 		memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
 
-	typedef boost::mpl::list< /**/std_vector,/**/ gstl_vector/**/, memory_mgr_vector/**/, memory_mgr_off_vector/**/> t_list;
+	typedef boost::mpl::list< /**std_vector,/**/ gstl_vector/**/, memory_mgr_vector/**/, memory_mgr_off_vector/**/> t_list;
 
 	#include "detail/test_construction_throw.hpp"
 	#include "detail/test_assign_throw.hpp"
@@ -68,6 +68,8 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 	#include "detail/test_access_operators.hpp"
 	#include "detail/test_reserve.hpp"
 	#include "detail/test_resize_reserve_throw.hpp"
+
+	#include "detail/test_iterator.hpp"
 
 
 	BOOST_AUTO_TEST_CASE( test_objects_validness )

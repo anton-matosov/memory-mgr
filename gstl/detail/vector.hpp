@@ -132,12 +132,12 @@ namespace gstl
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( get_buffer() );
+			return iter_helper::build_iter( get_buffer(), this );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( get_buffer() );
+			return iter_helper::build_const_iter( get_buffer(), this );
 		}
 
 		iterator end()
@@ -316,7 +316,7 @@ namespace gstl
 				}
 				_destroy( begin(), end() );
 				result_pos = iter_helper::build_iter( 
-					tmp_begin + gstl::distance( begin(), position ) );
+					tmp_begin + gstl::distance( begin(), position ), this );
 				
 				base_type::swap( tmp_buff );
 			}
@@ -357,8 +357,8 @@ namespace gstl
 		void _destroy( T* first, T* last, 
 			typename boost::disable_if< boost::is_pointer<pointer>, T >::type* = 0 )
 		{
-			_destroy( iter_helper::build_iter( first ),
-				iter_helper::build_iter( last ) );
+			_destroy( iter_helper::build_iter( first, this ),
+				iter_helper::build_iter( last, this ) );
 		};
 	};
 

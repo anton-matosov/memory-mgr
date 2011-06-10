@@ -28,11 +28,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <boost/iterator/iterator_adaptor.hpp>
-#include <boost/pointer_to_other.hpp>
+#include <gstl/detail/sequence_iterator.hpp>
 #include <gstl/detail/iterator_declarer.hpp>
-#include <gstl/detail/assert.hpp>
-#include <gstl/detail/helpers.hpp>
 
 namespace gstl
 {
@@ -40,49 +37,46 @@ namespace gstl
 	{
 		template <class NodePtrT, class ContainerT>
 		class list_iterator
-			: public boost::iterator_adaptor<
-			list_iterator<NodePtrT, ContainerT>,	// Derived
-			NodePtrT,								// Base
-			typename ContainerT::value_type,		// Value
-			boost::bidirectional_traversal_tag		// CategoryOrTraversal
+			: public sequence_iterator_base<
+				NodePtrT, ContainerT, boost::bidirectional_traversal_tag,
+				list_iterator<NodePtrT, ContainerT>,
+				typename ContainerT::value_type
 			>
+// 			: public boost::iterator_adaptor<
+// 			list_iterator<NodePtrT, ContainerT>,	// Derived
+// 			NodePtrT,								// Base
+// 			typename ContainerT::value_type,		// Value
+// 			boost::bidirectional_traversal_tag		// CategoryOrTraversal
+// 			>
 		{
 		private:
 			struct enabler {};  // a private type avoids misuse
 
-			typedef NodePtrT								pointer_type;
-			typedef ContainerT								container_type;
-			typedef typename boost::pointer_to_other<NodePtrT, const ContainerT>::type container_pointer;
 		public:
-			typedef list_iterator							self_type;
-			typedef typename self_type::iterator_adaptor_	base_type;
+			typedef self_type/*from base*/	base_type;
+			typedef list_iterator			self_type;
+			typedef NodePtrT								pointer_type;
 			typedef typename base_type::value_type			value_type;
 
 			list_iterator()
-				: base_type( 0 )
 			{}
 
 			explicit list_iterator( pointer_type p, container_pointer container )
-				: base_type( p )
-				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( container ) )
+				: base_type( p, container )
 			{
-				gstl::helpers::unused_variable( container );
-				GSTL_ASSERT( !! this->container_ );
 			}
 
 			template <class OtherPtrT>
 			list_iterator( list_iterator<OtherPtrT, container_type> const& other,
 				typename boost::enable_if< boost::is_convertible<OtherPtrT, pointer_type>,
 				enabler >::type = enabler() )
-				: base_type( other.base() )
-				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( other.container_ ) )
+				: base_type( other )
 			{
 			}
 		private:
 			friend class boost::iterator_core_access;
 			void increment()
 			{
-				//TODO: Implement checking
 				GSTL_ASSERT( !! this->container_ );
 				GSTL_ASSERT( this->base() != this->container_->tail_ );
 
@@ -91,7 +85,9 @@ namespace gstl
 
 			void decrement()
 			{
-				//TODO: Implement checking
+				GSTL_ASSERT( !! this->container_ );
+				GSTL_ASSERT( this->base() != this->container_->tail_->next_ );
+
 				this->base_reference() = (*this->base()).prev_;
 			}
 
@@ -100,15 +96,6 @@ namespace gstl
 				return (*this->base()).value_; 
 			}
 
-			bool equal(list_iterator const& other) const
-			{
-				GSTL_ASSERT( !! this->container_ );
-				GSTL_ASSERT( !! other.container_ );
-				GSTL_ASSERT( this->container_ == other.container_ );
-				return this->base() == other.base();
-			}
-
-			GSTL_DEBUG_EXPRESSION( container_pointer container_ );
 		};
 
 		template <class ContainerT>

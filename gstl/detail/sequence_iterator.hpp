@@ -30,49 +30,108 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <gstl/detail/iterator_declarer.hpp>
+#include <boost/pointer_to_other.hpp>
+#include <gstl/detail/assert.hpp>
+#include <gstl/detail/helpers.hpp>
 
 namespace gstl
 {
 	namespace detail
 	{
- 		template <class PtrT, class ContainerT>
- 		class sequence_iterator
+		template <class PtrT, class ContainerT,
+					class CategoryOrTraversal, class DerivedT, class Value = boost::use_default>
+ 		class sequence_iterator_base
  			: public boost::iterator_adaptor<
- 			sequence_iterator<PtrT, ContainerT>,	// Derived
- 			PtrT,									// Base
- 			boost::use_default,						// Value
- 			boost::random_access_traversal_tag		// CategoryOrTraversal
+ 			DerivedT,				// Derived
+ 			PtrT,					// Base
+ 			Value,					// Value
+ 			CategoryOrTraversal		// CategoryOrTraversal
  			>
  		{
- 		private:
- 			struct enabler {};  // a private type avoids misuse
+ 		protected:
+ 			struct enabler {};  // a protected type avoids misuse
+
+		public:
+ 			typedef sequence_iterator_base					self_type;
+ 			typedef typename self_type::iterator_adaptor_	base_type;
+			typedef typename base_type::value_type			value_type;
 
 			typedef PtrT									pointer_type;
 			typedef ContainerT								container_type;
- 		public:
- 			typedef sequence_iterator						self_type;
- 			typedef typename self_type::iterator_adaptor_	base_type;
- 			typedef typename base_type::value_type			value_type;
+			typedef typename boost::pointer_to_other<pointer_type, const container_type>::type container_pointer;
  
- 			sequence_iterator()
+ 			sequence_iterator_base()
  				: base_type( 0 )
  			{}
  
- 			explicit sequence_iterator( pointer_type p )
- 				: base_type( p )
- 			{}
+			explicit sequence_iterator_base( pointer_type p, container_pointer container )
+				: base_type( p )
+				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( container ) )
+			{
+				gstl::helpers::unused_variable( container );
+				GSTL_ASSERT( !! this->container_ );
+			}
  
-			template <class OtherPtrT>
-			sequence_iterator( sequence_iterator<OtherPtrT, container_type> const& other,
+			template <class OtherPtrT, class OtherDerivedT>
+			sequence_iterator_base( 
+				sequence_iterator_base<OtherPtrT, container_type, CategoryOrTraversal, OtherDerivedT, Value> const& other,
 				typename boost::enable_if< boost::is_convertible<OtherPtrT, pointer_type>,
 				enabler >::type = enabler() )
 				: base_type( other.base() )
+				GSTL_DEBUG_EXPRESSION( GSTL_COMA container_( other.container_ ) )
 			{
 
 			}
 
-			
+		private:
+			friend class boost::iterator_core_access;
+
+			bool equal(self_type const& other) const
+			{
+				GSTL_ASSERT( !! this->container_ );
+				GSTL_ASSERT( !! other.container_ );
+				GSTL_ASSERT( this->container_ == other.container_ );
+				return this->base() == other.base();
+			}
+
+		public:
+			GSTL_DEBUG_EXPRESSION( container_pointer container_ );
  		};
+
+		template <class PtrT, class ContainerT>
+		class sequence_iterator
+			:public sequence_iterator_base<
+			PtrT,
+			ContainerT,
+			boost::random_access_traversal_tag,
+			sequence_iterator<PtrT, ContainerT>,
+			boost::use_default
+			>
+		{
+		public:
+			typedef self_type/*from base*/	base_type;
+			typedef sequence_iterator		self_type;
+
+
+			sequence_iterator()
+			{}
+
+			explicit sequence_iterator( pointer_type p, container_pointer container )
+				: base_type( p, container )
+			{
+
+			}
+
+			template <class OtherPtrT>
+			sequence_iterator( sequence_iterator<OtherPtrT, container_type> const& other,
+				typename boost::enable_if< boost::is_convertible<OtherPtrT, pointer_type>,
+				enabler >::type = enabler() )
+				:base_type(other)
+			{
+			}
+		private:
+			friend class boost::iterator_core_access;
+		};
 
 		template <class ContainerT>
 		class declare_sequence_iterator

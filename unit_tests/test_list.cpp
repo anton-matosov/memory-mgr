@@ -69,24 +69,11 @@ typedef boost::mpl::list< /**std_list,/**/ gstl_list/**/, memory_mgr_list/**/, m
 
 #include "detail/test_push_pop_front.hpp"
 
+#include "detail/test_iterator.hpp"
+
 //#include "detail/test_construction_throw.hpp"
 //#include "detail/test_assign_throw.hpp"
 
-#ifdef GSTL_ASSERT_EXCEPTION
-
-BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_diff_containers, container_type, t_list )
-{
-	container_type container1;
-	container_type container2;
-
-	BOOST_CHECK_THROW( container1.begin() != container2.end(), gstl::assert_exception );
-	BOOST_CHECK_THROW( container1.end() != container2.begin(), gstl::assert_exception );
-
-	BOOST_CHECK_THROW( container1.rbegin() != container2.rend(), gstl::assert_exception );
-	BOOST_CHECK_THROW( container1.rend() != container2.rbegin(), gstl::assert_exception );
-}
-
-#endif
 
 BOOST_AUTO_TEST_SUITE_END()
 

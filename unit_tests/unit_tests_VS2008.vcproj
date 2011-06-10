@@ -366,6 +366,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\detail\test_iterator.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\detail\test_push_pop.hpp"
 				>
 			</File>
