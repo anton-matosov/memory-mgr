@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="gstl"
-	ProjectGUID="{317AB518-3AB8-4F87-9977-E413EDA3F859}"
+	ProjectGUID="{270B347C-65E1-41F9-B1EE-1AE3FBB97515}"
 	RootNamespace="BitManager"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
@@ -245,6 +245,10 @@
 			</File>
 			<File
 				RelativePath=".\detail\char_traits.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detail\checked_iterator.hpp"
 				>
 			</File>
 			<File

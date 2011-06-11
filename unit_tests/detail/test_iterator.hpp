@@ -44,6 +44,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_const_assign, container_type, t_lis
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_iterator_diff_containers, container_type, t_list )
 {
+	if( ! gstl::detail::supports_pointer_to_any<container_type::pointer>::value )
+	{
+		return;
+	}
+
 	container_type container1;
 	container_type container2;
 

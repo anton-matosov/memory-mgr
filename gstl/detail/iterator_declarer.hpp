@@ -31,10 +31,28 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/pointer_to_other.hpp>
 
+namespace memory_mgr
+{
+	template<class T1, class T2>
+	class offset_pointer;
+}
+
 namespace gstl
 {
 	namespace detail
 	{
+		template<class PtrT>
+		struct is_pointer_to_any_location
+		{
+			enum { value = 1 };
+		};
+
+		template<class T, class U>
+		struct is_pointer_to_any_location< memory_mgr::offset_pointer<T, U> >
+		{
+			enum { value = 0 };
+		};
+
 		template
 		<
 			class ContainerT,
@@ -49,32 +67,23 @@ namespace gstl
 
 			typedef PointerType				pointer;
 			typedef ConstPointerType		const_pointer;
-			typedef typename boost::pointer_to_other<pointer, const container_type>::type container_const_pointer;
-
 			typedef IteratorT<pointer, container_type>			iterator;
 			typedef IteratorT<const_pointer, container_type>	const_iterator;
 
-			static inline iterator build_iter( pointer p )
+			enum
 			{
-				iterator it( p );
+				can_store_conainer = is_pointer_to_any_location<pointer>::value
+			};
+
+			static inline iterator build_iter( pointer p, const container_type* cont )
+			{
+				iterator it( p, cont, can_store_conainer );
 				return it;
 			}
 
-			static inline const_iterator build_const_iter( const_pointer p )
+			static inline const_iterator build_const_iter( const_pointer p, const container_type* cont )
 			{
-				const_iterator it( p );
-				return it;
-			}
-
-			static inline iterator build_iter( pointer p, container_const_pointer cont )
-			{
-				iterator it( p, cont );
-				return it;
-			}
-
-			static inline const_iterator build_const_iter( const_pointer p, container_const_pointer cont )
-			{
-				const_iterator it( p, cont );
+				const_iterator it( p, cont, can_store_conainer );
 				return it;
 			}
 		};

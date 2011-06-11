@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <memory-mgr/allocator.h>
+#include <memory-mgr/offset_allocator.h>
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/size_tracking.h>

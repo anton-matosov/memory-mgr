@@ -37,7 +37,7 @@ namespace gstl
 	{
 		template <class NodePtrT, class ContainerT>
 		class list_iterator
-			: public sequence_iterator_base<
+			: public checked_iterator<
 				NodePtrT, ContainerT, boost::bidirectional_traversal_tag,
 				list_iterator<NodePtrT, ContainerT>,
 				typename ContainerT::value_type
@@ -61,8 +61,8 @@ namespace gstl
 			list_iterator()
 			{}
 
-			explicit list_iterator( pointer_type p, container_pointer container )
-				: base_type( p, container )
+			explicit list_iterator( pointer_type p, const container_type* container, bool checksEnabled )
+				: base_type( p, container, checksEnabled )
 			{
 			}
 
@@ -77,16 +77,16 @@ namespace gstl
 			friend class boost::iterator_core_access;
 			void increment()
 			{
-				GSTL_ASSERT( !! this->container_ );
-				GSTL_ASSERT( this->base() != this->container_->tail_ );
+				GSTL_CHECKED_ITER_ASSERT( !! this->container_ );
+				GSTL_CHECKED_ITER_ASSERT( this->base() != this->container_->tail_ );
 
 				this->base_reference() = (*this->base()).next_;
 			}
 
 			void decrement()
 			{
-				GSTL_ASSERT( !! this->container_ );
-				GSTL_ASSERT( this->base() != this->container_->tail_->next_ );
+				GSTL_CHECKED_ITER_ASSERT( !! this->container_ );
+				GSTL_CHECKED_ITER_ASSERT( this->base() != this->container_->tail_->next_ );
 
 				this->base_reference() = (*this->base()).prev_;
 			}
