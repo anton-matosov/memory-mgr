@@ -79,6 +79,27 @@ namespace memory_mgr
 		{
 		}
 
+		template<class Y, class MgrY>
+		offset_pointer(offset_pointer<Y, MgrY> const & r,
+			memory_mgr::detail::static_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
+		template<class Y, class MgrY>
+		offset_pointer(offset_pointer<Y, MgrY> const & r,
+			memory_mgr::detail::dynamic_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
+		template<class Y, class MgrY>
+		offset_pointer(offset_pointer<Y, MgrY> const & r,
+			memory_mgr::detail::const_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		//Polymorph copy operators
 		inline offset_pointer& operator=( const_pointer p )			
@@ -114,6 +135,24 @@ namespace memory_mgr
 		}
 	
 	};
+
+	template<class T, class U, class Mgr>
+	offset_pointer<T, Mgr> static_pointer_cast(offset_pointer<U, Mgr> const & r)
+	{
+		return offset_pointer<T, Mgr>(r, memory_mgr::detail::static_cast_tag());
+	}
+
+	template<class T, class U, class Mgr>
+	offset_pointer<T, Mgr> const_pointer_cast(offset_pointer<U, Mgr> const & r)
+	{
+		return offset_pointer<T, Mgr>(r, memory_mgr::detail::const_cast_tag());
+	}
+
+	template<class T, class U, class Mgr>
+	offset_pointer<T, Mgr> dynamic_pointer_cast(offset_pointer<U, Mgr> const & r)
+	{
+		return offset_pointer<T, Mgr>(r, memory_mgr::detail::dynamic_cast_tag());
+	}
 	
 	template<class Mgr, class T>
 	static inline void delete_( offset_pointer<T, Mgr>& ptr )

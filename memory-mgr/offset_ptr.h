@@ -80,6 +80,27 @@ namespace memory_mgr
 		{
 		}
 
+		template<class Y>
+		offset_ptr(offset_ptr<Y> const & r,
+			memory_mgr::detail::static_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
+		template<class Y>
+		offset_ptr(offset_ptr<Y> const & r,
+			memory_mgr::detail::dynamic_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
+		template<class Y>
+		offset_ptr(offset_ptr<Y> const & r,
+			memory_mgr::detail::const_cast_tag tag)
+			:base_type( r, tag )
+		{
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		//Polymorph copy operators
 		inline offset_ptr& operator=( const_pointer p )			
@@ -132,6 +153,21 @@ namespace memory_mgr
 			return static_cast<const_pointer>( detail::shift( this, m_offset ) );	
 		}
 	};
+
+	template<class T, class U> offset_ptr<T> static_pointer_cast(offset_ptr<U> const & r)
+	{
+		return offset_ptr<T>(r, memory_mgr::detail::static_cast_tag());
+	}
+
+	template<class T, class U> offset_ptr<T> const_pointer_cast(offset_ptr<U> const & r)
+	{
+		return offset_ptr<T>(r, memory_mgr::detail::const_cast_tag());
+	}
+
+	template<class T, class U> offset_ptr<T> dynamic_pointer_cast(offset_ptr<U> const & r)
+	{
+		return offset_ptr<T>(r, memory_mgr::detail::dynamic_cast_tag());
+	}
 }
 
 

@@ -33,6 +33,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/new.h>
 #include <memory-mgr/detail/type_manip.h>
+#include <memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp>
 
 namespace memory_mgr
 {	
@@ -112,6 +113,31 @@ namespace memory_mgr
 
 				STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 			}
+
+			template<class Y, typename DerivedY>
+			offset_ptr_base(offset_ptr_base<Y, offset_type, DerivedY> const & r,
+				memory_mgr::detail::static_cast_tag)
+				:m_offset( offset_traits<offset_type>::invalid_offset )
+			{
+				derived_this()->do_set_pointer( static_cast<pointer>(r.get()) );
+			}
+
+			template<class Y, typename DerivedY>
+			offset_ptr_base(offset_ptr_base<Y, offset_type, DerivedY> const & r,
+				memory_mgr::detail::dynamic_cast_tag)
+				:m_offset( offset_traits<offset_type>::invalid_offset )
+			{
+				derived_this()->do_set_pointer( dynamic_cast<pointer>(r.get()) );
+			}
+
+			template<class Y, typename DerivedY>
+			offset_ptr_base(offset_ptr_base<Y, offset_type, DerivedY> const & r,
+				memory_mgr::detail::const_cast_tag)
+				:m_offset( offset_traits<offset_type>::invalid_offset )
+			{
+				derived_this()->do_set_pointer( const_cast<pointer>(r.get()) );
+			}
+
 
 			//////////////////////////////////////////////////////////////////////////
 			//Polymorph copy operators
@@ -280,7 +306,8 @@ namespace memory_mgr
 			return lhs.get() - rhs.get();
 		}
 
-	}
+	} //namespace detail
+
 	//For compatibility with delete_, new_ operators
 	template<class T, class MemMgr, class OffsetT, class DerivedT>
 	inline void delete_( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr,

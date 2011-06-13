@@ -34,6 +34,7 @@
 #include <boost/detail/workaround.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp>
+#include <memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp>
 
 #include <memory-mgr/offset_ptr.h>
 
@@ -69,11 +70,6 @@ template<class T> class enable_shared_from_this2;
 
 namespace detail
 {
-
-struct static_cast_tag {};
-struct const_cast_tag {};
-struct dynamic_cast_tag {};
-struct polymorphic_cast_tag {};
 
 template<class T> struct shared_ptr_traits
 {

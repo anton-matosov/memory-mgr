@@ -63,7 +63,9 @@ template<> struct sp_enable_if_convertible_impl<false>
 {
 };
 
-template< class Y, class T > struct sp_enable_if_convertible: public sp_enable_if_convertible_impl< sp_convertible< Y, T >::value >
+template< class Y, class T >
+struct sp_enable_if_convertible
+	: public sp_enable_if_convertible_impl< sp_convertible< Y, T >::value >
 {
 };
 
