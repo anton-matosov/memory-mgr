@@ -6,8 +6,8 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SINGLETON_POOL_HPP
-#define BOOST_SINGLETON_POOL_HPP
+#ifndef MEMORY_MGR_SINGLETON_POOL_HPP
+#define MEMORY_MGR_SINGLETON_POOL_HPP
 
 #include <memory-mgr/pool/poolfwd.hpp>
 

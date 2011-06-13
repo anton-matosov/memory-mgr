@@ -9,8 +9,8 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SIMPLE_SEGREGATED_STORAGE_HPP
-#define BOOST_SIMPLE_SEGREGATED_STORAGE_HPP
+#ifndef MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
+#define MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
 
 // MS compatible compilers support #pragma once
 

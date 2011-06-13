@@ -6,8 +6,8 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef BOOST_POOLFWD_HPP
-#define BOOST_POOLFWD_HPP
+#ifndef MEMORY_MGR_POOLFWD_HPP
+#define MEMORY_MGR_POOLFWD_HPP
 
 //#include <boost/config.hpp> // for workarounds
 

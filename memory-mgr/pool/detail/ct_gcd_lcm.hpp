@@ -6,8 +6,8 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef BOOST_POOL_CT_GCD_LCM_HPP
-#define BOOST_POOL_CT_GCD_LCM_HPP
+#ifndef MEMORY_MGR_POOL_CT_GCD_LCM_HPP
+#define MEMORY_MGR_POOL_CT_GCD_LCM_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/ice.hpp>

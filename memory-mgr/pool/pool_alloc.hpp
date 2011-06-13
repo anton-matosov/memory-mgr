@@ -6,8 +6,8 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef BOOST_POOL_ALLOC_HPP
-#define BOOST_POOL_ALLOC_HPP
+#ifndef MEMORY_MGR_POOL_ALLOC_HPP
+#define MEMORY_MGR_POOL_ALLOC_HPP
 
 // std::numeric_limits
 #include <memory-mgr/limits.hpp>
