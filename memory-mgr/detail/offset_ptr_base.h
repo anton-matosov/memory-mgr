@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/offset_traits.h>
 #include <memory-mgr/detail/cmp_helper.h>
 #include <memory-mgr/detail/static_assert.h>
+#include <memory-mgr/pointer_cast.h>
 #include <memory-mgr/new.h>
 #include <memory-mgr/detail/type_manip.h>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp>
@@ -263,7 +264,7 @@ namespace memory_mgr
 				return this->get() > rhs.get();
 			}
 
-			pointer get()const
+			pointer get() const
 			{  
 				return unconst_pointer( derived_this()->do_get_pointer() );
 			}
@@ -307,6 +308,18 @@ namespace memory_mgr
 		}
 
 	} //namespace detail
+
+	template<class T, class OffsetT, class DerivedT>
+	T* get_pointer( const detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
+	{
+		return p.get();
+	}
+
+	template<class T, class OffsetT, class DerivedT>
+	const T* get_pointer( detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
+	{
+		return p.get();
+	}
 
 	//For compatibility with delete_, new_ operators
 	template<class T, class MemMgr, class OffsetT, class DerivedT>
