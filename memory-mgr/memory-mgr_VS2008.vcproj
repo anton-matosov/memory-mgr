@@ -532,6 +532,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\smart_ptr\smart_ptr\detail\cast_tags.hpp"
+						>
+					</File>
+					<File
 						RelativePath=".\smart_ptr\smart_ptr\detail\lightweight_mutex.hpp"
 						>
 					</File>
@@ -676,6 +680,66 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="pool"
+			>
+			<File
+				RelativePath=".\pool\object_pool.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\pool.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\pool_alloc.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\poolfwd.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\simple_segregated_storage.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\singleton_pool.hpp"
+				>
+			</File>
+			<Filter
+				Name="detail"
+				>
+				<File
+					RelativePath=".\pool\detail\ct_gcd_lcm.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\gcd_lcm.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\guard.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\mutex.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\pool_construct.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\pool_construct_simple.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\pool\detail\singleton.hpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File
