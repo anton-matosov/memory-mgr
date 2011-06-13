@@ -25,8 +25,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_bitset.h>
 
 typedef memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array> bitset_uchar_32_type;
+typedef memory_mgr::static_bitset<unsigned short, 64, memory_mgr::static_array> bitset_ushort_64_type;
+typedef memory_mgr::static_bitset<unsigned int, 128, memory_mgr::static_array> bitset_uint_128_type;
+typedef memory_mgr::static_bitset<unsigned long, 128, memory_mgr::static_array> bitset_ulong_128_type;
+typedef memory_mgr::static_bitset<unsigned long long, 256, memory_mgr::static_array> bitset_ulonglong_256_type;
 
-typedef boost::mpl::list< bitset_uchar_32_type > bitsets_list;
+typedef boost::mpl::list< bitset_uchar_32_type, bitset_ushort_64_type, bitset_uint_128_type,
+	bitset_ulong_128_type, bitset_ulonglong_256_type> bitsets_list;
 
 BOOST_AUTO_TEST_SUITE( test_static_bitset )
 
@@ -76,6 +81,13 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 
 		bitset.set(0, bitset_type::npos);
 		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_type::npos), true );
+	}
+
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_mask_calculation_on_bounds, bitset_type, bitsets_list )
+	{
+		bitset_type bitset;
+		bitset.reset( 0, bitset.size() );
+		BOOST_CHECK_EQUAL( bitset.find_n( 1 ), bitset_type::npos );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

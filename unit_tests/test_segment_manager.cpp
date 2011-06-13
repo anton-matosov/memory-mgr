@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
-	typedef unsigned char chunk_type;
+	typedef unsigned int chunk_type;
 	const size_t chunk_size = 4;
 	const size_t memory_size = 1024;
 

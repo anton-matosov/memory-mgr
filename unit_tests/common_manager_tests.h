@@ -100,13 +100,21 @@ namespace test
 
 	//Test pointers on validness
 	template<class T1, class T2, class T3, class T4, class T5>
-	void check_pointers( T1 p1, T2 p2, T3 p3, T4 p4, T5 p5 )
+	void check_pointers( T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, int object_size = 0 )
 	{
 		is_valid_ptr( p1 );
 		is_valid_ptr( p2 );
 		is_valid_ptr( p3 );
 		is_valid_ptr( p4 );
 		is_valid_ptr( p5 );
+
+		if( object_size )
+		{
+			BOOST_CHECK_GE( memory_mgr::detail::diff( p2, p1 ), object_size );
+			BOOST_CHECK_GE( memory_mgr::detail::diff( p3, p2 ), object_size );
+			BOOST_CHECK_GE( memory_mgr::detail::diff( p4, p3 ), object_size );
+			BOOST_CHECK_GE( memory_mgr::detail::diff( p5, p4 ), object_size );
+		}
 
 		BOOST_CHECK_NE( p1, p2 );
 		BOOST_CHECK_NE( p2, p3 );

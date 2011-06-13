@@ -27,12 +27,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 #include "common_manager_tests.h"
-
+#include <boost/dynamic_bitset.hpp>
 BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
-	typedef unsigned char chunk_type;
+	typedef unsigned int chunk_type;
 	const size_t chunk_size = 4;
-	const size_t memory_size = 256;
+	const size_t memory_size = 20 * 1024;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 	typedef void* pointer;
@@ -41,14 +41,18 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 	{	
 		std::vector<chunk_type> memory( memory_size );
 		memmgr_type mgr( &*memory.begin() );
-		const memmgr_type::size_type obj_size = 4;
+		const size_t allocable_memory = memory_mgr::manager_traits<memmgr_type>::allocable_memory;
+		const memmgr_type::size_type obj_size = sizeof( chunk_type ) * 8 * chunk_size * 2;
+
+		BOOST_REQUIRE_GT( allocable_memory, obj_size * 5 );
+
 		pointer p1 = mgr.allocate( obj_size );
 		pointer p2 = mgr.allocate( obj_size );
 		pointer p3 = mgr.allocate( obj_size );
 		pointer p4 = mgr.allocate( obj_size );
 		pointer p5 = mgr.allocate( obj_size );
 
-		test::check_pointers( p1, p2, p3, p4, p5 );
+		test::check_pointers( p1, p2, p3, p4, p5, obj_size );
 
 		mgr.deallocate( p3, obj_size );
 		mgr.deallocate( p5, obj_size );
