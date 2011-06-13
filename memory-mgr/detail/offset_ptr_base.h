@@ -310,13 +310,13 @@ namespace memory_mgr
 	} //namespace detail
 
 	template<class T, class OffsetT, class DerivedT>
-	T* get_pointer( const detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
+	const T* get_pointer( const detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
 	{
 		return p.get();
 	}
 
 	template<class T, class OffsetT, class DerivedT>
-	const T* get_pointer( detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
+	T* get_pointer( detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
 	{
 		return p.get();
 	}

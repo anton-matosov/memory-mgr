@@ -1,269 +1,288 @@
+
+//  This file is the adaptation for Generic Memory Manager library
+//  
 // Copyright (C) 2000, 2001 Stephen Cleary
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+// http://www.memory-mgr.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org for updates, documentation, and revision history.
+// See http://www.memory-mgr.org for updates, documentation, and revision history.
 
 #ifndef BOOST_SIMPLE_SEGREGATED_STORAGE_HPP
 #define BOOST_SIMPLE_SEGREGATED_STORAGE_HPP
 
+// MS compatible compilers support #pragma once
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 // std::greater
 #include <functional>
 
+#include <memory-mgr/get_pointer.h>
 #include <memory-mgr/pool/poolfwd.hpp>
+#include <boost/pointer_to_other.hpp>
 
 namespace memory_mgr {
 
-template <typename SizeType>
-class simple_segregated_storage
-{
-  public:
-    typedef SizeType size_type;
+	template <typename SizeType, class Pointer>
+	class simple_segregated_storage
+	{
+	public:
+		typedef SizeType size_type;
+		typedef typename boost::pointer_to_other<Pointer, void>::type void_ptr;
 
-  private:
-    simple_segregated_storage(const simple_segregated_storage &);
-    void operator=(const simple_segregated_storage &);
+	private:
+		simple_segregated_storage(const simple_segregated_storage &);
+		void operator=(const simple_segregated_storage &);
 
-    // pre: (n > 0), (start != 0), (nextof(start) != 0)
-    // post: (start != 0)
-    static void * try_malloc_n(void * & start, size_type n,
-        size_type partition_size);
+		// A plain wrapper on the offset_ptr to make pointer to pointer
+		// definition possible
+		struct pool_chunk
+		{
+			void_ptr next_;
+		};
 
-  protected:
-    void * first;
+		// pre: (n > 0), (start != 0), (nextof(start) != 0)
+		// post: (start != 0)
 
-    // Traverses the free list referred to by "first",
-    //  and returns the iterator previous to where
-    //  "ptr" would go if it was in the free list.
-    // Returns 0 if "ptr" would go at the beginning
-    //  of the free list (i.e., before "first")
-    void * find_prev(void * ptr);
+		// The following function attempts to find n contiguous chunks
+		//  of size partition_size in the free list, starting at start.
+		// If it succeeds, it returns the last chunk in that contiguous
+		//  sequence, so that the sequence is known by [start, {retval}]
+		// If it fails, it does do either because it's at the end of the
+		//  free list or hits a non-contiguous chunk.  In either case,
+		//  it will return 0, and set start to the last considered
+		//  chunk.  You are at the end of the free list if
+		//  nextof(start) == 0.  Otherwise, start points to the last
+		//  chunk in the contiguous sequence, and nextof(start) points
+		//  to the first chunk in the next contiguous sequence (assuming
+		//  an ordered free list)
+		void * try_malloc_n(
+			void * & start, size_type n, const size_type partition_size)
+		{
+			void * iter = nextof(start);
+			while (--n != 0)
+			{
+				void * next = nextof(iter);
+				if (next != static_cast<char *>(iter) + partition_size)
+				{
+					// next == 0 (end-of-list) or non-contiguous chunk found
+					start = iter;
+					return 0;
+				}
+				iter = next;
+			}
+			return iter;
+		}
 
-    // for the sake of code readability :)
-    static void * & nextof(void * const ptr)
-    { return *(static_cast<void **>(ptr)); }
+	protected:
+		void_ptr first;
 
-  public:
-    // Post: empty()
-    simple_segregated_storage()
-    :first(0) { }
+		// Traverses the free list referred to by "first",
+		//  and returns the iterator previous to where
+		//  "ptr" would go if it was in the free list.
+		// Returns 0 if "ptr" would go at the beginning
+		//  of the free list (i.e., before "first")
+		void * find_prev(void_ptr const ptr)
+		{
+			// Handle border case
+			if ( ! first || (first > ptr))
+			{
+				return 0;
+			}
 
-    // pre: npartition_sz >= sizeof(void *)
-    //      npartition_sz = sizeof(void *) * i, for some integer i
-    //      nsz >= npartition_sz
-    //      block is properly aligned for an array of object of
-    //        size npartition_sz and array of void *
-    // The requirements above guarantee that any pointer to a chunk
-    //  (which is a pointer to an element in an array of npartition_sz)
-    //  may be cast to void **.
-    static void * segregate(void * block,
-        size_type nsz, size_type npartition_sz,
-        void * end = 0);
+			void_ptr iter = first;
+			while (true)
+			{
+				void_ptr next = nextof(iter);
+				// if we're about to hit the end or
+				//  if we've found where "ptr" goes
+				if( ! next || (next > ptr))
+				{
+					return iter;
+				}
 
-    // Same preconditions as 'segregate'
-    // Post: !empty()
-    void add_block(void * const block,
-        const size_type nsz, const size_type npartition_sz)
-    {
-      // Segregate this block and merge its free list into the
-      //  free list referred to by "first"
-      first = segregate(block, nsz, npartition_sz, first);
-    }
+				iter = next;
+			}
+		};
 
-    // Same preconditions as 'segregate'
-    // Post: !empty()
-    void add_ordered_block(void * const block,
-        const size_type nsz, const size_type npartition_sz)
-    {
-      // This (slower) version of add_block segregates the
-      //  block and merges its free list into our free list
-      //  in the proper order
+		// for the sake of code readability :)
+ 		static void_ptr& nextof(void_ptr const ptr)
+ 		{
+ 			return memory_mgr::static_pointer_cast<pool_chunk>(ptr)->next_; 
+ 		}
 
-      // Find where "block" would go in the free list
-      void * const loc = find_prev(block);
+	public:
+		// Post: empty()
+		simple_segregated_storage()
+			:first(0)
+		{
+			STATIC_ASSERT( sizeof(first) == sizeof(void*), PointerTypeIsBiggerThanVoidPtr )
+		}
 
-      // Place either at beginning or in middle/end
-      if (loc == 0)
-        add_block(block, nsz, npartition_sz);
-      else
-        nextof(loc) = segregate(block, nsz, npartition_sz, nextof(loc));
-    }
+		// pre: npartition_sz >= sizeof(void *)
+		//      npartition_sz = sizeof(void *) * i, for some integer i
+		//      nsz >= npartition_sz
+		//      block is properly aligned for an array of object of
+		//        size npartition_sz and array of void *
+		// The requirements above guarantee that any pointer to a chunk
+		//  (which is a pointer to an element in an array of npartition_sz)
+		//  may be cast to void **.
+		static void_ptr segregate(
+			void * const block,
+			const size_type nsz,
+			const size_type npartition_sz,
+			void_ptr const end = 0)
+		{
+			// Get pointer to last valid chunk, preventing overflow on size calculations
+			//  The division followed by the multiplication just makes sure that
+			//    old == block + partition_sz * i, for some integer i, even if the
+			//    block size (sz) is not a multiple of the partition size.
+			char * old = static_cast<char *>(block)
+				+ ((nsz - npartition_sz) / npartition_sz) * npartition_sz;
 
-    // default destructor
+			// Set it to point to the end
+			nextof(old) = end;
 
-    bool empty() const { return (first == 0); }
+			// Handle border case where sz == partition_sz (i.e., we're handling an array
+			//  of 1 element)
+			if (old == block)
+			{
+				return block;
+			}
 
-    // pre: !empty()
-    void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
-    {
-      void * const ret = first;
+			// Iterate backwards, building a singly-linked list of pointers
+			for (char * iter = old - npartition_sz; iter != block;
+				old = iter, iter -= npartition_sz)
+			{
+				nextof(iter) = old;
+			}
 
-      // Increment the "first" pointer to point to the next chunk
-      first = nextof(first);
-      return ret;
-    }
+			// Point the first pointer, too
+			nextof(block) = old;
 
-    // pre: chunk was previously returned from a malloc() referring to the
-    //  same free list
-    // post: !empty()
-    void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunk)
-    {
-      nextof(chunk) = first;
-      first = chunk;
-    }
+			return block;
+		}
 
-    // pre: chunk was previously returned from a malloc() referring to the
-    //  same free list
-    // post: !empty()
-    void ordered_free(void * const chunk)
-    {
-      // This (slower) implementation of 'free' places the memory
-      //  back in the list in its proper order.
+		// Same preconditions as 'segregate'
+		// Post: !empty()
+		void add_block(void * const block,
+			const size_type nsz, const size_type npartition_sz)
+		{
+			// Segregate this block and merge its free list into the
+			//  free list referred to by "first"
+			first = segregate(block, nsz, npartition_sz, first);
+		}
 
-      // Find where "chunk" goes in the free list
-      void * const loc = find_prev(chunk);
+		// Same preconditions as 'segregate'
+		// Post: !empty()
+		void add_ordered_block(void * const block,
+			const size_type nsz, const size_type npartition_sz)
+		{
+			// This (slower) version of add_block segregates the
+			//  block and merges its free list into our free list
+			//  in the proper order
 
-      // Place either at beginning or in middle/end
-      if (loc == 0)
-        (free)(chunk);
-      else
-      {
-        nextof(chunk) = nextof(loc);
-        nextof(loc) = chunk;
-      }
-    }
+			// Find where "block" would go in the free list
+			void * const loc = find_prev(block);
 
-    // Note: if you're allocating/deallocating n a lot, you should
-    //  be using an ordered pool.
-    void * malloc_n(size_type n, size_type partition_size);
+			// Place either at beginning or in middle/end
+			if (loc == 0)
+				add_block(block, nsz, npartition_sz);
+			else
+				nextof(loc) = segregate(block, nsz, npartition_sz, nextof(loc));
+		}
 
-    // pre: chunks was previously allocated from *this with the same
-    //   values for n and partition_size
-    // post: !empty()
-    // Note: if you're allocating/deallocating n a lot, you should
-    //  be using an ordered pool.
-    void free_n(void * const chunks, const size_type n,
-        const size_type partition_size)
-    {
-      if(n != 0)
-        add_block(chunks, n * partition_size, partition_size);
-    }
+		// default destructor
 
-    // pre: chunks was previously allocated from *this with the same
-    //   values for n and partition_size
-    // post: !empty()
-    void ordered_free_n(void * const chunks, const size_type n,
-        const size_type partition_size)
-    {
-      if(n != 0)
-        add_ordered_block(chunks, n * partition_size, partition_size);
-    }
-};
+		bool empty() const { return (!first); }
 
-template <typename SizeType>
-void * simple_segregated_storage<SizeType>::find_prev(void * const ptr)
-{
-  // Handle border case
-  if (first == 0 || std::greater<void *>()(first, ptr))
-    return 0;
+		// pre: !empty()
+		void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
+		{
+			void_ptr ret = first;
 
-  void * iter = first;
-  while (true)
-  {
-    // if we're about to hit the end or
-    //  if we've found where "ptr" goes
-    if (nextof(iter) == 0 || std::greater<void *>()(nextof(iter), ptr))
-      return iter;
+			// Increment the "first" pointer to point to the next chunk
+			first = nextof(first);
+			return get_pointer( ret );
+		}
 
-    iter = nextof(iter);
-  }
-}
+		// pre: chunk was previously returned from a malloc() referring to the
+		//  same free list
+		// post: !empty()
+		void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunk)
+		{
+			nextof(chunk) = first;
+			first = chunk;
+		}
 
-template <typename SizeType>
-void * simple_segregated_storage<SizeType>::segregate(
-    void * const block,
-    const size_type sz,
-    const size_type partition_sz,
-    void * const end)
-{
-  // Get pointer to last valid chunk, preventing overflow on size calculations
-  //  The division followed by the multiplication just makes sure that
-  //    old == block + partition_sz * i, for some integer i, even if the
-  //    block size (sz) is not a multiple of the partition size.
-  char * old = static_cast<char *>(block)
-      + ((sz - partition_sz) / partition_sz) * partition_sz;
+		// pre: chunk was previously returned from a malloc() referring to the
+		//  same free list
+		// post: !empty()
+		void ordered_free(void * const chunk)
+		{
+			// This (slower) implementation of 'free' places the memory
+			//  back in the list in its proper order.
 
-  // Set it to point to the end
-  nextof(old) = end;
+			// Find where "chunk" goes in the free list
+			void * const loc = find_prev(chunk);
 
-  // Handle border case where sz == partition_sz (i.e., we're handling an array
-  //  of 1 element)
-  if (old == block)
-    return block;
+			// Place either at beginning or in middle/end
+			if (loc == 0)
+				(free)(chunk);
+			else
+			{
+				nextof(chunk) = nextof(loc);
+				nextof(loc) = chunk;
+			}
+		}
 
-  // Iterate backwards, building a singly-linked list of pointers
-  for (char * iter = old - partition_sz; iter != block;
-      old = iter, iter -= partition_sz)
-    nextof(iter) = old;
+		// Note: if you're allocating/deallocating n a lot, you should
+		//  be using an ordered pool.
+		void * malloc_n(const size_type n,
+			const size_type partition_size)
+		{
+			if(n == 0)
+				return 0;
+			void * start = &first;
+			void * iter;
+			do
+			{
+				if (nextof(start) == 0)
+					return 0;
+				iter = try_malloc_n(start, n, partition_size);
+			} while (iter == 0);
+			void * const ret = nextof(start);
+			nextof(start) = nextof(iter);
+			return ret;
+		}
 
-  // Point the first pointer, too
-  nextof(block) = old;
+		// pre: chunks was previously allocated from *this with the same
+		//   values for n and partition_size
+		// post: !empty()
+		// Note: if you're allocating/deallocating n a lot, you should
+		//  be using an ordered pool.
+		void free_n(void * const chunks, const size_type n,
+			const size_type partition_size)
+		{
+			if(n != 0)
+				add_block(chunks, n * partition_size, partition_size);
+		}
 
-  return block;
-}
+		// pre: chunks was previously allocated from *this with the same
+		//   values for n and partition_size
+		// post: !empty()
+		void ordered_free_n(void * const chunks, const size_type n,
+			const size_type partition_size)
+		{
+			if(n != 0)
+				add_ordered_block(chunks, n * partition_size, partition_size);
+		}
+	};
 
-// The following function attempts to find n contiguous chunks
-//  of size partition_size in the free list, starting at start.
-// If it succeds, it returns the last chunk in that contiguous
-//  sequence, so that the sequence is known by [start, {retval}]
-// If it fails, it does do either because it's at the end of the
-//  free list or hits a non-contiguous chunk.  In either case,
-//  it will return 0, and set start to the last considered
-//  chunk.  You are at the end of the free list if
-//  nextof(start) == 0.  Otherwise, start points to the last
-//  chunk in the contiguous sequence, and nextof(start) points
-//  to the first chunk in the next contiguous sequence (assuming
-//  an ordered free list)
-template <typename SizeType>
-void * simple_segregated_storage<SizeType>::try_malloc_n(
-    void * & start, size_type n, const size_type partition_size)
-{
-  void * iter = nextof(start);
-  while (--n != 0)
-  {
-    void * next = nextof(iter);
-    if (next != static_cast<char *>(iter) + partition_size)
-    {
-      // next == 0 (end-of-list) or non-contiguous chunk found
-      start = iter;
-      return 0;
-    }
-    iter = next;
-  }
-  return iter;
-}
-
-template <typename SizeType>
-void * simple_segregated_storage<SizeType>::malloc_n(const size_type n,
-    const size_type partition_size)
-{
-  if(n == 0)
-    return 0;
-  void * start = &first;
-  void * iter;
-  do
-  {
-    if (nextof(start) == 0)
-      return 0;
-    iter = try_malloc_n(start, n, partition_size);
-  } while (iter == 0);
-  void * const ret = nextof(start);
-  nextof(start) = nextof(iter);
-  return ret;
-}
-
-} // namespace boost
+} // namespace memory_mgr
 
 #endif

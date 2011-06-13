@@ -16,13 +16,14 @@
 
 // memory_mgr::details::pool::default_mutex
 #include <memory-mgr/pool/detail/mutex.hpp>
+#include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr {
 
 //
 // Location: <memory-mgr/pool/simple_segregated_storage.hpp>
 //
-template <typename SizeType = std::size_t>
+template <typename SizeType = std::size_t, class Pointer = offset_ptr<void> >
 class simple_segregated_storage;
 
 //

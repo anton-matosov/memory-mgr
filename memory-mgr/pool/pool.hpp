@@ -200,10 +200,18 @@ class pool: protected simple_segregated_storage<
     explicit pool(const size_type nrequested_size,
         const size_type nnext_size = 32,
         const size_type nmax_size = 0)
-    :list(0, 0), requested_size(nrequested_size), next_size(nnext_size), start_size(nnext_size),max_size(nmax_size)
-    { }
+    :list(0, 0),
+	requested_size(nrequested_size),
+	next_size(nnext_size),
+	start_size(nnext_size),
+	max_size(nmax_size)
+    {
+	}
 
-    ~pool() { purge_memory(); }
+    ~pool()
+	{
+		purge_memory();
+	}
 
     // Releases memory blocks that don't have chunks allocated
     // pre: lists are ordered
