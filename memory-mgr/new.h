@@ -32,7 +32,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/new_helpers.h>
-#include <memory-mgr/singleton_manager.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor/repetition.hpp>

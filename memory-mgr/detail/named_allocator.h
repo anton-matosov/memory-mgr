@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/offset_allocator.h>
+#include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
 
