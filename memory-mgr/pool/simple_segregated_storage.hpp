@@ -60,14 +60,14 @@ namespace memory_mgr {
 		//  chunk in the contiguous sequence, and nextof(start) points
 		//  to the first chunk in the next contiguous sequence (assuming
 		//  an ordered free list)
-		void * try_malloc_n(
-			void * & start, size_type n, const size_type partition_size)
+		void_ptr try_malloc_n(
+			void_ptr & start, size_type n, const size_type partition_size)
 		{
-			void * iter = nextof(start);
+			void_ptr iter = nextof(start);
 			while (--n != 0)
 			{
-				void * next = nextof(iter);
-				if (next != static_cast<char *>(iter) + partition_size)
+				void_ptr next = nextof(iter);
+				if (next != static_pointer_cast<char>(iter) + partition_size )
 				{
 					// next == 0 (end-of-list) or non-contiguous chunk found
 					start = iter;
@@ -79,25 +79,25 @@ namespace memory_mgr {
 		}
 
 	protected:
-		void_ptr first;
+		void_ptr first_;
 
 		// Traverses the free list referred to by "first",
 		//  and returns the iterator previous to where
 		//  "ptr" would go if it was in the free list.
 		// Returns 0 if "ptr" would go at the beginning
 		//  of the free list (i.e., before "first")
-		void * find_prev(void_ptr const ptr)
+		void_ptr find_prev(void_ptr const ptr)
 		{
 			// Handle border case
-			if ( ! first || (first > ptr))
+			if ( ! first_ || (first_ > ptr))
 			{
 				return 0;
 			}
 
-			void_ptr iter = first;
+			void_ptr iter = first_;
 			while (true)
 			{
-				void_ptr next = nextof(iter);
+				void_ptr& next = nextof(iter);
 				// if we're about to hit the end or
 				//  if we've found where "ptr" goes
 				if( ! next || (next > ptr))
@@ -118,9 +118,9 @@ namespace memory_mgr {
 	public:
 		// Post: empty()
 		simple_segregated_storage()
-			:first(0)
+			:first_(0)
 		{
-			STATIC_ASSERT( sizeof(first) == sizeof(void*), PointerTypeIsBiggerThanVoidPtr )
+			STATIC_ASSERT( sizeof(first_) == sizeof(void*), PointerTypeIsBiggerThanVoidPtr )
 		}
 
 		// pre: npartition_sz >= sizeof(void *)
@@ -132,7 +132,7 @@ namespace memory_mgr {
 		//  (which is a pointer to an element in an array of npartition_sz)
 		//  may be cast to void **.
 		static void_ptr segregate(
-			void * const block,
+			const void * const block,
 			const size_type nsz,
 			const size_type npartition_sz,
 			void_ptr const end = 0)
@@ -141,7 +141,7 @@ namespace memory_mgr {
 			//  The division followed by the multiplication just makes sure that
 			//    old == block + partition_sz * i, for some integer i, even if the
 			//    block size (sz) is not a multiple of the partition size.
-			char * old = static_cast<char *>(block)
+			const char * old = static_cast<const char *>(block)
 				+ ((nsz - npartition_sz) / npartition_sz) * npartition_sz;
 
 			// Set it to point to the end
@@ -155,7 +155,7 @@ namespace memory_mgr {
 			}
 
 			// Iterate backwards, building a singly-linked list of pointers
-			for (char * iter = old - npartition_sz; iter != block;
+			for (const char * iter = old - npartition_sz; iter != block;
 				old = iter, iter -= npartition_sz)
 			{
 				nextof(iter) = old;
@@ -169,17 +169,17 @@ namespace memory_mgr {
 
 		// Same preconditions as 'segregate'
 		// Post: !empty()
-		void add_block(void * const block,
+		void add_block(const void * const block,
 			const size_type nsz, const size_type npartition_sz)
 		{
 			// Segregate this block and merge its free list into the
 			//  free list referred to by "first"
-			first = segregate(block, nsz, npartition_sz, first);
+			first_ = segregate(block, nsz, npartition_sz, first_);
 		}
 
 		// Same preconditions as 'segregate'
 		// Post: !empty()
-		void add_ordered_block(void * const block,
+		void add_ordered_block(const void * const block,
 			const size_type nsz, const size_type npartition_sz)
 		{
 			// This (slower) version of add_block segregates the
@@ -187,26 +187,30 @@ namespace memory_mgr {
 			//  in the proper order
 
 			// Find where "block" would go in the free list
-			void * const loc = find_prev(block);
+			void_ptr const loc = find_prev(block);
 
 			// Place either at beginning or in middle/end
-			if (loc == 0)
+			if ( ! loc )
+			{
 				add_block(block, nsz, npartition_sz);
+			}
 			else
+			{
 				nextof(loc) = segregate(block, nsz, npartition_sz, nextof(loc));
+			}
 		}
 
 		// default destructor
 
-		bool empty() const { return (!first); }
+		bool empty() const { return ( ! first_ ); }
 
 		// pre: !empty()
 		void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
 		{
-			void_ptr ret = first;
+			void_ptr ret = first_;
 
 			// Increment the "first" pointer to point to the next chunk
-			first = nextof(first);
+			first_ = nextof(first_);
 			return get_pointer( ret );
 		}
 
@@ -215,8 +219,8 @@ namespace memory_mgr {
 		// post: !empty()
 		void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunk)
 		{
-			nextof(chunk) = first;
-			first = chunk;
+			nextof(chunk) = first_;
+			first_ = chunk;
 		}
 
 		// pre: chunk was previously returned from a malloc() referring to the
@@ -228,11 +232,13 @@ namespace memory_mgr {
 			//  back in the list in its proper order.
 
 			// Find where "chunk" goes in the free list
-			void * const loc = find_prev(chunk);
+			void_ptr const loc = find_prev(chunk);
 
 			// Place either at beginning or in middle/end
-			if (loc == 0)
+			if( ! loc )
+			{
 				(free)(chunk);
+			}
 			else
 			{
 				nextof(chunk) = nextof(loc);
@@ -246,18 +252,23 @@ namespace memory_mgr {
 			const size_type partition_size)
 		{
 			if(n == 0)
+			{
 				return 0;
-			void * start = &first;
-			void * iter;
+			}
+			void_ptr start = &first_;
+			void_ptr iter;
 			do
 			{
-				if (nextof(start) == 0)
+				if( ! nextof(start) )
+				{
 					return 0;
+				}
 				iter = try_malloc_n(start, n, partition_size);
-			} while (iter == 0);
-			void * const ret = nextof(start);
+			} while ( ! iter );
+
+			void_ptr const ret = nextof(start);
 			nextof(start) = nextof(iter);
-			return ret;
+			return get_pointer( ret );
 		}
 
 		// pre: chunks was previously allocated from *this with the same
@@ -269,7 +280,9 @@ namespace memory_mgr {
 			const size_type partition_size)
 		{
 			if(n != 0)
+			{
 				add_block(chunks, n * partition_size, partition_size);
+			}
 		}
 
 		// pre: chunks was previously allocated from *this with the same
@@ -279,7 +292,9 @@ namespace memory_mgr {
 			const size_type partition_size)
 		{
 			if(n != 0)
+			{
 				add_ordered_block(chunks, n * partition_size, partition_size);
+			}
 		}
 	};
 

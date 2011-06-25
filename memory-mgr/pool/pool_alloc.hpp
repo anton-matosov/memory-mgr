@@ -10,17 +10,17 @@
 #define MEMORY_MGR_POOL_ALLOC_HPP
 
 // std::numeric_limits
-#include <memory-mgr/limits.hpp>
+#include <limits>
 // new, std::bad_alloc
 #include <new>
 
-#include <memory-mgr/throw_exception.hpp>
+#include <boost/throw_exception.hpp>
 #include <memory-mgr/pool/poolfwd.hpp>
 
 // memory_mgr::singleton_pool
 #include <memory-mgr/pool/singleton_pool.hpp>
 
-#include <memory-mgr/detail/workaround.hpp>
+#include <boost/detail/workaround.hpp>
 
 // The following code will be put into Boost.Config in a later revision
 #if defined(_RWSTD_VER) || defined(__SGI_STL_PORT) || \
@@ -112,7 +112,9 @@ class pool_allocator
           singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
               NextSize, MaxSize>::ordered_malloc(n) );
       if (ret == 0)
-        memory_mgr::throw_exception(std::bad_alloc());
+	  {
+		  boost::throw_exception(std::bad_alloc());
+	  }
       return ret;
     }
     static pointer allocate(const size_type n, const void * const)
@@ -231,7 +233,9 @@ class fast_pool_allocator
               singleton_pool<fast_pool_allocator_tag, sizeof(T),
                   UserAllocator, Mutex, NextSize, MaxSize>::ordered_malloc(n) );
       if (ret == 0)
-        memory_mgr::throw_exception(std::bad_alloc());
+	  {
+		  boost::throw_exception(std::bad_alloc());
+	  }
       return ret;
     }
     static pointer allocate(const size_type n, const void * const)
@@ -242,7 +246,9 @@ class fast_pool_allocator
           (singleton_pool<fast_pool_allocator_tag, sizeof(T),
               UserAllocator, Mutex, NextSize, MaxSize>::malloc)() );
       if (ret == 0)
-        memory_mgr::throw_exception(std::bad_alloc());
+	  {
+		  boost::throw_exception(std::bad_alloc());
+	  }
       return ret;
     }
     static void deallocate(const pointer ptr, const size_type n)

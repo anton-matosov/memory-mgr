@@ -47,10 +47,6 @@ class object_pool: protected pool<UserAllocator>
     pool<UserAllocator> & store() { return *this; }
     const pool<UserAllocator> & store() const { return *this; }
 
-    // for the sake of code readability :)
-    static void * & nextof(void * const ptr)
-    { return *(static_cast<void **>(ptr)); }
-
   public:
     // This constructor parameter is an extension!
     explicit object_pool(const size_type next_size = 32, const size_type max_size = 0)
@@ -106,7 +102,7 @@ object_pool<T, UserAllocator>::~object_pool()
   details::PODptr<size_type> next = iter;
 
   // Start 'freed_iter' at beginning of free list
-  void * freed_iter = this->first;
+  void_ptr freed_iter = this->first_;
 
   const size_type partition_size = this->alloc_size();
 
@@ -121,7 +117,7 @@ object_pool<T, UserAllocator>::~object_pool()
     for (char * i = iter.begin(); i != iter.end(); i += partition_size)
     {
       // If this chunk is free
-      if (i == freed_iter)
+      if (void_ptr(i) == freed_iter)
       {
         // Increment freed_iter to point to next in free list
         freed_iter = nextof(freed_iter);
@@ -131,7 +127,7 @@ object_pool<T, UserAllocator>::~object_pool()
       }
 
       // This chunk is not free (allocated), so call its destructor
-      static_cast<T *>(static_cast<void *>(i))->~T();
+      static_pointer_cast<T>(void_ptr(i))->~T();
       // and continue searching chunks in the memory block
     }
 

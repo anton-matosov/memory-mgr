@@ -111,8 +111,6 @@ namespace memory_mgr
 				:m_offset( offset_traits<offset_type>::invalid_offset )
 			{
 				derived_this()->do_set_pointer( ptr.get() );
-
-				STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 			}
 
 			template<class Y, typename DerivedY>
@@ -158,7 +156,6 @@ namespace memory_mgr
 			template < typename U, typename OffsetU, typename DerivedU >
 			inline derived_ref_type operator=( const offset_ptr_base< U, OffsetU, DerivedU >& ptr )			
 			{
-				STATIC_ASSERT( ( type_manip::super_subclass<T, U>::value ), invalid_conversion );
 				derived_this()->do_set_pointer( ptr.get() );
 				return *derived_this();
 			}
@@ -310,13 +307,7 @@ namespace memory_mgr
 	} //namespace detail
 
 	template<class T, class OffsetT, class DerivedT>
-	const T* get_pointer( const detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
-	{
-		return p.get();
-	}
-
-	template<class T, class OffsetT, class DerivedT>
-	T* get_pointer( detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
+	T* get_pointer( const detail::offset_ptr_base<T, OffsetT, DerivedT>& p )
 	{
 		return p.get();
 	}
