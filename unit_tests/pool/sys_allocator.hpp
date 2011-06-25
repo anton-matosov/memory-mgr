@@ -32,28 +32,60 @@ struct malloc_allocator
 		typedef malloc_allocator<U> other;
 	};
 
-	static pointer address(reference r) { return &r; }
-	static const_pointer address(const_reference r) { return &r; }
+	static pointer address(reference r)
+	{
+		return &r;
+	}
+
+	static const_pointer address(const_reference r)
+	{
+		return &r;
+	}
+
 	static pointer allocate(const size_type n, const pointer = 0)
 	{
 		const pointer ret = (pointer) std::malloc(n * sizeof(T));
 		if (ret == 0)
+		{
 			throw std::bad_alloc();
+		}
 		return ret;
 	}
+
 	static void deallocate(const pointer p, const size_type)
-	{ std::free(p); }
-	static size_type max_size() { return (std::numeric_limits<size_type>::max)(); }
+	{ 
+		std::free(p);
+	}
 
-	bool operator==(const malloc_allocator &) const { return true; }
-	bool operator!=(const malloc_allocator &) const { return false; }
+	static size_type max_size()
+	{
+		return (std::numeric_limits<size_type>::max)();
+	}
 
-	malloc_allocator() { }
+	bool operator==(const malloc_allocator &) const
+	{
+		return true;
+	}
+
+	bool operator!=(const malloc_allocator &) const
+	{
+		return false;
+	}
+
+	malloc_allocator()
+	{
+	}
+
 	template <typename U>
-	malloc_allocator(const malloc_allocator<U> &) { }
+	malloc_allocator(const malloc_allocator<U> &)
+	{
+	}
 
 	static void construct(const pointer p, const_reference t)
-	{ new ((void *) p) T(t); }
+	{
+		new ((void *) p) T(t);
+	}
+
 	static void destroy(const pointer p)
 	{ 
 		p;
@@ -79,23 +111,55 @@ struct new_delete_allocator
 		typedef new_delete_allocator<U> other;
 	};
 
-	static pointer address(reference r) { return &r; }
-	static const_pointer address(const_reference r) { return &r; }
+	static pointer address(reference r)
+	{
+		return &r;
+	}
+	
+	static const_pointer address(const_reference r)
+	{
+		return &r;
+	}
+	
 	static pointer allocate(const size_type n, const pointer = 0)
-	{ return (pointer) new char[n * sizeof(T)]; }
+	{
+		return (pointer) new char[n * sizeof(T)];
+	}
+	
 	static void deallocate(const pointer p, const size_type)
-	{ delete [] p; }
-	static size_type max_size() { return (std::numeric_limits<size_type>::max)(); }
+	{
+		delete [] p;
+	}
 
-	bool operator==(const new_delete_allocator &) const { return true; }
-	bool operator!=(const new_delete_allocator &) const { return false; }
+	static size_type max_size()
+	{
+		return (std::numeric_limits<size_type>::max)();
+	}
 
-	new_delete_allocator() { }
+	bool operator==(const new_delete_allocator &) const
+	{
+		return true;
+	}
+
+	bool operator!=(const new_delete_allocator &) const
+	{
+		return false;
+	}
+
+	new_delete_allocator()
+	{
+	}
+
 	template <typename U>
-	new_delete_allocator(const new_delete_allocator<U> &) { }
+	new_delete_allocator(const new_delete_allocator<U> &)
+	{
+	}
 
 	static void construct(const pointer p, const_reference t)
-	{ new ((void *) p) T(t); }
+	{
+		new ((void *) p) T(t);
+	}
+
 	static void destroy(const pointer p)
 	{ 
 		p;
