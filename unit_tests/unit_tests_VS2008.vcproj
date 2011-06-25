@@ -312,6 +312,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="pool"
+			>
+			<File
+				RelativePath=".\pool\sys_allocator.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\test_pool_alloc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pool\time_pool_alloc.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

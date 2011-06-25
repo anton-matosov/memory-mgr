@@ -24,27 +24,32 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include <memory-mgr/pool/pool.hpp>
+#include <memory-mgr/pool/pool.hpp>
+
+template class memory_mgr::pool<>;
 
 BOOST_AUTO_TEST_SUITE( test_pool )
 
 
 BOOST_AUTO_TEST_CASE( test_alloc_dealloc )
 {
-	enum { numCalls = 1000 };
+	enum { numCalls = 10000 };
 	memory_mgr::pool<> p( 4 );
 
 	int* ppp[numCalls];
  	for (int i = 0; i < numCalls; ++i)
  	{
  		ppp[i] = (int*)p.malloc();
- 		*ppp[i] = 0;
+ 		*ppp[i] = i;
  	}
  
  	for (int i = 0; i < numCalls; ++i)
  	{
+		BOOST_CHECK_EQUAL( *ppp[i], i );
  		p.free( ppp[i] );
  	}
-//*/
+
+	BOOST_CHECK( p.release_memory() );
 }
 
 BOOST_AUTO_TEST_SUITE_END();
