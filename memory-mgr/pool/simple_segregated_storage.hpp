@@ -110,10 +110,10 @@ namespace memory_mgr {
 		};
 
 		// for the sake of code readability :)
- 		static void_ptr& nextof(void_ptr const ptr)
- 		{
- 			return memory_mgr::static_pointer_cast<pool_chunk>(ptr)->next_; 
- 		}
+		static void_ptr& nextof(void_ptr const ptr)
+		{
+			return memory_mgr::static_pointer_cast<pool_chunk>(ptr)->next_; 
+		}
 
 	public:
 		// Post: empty()

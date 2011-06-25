@@ -148,7 +148,7 @@ namespace memory_mgr {
 	template <typename UserAllocator>
 	class pool
 		: protected simple_segregated_storage<
-			typename UserAllocator::size_type>
+		typename UserAllocator::size_type>
 	{
 	public:
 		typedef UserAllocator user_allocator;

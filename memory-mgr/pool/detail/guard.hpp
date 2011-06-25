@@ -13,27 +13,27 @@
 
 namespace memory_mgr {
 
-namespace details {
-namespace pool {
+	namespace details {
+		namespace pool {
 
-template <typename Mutex>
-class guard
-{
-  private:
-    Mutex & mtx;
+			template <typename Mutex>
+			class guard
+			{
+			private:
+				Mutex & mtx;
 
-    guard(const guard &);
-    void operator=(const guard &);
+				guard(const guard &);
+				void operator=(const guard &);
 
-  public:
-    explicit guard(Mutex & nmtx)
-    :mtx(nmtx) { mtx.lock(); }
+			public:
+				explicit guard(Mutex & nmtx)
+					:mtx(nmtx) { mtx.lock(); }
 
-    ~guard() { mtx.unlock(); }
-};
+				~guard() { mtx.unlock(); }
+			};
 
-} // namespace pool
-} // namespace details
+		} // namespace pool
+	} // namespace details
 
 } // namespace memory_mgr
 
