@@ -17,7 +17,7 @@
 #include <new>
 // std::size_t, std::ptrdiff_t
 #include <cstddef>
-// std::malloc, std::free
+// std::allocate, std::free
 #include <cstdlib>
 // std::invalid_argument
 #include <exception>
@@ -35,7 +35,7 @@
 #include <memory-mgr/detail/ptr_casts.h>
 
 #ifdef BOOST_NO_STDC_NAMESPACE
-namespace std { using ::malloc; using ::free; }
+namespace std { using ::allocate; using ::free; }
 #endif
 
 // There are a few places in this file where the expression "this->m" is used.
@@ -52,10 +52,15 @@ namespace memory_mgr {
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 
-		static char * malloc BOOST_PREVENT_MACRO_SUBSTITUTION(const size_type bytes)
-		{ return new (std::nothrow) char[bytes]; }
-		static void free BOOST_PREVENT_MACRO_SUBSTITUTION(char * const block)
-		{ delete [] block; }
+		static char * allocate(const size_type bytes)
+		{
+			return new (std::nothrow) char[bytes];
+		}
+
+		static void deallocate(char * const block)
+		{
+			delete [] block;
+		}
 	};
 
 	struct default_user_allocator_malloc_free
@@ -63,10 +68,15 @@ namespace memory_mgr {
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 
-		static char * malloc BOOST_PREVENT_MACRO_SUBSTITUTION(const size_type bytes)
-		{ return static_cast<char *>(std::malloc(bytes)); }
-		static void free BOOST_PREVENT_MACRO_SUBSTITUTION(char * const block)
-		{ std::free(block); }
+		static char * allocate(const size_type bytes)
+		{
+			return static_cast<char *>(std::malloc(bytes));
+		}
+		
+		static void deallocate(char * const block)
+		{
+			std::free(block);
+		}
 	};
 
 	namespace details {
@@ -160,9 +170,9 @@ namespace memory_mgr {
 			(::memory_mgr::details::pool::ct_lcm<sizeof(void *), sizeof(size_type)>::value) );
 
 		// Returns 0 if out-of-memory
-		// Called if malloc/ordered_malloc needs to resize the free list
+		// Called if allocate/ordered_allocate needs to resize the free list
 		void * malloc_need_resize();
-		void * ordered_malloc_need_resize();
+		void * ordered_allocate_need_resize();
 
 	protected:
 		details::PODptr<size_type> list;
@@ -242,70 +252,70 @@ namespace memory_mgr {
 		void set_max_size(const size_type nmax_size) { max_size = nmax_size; }
 		size_type get_requested_size() const { return requested_size; }
 
-		// Both malloc and ordered_malloc do a quick inlined check first for any
+		// Both allocate and ordered_allocate do a quick inlined check first for any
 		//  free chunks.  Only if we need to get another memory block do we call
 		//  the non-inlined *_need_resize() functions.
 		// Returns 0 if out-of-memory
-		void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
+		void * allocate()
 		{
 			// Look for a non-empty storage
 			if (!store().empty())
 			{
-				return (store().malloc)();
+				return (store().allocate)();
 			}
 			return malloc_need_resize();
 		}
 
-		void * ordered_malloc()
+		void * ordered_allocate()
 		{
 			// Look for a non-empty storage
 			if (!store().empty())
 			{
-				return (store().malloc)();
+				return (store().allocate)();
 			}
-			return ordered_malloc_need_resize();
+			return ordered_allocate_need_resize();
 		}
 
 		// Returns 0 if out-of-memory
 		// Allocate a contiguous section of n chunks
-		void * ordered_malloc(size_type n);
+		void * ordered_allocate(size_type n);
 
 		// pre: 'chunk' must have been previously
-		//        returned by *this.malloc().
-		void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunk)
+		//        returned by *this.allocate().
+		void deallocate(void * const chunk)
 		{
-			(store().free)(chunk);
+			store().deallocate(chunk);
 		}
 
 		// pre: 'chunk' must have been previously
-		//        returned by *this.malloc().
-		void ordered_free(void * const chunk)
+		//        returned by *this.allocate().
+		void ordered_deallocate(void * const chunk)
 		{
-			store().ordered_free(chunk);
+			store().ordered_deallocate(chunk);
 		}
 
 		// pre: 'chunk' must have been previously
-		//        returned by *this.malloc(n).
-		void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunks, const size_type n)
+		//        returned by *this.allocate(n).
+		void deallocate(void * const chunks, const size_type n)
 		{
 			const size_type partition_size = alloc_size();
 			const size_type total_req_size = n * requested_size;
 			const size_type num_chunks = total_req_size / partition_size +
 				((total_req_size % partition_size) ? true : false);
 
-			store().free_n(chunks, num_chunks, partition_size);
+			store().deallocate_n(chunks, num_chunks, partition_size);
 		}
 
 		// pre: 'chunk' must have been previously
-		//        returned by *this.malloc(n).
-		void ordered_free(void * const chunks, const size_type n)
+		//        returned by *this.allocate(n).
+		void ordered_deallocate(void * const chunks, const size_type n)
 		{
 			const size_type partition_size = alloc_size();
 			const size_type total_req_size = n * requested_size;
 			const size_type num_chunks = total_req_size / partition_size +
 				((total_req_size % partition_size) ? true : false);
 
-			store().ordered_free_n(chunks, num_chunks, partition_size);
+			store().ordered_deallocate_n(chunks, num_chunks, partition_size);
 		}
 
 		// is_from() tests a chunk to determine if it was allocated from *this
@@ -436,7 +446,7 @@ namespace memory_mgr {
 				}
 
 				// And release memory
-				(UserAllocator::free)(ptr.begin());
+				UserAllocator::deallocate(ptr.begin());
 				ret = true;
 			}
 
@@ -464,7 +474,7 @@ namespace memory_mgr {
 			const details::PODptr<size_type> next = iter.next();
 
 			// delete the storage
-			(UserAllocator::free)(iter.begin());
+			UserAllocator::deallocate(iter.begin());
 
 			// increment iter
 			iter = next;
@@ -484,7 +494,7 @@ namespace memory_mgr {
 		const size_type partition_size = alloc_size();
 		const size_type POD_size = next_size * partition_size +
 			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::malloc)(POD_size);
+		char * const ptr = (UserAllocator::allocate)(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -498,7 +508,7 @@ namespace memory_mgr {
 		}
 		else if( next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min BOOST_PREVENT_MACRO_SUBSTITUTION(next_size << 1, max_size*requested_size/ partition_size);
+			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  initialize it,
@@ -509,17 +519,17 @@ namespace memory_mgr {
 		list = node;
 
 		//  and return a chunk from it.
-		return (store().malloc)();
+		return store().allocate();
 	}
 
 	template <typename UserAllocator>
-	void * pool<UserAllocator>::ordered_malloc_need_resize()
+	void * pool<UserAllocator>::ordered_allocate_need_resize()
 	{
 		// No memory in any of our storages; make a new storage,
 		const size_type partition_size = alloc_size();
 		const size_type POD_size = next_size * partition_size +
 			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::malloc)(POD_size);
+		char * const ptr = (UserAllocator::allocate)(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -533,7 +543,7 @@ namespace memory_mgr {
 		}
 		else if( next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min BOOST_PREVENT_MACRO_SUBSTITUTION(next_size << 1, max_size*requested_size/ partition_size);
+			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  initialize it,
@@ -571,18 +581,18 @@ namespace memory_mgr {
 		}
 
 		//  and return a chunk from it.
-		return (store().malloc)();
+		return store().allocate();
 	}
 
 	template <typename UserAllocator>
-	void * pool<UserAllocator>::ordered_malloc(const size_type n)
+	void * pool<UserAllocator>::ordered_allocate(const size_type n)
 	{
 		const size_type partition_size = alloc_size();
 		const size_type total_req_size = n * requested_size;
 		const size_type num_chunks = total_req_size / partition_size +
 			((total_req_size % partition_size) ? true : false);
 
-		void * ret = store().malloc_n(num_chunks, partition_size);
+		void * ret = store().allocate_n(num_chunks, partition_size);
 
 		if (ret != 0)
 		{
@@ -591,10 +601,10 @@ namespace memory_mgr {
 
 		// Not enougn memory in our storages; make a new storage,
 		BOOST_USING_STD_MAX();
-		next_size = max BOOST_PREVENT_MACRO_SUBSTITUTION(next_size, num_chunks);
+		next_size = max (next_size, num_chunks);
 		const size_type POD_size = next_size * partition_size +
 			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::malloc)(POD_size);
+		char * const ptr = (UserAllocator::allocate)(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -618,7 +628,7 @@ namespace memory_mgr {
 		}
 		else if( next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min BOOST_PREVENT_MACRO_SUBSTITUTION(next_size << 1, max_size*requested_size/ partition_size);
+			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  insert it into the list,

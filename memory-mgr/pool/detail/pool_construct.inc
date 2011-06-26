@@ -12,7 +12,7 @@
 template <typename T0>
 element_type * construct(T0 & a0)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0); }
@@ -22,7 +22,7 @@ element_type * construct(T0 & a0)
 template <typename T0>
 element_type * construct(const T0 & a0)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0); }
@@ -32,7 +32,7 @@ element_type * construct(const T0 & a0)
 template <typename T0>
 element_type * construct(volatile T0 & a0)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0); }
@@ -42,7 +42,7 @@ element_type * construct(volatile T0 & a0)
 template <typename T0>
 element_type * construct(const volatile T0 & a0)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0); }
@@ -52,7 +52,7 @@ element_type * construct(const volatile T0 & a0)
 template <typename T0, typename T1>
 element_type * construct(T0 & a0, T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -62,7 +62,7 @@ element_type * construct(T0 & a0, T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const T0 & a0, T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -72,7 +72,7 @@ element_type * construct(const T0 & a0, T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(volatile T0 & a0, T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -82,7 +82,7 @@ element_type * construct(volatile T0 & a0, T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const volatile T0 & a0, T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -92,7 +92,7 @@ element_type * construct(const volatile T0 & a0, T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(T0 & a0, const T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -102,7 +102,7 @@ element_type * construct(T0 & a0, const T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const T0 & a0, const T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -112,7 +112,7 @@ element_type * construct(const T0 & a0, const T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(volatile T0 & a0, const T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -122,7 +122,7 @@ element_type * construct(volatile T0 & a0, const T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const volatile T0 & a0, const T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -132,7 +132,7 @@ element_type * construct(const volatile T0 & a0, const T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(T0 & a0, volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -142,7 +142,7 @@ element_type * construct(T0 & a0, volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const T0 & a0, volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -152,7 +152,7 @@ element_type * construct(const T0 & a0, volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(volatile T0 & a0, volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -162,7 +162,7 @@ element_type * construct(volatile T0 & a0, volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const volatile T0 & a0, volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -172,7 +172,7 @@ element_type * construct(const volatile T0 & a0, volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(T0 & a0, const volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -182,7 +182,7 @@ element_type * construct(T0 & a0, const volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const T0 & a0, const volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -192,7 +192,7 @@ element_type * construct(const T0 & a0, const volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(volatile T0 & a0, const volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -202,7 +202,7 @@ element_type * construct(volatile T0 & a0, const volatile T1 & a1)
 template <typename T0, typename T1>
 element_type * construct(const volatile T0 & a0, const volatile T1 & a1)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1); }
@@ -212,7 +212,7 @@ element_type * construct(const volatile T0 & a0, const volatile T1 & a1)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -222,7 +222,7 @@ element_type * construct(T0 & a0, T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -232,7 +232,7 @@ element_type * construct(const T0 & a0, T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -242,7 +242,7 @@ element_type * construct(volatile T0 & a0, T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -252,7 +252,7 @@ element_type * construct(const volatile T0 & a0, T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -262,7 +262,7 @@ element_type * construct(T0 & a0, const T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -272,7 +272,7 @@ element_type * construct(const T0 & a0, const T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -282,7 +282,7 @@ element_type * construct(volatile T0 & a0, const T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -292,7 +292,7 @@ element_type * construct(const volatile T0 & a0, const T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -302,7 +302,7 @@ element_type * construct(T0 & a0, volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -312,7 +312,7 @@ element_type * construct(const T0 & a0, volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -322,7 +322,7 @@ element_type * construct(volatile T0 & a0, volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -332,7 +332,7 @@ element_type * construct(const volatile T0 & a0, volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -342,7 +342,7 @@ element_type * construct(T0 & a0, const volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -352,7 +352,7 @@ element_type * construct(const T0 & a0, const volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -362,7 +362,7 @@ element_type * construct(volatile T0 & a0, const volatile T1 & a1, T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const volatile T1 & a1, T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -372,7 +372,7 @@ element_type * construct(const volatile T0 & a0, const volatile T1 & a1, T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -382,7 +382,7 @@ element_type * construct(T0 & a0, T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -392,7 +392,7 @@ element_type * construct(const T0 & a0, T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -402,7 +402,7 @@ element_type * construct(volatile T0 & a0, T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -412,7 +412,7 @@ element_type * construct(const volatile T0 & a0, T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -422,7 +422,7 @@ element_type * construct(T0 & a0, const T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -432,7 +432,7 @@ element_type * construct(const T0 & a0, const T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -442,7 +442,7 @@ element_type * construct(volatile T0 & a0, const T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -452,7 +452,7 @@ element_type * construct(const volatile T0 & a0, const T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -462,7 +462,7 @@ element_type * construct(T0 & a0, volatile T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -472,7 +472,7 @@ element_type * construct(const T0 & a0, volatile T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -482,7 +482,7 @@ element_type * construct(volatile T0 & a0, volatile T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -492,7 +492,7 @@ element_type * construct(const volatile T0 & a0, volatile T1 & a1, const T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -502,7 +502,7 @@ element_type * construct(T0 & a0, const volatile T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -512,7 +512,7 @@ element_type * construct(const T0 & a0, const volatile T1 & a1, const T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -522,7 +522,7 @@ element_type * construct(volatile T0 & a0, const volatile T1 & a1, const T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const volatile T1 & a1, const T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -532,7 +532,7 @@ element_type * construct(const volatile T0 & a0, const volatile T1 & a1, const T
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -542,7 +542,7 @@ element_type * construct(T0 & a0, T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -552,7 +552,7 @@ element_type * construct(const T0 & a0, T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -562,7 +562,7 @@ element_type * construct(volatile T0 & a0, T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -572,7 +572,7 @@ element_type * construct(const volatile T0 & a0, T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -582,7 +582,7 @@ element_type * construct(T0 & a0, const T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -592,7 +592,7 @@ element_type * construct(const T0 & a0, const T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -602,7 +602,7 @@ element_type * construct(volatile T0 & a0, const T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -612,7 +612,7 @@ element_type * construct(const volatile T0 & a0, const T1 & a1, volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -622,7 +622,7 @@ element_type * construct(T0 & a0, volatile T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -632,7 +632,7 @@ element_type * construct(const T0 & a0, volatile T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -642,7 +642,7 @@ element_type * construct(volatile T0 & a0, volatile T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -652,7 +652,7 @@ element_type * construct(const volatile T0 & a0, volatile T1 & a1, volatile T2 &
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -662,7 +662,7 @@ element_type * construct(T0 & a0, const volatile T1 & a1, volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -672,7 +672,7 @@ element_type * construct(const T0 & a0, const volatile T1 & a1, volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -682,7 +682,7 @@ element_type * construct(volatile T0 & a0, const volatile T1 & a1, volatile T2 &
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const volatile T1 & a1, volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -692,7 +692,7 @@ element_type * construct(const volatile T0 & a0, const volatile T1 & a1, volatil
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -702,7 +702,7 @@ element_type * construct(T0 & a0, T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -712,7 +712,7 @@ element_type * construct(const T0 & a0, T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -722,7 +722,7 @@ element_type * construct(volatile T0 & a0, T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -732,7 +732,7 @@ element_type * construct(const volatile T0 & a0, T1 & a1, const volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -742,7 +742,7 @@ element_type * construct(T0 & a0, const T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -752,7 +752,7 @@ element_type * construct(const T0 & a0, const T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -762,7 +762,7 @@ element_type * construct(volatile T0 & a0, const T1 & a1, const volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -772,7 +772,7 @@ element_type * construct(const volatile T0 & a0, const T1 & a1, const volatile T
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -782,7 +782,7 @@ element_type * construct(T0 & a0, volatile T1 & a1, const volatile T2 & a2)
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -792,7 +792,7 @@ element_type * construct(const T0 & a0, volatile T1 & a1, const volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -802,7 +802,7 @@ element_type * construct(volatile T0 & a0, volatile T1 & a1, const volatile T2 &
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -812,7 +812,7 @@ element_type * construct(const volatile T0 & a0, volatile T1 & a1, const volatil
 template <typename T0, typename T1, typename T2>
 element_type * construct(T0 & a0, const volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -822,7 +822,7 @@ element_type * construct(T0 & a0, const volatile T1 & a1, const volatile T2 & a2
 template <typename T0, typename T1, typename T2>
 element_type * construct(const T0 & a0, const volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -832,7 +832,7 @@ element_type * construct(const T0 & a0, const volatile T1 & a1, const volatile T
 template <typename T0, typename T1, typename T2>
 element_type * construct(volatile T0 & a0, const volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }
@@ -842,7 +842,7 @@ element_type * construct(volatile T0 & a0, const volatile T1 & a1, const volatil
 template <typename T0, typename T1, typename T2>
 element_type * construct(const volatile T0 & a0, const volatile T1 & a1, const volatile T2 & a2)
 {
-  element_type * const ret = (malloc)();
+  element_type * const ret = (allocate)();
   if (ret == 0)
     return ret;
   try { new (ret) element_type(a0, a1, a2); }

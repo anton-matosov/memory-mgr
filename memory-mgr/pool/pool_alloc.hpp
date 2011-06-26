@@ -110,7 +110,7 @@ namespace memory_mgr {
 		{
 			const pointer ret = static_cast<pointer>(
 				singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
-				NextSize, MaxSize>::ordered_malloc(n) );
+				NextSize, MaxSize>::ordered_allocate(n) );
 			if (ret == 0)
 			{
 				boost::throw_exception(std::bad_alloc());
@@ -126,7 +126,7 @@ namespace memory_mgr {
 				return;
 #endif
 			singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
-				NextSize, MaxSize>::ordered_free(ptr, n);
+				NextSize, MaxSize>::ordered_deallocate(ptr, n);
 		}
 	};
 
@@ -174,15 +174,17 @@ namespace memory_mgr {
 			typedef fast_pool_allocator<U, UserAllocator, Mutex, NextSize, MaxSize> other;
 		};
 
+		typedef singleton_pool<fast_pool_allocator_tag, sizeof(T),
+			UserAllocator, Mutex, NextSize, MaxSize> internal_pool_type;
+
 	public:
 		fast_pool_allocator()
 		{
 			// Required to ensure construction of singleton_pool IFF an
-			// instace of this allocator is constructed during global
+			// instance of this allocator is constructed during global
 			// initialization. See ticket #2359 for a complete explaination
 			// ( http://svn.memory-mgr.org/trac/memory-mgr/ticket/2359 )
-			singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::is_from(0);
+			internal_pool_type::is_from(0);
 		}
 
 		// default copy constructor
@@ -195,79 +197,100 @@ namespace memory_mgr {
 			const fast_pool_allocator<U, UserAllocator, Mutex, NextSize, MaxSize> &)
 		{
 			// Required to ensure construction of singleton_pool IFF an
-			// instace of this allocator is constructed during global
-			// initialization. See ticket #2359 for a complete explaination
+			// instance of this allocator is constructed during global
+			// initialization. See ticket #2359 for a complete explanation
 			// ( http://svn.memory-mgr.org/trac/memory-mgr/ticket/2359 )
-			singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::is_from(0);
+			internal_pool_type::is_from(0);
 		}
 
 		// default destructor
 
 		static pointer address(reference r)
-		{ return &r; }
+		{ 
+			return &r;
+		}
+
 		static const_pointer address(const_reference s)
-		{ return &s; }
+		{ 
+			return &s;
+		}
+
 		static size_type max_size()
-		{ return (std::numeric_limits<size_type>::max)(); }
+		{ 
+			return (std::numeric_limits<size_type>::max)();
+		}
+
 		void construct(const pointer ptr, const value_type & t)
-		{ new (ptr) T(t); }
+		{
+			new (ptr) T(t);
+		}
+
 		void destroy(const pointer ptr)
 		{
-			ptr->~T();
+			(*ptr).~T();
 			(void) ptr; // avoid unused variable warning
 		}
 
 		bool operator==(const fast_pool_allocator &) const
-		{ return true; }
+		{
+			return true;
+		}
+
 		bool operator!=(const fast_pool_allocator &) const
-		{ return false; }
+		{
+			return false;
+		}
 
 		static pointer allocate(const size_type n)
 		{
-			const pointer ret = (n == 1) ? 
-				static_cast<pointer>(
-				(singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::malloc)() ) :
-			static_cast<pointer>(
-				singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::ordered_malloc(n) );
+			void* ret = 0;
+			
+			if(n == 1)
+			{			
+				ret = internal_pool_type::allocate();
+			}
+			else
+			{
+				ret = internal_pool_type::ordered_allocate(n);
+			}
+
 			if (ret == 0)
 			{
-				boost::throw_exception(std::bad_alloc());
+				boost::throw_exception( std::bad_alloc() );
 			}
-			return ret;
+			return static_cast<pointer>( ret );
 		}
 		static pointer allocate(const size_type n, const void * const)
-		{ return allocate(n); }
+		{
+			return allocate(n);
+		}
+
 		static pointer allocate()
 		{
-			const pointer ret = static_cast<pointer>(
-				(singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::malloc)() );
-			if (ret == 0)
-			{
-				boost::throw_exception(std::bad_alloc());
-			}
-			return ret;
+			return allocate(1);
 		}
+
 		static void deallocate(const pointer ptr, const size_type n)
 		{
 #ifdef BOOST_NO_PROPER_STL_DEALLOCATE
 			if (ptr == 0 || n == 0)
+			{
 				return;
+			}
 #endif
 			if (n == 1)
-				(singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr);
+			{
+				internal_pool_type::deallocate(ptr);
+			}
 			else
-				(singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr, n);
+			{
+				internal_pool_type::deallocate(ptr, n);
+			}
 		}
+
 		static void deallocate(const pointer ptr)
 		{
-			(singleton_pool<fast_pool_allocator_tag, sizeof(T),
-				UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr);
+			internal_pool_type::deallocate(ptr);
 		}
 	};
 
@@ -282,7 +305,9 @@ namespace memory_mgr {
 		typedef void*       pointer;
 		typedef const void* const_pointer;
 		typedef void        value_type;
-		template <class U> struct rebind {
+
+		template <class U> struct rebind
+		{
 			typedef fast_pool_allocator<U, UserAllocator, Mutex, NextSize, MaxSize> other;
 		};
 	};

@@ -268,21 +268,21 @@ struct TrackAlloc
 
 	static std::set<char *> allocated_blocks;
 
-	static char * malloc BOOST_PREVENT_MACRO_SUBSTITUTION(const size_type bytes)
+	static char* allocate (const size_type bytes)
 	{
-		char * const ret = (UserAllocator::malloc)(bytes);
+		char* const ret = (UserAllocator::allocate)(bytes);
 		BOOST_REQUIRE_MESSAGE( ret, "memory is not allocated. requested size: " << bytes );
 		allocated_blocks.insert(ret);
 		return ret;
 	}
 
-	static void free BOOST_PREVENT_MACRO_SUBSTITUTION(char * const block)
+	static void deallocate(char * const block)
 	{
 		BOOST_CHECK_MESSAGE( allocated_blocks.find(block) != allocated_blocks.end(),
-			"Free'd non-malloc'ed block: " << (void *) block );
+			"Free'd non-allocate'ed block: " << (void *) block );
 
 		allocated_blocks.erase(block);
-		(UserAllocator::free)(block);
+		UserAllocator::deallocate(block);
 	}
 
 	static bool ok()
@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE( test_memory_usage )
 		BOOST_CHECK_MESSAGE( ! pool.purge_memory(), "Pool purged memory, however should not" );
 
 		// Should allocate from system
-		(pool.free)((pool.malloc)());
+		pool.deallocate((pool.allocate)());
 		BOOST_CHECK_MESSAGE( ! track_alloc::ok(), "Memory error" );
 
 		// Ask pool to give up memory it's not using; this should succeed
@@ -316,7 +316,7 @@ BOOST_AUTO_TEST_CASE( test_memory_usage )
 		BOOST_CHECK_MESSAGE( track_alloc::ok(), "Memory error" );
 
 		// Should allocate from system again
-		(pool.malloc)(); // loses the pointer to the returned chunk (*A*)
+		pool.allocate(); // loses the pointer to the returned chunk (*A*)
 
 		// Ask pool to give up memory it's not using; this should fail
 		BOOST_CHECK_MESSAGE( ! pool.release_memory(), "Pool released memory, however should not" );
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE( test_memory_usage )
 		BOOST_CHECK_MESSAGE( track_alloc::ok(), "Memory error" );
 
 		// Should allocate from system again
-		(pool.malloc)(); // loses the pointer to the returned chunk (*B*)
+		pool.allocate(); // loses the pointer to the returned chunk (*B*)
 
 		// pool's destructor should purge the memory
 		//  This will clean up the memory leak from (*B*)

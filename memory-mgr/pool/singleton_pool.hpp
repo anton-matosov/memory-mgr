@@ -42,10 +42,14 @@ namespace memory_mgr {
 		BOOST_STATIC_CONSTANT(unsigned, next_size = NextSize);
 
 	private:
-		struct pool_type: Mutex
+		struct pool_type
+			: Mutex
 		{
 			pool<UserAllocator> p;
-			pool_type():p(RequestedSize, NextSize) { }
+			pool_type()
+				:p(RequestedSize, NextSize)
+			{
+			}
 		};
 
 		typedef details::pool::singleton_default<pool_type> singleton;
@@ -53,60 +57,69 @@ namespace memory_mgr {
 		singleton_pool();
 
 	public:
-		static void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
+		static void * allocate ()
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			return (p.p.malloc)();
+			return p.p.allocate();
 		}
-		static void * ordered_malloc()
+
+		static void * ordered_allocate()
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			return p.p.ordered_malloc();
+			return p.p.ordered_allocate();
 		}
-		static void * ordered_malloc(const size_type n)
+
+		static void * ordered_allocate(const size_type n)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			return p.p.ordered_malloc(n);
+			return p.p.ordered_allocate(n);
 		}
+
 		static bool is_from(void * const ptr)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
 			return p.p.is_from(ptr);
 		}
-		static void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const ptr)
+
+		static void deallocate(void * const ptr)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			(p.p.free)(ptr);
+			p.p.deallocate(ptr);
 		}
-		static void ordered_free(void * const ptr)
+
+		static void ordered_deallocate(void * const ptr)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			p.p.ordered_free(ptr);
+			p.p.ordered_deallocate(ptr);
 		}
-		static void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const ptr, const size_type n)
+
+		static void deallocate (void * const ptr, const size_type n)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			(p.p.free)(ptr, n);
+			p.p.deallocate(ptr, n);
 		}
-		static void ordered_free(void * const ptr, const size_type n)
+
+		static void ordered_deallocate(void * const ptr, const size_type n)
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
-			p.p.ordered_free(ptr, n);
+			p.p.ordered_deallocate(ptr, n);
 		}
+
 		static bool release_memory()
 		{
 			pool_type & p = singleton::instance();
 			details::pool::guard<Mutex> g(p);
 			return p.p.release_memory();
 		}
+
 		static bool purge_memory()
 		{
 			pool_type & p = singleton::instance();

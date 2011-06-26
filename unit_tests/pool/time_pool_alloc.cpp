@@ -51,7 +51,7 @@ static void timing_test_alloc_larger()
 	start = std::clock();
 	{
 		for (unsigned long i = 0; i < num_ints; ++i)
-			std::free(std::malloc(sizeof(larger_structure<N>)));
+			std::free(std::allocate(sizeof(larger_structure<N>)));
 	}
 	end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
 
@@ -81,7 +81,7 @@ static void timing_test_alloc_larger()
 		memory_mgr::pool<> p(sizeof(larger_structure<N>));
 		for (unsigned long i = 0; i < num_ints; ++i)
 		{
-			void * const t = p.malloc();
+			void * const t = p.allocate();
 			if (t != 0)
 				p.free(t);
 		}
@@ -90,7 +90,7 @@ static void timing_test_alloc_larger()
 
 	std::cout << "Test " << test_number++ << ": Alloc & Dealloc " << num_ints << " structures of size " << sizeof(larger_structure<N>) << ":" << std::endl;
 	std::cout << "  std::allocator: " << end[0][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[0][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[0][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[0][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[0][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[0][4] << " seconds" << std::endl;
@@ -150,9 +150,11 @@ static void timing_test_alloc()
 		memory_mgr::pool<> p(sizeof(int));
 		for (unsigned long i = 0; i < num_ints; ++i)
 		{
-			void * const t = p.malloc();
+			void * const t = p.allocate();
 			if (t != 0)
-				p.free(t);
+			{
+				p.deallocate(t);
+			}
 		}
 	}
 	end[0][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
@@ -162,9 +164,13 @@ static void timing_test_alloc()
 	{
 		std::allocator<int> a;
 		for (unsigned long i = 0; i < num_ints; ++i)
+		{
 			p[i] = a.allocate(1);
+		}
 		for (unsigned long i = 0; i < num_ints; ++i)
+		{
 			a.deallocate(p[i], 1);
+		}
 	}
 	end[1][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
 
@@ -208,10 +214,10 @@ static void timing_test_alloc()
 	{
 		memory_mgr::pool<> pl(sizeof(int));
 		for (unsigned long i = 0; i < num_ints; ++i)
-			p[i] = reinterpret_cast<int *>(pl.malloc());
+			p[i] = reinterpret_cast<int *>(pl.allocate());
 		for (unsigned long i = 0; i < num_ints; ++i)
 			if (p[i] != 0)
-				pl.free(p[i]);
+				pl.deallocate(p[i]);
 	}
 	end[1][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
 
@@ -219,7 +225,7 @@ static void timing_test_alloc()
 
 	std::cout << "Test 3: Alloc & Dealloc " << num_ints << " ints:" << std::endl;
 	std::cout << "  std::allocator: " << end[0][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[0][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[0][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[0][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[0][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[0][4] << " seconds" << std::endl;
@@ -227,7 +233,7 @@ static void timing_test_alloc()
 
 	std::cout << "Test 4: Alloc " << num_ints << " ints & Dealloc " << num_ints << " ints:" << std::endl;
 	std::cout << "  std::allocator: " << end[1][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[1][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[1][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[1][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[1][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[1][4] << " seconds" << std::endl;
@@ -372,21 +378,21 @@ static void timing_test_containers()
 
 	std::cout << "Test 0: Insertion & deletion of " << num_ints << " ints in a vector:" << std::endl;
 	std::cout << "  std::allocator: " << end[0][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[0][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[0][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[0][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[0][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[0][4] << " seconds" << std::endl;
 	std::cout << "  Pool:           not possible" << std::endl;
 	std::cout << "Test 1: Insertion & deletion of " << num_ints << " ints in a set:" << std::endl;
 	std::cout << "  std::allocator: " << end[1][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[1][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[1][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[1][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[1][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[1][4] << " seconds" << std::endl;
 	std::cout << "  Pool:           not possible" << std::endl;
 	std::cout << "Test 2: Insertion & deletion of " << num_ints << " ints in a list:" << std::endl;
 	std::cout << "  std::allocator: " << end[2][0] << " seconds" << std::endl;
-	std::cout << "  malloc/free:    " << end[2][1] << " seconds" << std::endl;
+	std::cout << "  allocate/free:    " << end[2][1] << " seconds" << std::endl;
 	std::cout << "  new/delete:     " << end[2][2] << " seconds" << std::endl;
 	std::cout << "  Pool Alloc:     " << end[2][3] << " seconds" << std::endl;
 	std::cout << "  Pool /w Sync:   " << end[2][4] << " seconds" << std::endl;

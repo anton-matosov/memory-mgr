@@ -24,18 +24,13 @@
 # pragma option push -w-inl
 #endif
 
-// There are a few places in this file where the expression "this->m" is used.
-// This expression is used to force instantiation-time name lookup, which I am
-//   informed is required for strict Standard compliance.  It's only necessary
-//   if "m" is a member of a base class that is dependent on a template
-//   parameter.
-// Thanks to Jens Maurer for pointing this out!
 
 namespace memory_mgr {
 
 	// T must have a non-throwing destructor
 	template <typename T, typename UserAllocator>
-	class object_pool: protected pool<UserAllocator>
+	class object_pool
+		: protected pool<UserAllocator>
 	{
 	public:
 		typedef T element_type;
@@ -44,31 +39,57 @@ namespace memory_mgr {
 		typedef typename pool<UserAllocator>::difference_type difference_type;
 
 	protected:
-		pool<UserAllocator> & store() { return *this; }
-		const pool<UserAllocator> & store() const { return *this; }
+		pool<UserAllocator> & store()
+		{
+			return *this;
+		}
+
+		const pool<UserAllocator> & store() const
+		{
+			return *this;
+		}
 
 	public:
 		// This constructor parameter is an extension!
 		explicit object_pool(const size_type next_size = 32, const size_type max_size = 0)
-			:pool<UserAllocator>(sizeof(T), next_size, max_size) { }
+			:pool<UserAllocator>(sizeof(T), next_size, max_size)
+		{ }
 
 		~object_pool();
 
 		// Returns 0 if out-of-memory
-		element_type * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
-		{ return static_cast<element_type *>(store().ordered_malloc()); }
-		void free BOOST_PREVENT_MACRO_SUBSTITUTION(element_type * const chunk)
-		{ store().ordered_free(chunk); }
+		element_type * allocate ()
+		{
+			return static_cast<element_type *>(store().ordered_allocate());
+		}
+		
+		void free (element_type * const chunk)
+		{
+			store().ordered_deallocate(chunk);
+		}
+		
 		bool is_from(element_type * const chunk) const
-		{ return store().is_from(chunk); }
+		{
+			return store().is_from(chunk);
+		}
 
 		element_type * construct()
 		{
-			element_type * const ret = (malloc)();
+			element_type * const ret = (allocate)();
 			if (ret == 0)
+			{
 				return ret;
-			try { new (ret) element_type(); }
-			catch (...) { (free)(ret); throw; }
+			}
+			
+			try
+			{
+				new (ret) element_type();
+			}
+			catch (...)
+			{
+				(free)(ret);
+				throw; 
+			}
 			return ret;
 		}
 
@@ -132,7 +153,7 @@ namespace memory_mgr {
 			}
 
 			// free storage
-			(UserAllocator::free)(iter.begin());
+			UserAllocator::deallocate(iter.begin());
 
 			// increment iter
 			iter = next;

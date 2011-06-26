@@ -60,7 +60,7 @@ namespace memory_mgr {
 		//  chunk in the contiguous sequence, and nextof(start) points
 		//  to the first chunk in the next contiguous sequence (assuming
 		//  an ordered free list)
-		void_ptr try_malloc_n(
+		void_ptr try_alloc_n(
 			void_ptr & start, size_type n, const size_type partition_size)
 		{
 			void_ptr iter = nextof(start);
@@ -205,7 +205,7 @@ namespace memory_mgr {
 		bool empty() const { return ( ! first_ ); }
 
 		// pre: !empty()
-		void * malloc BOOST_PREVENT_MACRO_SUBSTITUTION()
+		void * allocate()
 		{
 			void_ptr ret = first_;
 
@@ -214,19 +214,19 @@ namespace memory_mgr {
 			return get_pointer( ret );
 		}
 
-		// pre: chunk was previously returned from a malloc() referring to the
+		// pre: chunk was previously returned from a allocate() referring to the
 		//  same free list
 		// post: !empty()
-		void free BOOST_PREVENT_MACRO_SUBSTITUTION(void * const chunk)
+		void deallocate(void * const chunk)
 		{
 			nextof(chunk) = first_;
 			first_ = chunk;
 		}
 
-		// pre: chunk was previously returned from a malloc() referring to the
+		// pre: chunk was previously returned from a allocate() referring to the
 		//  same free list
 		// post: !empty()
-		void ordered_free(void * const chunk)
+		void ordered_deallocate(void * const chunk)
 		{
 			// This (slower) implementation of 'free' places the memory
 			//  back in the list in its proper order.
@@ -237,7 +237,7 @@ namespace memory_mgr {
 			// Place either at beginning or in middle/end
 			if( ! loc )
 			{
-				(free)(chunk);
+				deallocate(chunk);
 			}
 			else
 			{
@@ -248,7 +248,7 @@ namespace memory_mgr {
 
 		// Note: if you're allocating/deallocating n a lot, you should
 		//  be using an ordered pool.
-		void * malloc_n(const size_type n,
+		void * allocate_n(const size_type n,
 			const size_type partition_size)
 		{
 			if(n == 0)
@@ -263,7 +263,7 @@ namespace memory_mgr {
 				{
 					return 0;
 				}
-				iter = try_malloc_n(start, n, partition_size);
+				iter = try_alloc_n(start, n, partition_size);
 			} while ( ! iter );
 
 			void_ptr const ret = nextof(start);
@@ -276,7 +276,7 @@ namespace memory_mgr {
 		// post: !empty()
 		// Note: if you're allocating/deallocating n a lot, you should
 		//  be using an ordered pool.
-		void free_n(void * const chunks, const size_type n,
+		void deallocate_n(void * const chunks, const size_type n,
 			const size_type partition_size)
 		{
 			if(n != 0)
@@ -288,7 +288,7 @@ namespace memory_mgr {
 		// pre: chunks was previously allocated from *this with the same
 		//   values for n and partition_size
 		// post: !empty()
-		void ordered_free_n(void * const chunks, const size_type n,
+		void ordered_deallocate_n(void * const chunks, const size_type n,
 			const size_type partition_size)
 		{
 			if(n != 0)
