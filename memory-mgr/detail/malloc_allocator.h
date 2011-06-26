@@ -35,7 +35,7 @@ namespace memory_mgr
 	namespace detail
 	{
 		/**
-		   @brief Adapter for malloc/free to SegmentAllocatorConcept	                                                            
+		   @brief Adapter for malloc/free to SegmentAllocatorConcept
 		*/
 		struct malloc_allocator
 		{
