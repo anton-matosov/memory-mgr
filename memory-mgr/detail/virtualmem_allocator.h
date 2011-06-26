@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <malloc.h>
+#include <windows.h>
 
 namespace memory_mgr
 {	
