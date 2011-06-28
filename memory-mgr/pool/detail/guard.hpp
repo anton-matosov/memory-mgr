@@ -11,10 +11,12 @@
 
 // Extremely Light-Weight guard glass
 
-namespace memory_mgr {
-
-	namespace details {
-		namespace pool {
+namespace memory_mgr
+{
+	namespace details
+	{
+		namespace pool
+		{
 
 			template <typename Mutex>
 			class guard
@@ -27,9 +29,15 @@ namespace memory_mgr {
 
 			public:
 				explicit guard(Mutex & nmtx)
-					:mtx(nmtx) { mtx.lock(); }
+					:mtx(nmtx)
+				{
+					mtx.lock();
+				}
 
-				~guard() { mtx.unlock(); }
+				~guard()
+				{
+					mtx.unlock();
+				}
 			};
 
 		} // namespace pool
