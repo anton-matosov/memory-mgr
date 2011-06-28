@@ -98,6 +98,11 @@ namespace memory_mgr {
 			char_ptr ptr;
 			size_type sz;
 
+			struct POD_ptr_chunk
+			{
+				char_ptr next_;
+			};
+
 			char * ptr_next_size() const
 			{
 				return get_pointer(ptr + sz - sizeof(size_type));
@@ -110,22 +115,40 @@ namespace memory_mgr {
 			}
 
 		public:
-			PODptr(char * const nptr, const size_type nsize)
+			PODptr(char_ptr const nptr, const size_type nsize)
 				:ptr(nptr), sz(nsize)
-			{ }
+			{
+			}
 
 			PODptr()
 				:ptr(0), sz(0)
-			{ }
+			{
+			}
 
-			bool valid() const { return (ptr); }
-			void invalidate() { ptr = 0; }
+			bool valid() const
+			{
+				return (ptr);
+			}
 
-			char * begin() const { return get_pointer( ptr ); }
+			void invalidate()
+			{
+				ptr = 0;
+			}
 
-			char * end() const { return ptr_next_ptr(); }
+			char * begin() const
+			{
+				return get_pointer( ptr );
+			}
 
-			size_type total_size() const { return sz; }
+			char * end() const
+			{
+				return ptr_next_ptr();
+			}
+
+			size_type total_size() const
+			{
+				return sz;
+			}
 
 			size_type element_size() const
 			{
@@ -138,17 +161,24 @@ namespace memory_mgr {
 				return *detail::size_cast( ptr_next_size() );
 			}
 
-			char * & next_ptr() const
+			char_ptr& next_POD_ptr() const
 			{ 
-				return *(static_cast<char **>(static_cast<void*>(ptr_next_ptr())));
+				return reinterpret_cast<POD_ptr_chunk*>( ptr_next_ptr() )->next_;
+			}
+
+			char* next_ptr() const
+			{ 
+				return &*next_POD_ptr();
 			}
 
 			PODptr next() const
-			{ return PODptr<size_type>(next_ptr(), next_size()); }
+			{
+				return PODptr( next_ptr(), next_size() );
+			}
 
 			void next(const PODptr & arg) const
 			{
-				next_ptr() = arg.begin();
+				next_POD_ptr() = arg.begin();
 				next_size() = arg.total_size();
 			}
 		};
@@ -183,10 +213,14 @@ namespace memory_mgr {
 		size_type max_size;
 
 		simple_segregated_storage<size_type> & store()
-		{ return *this; }
+		{
+			return *this;
+		}
 
 		const simple_segregated_storage<size_type> & store() const
-		{ return *this; }
+		{
+			return *this;
+		}
 
 		// finds which POD in the list 'chunk' was allocated from
 		details::PODptr<size_type> find_POD(void * const chunk) const;

@@ -69,7 +69,7 @@ static construct_destruct_checker mem;
 
 struct tester
 {
-	tester(int arg1, int arg2)
+	tester(int arg1, int arg2 = 0)
 	{
 		if (arg1 == 17 && arg2 == 17)
 		{
@@ -123,6 +123,7 @@ BOOST_FIXTURE_TEST_SUITE( test_object_pool, test_pool_fixture )
 		memory_mgr::object_pool<tester> pool;
 		for (int i = 0; i < 10; ++i)
 		{
+			BOOST_REQUIRE( pool.construct(13) );
 			BOOST_REQUIRE( pool.construct(13, 13) );
 		}
 	}
