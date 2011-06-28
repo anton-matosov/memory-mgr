@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_pool.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_templates.h"
 				>
 			</File>
