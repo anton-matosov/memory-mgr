@@ -42,32 +42,12 @@ static void timing_test_alloc_larger()
 
 	start = std::clock();
 	{
-		std::allocator<larger_structure<N> > a;
-		for (unsigned long i = 0; i < num_ints; ++i)
-			a.deallocate(a.allocate(1), 1);
-	}
-	end[0][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			std::free(std::allocate(sizeof(larger_structure<N>)));
-	}
-	end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			delete new (std::nothrow) larger_structure<N>;
-	}
-	end[0][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
 		for (unsigned long i = 0; i < num_ints; ++i)
 			alloc::deallocate(alloc::allocate());
 	}
 	end[0][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+
+
 
 	start = std::clock();
 	{
@@ -75,6 +55,8 @@ static void timing_test_alloc_larger()
 			alloc_sync::deallocate(alloc_sync::allocate());
 	}
 	end[0][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+
+
 
 	start = std::clock();
 	{
@@ -111,32 +93,12 @@ static void timing_test_alloc()
 
 	start = std::clock();
 	{
-		std::allocator<int> a;
-		for (unsigned long i = 0; i < num_ints; ++i)
-			a.deallocate(a.allocate(1), 1);
-	}
-	end[0][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			std::free(std::malloc(sizeof(int)));
-	}
-	end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			delete new (std::nothrow) int;
-	}
-	end[0][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
 		for (unsigned long i = 0; i < num_ints; ++i)
 			alloc::deallocate(alloc::allocate());
 	}
 	end[0][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+
+
 
 	start = std::clock();
 	{
@@ -144,6 +106,8 @@ static void timing_test_alloc()
 			alloc_sync::deallocate(alloc_sync::allocate());
 	}
 	end[0][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+
+
 
 	start = std::clock();
 	{
@@ -159,38 +123,7 @@ static void timing_test_alloc()
 	}
 	end[0][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
 
-
-	start = std::clock();
-	{
-		std::allocator<int> a;
-		for (unsigned long i = 0; i < num_ints; ++i)
-		{
-			p[i] = a.allocate(1);
-		}
-		for (unsigned long i = 0; i < num_ints; ++i)
-		{
-			a.deallocate(p[i], 1);
-		}
-	}
-	end[1][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			p[i] = (int *) std::malloc(sizeof(int));
-		for (unsigned long i = 0; i < num_ints; ++i)
-			std::free(p[i]);
-	}
-	end[1][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
-
-	start = std::clock();
-	{
-		for (unsigned long i = 0; i < num_ints; ++i)
-			p[i] = new (std::nothrow) int;
-		for (unsigned long i = 0; i < num_ints; ++i)
-			delete p[i];
-	}
-	end[1][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+//////////////////////////////////////////////////////////////////////////
 
 	start = std::clock();
 	{
@@ -201,6 +134,8 @@ static void timing_test_alloc()
 	}
 	end[1][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
 
+
+
 	start = std::clock();
 	{
 		for (unsigned long i = 0; i < num_ints; ++i)
@@ -209,6 +144,7 @@ static void timing_test_alloc()
 			alloc_sync::deallocate(p[i]);
 	}
 	end[1][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+
 
 	start = std::clock();
 	{
