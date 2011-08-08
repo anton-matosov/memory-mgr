@@ -45,9 +45,9 @@ namespace
 	{
 		MemMgr mgr;
 		
-		TEST_START_LOOP( op_repeat, per_alloc, char );
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
 		{
-			mgr.allocate( chunk_size );
+			TEST_TRACK_PTR = mgr.allocate( chunk_size );
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
@@ -55,6 +55,28 @@ namespace
 			break;
 		}
 		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+
+	template<class MemMgr, class PointerType >
+	long double test_dealloc_mem_mgr( const int op_repeat, const int per_alloc )
+	{
+		MemMgr mgr;
+
+		typedef PointerType pointer_type;
+		//TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, int );
+
+		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
+		{
+			TEST_TRACK_PTR = static_cast<pointer_type>( mgr.allocate( chunk_size ) );
+		}
+		TEST_SPLIT_LOOP_RESTART_TIMER;
+		{
+			mgr.deallocate( TEST_GET_TRACKED_PTR, chunk_size );
+		}
+		TEST_END_LOOP( std::wcout );
+
 
 		return TEST_ELAPCED_MCS;
 	}
@@ -159,7 +181,7 @@ namespace
 		MemMgr mgr;
 
 		typedef PointerType pointer_type;
-		TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, int );
+		//TEST_PRINT_MEM_INFO( op_repeat, per_alloc, MemMgr, int );
 
 		TEST_START_LOOP( op_repeat, per_alloc, pointer_type );
 		{
@@ -174,6 +196,7 @@ namespace
 		
 		return TEST_ELAPCED_MCS;
 	}
+
 #ifdef GC_ALLOC_DECLARED
 	template< class PointerType >
 	long double test_alloc_dealloc_gc_alloc( const int op_repeat, const int per_alloc )
@@ -284,6 +307,8 @@ namespace
 		//////////////////////////////////////////////////////////////////////////
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, per_alloc, test_repeat );
+ 		run_perf_test( simple_alloc_category, "DEalloc heap mgr",
+ 			test_dealloc_mem_mgr<heap_mgr, pointer_type>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc shared mgr",
 			test_alloc_mem_mgr<shared_mgr>, op_repeat, per_alloc, test_repeat );
 // 		run_perf_test( simple_alloc_category, "alloc seg heap mgr",

@@ -39,6 +39,61 @@ namespace
 		return TEST_ELAPCED_MCS;
 	}
 
+	long double test_pool_dealloc( const int op_repeat, const int per_alloc )
+	{
+		memory_mgr::pool<> p( 4 );
+
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		{
+			TEST_TRACK_PTR = p.allocate();
+		}
+		TEST_SPLIT_LOOP_RESTART_TIMER;
+		{
+			p.deallocate( TEST_GET_TRACKED_PTR );
+		}
+		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+
+	long double test_pool_ordered_dealloc( const int op_repeat, const int per_alloc )
+	{
+		memory_mgr::pool<> p( 4 );
+
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		{
+			TEST_TRACK_PTR = p.allocate();
+		}
+		TEST_SPLIT_LOOP_RESTART_TIMER;
+		{
+			p.ordered_deallocate( TEST_GET_TRACKED_PTR );
+		}
+		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+
+	long double test_pool_alloc_ordered_dealloc( const int op_repeat, const int per_alloc )
+	{
+// 		typedef memory_mgr::fast_pool_allocator<larger_structure<N>,
+// 			memory_mgr::default_user_allocator_new_delete,
+// 			memory_mgr::details::pool::null_mutex> alloc;
+// 		typedef memory_mgr::fast_pool_allocator<larger_structure<N> > alloc_sync;
+
+		memory_mgr::pool<> p( 4 );
+		TEST_START_LOOP( op_repeat, per_alloc, void* );
+		{
+			TEST_TRACK_PTR = p.allocate();
+		}
+		TEST_SPLIT_LOOP;
+		{
+			p.ordered_deallocate( TEST_GET_TRACKED_PTR );
+		}
+		TEST_END_LOOP( std::wcout );
+
+		return TEST_ELAPCED_MCS;
+	}
+
 	long double test_pool_alloc_dealloc( const int op_repeat, const int per_alloc )
 	{
 		memory_mgr::pool<> p( 4 );
@@ -58,13 +113,16 @@ namespace
 
 	const char* pool_tests_category = "pool";
 
+#define RUN_PERF_TEST( _testCategoryName, testMethod )\
+	run_perf_test( pool_tests_category, #testMethod,\
+		testMethod, op_repeat, per_alloc, test_repeat );
+
 	void run_all_tests( const int op_repeat, const int per_alloc, const int test_repeat )
 	{
-		run_perf_test( pool_tests_category, "test pool alloc",
-			test_pool_alloc, op_repeat, per_alloc, test_repeat );
-
-		run_perf_test( pool_tests_category, "test pool alloc/dealloc",
-			test_pool_alloc_dealloc, op_repeat, per_alloc, test_repeat );
+		RUN_PERF_TEST( pool_tests_category, test_pool_alloc );
+		RUN_PERF_TEST( pool_tests_category, test_pool_dealloc );
+		//RUN_PERF_TEST( pool_tests_category, test_pool_ordered_dealloc );
+		RUN_PERF_TEST( pool_tests_category, test_pool_alloc_dealloc );
 	}
 
 }

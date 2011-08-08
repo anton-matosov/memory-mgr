@@ -125,8 +125,8 @@ public:
 	(void)full_repeat_count__;														\
 	double accum__ = 0.0;															\
 	pointer_type *ptr_storage__ = new pointer_type[alloc_count__ + 1];ptr_storage__;\
-	timer__.start();																\
 	while( loop_outer__-- ){														\
+		timer__.start(true);														\
 		size_t loop_inner__ = alloc_count__;										\
 		while( loop_inner__-- ){
 
@@ -138,12 +138,13 @@ public:
 #define TEST_SPLIT_LOOP } loop_inner__ = alloc_count__; while( --loop_inner__ ){
 
 #define TEST_SPLIT_LOOP_STOP_TIMER } timer__.stop();{ TEST_SPLIT_LOOP
+#define TEST_SPLIT_LOOP_RESTART_TIMER } timer__.stop();timer__.start(true);{ TEST_SPLIT_LOOP
 
 #define  TEST_END_LOOP_NO_PRINT			\
 		}								\
+		timer__.stop();					\
+		accum__ += timer__.elapsed_mcs();\
 	}									\
-	timer__.stop();						\
-	accum__ = timer__.elapsed_mcs();	\
 	delete[] ptr_storage__;
 
 #define  TEST_END_LOOP( out_stream )										\
