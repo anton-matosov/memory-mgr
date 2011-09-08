@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gstl">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="detail">
+      <UniqueIdentifier>{2487336f-0d02-47db-b967-5e49deee2554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{11cd8ead-28a2-4e81-a61d-687097861404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\platform">
+      <UniqueIdentifier>{a708e0a3-d924-4b89-81fc-7c6718addc04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="algorithm">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="allocator">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="deque">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="functional">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="iterator">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="list">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="map">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="memory">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="pointer_traits">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="priority_queue">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="queue">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="stack">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="string">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="utility">
+      <Filter>gstl</Filter>
+    </None>
+    <None Include="vector">
+      <Filter>gstl</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hash.hpp">
+      <Filter>gstl</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\algorithm.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\allocator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\assert.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\basic_string.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\boost_warnings_off.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\boost_warnings_on.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\buffer_helpers.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\char_traits.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\checked_iterator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="concepts.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\container_helpers.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\deque.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\dynamic_buffer.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\fill_iterator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\helpers.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\iterator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\iterator_declarer.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\list.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\list_base.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\list_iterator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\list_node.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\map.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\pointer_traits.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\priority_queue.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\queue.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\raw_memory.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\sequence_iterator.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\stack.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\temp_buffer.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\types.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\utility.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\vector.hpp">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="config\platform\linux.hpp">
+      <Filter>config\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="config\platform\win32.hpp">
+      <Filter>config\platform</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

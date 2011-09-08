@@ -415,13 +415,18 @@ BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 	const_nonconst_iterator_test(i, ++j);
 }
 
-BOOST_AUTO_TEST_CASE( test_insert_iterators )
-{
 	typedef std::deque<int> int_deque_type;
 	template class gstl::back_insert_iterator<int_deque_type>;
 	template class gstl::front_insert_iterator<int_deque_type>;
 	template class gstl::insert_iterator<int_deque_type>;
 
+	template class gstl::istream_iterator<int>;
+	template class gstl::ostream_iterator<int>;
+	template class gstl::istreambuf_iterator<char>;
+	template class gstl::ostreambuf_iterator<char>;
+
+BOOST_AUTO_TEST_CASE( test_insert_iterators )
+{
 	typedef gstl::back_insert_iterator<int_deque_type>	back_insert_iterator;
 	typedef gstl::front_insert_iterator<int_deque_type>	front_insert_iterator;
 	typedef gstl::insert_iterator<int_deque_type>		insert_iterator;
@@ -434,11 +439,6 @@ BOOST_AUTO_TEST_CASE( test_insert_iterators )
 
 BOOST_AUTO_TEST_CASE( test_stream_iterators )
 {
-	template class gstl::istream_iterator<int>;
-	template class gstl::ostream_iterator<int>;
-	template class gstl::istreambuf_iterator<char>;
-	template class gstl::ostreambuf_iterator<char>;
-
 	//////////////////////////////////////////////////////////////////////////
 	//This instantiations produce CRT SECURE warning messages (Tested on VC 9.0)
 	std::basic_istringstream<char, gstl::char_traits<char> > istr;

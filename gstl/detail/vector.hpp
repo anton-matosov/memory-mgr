@@ -296,7 +296,8 @@ namespace gstl
 			if( new_size > capacity() )
 			{
 				internal_buffer_type tmp_buff;
-				tmp_buff.reserve( new_size + 10 );
+				tmp_buff.reserve( new_size );
+
 				value_type* tmp_begin = tmp_buff.get_buffer();
 
 				value_type* tmp_pos = tmp_begin;

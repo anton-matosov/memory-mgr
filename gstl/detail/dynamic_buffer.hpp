@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <gstl/allocator>
+#include <gstl/algorithm>
 #include <gstl/detail/buffer_helpers.hpp>
 #include <gstl/detail/sequence_iterator.hpp>
 
@@ -90,22 +91,24 @@ namespace gstl
 				alloc_.deallocate( &*buffer_, reserved_ );
 			}
 
-			void reserve( size_type n = 0 )
+			void reserve( size_type requested_capacity = 0 )
 			{
-				if( n >= max_size() )
+				if( requested_capacity >= max_size() )
 				{
 					throw_length_error();
 				}
-				if( n > reserved_ )
+				if( requested_capacity > reserved_ )
 				{
-					n = floor( n, min_buff_size );
-					pointer new_buffer = alloc_.allocate( n );
+					size_type new_reserved = reserved_ + reserved_/2;
+					new_reserved = (gstl::max)(requested_capacity, new_reserved);
+
+					pointer new_buffer = alloc_.allocate( new_reserved );
 					
 					if( !! buffer_ )
 					{
 						traits_type::move( &*new_buffer, get_buffer(), size_ );
 					}
-					reset_buffer( new_buffer, size_, n );
+					reset_buffer( new_buffer, size_, new_reserved );
 				}
 			}
 

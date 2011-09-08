@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>gstl</ProjectName>
+    <ProjectGuid>{270B347C-65E1-41F9-B1EE-1AE3FBB97515}</ProjectGuid>
+    <RootNamespace>BitManager</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="algorithm" />
+    <None Include="allocator" />
+    <None Include="deque" />
+    <None Include="functional" />
+    <None Include="iterator" />
+    <None Include="list" />
+    <None Include="map" />
+    <None Include="memory" />
+    <None Include="pointer_traits" />
+    <None Include="priority_queue" />
+    <None Include="queue" />
+    <None Include="stack" />
+    <None Include="string" />
+    <None Include="utility" />
+    <None Include="vector" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hash.hpp" />
+    <ClInclude Include="detail\algorithm.hpp" />
+    <ClInclude Include="detail\allocator.hpp" />
+    <ClInclude Include="detail\assert.hpp" />
+    <ClInclude Include="detail\basic_string.hpp" />
+    <ClInclude Include="detail\boost_warnings_off.hpp" />
+    <ClInclude Include="detail\boost_warnings_on.hpp" />
+    <ClInclude Include="detail\buffer_helpers.hpp" />
+    <ClInclude Include="detail\char_traits.hpp" />
+    <ClInclude Include="detail\checked_iterator.hpp" />
+    <ClInclude Include="concepts.hpp" />
+    <ClInclude Include="detail\container_helpers.hpp" />
+    <ClInclude Include="detail\deque.hpp" />
+    <ClInclude Include="detail\dynamic_buffer.hpp" />
+    <ClInclude Include="detail\fill_iterator.hpp" />
+    <ClInclude Include="detail\helpers.hpp" />
+    <ClInclude Include="detail\iterator.hpp" />
+    <ClInclude Include="detail\iterator_declarer.hpp" />
+    <ClInclude Include="detail\list.hpp" />
+    <ClInclude Include="detail\list_base.hpp" />
+    <ClInclude Include="detail\list_iterator.hpp" />
+    <ClInclude Include="detail\list_node.hpp" />
+    <ClInclude Include="detail\map.hpp" />
+    <ClInclude Include="detail\pointer_traits.hpp" />
+    <ClInclude Include="detail\priority_queue.hpp" />
+    <ClInclude Include="detail\queue.hpp" />
+    <ClInclude Include="detail\raw_memory.hpp" />
+    <ClInclude Include="detail\sequence_iterator.hpp" />
+    <ClInclude Include="detail\stack.hpp" />
+    <ClInclude Include="detail\temp_buffer.hpp" />
+    <ClInclude Include="detail\types.hpp" />
+    <ClInclude Include="detail\utility.hpp" />
+    <ClInclude Include="detail\vector.hpp" />
+    <ClInclude Include="config\config.hpp" />
+    <ClInclude Include="config\platform\linux.hpp" />
+    <ClInclude Include="config\platform\win32.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

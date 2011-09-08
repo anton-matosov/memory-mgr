@@ -39,9 +39,11 @@ Table 71 - Relations among iterator categories
 +-------------------------------------------------------+
 */
 
+#include <iterator>
+#include <xutility>
 #include <gstl/detail/iterator.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/iterator.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 
 namespace gstl
 {
@@ -51,9 +53,8 @@ namespace gstl
 
 		template <class Value>
 		class fill_iterator_base
-			: public boost::iterator_adaptor<
+			: public boost::iterator_facade<
 			fill_iterator_base<Value>				// Derived
-			, long									// Base
 			, Value									// Value
 			, boost::random_access_traversal_tag	// CategoryOrTraversal
 			>
@@ -63,7 +64,7 @@ namespace gstl
 
 		public:
 			typedef fill_iterator_base						self_type;
-			typedef typename self_type::iterator_adaptor_	base_type;
+			typedef typename self_type::iterator_facade_	base_type;
 			typedef Value									value_type;
 			typedef value_type&								reference;
 			typedef long									counter_type;
@@ -71,25 +72,27 @@ namespace gstl
 			static const counter_type npos = static_cast<counter_type>( -1 );
 
 			fill_iterator_base()
-				: base_type( npos ),
-				value_( 0 )
+				: value_( 0 ),
+				count_( 0 )
 			{}
 
-			explicit fill_iterator_base( value_type* p, counter_type count )
-				: base_type( count ),
-				value_( p )
+			explicit fill_iterator_base( value_type* valuePtr, counter_type count )
+				: value_( valuePtr ),
+				count_( count )
 			{}
 
 			template <class OtherValue>
 			fill_iterator_base( fill_iterator_base<OtherValue> const& other,
 				typename boost::enable_if< boost::is_convertible<OtherValue*,Value*>,
 				enabler >::type = enabler() )
-				: base_type( other.base() ),
-				value_( other.value_ )
+				: value_( other.value() ),
+				count_( other.count() )
 			{
 
 			}
 
+			value_type* value() const { return value_; }
+			counter_type count() const { return count_; }
 		private:
 			friend class boost::iterator_core_access;
 
@@ -98,7 +101,36 @@ namespace gstl
 				return *value_; 
 			}
 
+			void advance(difference_type n)
+			{
+				count_ += n;
+			}
+
+			void increment()
+			{
+				++count_;
+			}
+
+			void decrement() 
+			{
+				--count_;
+			}
+
+			template<class OtherValue> 
+			difference_type distance_to( fill_iterator_base<OtherValue> const& y ) const
+			{
+				return y.count() - count_;
+			}
+
+			template<class OtherValue> 
+			bool equal( fill_iterator_base<OtherValue> const& y ) const
+			{
+				return y.count() == count_
+					&& y.value() == value_;
+			}
+
 			value_type* value_;
+			counter_type count_;
 		};
 	}
 

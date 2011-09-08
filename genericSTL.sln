@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{565E49DA-AFA6-43A6-8CD8-B3165868B2A2}"
 	ProjectSection(SolutionItems) = preProject
 		AUTHORS = AUTHORS
@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO = TODO
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests_VS2008.vcproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gstl", "gstl\gSTL.vcxproj", "{270B347C-65E1-41F9-B1EE-1AE3FBB97515}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gstl", "gstl\gstl_VS2008.vcproj", "{317AB518-3AB8-4F87-9977-E413EDA3F859}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests.vcxproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,14 +21,14 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{270B347C-65E1-41F9-B1EE-1AE3FBB97515}.Debug|Win32.ActiveCfg = Debug|Win32
+		{270B347C-65E1-41F9-B1EE-1AE3FBB97515}.Debug|Win32.Build.0 = Debug|Win32
+		{270B347C-65E1-41F9-B1EE-1AE3FBB97515}.Release|Win32.ActiveCfg = Release|Win32
+		{270B347C-65E1-41F9-B1EE-1AE3FBB97515}.Release|Win32.Build.0 = Release|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Debug|Win32.Build.0 = Debug|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.ActiveCfg = Release|Win32
 		{BBBC875F-89BB-424D-8626-B0B2D856CFAA}.Release|Win32.Build.0 = Release|Win32
-		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Debug|Win32.ActiveCfg = Debug|Win32
-		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Debug|Win32.Build.0 = Debug|Win32
-		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.ActiveCfg = Release|Win32
-		{317AB518-3AB8-4F87-9977-E413EDA3F859}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
