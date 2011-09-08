@@ -81,7 +81,7 @@ public:
     intrusive_ptr( T * p, bool add_ref = true )
 		: px( p )
     {
-        if( px != 0 && add_ref )
+        if( !! px && add_ref )
 		{
 			intrusive_ptr_add_ref( &*px );
 		}
@@ -196,7 +196,7 @@ public:
 
     void swap(intrusive_ptr & rhs)
     {
-        T * tmp = px;
+        pointer tmp = px;
         px = rhs.px;
         rhs.px = tmp;
     }

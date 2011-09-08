@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_intrusive_ptr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_managed_base.cpp"
 				>
 			</File>
@@ -301,6 +305,14 @@
 			>
 			<File
 				RelativePath=".\common_manager_tests.h"
+				>
+			</File>
+			<File
+				RelativePath=".\detect_memory_leaks.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\detect_memory_leaks.h"
 				>
 			</File>
 			<File

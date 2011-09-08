@@ -434,7 +434,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\smart_ptr\intrusive_base.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\smart_ptr\intrusive_ptr.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\smart_ptr\make_shared.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\smart_ptr\mgr_deleter.hpp"
 				>
 			</File>
 			<File

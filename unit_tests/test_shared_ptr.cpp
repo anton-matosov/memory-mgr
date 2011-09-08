@@ -32,6 +32,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/smart_ptr/scoped_array.hpp>
 
 
+#include <memory-mgr/smart_ptr/mgr_deleter.hpp>
 #include <memory-mgr/smart_ptr/make_shared.hpp>
 #include "managers.h"
 #include <memory-mgr/new.h>
@@ -49,25 +50,15 @@ namespace
 	typedef memory_mgr::singleton_manager<name_heap_mgr_type> sing_name_heap_mgr_type2;
 }
 MGR_DECLARE_MANAGER_CLASS( name_heap_mgr, name_heap_mgr_type );
-MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr2, sing_name_heap_mgr_type2 );
+MGR_DECLARE_MANAGER_CLASS( sing_mgr, sing_name_heap_mgr_type2 );
 
-template<class MemMgr>
-struct deleter_impl
-{
-	template<class T>
-	void operator()( T* ptr )
-	{
-		(*ptr).~T();
-		MemMgr::instance().deallocate( ptr );
-	}
-};
 
 BOOST_AUTO_TEST_SUITE( test_shared_ptr )
 
 BOOST_AUTO_TEST_CASE( test_create_delete )
 {
- 	memory_mgr::shared_ptr<int> int_pda( memory_mgr::new_<int, sing_name_heap_mgr2>()(),
- 		deleter_impl<sing_name_heap_mgr2>(), memory_mgr::allocator<int, sing_name_heap_mgr2>() );
+ 	memory_mgr::shared_ptr<int> int_pda( memory_mgr::new_<int, sing_mgr>()(),
+ 		memory_mgr::mgr_deleter<sing_mgr>(), memory_mgr::allocator<int, sing_mgr>() );
  	*int_pda = 10;
  
  	memory_mgr::weak_ptr<int> weak_int = int_pda;
@@ -76,7 +67,7 @@ BOOST_AUTO_TEST_CASE( test_create_delete )
 
 BOOST_AUTO_TEST_CASE( test_make_shared_singleton )
 {
-	typedef sing_name_heap_mgr2 mem_mgr;
+	typedef sing_mgr mem_mgr;
 	using memory_mgr::make_shared;
 	using memory_mgr::shared_ptr;
 
@@ -114,7 +105,7 @@ BOOST_AUTO_TEST_CASE( test_allocate_shared )
 {
 	using memory_mgr::allocate_shared;
 	using memory_mgr::shared_ptr;
-	memory_mgr::allocator<int, sing_name_heap_mgr2> alloc;
+	memory_mgr::allocator<int, sing_mgr> alloc;
 
 	shared_ptr<int> int_p  = allocate_shared<int>( alloc );
 	shared_ptr<int> int_p1 = allocate_shared<int>( alloc, 123 );
