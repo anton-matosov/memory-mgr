@@ -1,6 +1,12 @@
 #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SHARED_ARRAY_NMT_HPP_INCLUDED
 #define MEMORY_MGR_SMART_PTR_DETAIL_SHARED_ARRAY_NMT_HPP_INCLUDED
 
+// MS compatible compilers support #pragma once
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 //
 //  detail/shared_array_nmt.hpp - shared_array.hpp without member templates
 //

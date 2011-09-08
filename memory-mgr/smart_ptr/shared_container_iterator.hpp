@@ -8,6 +8,12 @@
 #ifndef SHARED_CONTAINER_ITERATOR_RG08102002_HPP
 #define SHARED_CONTAINER_ITERATOR_RG08102002_HPP
 
+// MS compatible compilers support #pragma once
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include "boost/iterator_adaptors.hpp"
 #include "boost/shared_ptr.hpp"
 #include <utility>

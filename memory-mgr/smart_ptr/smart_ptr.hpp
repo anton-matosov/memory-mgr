@@ -14,6 +14,12 @@
 //  http://www.boost.org/libs/smart_ptr/smart_ptr.htm
 //
 
+// MS compatible compilers support #pragma once
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include <boost/config.hpp>
 
 #include <memory-mgr/smart_ptr/scoped_ptr.hpp>
