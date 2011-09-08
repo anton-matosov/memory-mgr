@@ -204,8 +204,8 @@ namespace memory_mgr
  		*/
  		inline void deallocate( const void* p, size_type size = 0 )
  		{
-			assert( ! this->m_named_alloc.is_exists( detail::pointer_to_offset( p, *this ) )
-				&& "\n!!!You are trying to delete named object via unnamed deallocate operation!!!!" );
+			//assert( ! this->m_named_alloc.is_exists( detail::pointer_to_offset( p, *this ) )
+			//	&& "\n!!!You are trying to delete named object via unnamed deallocate operation!!!!" );
  			this->m_mgr.deallocate( p, size );
  		}
 	};

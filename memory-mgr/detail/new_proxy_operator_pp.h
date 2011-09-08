@@ -29,6 +29,7 @@
 	MGR_NEW_PROXY_CONSTRUCT_TEMPLATE_PARAMS
 	object_pointer_type operator()(MGR_NEW_PROXY_CONSTRUCT_PARMS)
 	{
+		lock_type lock( m_alloc->get_lockable() );
 		allocate();
 		object_pointer_type object = m_object;
 
