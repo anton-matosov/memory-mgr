@@ -24,6 +24,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/detail/workaround.hpp>
+#include <memory-mgr/offset_ptr.h>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp>
 
 #include <boost/config/no_tr1/functional.hpp>           // for std::less
@@ -63,15 +64,21 @@ private:
 
 public:
 
-    typedef T element_type;
+	typedef T element_type;
+	typedef offset_ptr<T> pointer;
 
-    intrusive_ptr(): px( 0 )
+    intrusive_ptr()
+		: px( 0 )
     {
     }
 
-    intrusive_ptr( T * p, bool add_ref = true ): px( p )
+    intrusive_ptr( T * p, bool add_ref = true )
+		: px( p )
     {
-        if( px != 0 && add_ref ) intrusive_ptr_add_ref( px );
+        if( px != 0 && add_ref )
+		{
+			intrusive_ptr_add_ref( &*px );
+		}
     }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) || defined(BOOST_MSVC6_MEMBER_TEMPLATES)
@@ -88,19 +95,28 @@ public:
 #endif
     : px( rhs.get() )
     {
-        if( px != 0 ) intrusive_ptr_add_ref( px );
+		if( !! px )
+		{
+			intrusive_ptr_add_ref( &*px );
+		}
     }
 
 #endif
 
     intrusive_ptr(intrusive_ptr const & rhs): px( rhs.px )
     {
-        if( px != 0 ) intrusive_ptr_add_ref( px );
+        if( !! px )
+		{
+			intrusive_ptr_add_ref( &*px );
+		}
     }
 
     ~intrusive_ptr()
     {
-        if( px != 0 ) intrusive_ptr_release( px );
+        if( !! px )
+		{
+			intrusive_ptr_release( &*px );
+		}
     }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) || defined(BOOST_MSVC6_MEMBER_TEMPLATES)
@@ -154,19 +170,19 @@ public:
 
     T * get() const
     {
-        return px;
+        return &*px;
     }
 
     T & operator*() const
     {
-        BOOST_ASSERT( px != 0 );
+        BOOST_ASSERT( !! px );
         return *px;
     }
 
     T * operator->() const
     {
-        BOOST_ASSERT( px != 0 );
-        return px;
+        BOOST_ASSERT( !! px );
+        return &*px;
     }
 
 // implicit conversion to "bool"
@@ -181,7 +197,7 @@ public:
 
 private:
 
-    T * px;
+    pointer px;
 };
 
 template<class T, class U> inline bool operator==(intrusive_ptr<T> const & a, intrusive_ptr<U> const & b)
