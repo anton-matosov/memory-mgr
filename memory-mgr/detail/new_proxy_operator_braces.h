@@ -1,5 +1,4 @@
 
-
 object_pointer_type operator()()
 {
 	lock_type lock( m_alloc->get_lockable() );
@@ -18,7 +17,7 @@ object_pointer_type operator()()
 }
 
 template<  typename A0 >
-object_pointer_type operator()( A0 a0)
+object_pointer_type operator()( const A0& a0)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -36,7 +35,7 @@ object_pointer_type operator()( A0 a0)
 }
 
 template<  typename A0 , typename A1 >
-object_pointer_type operator()( A0 a0 , A1 a1)
+object_pointer_type operator()( const A0& a0 , const A1& a1)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -54,7 +53,7 @@ object_pointer_type operator()( A0 a0 , A1 a1)
 }
 
 template<  typename A0 , typename A1 , typename A2 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -72,8 +71,9 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2)
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3)
 {
+	lock_type lock( m_alloc->get_lockable() );
 	allocate();
 	object_pointer_type object = m_object;
 
@@ -89,7 +89,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3)
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -107,7 +107,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4)
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -125,7 +125,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5)
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , A6 a6)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -143,7 +143,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , 
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , A6 a6 , A7 a7)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -161,7 +161,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , 
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 , typename A8 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , A6 a6 , A7 a7 , A8 a8)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7 , const A8& a8)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
@@ -179,7 +179,7 @@ object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , 
 }
 
 template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 , typename A8 , typename A9 >
-object_pointer_type operator()( A0 a0 , A1 a1 , A2 a2 , A3 a3 , A4 a4 , A5 a5 , A6 a6 , A7 a7 , A8 a8 , A9 a9)
+object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7 , const A8& a8 , const A9& a9)
 {
 	lock_type lock( m_alloc->get_lockable() );
 	allocate();
