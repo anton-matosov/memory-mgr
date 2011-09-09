@@ -109,7 +109,8 @@ public:
 
 #endif
 
-    intrusive_ptr(intrusive_ptr const & rhs): px( rhs.px )
+    intrusive_ptr(intrusive_ptr const & rhs)
+		: px( rhs.px )
     {
         if( !! px )
 		{
@@ -139,7 +140,8 @@ public:
 
 #if defined( BOOST_HAS_RVALUE_REFS )
 
-    intrusive_ptr(intrusive_ptr && rhs): px( rhs.px )
+    intrusive_ptr(intrusive_ptr && rhs)
+		: px( rhs.px )
     {
         rhs.px = 0;
     }

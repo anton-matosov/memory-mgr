@@ -34,6 +34,17 @@ namespace memory_mgr
 	private:
 		typedef intrusive_base self;
 
+	public:
+		IntrusivePtr<Derived> shared_from_this()
+		{
+			return IntrusivePtr<Derived>( static_cast<Derived*>(this) );
+		}
+
+		IntrusivePtr<Derived const> shared_from_this() const
+		{
+			return IntrusivePtr<Derived const>( static_cast<Derived const*>(this) );
+		}
+
 	protected:
 		intrusive_base()
 			: reference_counter_(0)
@@ -56,29 +67,18 @@ namespace memory_mgr
 		}
 
 	private:
-		void friend intrusive_ptr_add_ref(const Derived* p) 
+		friend void intrusive_ptr_add_ref(const Derived* p) 
 		{
 			++(static_cast<self const*>(p)->reference_counter_);
 		}
 
-		void friend intrusive_ptr_release(const Derived* p) 
+		friend void intrusive_ptr_release(const Derived* p) 
 		{
 			if ( ! --(static_cast<self const*>(p)->reference_counter_) )
 			{
 				DeleteStrategy deleter;
 				deleter( const_cast<Derived*>(p) );
 			}
-		}
-
-	public:
-		IntrusivePtr<Derived> shared_from_this()
-		{
-			return IntrusivePtr<Derived>( static_cast<Derived*>(this) );
-		}
-
-		IntrusivePtr<Derived const> shared_from_this() const
-		{
-			return IntrusivePtr<Derived const>( static_cast<Derived const*>(this) );
 		}
 
 		mutable CounterType reference_counter_;
