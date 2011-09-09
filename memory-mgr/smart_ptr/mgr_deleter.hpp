@@ -17,6 +17,27 @@
 
 namespace memory_mgr
 {
+	struct std_deleter
+	{
+		template<class T>
+		void operator()( T* ptr )
+		{
+			delete ptr;
+		}
+	};
+
+	template<class Allocator>
+	struct allocator_deleter
+	{
+		template<class T>
+		void operator()( T* ptr )
+		{
+			typename Allocator::rebind<T>::other alloc;
+			alloc.destroy( ptr );
+			alloc.deallocate( ptr, sizeof(T) );
+		}
+	};
+
 	template<class MemMgr>
 	struct mgr_deleter
 	{

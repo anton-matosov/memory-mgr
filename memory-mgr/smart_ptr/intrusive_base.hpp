@@ -16,11 +16,19 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 //
 
+#include <memory-mgr/smart_ptr/mgr_deleter.hpp>
 #include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
+#include <memory-mgr/smart_ptr/smart_ptr/intrusive_ptr.hpp>
 
 namespace memory_mgr
 {
-	template<class Derived, class DeleteStrategy, class CounterType = ::memory_mgr::detail::atomic_count>
+	template
+	<
+		class Derived,
+		class DeleteStrategy = ::memory_mgr::std_deleter,
+		class CounterType = ::memory_mgr::detail::atomic_count,
+		template <class> class IntrusivePtr = memory_mgr::intrusive_ptr
+	>
 	class intrusive_base
 	{
 	private:
@@ -63,14 +71,14 @@ namespace memory_mgr
 		}
 
 	public:
-		memory_mgr::intrusive_ptr<Derived> shared_from_this()
+		IntrusivePtr<Derived> shared_from_this()
 		{
-			return boost::intrusive_ptr<Derived>( static_cast<Derived*>(this) );
+			return IntrusivePtr<Derived>( static_cast<Derived*>(this) );
 		}
 
-		memory_mgr::intrusive_ptr<Derived const> shared_from_this() const
+		IntrusivePtr<Derived const> shared_from_this() const
 		{
-			return boost::intrusive_ptr<Derived>(this);
+			return IntrusivePtr<Derived const>( static_cast<Derived const*>(this) );
 		}
 
 		mutable CounterType reference_counter_;
