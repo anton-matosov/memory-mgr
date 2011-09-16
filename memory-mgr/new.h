@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/config/config.h>
+#include <memory-mgr/sync/locks.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/new_helpers.h>
@@ -53,7 +54,7 @@ namespace memory_mgr
 			typedef object_type*	object_pointer_type;
 			typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
 			typedef typename manager_traits<mgr_type>::size_type	size_type;
-			typedef typename manager_traits<mgr_type>::lockable_type lockable_type;
+			typedef typename ::memory_mgr::sync::lockable lockable_type;
 
 			allocate_base( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
 				: m_mgr( &mgr.get() )
@@ -77,11 +78,9 @@ namespace memory_mgr
 				return allocate_impl( required_size, *m_mgr );
 			}
 
-			lockable_type& get_lockable()
-			{
-				return m_mgr->get_lockable();
-			}
-		private:
+			virtual lockable_type& get_lockable() = 0;
+		
+		protected:
 			virtual void* allocate_impl( size_t size, mgr_type& mgr ) = 0;
 			virtual bool construction_needed_impl() = 0;
 
@@ -101,6 +100,10 @@ namespace memory_mgr
 
 			}
 
+			virtual lockable_type& get_lockable()
+			{
+				return m_fake_lockable;
+			}
 		protected:
 			virtual void* allocate_impl( size_t size, mgr_type& mgr )
 			{
@@ -111,6 +114,9 @@ namespace memory_mgr
 			{
 				return true;
 			}
+
+		private:
+			::memory_mgr::sync::fake_lockable m_fake_lockable;
 		};
 
 		template<class T, class MemMgr>
@@ -132,6 +138,10 @@ namespace memory_mgr
 
 			}
 
+			virtual lockable_type& get_lockable()
+			{
+				return m_mgr->get_lockable();
+			}
 		protected:
 			virtual void* allocate_impl( size_t size, mgr_type& mgr )
 			{
@@ -159,11 +169,12 @@ namespace memory_mgr
 			typedef MemMgr			mgr_type;
 			typedef T				object_type;
 			typedef object_type*	object_pointer_type;
+			typedef allocate_base<T, MemMgr> allocate_base_type;
 			typedef typename manager_traits<mgr_type>::lock_type lock_type;
 
 			object_pointer_type m_object;
-			size_t		m_num_items;
-			boost::shared_ptr<allocate_base<T, MemMgr> > m_alloc;
+			size_t m_num_items;
+			boost::shared_ptr<allocate_base_type> m_alloc;
 
 		public:
 			new_proxy( const new_proxy& old_proxy, size_t num_items )

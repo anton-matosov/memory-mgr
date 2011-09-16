@@ -35,10 +35,52 @@ namespace memory_mgr
 	*/
 	namespace sync
 	{
-		//-------------------------------------
+		class lockable
+		{  
+		public:
+			virtual void enter() const = 0;
+			virtual void leave() const = 0;
+		};
+
+		class scoped_lock
+		{
+		public:
+			scoped_lock( const lockable &lockable ) 
+				: m_lockable(lockable)
+			{ 
+				m_lockable.enter();
+			};
+
+			~scoped_lock()
+			{ 
+				m_lockable.leave();
+			};
+
+		private:
+			lockable const &m_lockable;
+
+			//Non copyable
+			scoped_lock(const scoped_lock &);
+			scoped_lock& operator=(const scoped_lock &);
+		};
+
+		class fake_lockable
+			:public lockable
+		{
+		public:
+			virtual void enter() const
+			{
+			}
+
+			virtual void leave() const
+			{
+			}
+		};
+
 		// Locks do nothing
 		template<class SyncObjT>
 		class pseudo_lockable
+			:public fake_lockable
 		{  
 		public:
 			pseudo_lockable()
@@ -48,22 +90,7 @@ namespace memory_mgr
 			pseudo_lockable( T )
 			{}
 
-			class lock
-			{
-			public:
-				lock() 
-				{};
-
-				lock( const pseudo_lockable &c ) 
-				{};
-				~lock()
-				{};
-
-			private:
-				lock(const lock &c);
-				lock& operator=(const lock &c);
-			};
-
+			typedef scoped_lock lock_type;
 		private:
 			pseudo_lockable( const pseudo_lockable& );
 			pseudo_lockable& operator=( const pseudo_lockable& );
@@ -73,10 +100,9 @@ namespace memory_mgr
 		// Object level blocking
 		template<class SyncObjT>
 		class object_level_lockable
+			:public lockable
 		{  
 		public:
-			friend class lock;
-
 			object_level_lockable()
 			{}
 
@@ -85,29 +111,20 @@ namespace memory_mgr
 				:m_sync_object( val )
 			{}
 
-			class lock
+			virtual void enter() const
 			{
-			public:
-				lock( const object_level_lockable &c ) 
-					: m_lockable(c)
-				{ 
-					m_lockable.m_sync_object.enter();
-				};
+				m_sync_object.enter();
+			}
 
-				~lock()
-				{ 
-					m_lockable.m_sync_object.leave();
-				};
-
-			private:
-				object_level_lockable const &m_lockable;
-
-				lock(const lock &c);
-				lock& operator=(const lock &c);
-			};
-			typedef		lock	lock_type;
+			virtual void leave() const
+			{
+				m_sync_object.leave();
+			}
+			
+			typedef scoped_lock lock_type;
 		private:
 			mutable SyncObjT m_sync_object;
+
 			object_level_lockable( const object_level_lockable& );
 			object_level_lockable& operator=( const object_level_lockable& );
 		};
@@ -122,21 +139,22 @@ namespace memory_mgr
 			//class lock;
 			friend class lock;
 
-			class lock
+			class static_lock
 			{
-				lock(const lock&);
-				lock& operator=(const lock&);
+				static_lock(const static_lock&);
+				static_lock& operator=(const static_lock&);
 			public:
-				lock()
+				static_lock()
 				{
 					sm_sync_object.enter();
 				}
 
-				~lock()
+				~static_lock()
 				{
 					sm_sync_object.leave();
 				}
 			};
+			typedef static_lock lock_type;
 		};
 
 		template <class SyncObjT>

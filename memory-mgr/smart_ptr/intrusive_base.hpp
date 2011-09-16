@@ -35,14 +35,10 @@ namespace memory_mgr
 		typedef intrusive_base self;
 
 	public:
-		IntrusivePtr<Derived> shared_from_this()
+		IntrusivePtr<Derived> shared_from_this() const
 		{
-			return IntrusivePtr<Derived>( static_cast<Derived*>(this) );
-		}
-
-		IntrusivePtr<Derived const> shared_from_this() const
-		{
-			return IntrusivePtr<Derived const>( static_cast<Derived const*>(this) );
+			Derived const* derived = static_cast<Derived const*>(this);
+			return IntrusivePtr<Derived>( const_cast<Derived*>( derived ) );
 		}
 
 	protected:

@@ -54,7 +54,7 @@ namespace memory_mgr
 		/**
 		   @brief Scoped lock type
 		*/
-		typedef typename ThreadingModel<SyncObj>::lock lock;
+		typedef typename ThreadingModel<SyncObj>::lock_type lock;
 	public:
 		/**
 		   @brief Call this method to get instance of singleton class, creates
