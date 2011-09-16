@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		const int* arr_ptr = new_<int, mgr_type>()[5]();
 		const void* void_arr_ptr = new_<int, mgr_type>()[15]( 12345 );
-		const test_class* class_arr_ptr = new_<test_class, mgr_type>()[15]( 12345, 123, *p1 );
+		const test_class* class_arr_ptr = new_<test_class, mgr_type>()[15]( 12345, 123, boost::ref(*p1) );
 
 		test::check_pointers( p1, p2, p3, p4, p5 );
 
