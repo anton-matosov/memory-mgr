@@ -102,7 +102,7 @@ namespace memory_mgr
 		@see memory_manager::memory_segment                        
 		*/
 		inline named_objects()
-			:m_named_alloc( base_type::m_mgr )
+			:m_named_alloc( base_type::get_decorated_mgr() )
 		{}
 
 		/**
@@ -114,7 +114,7 @@ namespace memory_mgr
 		*/
 		inline named_objects( void* segment_base )
 			:base_type( segment_base ),
-			m_named_alloc( base_type::m_mgr )
+			m_named_alloc( base_type::get_decorated_mgr() )
 		{}
 
 		bool is_exists( const char* name )
@@ -130,7 +130,7 @@ namespace memory_mgr
 			block_offset_type offset = this->m_named_alloc.get_object( name );
 			if( offset ==  offset_traits<block_offset_type>::invalid_offset )
 			{
-				ptr = this->m_mgr.allocate( size );
+				ptr = decorated_mgr::allocate( size );
 				m_named_alloc.add_object( name, detail::pointer_to_offset( ptr, *this ) );
 			}
 			else
@@ -151,7 +151,7 @@ namespace memory_mgr
 			lock_type lock( this->get_lockable() );
 			if( this->m_named_alloc.remove_object( name ) )
 			{
-				this->m_mgr.deallocate( p, size );
+				decorated_mgr::deallocate( p, size );
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace memory_mgr
 			lock_type lock( this->get_lockable() );
 			if( this->m_named_alloc.remove_object( detail::pointer_to_offset( p, *this ) ) )
 			{
-				this->m_mgr.deallocate( p, size );
+				decorated_mgr::deallocate( p, size );
 			}
 		}
 
@@ -179,7 +179,7 @@ namespace memory_mgr
  		*/
  		inline void* allocate( size_type size )
  		{			
- 			return this->m_mgr.allocate( size );
+ 			return decorated_mgr::allocate( size );
  		}
  
  		/**
@@ -193,7 +193,7 @@ namespace memory_mgr
  		*/
  		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
  		{			
- 			return this->m_mgr.allocate( size, nothrow );
+ 			return decorated_mgr::allocate( size, nothrow );
  		}
  
  		/**
@@ -206,7 +206,7 @@ namespace memory_mgr
  		{
 			//assert( ! this->m_named_alloc.is_exists( detail::pointer_to_offset( p, *this ) )
 			//	&& "\n!!!You are trying to delete named object via unnamed deallocate operation!!!!" );
- 			this->m_mgr.deallocate( p, size );
+ 			decorated_mgr::deallocate( p, size );
  		}
 	};
 

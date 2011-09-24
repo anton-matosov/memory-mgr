@@ -38,12 +38,26 @@ namespace memory_mgr
 	{
 		template< class MemMgr >
 		class decorator_base
+			:public MemMgr
 		{
 		protected:
-			typedef MemMgr									mgr_type;
+			typedef MemMgr mgr_type;
+			typedef decorator_base	decorated_mgr;
 
-			mgr_type m_mgr;
+			decorated_mgr& get_decorated_mgr()
+			{
+				return *this;
+			}
 		public:	
+			//Type definitions to make definition of classes drived from decorator_base easier
+			typedef typename manager_traits<mgr_type>::size_type size_type;
+			typedef typename manager_traits<mgr_type>::block_offset_type block_offset_type;
+
+			typedef typename manager_traits<mgr_type>::sync_object_type sync_object_type;
+			typedef typename manager_traits<mgr_type>::lockable_type lockable_type;
+			typedef typename manager_traits<mgr_type>::lock_type lock_type;
+
+
 			/**
 			   @brief Default constructor, creates memory manager 
 			   @remarks Can be used only if decorates memory manager with 
@@ -56,69 +70,10 @@ namespace memory_mgr
 					Memory_manager_does_not_have_attached_memory_segment );
 			}
 
-			/**
-			   @missing_comments 
-			*/
+			///One more constructor that delegates parameters to the base class
 			inline explicit decorator_base( void* segment_base )
-				:m_mgr( segment_base )
+				:mgr_type( segment_base )
 			{}
-
-			typedef typename manager_traits<mgr_type>::size_type		size_type;
-			typedef typename manager_traits<mgr_type>::block_offset_type	block_offset_type;
-
-			typedef typename manager_traits<mgr_type>::sync_object_type		sync_object_type;
-			typedef typename manager_traits<mgr_type>::lockable_type		lockable_type;
-			typedef typename manager_traits<mgr_type>::lock_type			lock_type;
-
-			inline bool empty()
-			{
-				return m_mgr.empty();
-			}
-
-			inline bool is_free()
-			{
-				return m_mgr.is_free();
-			}
-
-			inline void clear()
-			{
-				m_mgr.clear();
-			}
-
-			inline const char* get_offset_base( const block_offset_type offset = 0 ) const
-			{
-				return m_mgr.get_offset_base( offset );
-			}
-
-			inline char* get_offset_base( block_offset_type offset = 0 )
-			{
-				return m_mgr.get_offset_base( offset );
-			}
-
-			inline const char* get_ptr_base( const void* ptr ) const
-			{
-				return m_mgr.get_ptr_base( ptr );
-			}
-
-			inline char* get_ptr_base( void* ptr )
-			{
-				return m_mgr.get_ptr_base( ptr );
-			}
-
-			inline void* offset_to_pointer( block_offset_type offset )
-			{
-				return m_mgr.offset_to_pointer( offset );
-			}
-
-			inline block_offset_type pointer_to_offset( const void* ptr )
-			{
-				return m_mgr.pointer_to_offset( ptr );
-			}
-
-			inline lockable_type& get_lockable()
-			{
-				return m_mgr.get_lockable();
-			}
 		};
 
 	}

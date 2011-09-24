@@ -83,7 +83,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size )
 			{
-				return this->m_mgr.allocate( size + this->aux_data_size );
+				return decorated_mgr::allocate( size + this->aux_data_size );
 			}
 
 			/**
@@ -97,7 +97,7 @@ namespace memory_mgr
 			*/
 			inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 			{
-				return this->m_mgr.allocate( size + this->aux_data_size, nothrow );
+				return decorated_mgr::allocate( size + this->aux_data_size, nothrow );
 			}
 
 			/**
@@ -108,7 +108,7 @@ namespace memory_mgr
 			*/
 			inline void deallocate( const void* ptr, size_type size )
 			{
-				this->m_mgr.deallocate( get_aux_data( ptr, 0 ), size + this->aux_data_size );
+				decorated_mgr::deallocate( get_aux_data( ptr, 0 ), size + this->aux_data_size );
 			}
 			
 			/**
