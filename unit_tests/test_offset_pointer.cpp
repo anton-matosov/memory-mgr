@@ -36,9 +36,9 @@ template class memory_mgr::offset_ptr< builtin_type >;
 template class memory_mgr::offset_ptr< base_test_class >;
 template class memory_mgr::offset_ptr< derived_test_class >;
 
-template class memory_mgr::offset_pointer< builtin_type, def_heap_mgr >;
-template class memory_mgr::offset_pointer< base_test_class, def_heap_mgr >;
-template class memory_mgr::offset_pointer< derived_test_class, def_heap_mgr >;
+template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr >;
+template class memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr >;
 
 BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	
@@ -46,9 +46,9 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	typedef memory_mgr::offset_ptr< base_test_class > base_class_ptr;
 	typedef memory_mgr::offset_ptr< derived_test_class > derived_class_ptr;
 
-	typedef memory_mgr::offset_pointer< builtin_type, def_heap_mgr > builtin_pointer;
-	typedef memory_mgr::offset_pointer< base_test_class, def_heap_mgr > base_class_pointer;
-	typedef memory_mgr::offset_pointer< derived_test_class, def_heap_mgr > derived_class_pointer;
+	typedef memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr > builtin_pointer;
+	typedef memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr > base_class_pointer;
+	typedef memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr > derived_class_pointer;
 
 	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr,
 		builtin_pointer, base_class_pointer, derived_class_pointer > pointer_types;
@@ -90,12 +90,12 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 		&*null_ptr;
 
 		BOOST_CHECKPOINT( "before deletion of null ptr" );
-		delete_<ptr_mem_mgr>( null_ptr );
+		::delete_<ptr_mem_mgr>( null_ptr );
 		BOOST_CHECKPOINT( "after deletion of null ptr" );
 
 
 		BOOST_CHECKPOINT( "before deletion of null array" );
-		delete_array<ptr_mem_mgr>( null_ptr );
+		::delete_array<ptr_mem_mgr>( null_ptr );
 		BOOST_CHECKPOINT( "after deletion of null array" );
 	}
 

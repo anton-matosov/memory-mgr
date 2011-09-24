@@ -311,46 +311,6 @@ namespace memory_mgr
 	{
 		return p.get();
 	}
-
-	//For compatibility with delete_, new_ operators
-	template<class T, class MemMgr, class OffsetT, class DerivedT>
-	inline void delete_( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr,
-		const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr )
-	{
-		::delete_( get_pointer_internal(ptr), mgr );
-	}
-
-
-	template<class T, class MemMgr, class OffsetT, class DerivedT>
-	inline void delete_( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr, MemMgr& mgr )
-	{
-		::delete_( get_pointer_internal(ptr), memory_mgr::mem_mgr(mgr) );
-	}
-
-	template<class MemMgr, class T, class OffsetT, class DerivedT>
-	inline void delete_( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr )
-	{
-		::delete_( get_pointer_internal(ptr), memory_mgr::mem_mgr<MemMgr>() );
-	}
-
-	template<class T, class MemMgr, class OffsetT, class DerivedT>
-	inline void delete_array( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr,
-		const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr )
-	{
-		::delete_array( get_pointer_internal(ptr), mgr );
-	}
-
-	template<class T, class MemMgr, class OffsetT, class DerivedT>
-	inline void delete_array( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr, MemMgr& mgr )
-	{
-		::delete_array( get_pointer_internal(ptr), memory_mgr::mem_mgr( mgr ) );
-	}
-
-	template<class MemMgr, class T, class OffsetT, class DerivedT>
-	inline void delete_array( const detail::offset_ptr_base<T, OffsetT, DerivedT>& ptr )
-	{
-		::delete_array( get_pointer_internal(ptr), memory_mgr::mem_mgr<MemMgr>() );
-	}
 }
 
 

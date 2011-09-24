@@ -153,19 +153,21 @@ namespace memory_mgr
 	{
 		return offset_pointer<T, Mgr>(r, memory_mgr::detail::dynamic_cast_tag());
 	}
-	
+
 	template<class Mgr, class T>
-	static inline void delete_( offset_pointer<T, Mgr>& ptr )
+	inline void delete_( memory_mgr::offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_( ptr, mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class Mgr, class T>
-	static inline void delete_array( offset_pointer<T, Mgr>& ptr )
+	inline void delete_array( memory_mgr::offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
+		return ::delete_array( ptr, mem_mgr(Mgr::instance() ) );
 	}
 }
+
+MGR_DEFINE_ALL_DELETES( memory_mgr::offset_pointer<T MGR_COMA MemMgr>, get_pointer_internal );
 
 
 #endif// MGR_OFFSET_POINTER_HEADER

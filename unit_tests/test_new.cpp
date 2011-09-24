@@ -178,7 +178,6 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		}
 	}
 
-#if 0 //Named new is no longer supported
 	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete_named, mgr_type, managers_list )
 	{
 		const builtin_type* null_ptr = 0;
@@ -188,8 +187,8 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		using memory_mgr::object_name;
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
-		builtin_type* ptr1( new( mem_mgr<mgr_type>(), object_name( name1 ) ) builtin_type );
-		builtin_type* ptr2( new( mem_mgr<mgr_type>(), object_name( name2 ) ) builtin_type );
+		builtin_type* ptr1( new_<builtin_type, mgr_type>( name1 )() );
+		builtin_type* ptr2( new_<builtin_type, mgr_type>( name2 )() );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), true );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), true );
 		
@@ -200,8 +199,8 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_NE( ptr2, null_ptr );
 		BOOST_CHECK_NE( ptr1, ptr2 );
 
-		builtin_type* ptr11( new( mem_mgr<mgr_type>(), object_name( name1 ) ) builtin_type );
-		builtin_type* ptr22( new( mem_mgr<mgr_type>(), object_name( name2 ) ) builtin_type );
+		builtin_type* ptr11( new_<builtin_type, mgr_type>( name1 )() );
+		builtin_type* ptr22( new_<builtin_type, mgr_type>( name2 )() );
 
 		BOOST_CHECK_EQUAL( ptr1, ptr11 );
 		BOOST_CHECK_EQUAL( ptr2, ptr22 );
@@ -209,8 +208,8 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), false );
-		builtin_type* arr1( new( mem_mgr<mgr_type>(), object_name( name1_arr ) ) builtin_type[5] );
-		builtin_type* arr2( new( mem_mgr<mgr_type>(), object_name( name2_arr ) ) builtin_type[5] );
+		builtin_type* arr1( new_<builtin_type, mgr_type>( name1_arr )[5]() );
+		builtin_type* arr2( new_<builtin_type, mgr_type>( name2_arr )[5]() );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), true );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), true );
 
@@ -221,19 +220,28 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_NE( arr2, ptr1 );
 		BOOST_CHECK_NE( arr2, ptr2 );
 
-		builtin_type* arr11( new( mem_mgr<mgr_type>(), object_name( name1_arr ) ) builtin_type[5] );
-		builtin_type* arr22( new( mem_mgr<mgr_type>(), object_name( name2_arr ) ) builtin_type[5] );
+		builtin_type* arr11( new_<builtin_type, mgr_type>( name1_arr )[5]() );
+		builtin_type* arr22( new_<builtin_type, mgr_type>( name2_arr )[5]() );
 
 		BOOST_CHECK_EQUAL( arr1, arr11 );
 		BOOST_CHECK_EQUAL( arr2, arr22 );
 		BOOST_CHECK_NE( arr11, arr22 );
 
-		//delete_named( ptr11, mem_mgr<mgr_type>() );
-		delete_( ptr2, mem_mgr<mgr_type>() );
+		delete_<mgr_type>( ptr1, name1 );
+		delete_<mgr_type>( ptr11, name1 );
+		delete_( ptr2, mem_mgr<mgr_type>(), name2 );
+		delete_( ptr22, mem_mgr<mgr_type>(), name2 );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
+
+
+		delete_<mgr_type>( arr1, name1_arr );
+		delete_<mgr_type>( arr11, name1_arr );
+		delete_( arr22, mem_mgr<mgr_type>(), name2_arr );
+		delete_( arr2, mem_mgr<mgr_type>(), name2_arr );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), false );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), false );
 	}
-#endif
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
 	{

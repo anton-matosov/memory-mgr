@@ -170,5 +170,7 @@ namespace memory_mgr
 	}
 }
 
+MGR_DEFINE_ALL_DELETES( memory_mgr::offset_ptr<T>, get_pointer_internal );
+
 
 #endif// MGR_SELF_OFFSET_PTR_HEADER
