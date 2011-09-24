@@ -211,8 +211,8 @@ namespace memory_mgr
 	};
 
 	/**
-	@brief memory_manager + pointer_convert traits
-	@details Adds pointer_conversion_tag to manager_category
+	@brief memory_manager + named_objects traits
+	@details Adds named_objects_manager_tag to manager_category
 	*/
 	template< class MemMgr, class NamedAllocatorTraits >
 	struct manager_traits< named_objects< MemMgr, NamedAllocatorTraits > > 
