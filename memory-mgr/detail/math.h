@@ -183,10 +183,9 @@ namespace memory_mgr
 		template <typename T>
 		static inline  int lowest_bit2(T x) 
 		{
-			assert(x != 0); // PRE
+			assert(x != 0);
 
-			//  Lookup table that tells how many contiguous LOW order bits are clear in a byte
-			static const char bitsClearLow[] =
+			static const char num_clear_low_bits[] =
 					  { -1,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
@@ -206,19 +205,19 @@ namespace memory_mgr
 			
 			enum
 			{
-				numBytes = sizeof( T ),
-				bitsInByte = 8			
+				num_bytes = sizeof( T ),
+				bits_in_byte = 8			
 			};
 			int result = -1;
-			for( size_t i = 0; i < numBytes && result < 0; ++i )
+			for( size_t i = 0; i < num_bytes && result < 0; ++i )
 			{
-				unsigned char val = (x >> (i*bitsInByte)) & 0xFF;
+				unsigned char val = (x >> (i*bits_in_byte)) & 0xFF;
 				if( val )
 				{
-					result = bitsClearLow[val];
+					result = num_clear_low_bits[val];
 					if( result >= 0 )
 					{
-						result+=(i*(bitsInByte));
+						result+=(i*(bits_in_byte));
 					}
 					
 				}
