@@ -46,7 +46,12 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	typedef memory_mgr::offset_ptr< base_test_class > base_class_ptr;
 	typedef memory_mgr::offset_ptr< derived_test_class > derived_class_ptr;
 
-	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr > pointer_types;
+	typedef memory_mgr::offset_pointer< builtin_type, def_heap_mgr > builtin_pointer;
+	typedef memory_mgr::offset_pointer< base_test_class, def_heap_mgr > base_class_pointer;
+	typedef memory_mgr::offset_pointer< derived_test_class, def_heap_mgr > derived_class_pointer;
+
+	typedef boost::mpl::list< builtin_ptr, base_class_ptr, derived_class_ptr,
+		builtin_pointer, base_class_pointer, derived_class_pointer > pointer_types;
 	
 	BOOST_AUTO_TEST_CASE( test_pointer_casts )
 	{
