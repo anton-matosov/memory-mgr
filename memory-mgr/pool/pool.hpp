@@ -70,12 +70,29 @@ namespace memory_mgr {
 
 		static char * allocate(const size_type bytes)
 		{
-			return static_cast<char *>(std::malloc(bytes));
+			return detail::char_cast(std::malloc(bytes));
 		}
 		
 		static void deallocate(char * const block)
 		{
 			std::free(block);
+		}
+	};
+
+	template<class SingletonMemMgr>
+	struct memory_mgr_pool_allocator
+	{
+		typedef std::size_t size_type;
+		typedef std::ptrdiff_t difference_type;
+
+		static char * allocate(const size_type bytes)
+		{
+			return detail::char_cast( SingletonMemMgr::instance().allocate( bytes ) );
+		}
+
+		static void deallocate(char * const block)
+		{
+			SingletonMemMgr::instance().deallocate( block );
 		}
 	};
 
@@ -295,7 +312,7 @@ namespace memory_mgr {
 			// Look for a non-empty storage
 			if (!store().empty())
 			{
-				return (store().allocate)();
+				return store().allocate();
 			}
 			return malloc_need_resize();
 		}
@@ -305,7 +322,7 @@ namespace memory_mgr {
 			// Look for a non-empty storage
 			if (!store().empty())
 			{
-				return (store().allocate)();
+				return store().allocate();
 			}
 			return ordered_allocate_need_resize();
 		}

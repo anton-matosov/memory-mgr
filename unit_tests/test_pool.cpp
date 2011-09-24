@@ -28,21 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 template class memory_mgr::pool<>;
 
-struct memory_mgr_pool_allocator
-{
-	typedef std::size_t size_type;
-	typedef std::ptrdiff_t difference_type;
-
-	static char * allocate(const size_type bytes)
-	{
-		return (char*)sing_shared_sz_mgr::instance().allocate( bytes );
-	}
-
-	static void deallocate(char * const block)
-	{
-		sing_shared_sz_mgr::instance().deallocate( block );
-	}
-};
+typedef memory_mgr::memory_mgr_pool_allocator<sing_shared_sz_mgr> memory_mgr_pool_allocator;
 
 BOOST_AUTO_TEST_SUITE( test_pool )
 
