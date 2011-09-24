@@ -307,6 +307,15 @@ inline void delete_array( const T* p, MemMgr& mgr )
 	::delete_array( p, memory_mgr::mem_mgr( mgr ) );
 }
 
+template<class T, class MemMgr>
+inline void delete_array( const T* p, MemMgr& mgr, const char* name )
+{
+	if( mgr.remove_object( name ) )
+	{
+		::delete_array( p, mgr );
+	}
+}
+
 template<class MemMgr, class T>
 inline void delete_array( const T* p )
 {
