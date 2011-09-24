@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/shared_segment.h>
+#include <memory-mgr/low_fragmentation_manager.h>
 #include <memory-mgr/new.h>
 #include <memory-mgr/size_tracking.h>
 #include <memory-mgr/memory_debug.h>
@@ -78,6 +79,12 @@ typedef memory_mgr::heap_segment
 		memmgr_type
 	>
 > heap_sz_mgr;
+
+
+typedef memory_mgr::low_fragmentation_manager
+<
+	heap_sz_mgr
+> lfm_heap_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment

@@ -218,6 +218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_low_fragmentation_manager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_managed_base.cpp"
 				>
 			</File>
