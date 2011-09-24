@@ -51,44 +51,25 @@ BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 
 	BOOST_AUTO_TEST_CASE( calculate_pools_ids )
 	{
-		const size_t allocation_segments[] = { 256, 512, 1024, 2048, 4096, 8196, 16384 };
+		size_t prevSize = 0;
+		size_t poolId = 0;
 
-		std::cout << "\n";
-
-		std::ofstream pool_by_size( "E:\\projects\\memory-mgr\\pool_by_size" );
-
-		size_t itemsOnRow = 20;
-		size_t itemsPrinted = 0;
+		for( size_t i = 0; i < 16384; i += 1 )
 		{
-			size_t prevSize = 0;
-			int poolId = 0;
-			size_t *poolIds = new size_t[16384];
+			size_t resulting_size = memory_mgr::detail::get_allocation_size( i );
 
-			//for index 0
-			for( size_t i = 0; i < 16384; i += 1 )
+			if( resulting_size != prevSize )
 			{
-				size_t resulting_size = memory_mgr::detail::get_allocation_size( i );
-
-				if( resulting_size != prevSize )
+				if( prevSize != 0 )
 				{
-					if( prevSize != 0 )
-					{
-						++poolId;
-					}
-					prevSize = resulting_size;
+					++poolId;
 				}
-
-				pool_by_size << poolId << ", ";
-				poolIds[i] = poolId;
-
-				if( ++itemsPrinted == itemsOnRow )
-				{
-					pool_by_size << '\n';
-					itemsPrinted = 0;
-				}
+				prevSize = resulting_size;
 			}
-		}
 
+			BOOST_CHECK_EQUAL( memory_mgr::detail::get_pool_id(i), poolId );
+
+		}
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
