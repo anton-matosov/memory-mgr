@@ -90,7 +90,7 @@ namespace memory_mgr
 
 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )
 		{
-			if( size && can_allocate_in_pool(size) )
+			if( can_allocate_in_pool(size) )
 			{
 				return allocate_in_pool(size);
 			}
@@ -103,7 +103,7 @@ namespace memory_mgr
 		using base_type::deallocate;
 		inline void deallocate( const void* ptr, size_type size )
 		{
-			if( ptr && size && can_allocate_in_pool(size) )
+			if( can_allocate_in_pool(ptr, size) )
 			{
 				deallocate_in_pool( ptr, size );
 			}
@@ -114,9 +114,14 @@ namespace memory_mgr
 		}
 
 	private:
+		bool can_allocate_in_pool( const void* ptr, size_type size )
+		{
+			return ptr && can_allocate_in_pool(size);
+		}
+
 		bool can_allocate_in_pool( size_type size )
 		{
-			return size < detail::max_lfm_object_size;
+			return size && size < detail::max_lfm_object_size;
 		}
 
 		void* allocate_in_pool( size_type size )
