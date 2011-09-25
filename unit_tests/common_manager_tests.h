@@ -34,21 +34,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace test
 {
-	template<class MemMgr, class ValueType, class Allocator>
-	void test_data_validness_impl()
+	template<class ValueType, class Allocator, class MemMgr>
+	void test_data_validness_impl( MemMgr& mgr )
 	{
-		typedef MemMgr										mgr_type;
+		typedef memory_mgr::manager_traits<MemMgr> mgr_traits;
+		STATIC_ASSERT( mgr_traits::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_small );
+
 		typedef ValueType									value_type;
-		typedef memory_mgr::manager_traits<mgr_type>		traits_type;
-		typedef typename traits_type::chunk_type			chunk_type;
 		typedef typename Allocator::template rebind<value_type>::other		allocator;
-
-		STATIC_ASSERT( traits_type::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_small );
-
-		std::vector<chunk_type> memory( traits_type::memory_size );
-		mgr_type mgr( &*memory.begin() );
 		allocator alloc( &mgr );
-		
+
 		typedef std::map<value_type*, value_type> ptrval_map_type;
 		ptrval_map_type real_vals;
 
@@ -70,6 +65,19 @@ namespace test
 		}
 	}
 
+	template<class MemMgr, class ValueType, class Allocator>
+	void test_data_validness_impl()
+	{
+		typedef MemMgr mgr_type;
+		typedef memory_mgr::manager_traits<mgr_type> mgr_traits;
+		typedef typename mgr_traits::chunk_type chunk_type;
+
+
+		std::vector<chunk_type> memory( mgr_traits::memory_size );
+		mgr_type mgr( &*memory.begin() );
+		test_data_validness_impl<ValueType, Allocator>( mgr );
+	}
+
 	template<class MemMgr, class ValueType>
 	void test_data_validness_type()
 	{
@@ -81,6 +89,13 @@ namespace test
 	{
 		test_data_validness_impl<MemMgr, char, memory_mgr::member_allocator<char, MemMgr> >();
 		test_data_validness_impl<MemMgr, int, memory_mgr::member_allocator<int, MemMgr> >();
+	}
+
+	template<class MemMgr>
+	void test_data_validness( MemMgr& mgr )
+	{
+		test_data_validness_impl<char, memory_mgr::member_allocator<char, MemMgr> >( mgr );
+		test_data_validness_impl<int, memory_mgr::member_allocator<int, MemMgr> >( mgr );
 	}
 
 	template<class MemMgr>

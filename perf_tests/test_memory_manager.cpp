@@ -51,7 +51,7 @@ namespace
 		}
 		TEST_SPLIT_LOOP_STOP_TIMER;
 		{
-			mgr.clear();
+			mgr.deallocate( TEST_GET_TRACKED_PTR, chunk_size );
 			break;
 		}
 		TEST_END_LOOP( std::wcout );

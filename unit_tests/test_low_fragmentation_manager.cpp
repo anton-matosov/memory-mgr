@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/heap_segment.h>
 #include <memory-mgr/allocator.h>
 #include <memory-mgr/offset_allocator.h>
+#include "common_manager_tests.h"
 #include "managers.h"
 #include <string>
 #include <fstream>
@@ -37,15 +38,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <map>
 #include <boost/unordered_map.hpp>
 
-typedef memory_mgr::low_fragmentation_manager
-< 
-	memory_mgr::heap_segment
-	< 
-		memory_mgr::memory_manager<size_t, 1234 * 321, 4> 
-	> 
-> lfm_mgr;
-
-MGR_DECLARE_MANAGER_CLASS( low_fragmentation_mgr, lfm_mgr );
 
 BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 
@@ -70,6 +62,12 @@ BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 			BOOST_CHECK_EQUAL( memory_mgr::detail::get_pool_id(i), poolId );
 
 		}
+	}
+
+	BOOST_AUTO_TEST_CASE( test_data_validness )
+	{
+		lfm_heap_sz_mgr mgr;
+		test::test_data_validness(mgr);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()

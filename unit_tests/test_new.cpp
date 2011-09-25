@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "managers.h"
 #include <memory-mgr/new.h>
 #include <memory-mgr/named_objects.h>
+#include <memory-mgr/offset_ptr.h>
 #include "common_manager_tests.h"
 
 typedef 
@@ -257,6 +258,15 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECKPOINT( "after deletion of null array" );
 	}
 
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pointers_array, mgr_type, managers_list )
+	{
+		typedef memory_mgr::offset_ptr<builtin_type> builtin_ptr;
+		builtin_ptr* arr( new_<builtin_ptr, mgr_type>( name1_arr )[129]() );
+
+		BOOST_CHECKPOINT( "before deletion of array" );
+		delete_array( arr, mem_mgr<mgr_type>() );
+		BOOST_CHECKPOINT( "after deletion of array" );
+	}
 BOOST_AUTO_TEST_SUITE_END();
 
 
