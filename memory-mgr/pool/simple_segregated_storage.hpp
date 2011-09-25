@@ -232,8 +232,8 @@ namespace memory_mgr {
 		void deallocate(void * const chunk)
 		{
 			//NOTE: This assertion may work incorrectly in case storage is really empty
-			MGR_POOL_ASSERT( !! first_,
-				"'first_' should not be NULL, if it is, than pool is still empty" );
+			//MGR_POOL_ASSERT( !! first_,
+			//	"'first_' should not be NULL, if it is, than pool is still empty" );
 
 			nextof(chunk) = first_;
 			first_ = chunk;

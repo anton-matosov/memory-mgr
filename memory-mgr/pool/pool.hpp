@@ -370,6 +370,7 @@ namespace memory_mgr {
 		//        returned by *this.allocate().
 		void deallocate(void * const chunk)
 		{
+			MGR_POOL_ASSERT( is_from( chunk ), "This chunk was not allocated by this pool" );
 			store().deallocate(chunk);
 		}
 
@@ -377,6 +378,7 @@ namespace memory_mgr {
 		//        returned by *this.allocate().
 		void ordered_deallocate(void * const chunk)
 		{
+			MGR_POOL_ASSERT( is_from( chunk ), "This chunk was not allocated by this pool" );
 			store().ordered_deallocate(chunk);
 		}
 
