@@ -162,10 +162,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\block_id_converter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\get_pointer.h"
 				>
 			</File>

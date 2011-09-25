@@ -33,8 +33,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/manager_category.h>
 #include <memory-mgr/offset_ptr.h>
-#include <memory-mgr/block_id_converter.h>
-
 
 namespace memory_mgr
 {	

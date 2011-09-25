@@ -39,10 +39,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/detail/helpers.h>
 
-#include <boost/tuple/tuple.hpp>	//For boost::tie
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_const.hpp>
 
 #define MGR_STR( expr ) #expr
 #define MGR_STRINGIZE( expr ) MGR_STR( expr )

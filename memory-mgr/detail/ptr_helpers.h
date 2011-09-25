@@ -42,49 +42,13 @@ namespace memory_mgr
 			return mgr.offset_to_pointer( offset );
 		}
 
-		template<class T, class MemMgr>
-		static inline typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
-			to_pointer( typename manager_traits<MemMgr>::block_offset_type offset, MemMgr& mgr )
-		{
-			return static_cast<typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*>(
-				mgr.offset_to_pointer( offset ) );
-		}
-
-		template<class T, class MemMgr>
-		static inline typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
-			to_pointer( typename boost::remove_pointer< typename boost::remove_const<T>::type >::type* ptr, MemMgr& /*mgr*/ )
-		{
-			return ptr;
-		}
-
-		template<class T, class MemMgr>
-		static inline const typename boost::remove_pointer< typename boost::remove_const<T>::type >::type*
-			to_pointer( const typename boost::remove_pointer< typename boost::remove_const<T>::type >::type* ptr, MemMgr& /*mgr*/ )
-		{
-			return ptr;
-		}
 
 		template<class MemMgr>
 		static inline typename manager_traits<MemMgr>::block_offset_type pointer_to_offset( const void* ptr, MemMgr& mgr )
 		{
 			return mgr.pointer_to_offset( ptr );
 		}
-
-		template<class MemMgr>
-		static inline typename manager_traits<MemMgr>::block_offset_type to_offset( const void* ptr, MemMgr& mgr )
-		{
-			return mgr.pointer_to_offset( ptr );
-		}
-
-		template<class MemMgr>
-		static inline typename manager_traits<MemMgr>::block_offset_type to_offset( typename manager_traits<MemMgr>::block_offset_type ptr,
-			MemMgr& /*mgr*/ )
-		{
-			return ptr;
-		}
-
-	}// namespace detail
-
-}// namespace memory_mgr
+	}
+}
 
 #endif //MGR_PTR_HELPERS_HEADER

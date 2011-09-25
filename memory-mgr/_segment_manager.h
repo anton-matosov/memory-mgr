@@ -38,6 +38,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/segment_storage_vector.h>
 #include <assert.h>
 #include <functional>
+#include <boost/tuple/tuple.hpp>	//For boost::tie
 
 namespace memory_mgr
 {
