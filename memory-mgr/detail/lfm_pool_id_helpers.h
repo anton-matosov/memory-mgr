@@ -54,6 +54,12 @@ namespace memory_mgr
 			return resulting_size;
 		}
 
+		inline size_t get_pool_size( size_t /*requested_size*/ )
+		{
+			return 32;
+		}
+
+
 		enum
 		{
 			max_lfm_object_size = 16384,

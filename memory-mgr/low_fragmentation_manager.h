@@ -31,6 +31,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/detail/lfm_pool_id_helpers.h>
 #include <memory-mgr/pool/pool.hpp>
+#include <memory-mgr/smart_ptr/shared_ptr.hpp>
+#include <memory-mgr/smart_ptr/make_shared.hpp>
 #include <memory-mgr/new.h>
 
 
@@ -43,8 +45,9 @@ namespace memory_mgr
 	public:
 		typedef detail::decorator_base<MemMgr> base_type;
 
-		typedef memory_mgr::pool<memory_mgr::default_user_allocator_new_delete> pool_type;
-		typedef memory_mgr::offset_ptr<pool_type> pool_ptr;
+		typedef memory_mgr::mgr_pool_allocator<base_type> pool_allocator_type;
+		typedef memory_mgr::pool<pool_allocator_type> pool_type;
+		typedef memory_mgr::shared_ptr<pool_type> pool_ptr;
 
 		low_fragmentation_manager()
 			: m_pools(NULL)
@@ -131,8 +134,12 @@ namespace memory_mgr
 			pool_ptr& pool = m_pools[pool_id];
 			if( ! pool )
 			{
-				pool = memory_mgr::new_<pool_type>( get_decorated_mgr() )( 
-					detail::get_allocation_size(size) );
+				pool = memory_mgr::make_shared<pool_type>( get_decorated_mgr(), 
+					detail::get_allocation_size(size),
+					detail::get_pool_size(size),
+					0,
+					pool_allocator_type( get_decorated_mgr() )
+					);
 			}
 			return *pool;
 		}
