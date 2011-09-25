@@ -157,13 +157,13 @@ namespace memory_mgr
 	template<class Mgr, class T>
 	inline void delete_( memory_mgr::offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_( ptr, mem_mgr(Mgr::instance() ) );
+		return ::delete_( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 
 	template<class Mgr, class T>
 	inline void delete_array( memory_mgr::offset_pointer<T, Mgr>& ptr )
 	{
-		return ::delete_array( ptr, mem_mgr(Mgr::instance() ) );
+		return ::delete_array( get_pointer_internal(ptr), mem_mgr(Mgr::instance() ) );
 	}
 }
 
