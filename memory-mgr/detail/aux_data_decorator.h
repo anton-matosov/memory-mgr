@@ -75,6 +75,8 @@ namespace memory_mgr
 				:base_type( segment_base )
 			{}
 
+			using base_type::allocate;
+			using base_type::deallocate;
 			/**
 			  @brief Call this method to allocate memory block
 			  @param size size of memory block in bytes

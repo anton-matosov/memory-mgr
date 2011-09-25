@@ -75,8 +75,10 @@ namespace memory_mgr
 				"low_fragmentation_manager_pools" );
 		}
 
+		using base_type::allocate;
 		inline void* allocate( size_type size )
 		{
+			lock_type lock( this->get_lockable() );
 			if( can_allocate_in_pool(size) )
 			{
 				return allocate_in_pool(size);
@@ -89,7 +91,8 @@ namespace memory_mgr
 
 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )
 		{
-			if( can_allocate_in_pool(size) )
+			lock_type lock( this->get_lockable() );
+			if( size && can_allocate_in_pool(size) )
 			{
 				return allocate_in_pool(size);
 			}
@@ -99,9 +102,11 @@ namespace memory_mgr
 			}
 		}
 
+		using base_type::deallocate;
 		inline void deallocate( const void* ptr, size_type size )
 		{
-			if( can_allocate_in_pool(size) )
+			lock_type lock( this->get_lockable() );
+			if( ptr && size && can_allocate_in_pool(size) )
 			{
 				deallocate_in_pool( ptr, size );
 			}
@@ -134,9 +139,11 @@ namespace memory_mgr
 			pool_ptr& pool = m_pools[pool_id];
 			if( ! pool )
 			{
+				size_type segment_allocation_size = 1;
+				size_type pool_object_size = detail::get_allocation_size(size, segment_allocation_size);
 				pool = memory_mgr::make_shared<pool_type>( get_decorated_mgr(), 
-					detail::get_allocation_size(size),
-					detail::get_pool_size(size),
+					pool_object_size,
+					detail::get_pool_grow_size(segment_allocation_size),
 					0,
 					pool_allocator_type( get_decorated_mgr() )
 					);

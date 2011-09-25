@@ -32,39 +32,41 @@ namespace memory_mgr
 {
 	namespace detail
 	{
+		enum LFM_constants
+		{
+			max_lfm_object_size = 16384,
+			num_pools_required = 129		
+		};
+
 		inline size_t make_multiple_of( const size_t value, const int multiple )
 		{
 			return (value + multiple - 1) & (-multiple);
 		}
 
-		inline size_t get_allocation_size( size_t requested_size )
+		inline size_t get_allocation_size( size_t requested_size, size_t& segment_allocation_size )
 		{
 			const size_t allocation_segments[] = { 256, 512, 1024, 2048, 4096, 8196, 16384 };
 			size_t resulting_size = requested_size;
 
 			for( int segment = 0; segment < _countof( allocation_segments ); ++segment )
 			{
-				if( requested_size <= allocation_segments[segment] )
+				size_t segment_size = allocation_segments[segment];
+				if( requested_size <= segment_size )
 				{
-					const int multiple = allocation_segments[segment] / 32;
+					const int multiple = segment_size / 32;
 					resulting_size = memory_mgr::detail::make_multiple_of( requested_size, multiple );
+					segment_allocation_size = segment_size;
 					break;
 				}
 			}
 			return resulting_size;
 		}
 
-		inline size_t get_pool_size( size_t /*requested_size*/ )
+		inline size_t get_pool_grow_size( size_t segment_allocation_size )
 		{
-			return 32;
+			return (max_lfm_object_size * 2) / segment_allocation_size;
 		}
 
-
-		enum
-		{
-			max_lfm_object_size = 16384,
-			num_pools_required = 129		
-		};
 		inline size_t get_pool_id( size_t requested_size )
 		{
 			const size_t pool_id_by_size[max_lfm_object_size] = {

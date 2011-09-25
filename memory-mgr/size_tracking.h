@@ -80,6 +80,9 @@ namespace memory_mgr
 		inline explicit size_tracking( void* segment_base )
 			:impl_base_type( segment_base )
 		{}
+
+		using impl_base_type::allocate;
+		using impl_base_type::deallocate;
 		
 		/**
 		  @brief Call this method to allocate memory block
