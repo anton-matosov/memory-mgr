@@ -226,17 +226,21 @@ namespace memory_mgr
 
 			bool do_remove( typename map_type::iterator fres ) 
 			{
-				bool deleted = false;
-				if( fres != m_objects->end() )
+				if( fres == m_objects->end() )
 				{
-					named_object& obj = fres->second;
-
-					if ( 0 == obj.dec_ref_count() )
-					{
-						m_objects->erase( fres );
-						deleted = true;
-					}
+					//If object is not in map, than we treat it as already deleted
+					return true;
 				}
+
+				bool deleted = false;
+				named_object& obj = fres->second;
+
+				if ( 0 == obj.dec_ref_count() )
+				{
+					m_objects->erase( fres );
+					deleted = true;
+				}
+				
 				return deleted;
 			}
 		};

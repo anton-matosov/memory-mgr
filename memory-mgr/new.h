@@ -264,37 +264,37 @@ namespace memory_mgr
 #define MGR_COMA ,
 
 
-#define MGR_DEFINE_DELETE_OVERLOADS( _delete_name, _pointer_type,				\
+#define MGR_DEFINE_DELETE_OVERLOADS( _delete_name, _pointer_type,										\
 				_destroy_method, _pointer_getter, _extra_check, _extra_param, _extra_param_forward )	\
-	template<class T, class MemMgr>												\
-	inline void _delete_name(_pointer_type p,									\
-		const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr _extra_param )	\
-	{																			\
-		T* ptr = _pointer_getter(p);											\
-		_extra_check															\
-		if( ptr )																\
-		{																		\
-			typedef MemMgr mgr_type;											\
-			typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>		\
-							::new_helper_type helper_type;						\
-																			\
-			helper_type::_destroy_method( ptr, mgr.get() );					\
-		}																	\
-	}																		\
-																			\
-	template<class T, class MemMgr>											\
-	inline void _delete_name( _pointer_type p, MemMgr& mgr _extra_param )	\
-	{																		\
-		{																	\
-			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr(mgr) _extra_param_forward );	\
-		}																	\
-	}																		\
-	template<class MemMgr, class T>											\
-	inline void _delete_name( _pointer_type p _extra_param )				\
-	{																		\
-		{																	\
-			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr<MemMgr>() _extra_param_forward );	\
-		}																	\
+	template<class T, class MemMgr>																		\
+	inline void _delete_name(_pointer_type p,															\
+		const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr _extra_param )							\
+	{																									\
+		T* ptr = _pointer_getter(p);																	\
+		_extra_check																					\
+		if( ptr )																						\
+		{																								\
+			typedef MemMgr mgr_type;																	\
+			typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>								\
+							::new_helper_type helper_type;												\
+																										\
+			helper_type::_destroy_method( ptr, mgr.get() _extra_param_forward );						\
+		}																								\
+	}																									\
+																										\
+	template<class T, class MemMgr>																		\
+	inline void _delete_name( _pointer_type p, MemMgr& mgr _extra_param )								\
+	{																									\
+		{																								\
+			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr(mgr) _extra_param_forward );			\
+		}																								\
+	}																									\
+	template<class MemMgr, class T>																		\
+	inline void _delete_name( _pointer_type p _extra_param )											\
+	{																									\
+		{																								\
+			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr<MemMgr>() _extra_param_forward );		\
+		}																								\
 	}
 
 #define MGR_NAMED_OBJECT_DELETE_CHECK if( mgr.get().remove_object( name ) )

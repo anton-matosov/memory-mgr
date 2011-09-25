@@ -46,35 +46,34 @@ namespace memory_mgr
 			>
 		struct new_helpers
 		{
-			/**
-			@brief Bomb-method for global new, generates compile time error if called
-			*/
 			typedef MemMgr mgr_type;
+
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
 
-			/**
-			@brief Bomb-method for global new for named objects, generates compile time error if called
-			*/
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
 
-			/**
-			@brief Bomb-method for global delete_, generates compile time error if called
-			*/
 			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}
 
-			/**
-			@brief Bomb-method for global delete_arr, generates compile time error if called
-			*/
+			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
+			{
+				STATIC_ASSERT( false, Invalid_manager_type )
+			}
+
 			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/ )
+			{
+				STATIC_ASSERT( false, Invalid_manager_type )
+			}	
+
+			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
 				STATIC_ASSERT( false, Invalid_manager_type )
 			}			
@@ -89,39 +88,6 @@ namespace memory_mgr
 		struct new_helpers<MemMgr, yes_type>
 		{
 			typedef MemMgr mgr_type;
-
-
-
-			template<class T>
-			static inline void construct( T* p )
-			{
-				new( p ) T();
-			}
-
-			template<class T>
-			static inline void construct( T* p, size_t count )
-			{
-				for( size_t i = 0; i < count; ++i )
-				{
-					construct( p + i );
-				}
-			}
-
-			template<class T>
-			static inline void destroy( T* ptr )
-			{
-				ptr;//VS 2008 warning
-				(*ptr).~T();
-			}
-
-			template<class T>
-			static inline void destroy( T* p, size_t count )
-			{
-				for( size_t i = 0; i < count; ++i )
-				{
-					destroy( p + i );
-				}
-			}
 
 			/**
 			@brief Implementation of global operators new/new[]
@@ -151,6 +117,63 @@ namespace memory_mgr
 				return mgr.allocate( size, name );
 			}
 
+
+			/**
+			@brief Base class for delete helpers template classes specializations
+			@details Delete helper is required, because there is no need to call destructor for the
+			built in types. One more reason is that destructor of void can't be called at all.
+			*/
+			template<bool IsClass>
+			struct delete_helper_impl{};
+			
+			///Delete helper class for arrays of class objects
+			template<>
+			struct delete_helper_impl<true>
+			{
+				template<class T>
+				static inline size_t get_objects_count( const T* p )
+				{
+					const size_t* full_size = size_cast(p) - 1;
+					return *full_size / sizeof(T);
+				}
+
+				template<class T>
+				static inline void destroy( T* ptr )
+				{
+					ptr;//VS 2008 warning
+					(*ptr).~T();
+				}
+
+				template<class T>
+				static inline void destroy_array( T* p )
+				{
+					size_t count = get_objects_count( p );
+					for( size_t i = 0; i < count; ++i )
+					{
+						destroy( p + i );
+					}
+				}
+			};
+
+			///Delete helper class for arrays of non class objects
+			template<>
+			struct delete_helper_impl<false>
+			{
+				static inline void destroy( const void* /*p*/ )
+				{
+				}
+
+				static inline void destroy_array( const void* /*p*/ )
+				{
+				}
+			};
+
+			template<class T>
+			struct delete_helper
+				:delete_helper_impl< type_manip::is_class< T >::value >
+			{
+			};
+
 			/**
 			@brief Implementation of global operator delete_
 			@details deallocates memory that was allocated by new operator,
@@ -162,50 +185,17 @@ namespace memory_mgr
 			template<class T>
 			static inline void destroy_and_deallocate( const T* p, mgr_type& mgr )
 			{
-				p->~T();
+				delete_helper<T>::destroy( p );
 				return mgr.deallocate( p );
 			}
 
-			static inline void destroy_and_deallocate( const void* p, mgr_type& mgr )
+			///an overload for named objects
+			template<class T>
+			static inline void destroy_and_deallocate( const T* p, mgr_type& mgr, const char* name )
 			{
-				return mgr.deallocate( p );
+				delete_helper<T>::destroy( p );
+				return mgr.deallocate( p, 0, name );
 			}
-			/**
-			@brief Base class for delete helpers template classes specializations
-			@details Delete helper is required because C++ compiler uses memory for arrays
-			in different manner for class array and non class arrays
-			*/
-			template<bool IsClass>
-			struct delete_helper{};
-
-			typedef std::pair<const void*, size_t> ptr_and_count_pair;
-			/**
-			@brief Delete helper class for arrays of class objects
-			*/
-			template<>
-			struct delete_helper<true>
-			{
-				template<class T>
-				static inline size_t get_objects_count( const T* p )
-				{
-					const size_t* full_size = size_cast(p) - 1;
-					return *full_size / sizeof(T);
-				}
-			};
-
-			/**
-			@brief Delete helper class for arrays of non class objects
-			@note Returns zero as a count, because there is no need to call destructor for the
-			built in types
-			*/
-			template<>
-			struct delete_helper<false>
-			{
-				static inline size_t get_objects_count( const void* /*p*/ )
-				{
-					return 0;
-				}
-			};
 
 			/**
 			@brief Implementation of global operator delete_arr
@@ -217,20 +207,18 @@ namespace memory_mgr
 			*/
 			template<class T>
 			static inline void destroy_and_deallocate_array( const T* p, mgr_type& mgr )
-			{				
-				size_t objects_count = 
-					delete_helper< type_manip::is_class< T >::value >::get_objects_count( p );
-
-				destroy( p, objects_count );
-
+			{
+				delete_helper<T>::destroy_array( p );
 				return mgr.deallocate( p );
 			}
 
-			///A destructor of void can't be called, so we need to treat void* array in different manner
- 			static inline void destroy_and_deallocate_array( const void* p, mgr_type& mgr )
- 			{
- 				return mgr.deallocate( p );
- 			}
+			///an overload for named objects
+			template<class T>
+			static inline void destroy_and_deallocate_array( const T* p, mgr_type& mgr, const char* name )
+			{
+				delete_helper<T>::destroy_array( p );
+				return mgr.deallocate( p, 0, name );
+			}
 		};
 
 

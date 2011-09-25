@@ -97,7 +97,9 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		delete_( p2, mgr );
 		delete_( p3, mem_mgr<mgr_type>() );
 		delete_<mgr_type>( p4 );
-		delete_( p5, mgr );
+
+		void* p5_as_void = p5;
+		delete_( p5_as_void, mgr );
 
 		//const int* p4 = mgr_type::new_<int>()( 4 );
 		//mgr_type::delete_( p4 );
@@ -278,7 +280,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		builtin_ptr* arr( new_<builtin_ptr, mgr_type>( name1_arr )[129]() );
 
 		BOOST_CHECKPOINT( "before deletion of array" );
-		delete_array( arr, mem_mgr<mgr_type>() );
+		delete_array( arr, mem_mgr<mgr_type>(), name1_arr );
 		BOOST_CHECKPOINT( "after deletion of array" );
 	}
 BOOST_AUTO_TEST_SUITE_END();
