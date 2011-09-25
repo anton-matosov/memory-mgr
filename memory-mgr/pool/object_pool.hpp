@@ -153,7 +153,7 @@ namespace memory_mgr {
 			}
 
 			// free storage
-			UserAllocator::deallocate(iter.begin());
+			m_alloc.deallocate(iter.begin(), iter.total_size());
 
 			// increment iter
 			iter = next;

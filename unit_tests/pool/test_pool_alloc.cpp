@@ -268,22 +268,23 @@ struct TrackAlloc
 	typedef typename UserAllocator::difference_type difference_type;
 
 	static std::set<char *> allocated_blocks;
+	static UserAllocator m_alloc;
 
 	static char* allocate (const size_type bytes)
 	{
-		char* const ret = (UserAllocator::allocate)(bytes);
+		char* const ret = m_alloc.allocate(bytes);
 		BOOST_REQUIRE_MESSAGE( ret, "memory is not allocated. requested size: " << bytes );
 		allocated_blocks.insert(ret);
 		return ret;
 	}
 
-	static void deallocate(char * const block)
+	static void deallocate(char * const block, size_type size)
 	{
 		BOOST_CHECK_MESSAGE( allocated_blocks.find(block) != allocated_blocks.end(),
 			"Free'd non-allocate'ed block: " << (void *) block );
 
 		allocated_blocks.erase(block);
-		UserAllocator::deallocate(block);
+		m_alloc.deallocate(block, size);
 	}
 
 	static bool ok()
@@ -293,6 +294,9 @@ struct TrackAlloc
 };
 template <typename UserAllocator>
 std::set<char *> TrackAlloc<UserAllocator>::allocated_blocks;
+
+template <typename UserAllocator>
+UserAllocator TrackAlloc<UserAllocator>::m_alloc;
 
 typedef TrackAlloc<memory_mgr::default_user_allocator_new_delete> track_alloc;
 

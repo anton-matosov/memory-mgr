@@ -52,12 +52,12 @@ namespace memory_mgr {
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 
-		static char * allocate(const size_type bytes)
+		inline char* allocate(const size_type bytes)
 		{
 			return new (std::nothrow) char[bytes];
 		}
 
-		static void deallocate(char * const block)
+		inline void deallocate(char* const block, size_type /*size*/)
 		{
 			delete [] block;
 		}
@@ -68,15 +68,41 @@ namespace memory_mgr {
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 
-		static char * allocate(const size_type bytes)
+		inline char* allocate(const size_type bytes)
 		{
 			return detail::char_cast(std::malloc(bytes));
 		}
 		
-		static void deallocate(char * const block)
+		inline void deallocate(char * const block, size_type /*size*/)
 		{
 			std::free(block);
 		}
+	};
+
+	template<class MemMgr>
+	struct mgr_pool_allocator
+	{
+		typedef std::size_t size_type;
+		typedef std::ptrdiff_t difference_type;
+
+		mgr_pool_allocator( MemMgr& mgr )
+			:m_mgr( &mgr )
+		{
+
+		}
+
+		inline char* allocate(const size_type bytes)
+		{
+			return detail::char_cast( m_mgr->allocate( bytes ) );
+		}
+
+		inline void deallocate(char * const block, size_type size)
+		{
+			m_mgr->deallocate( block, size );
+		}
+
+	private:
+		MemMgr* m_mgr;
 	};
 
 	template<class SingletonMemMgr>
@@ -85,14 +111,14 @@ namespace memory_mgr {
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 
-		static char * allocate(const size_type bytes)
+		char* allocate(const size_type bytes)
 		{
 			return detail::char_cast( SingletonMemMgr::instance().allocate( bytes ) );
 		}
 
-		static void deallocate(char * const block)
+		void deallocate(char * const block, size_type size)
 		{
-			SingletonMemMgr::instance().deallocate( block );
+			SingletonMemMgr::instance().deallocate( block, size );
 		}
 	};
 
@@ -225,9 +251,10 @@ namespace memory_mgr {
 		details::PODptr<size_type> list;
 
 		const size_type requested_size;
-		size_type next_size;
+		size_type m_next_size;
 		size_type start_size;
 		size_type max_size;
+		user_allocator m_alloc;
 
 		simple_segregated_storage<size_type> & store()
 		{
@@ -268,17 +295,25 @@ namespace memory_mgr {
 			return details::pool::lcm<size_type>(requested_size, min_size);
 		}
 
+		size_type calc_POD_size( const size_type partition_size ) 
+		{
+			return m_next_size * partition_size +
+				details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
+		}
+
 	public:
 		// The second parameter here is an extension!
 		// pre: npartition_size != 0 && nnext_size != 0
 		explicit pool(const size_type nrequested_size,
 			const size_type nnext_size = 32,
-			const size_type nmax_size = 0)
+			const size_type nmax_size = 0,
+			const user_allocator& alloc = user_allocator() )
 			:list(0, 0),
 			requested_size(nrequested_size),
-			next_size(nnext_size),
+			m_next_size(nnext_size),
 			start_size(nnext_size),
-			max_size(nmax_size)
+			max_size(nmax_size),
+			m_alloc( alloc )
 		{
 		}
 
@@ -297,8 +332,8 @@ namespace memory_mgr {
 		bool purge_memory();
 
 		// These functions are extensions!
-		size_type get_next_size() const { return next_size; }
-		void set_next_size(const size_type nnext_size) { next_size = start_size = nnext_size; }
+		size_type get_next_size() const { return m_next_size; }
+		void set_next_size(const size_type nnext_size) { m_next_size = start_size = nnext_size; }
 		size_type get_max_size() const { return max_size; }
 		void set_max_size(const size_type nmax_size) { max_size = nmax_size; }
 		size_type get_requested_size() const { return requested_size; }
@@ -497,7 +532,7 @@ namespace memory_mgr {
 				}
 
 				// And release memory
-				UserAllocator::deallocate(ptr.begin());
+				m_alloc.deallocate(ptr.begin(), ptr.total_size());
 				ret = true;
 			}
 
@@ -505,7 +540,7 @@ namespace memory_mgr {
 			ptr = next;
 		}
 
-		next_size = start_size;
+		m_next_size = start_size;
 		return ret;
 	}
 
@@ -525,7 +560,7 @@ namespace memory_mgr {
 			const details::PODptr<size_type> next = iter.next();
 
 			// delete the storage
-			UserAllocator::deallocate(iter.begin());
+			m_alloc.deallocate(iter.begin(), iter.total_size());
 
 			// increment iter
 			iter = next;
@@ -533,7 +568,7 @@ namespace memory_mgr {
 
 		list.invalidate();
 		this->first_ = 0;
-		next_size = start_size;
+		m_next_size = start_size;
 
 		return true;
 	}
@@ -543,9 +578,8 @@ namespace memory_mgr {
 	{
 		// No memory in any of our storages; make a new storage,
 		const size_type partition_size = alloc_size();
-		const size_type POD_size = next_size * partition_size +
-			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::allocate)(POD_size);
+		const size_type POD_size = calc_POD_size(partition_size);
+		char * const ptr = m_alloc.allocate(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -555,11 +589,11 @@ namespace memory_mgr {
 		BOOST_USING_STD_MIN();
 		if(!max_size)
 		{
-			next_size <<= 1;
+			m_next_size <<= 1;
 		}
-		else if( next_size*partition_size/requested_size < max_size)
+		else if( m_next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
+			m_next_size = min (m_next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  initialize it,
@@ -578,9 +612,8 @@ namespace memory_mgr {
 	{
 		// No memory in any of our storages; make a new storage,
 		const size_type partition_size = alloc_size();
-		const size_type POD_size = next_size * partition_size +
-			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::allocate)(POD_size);
+		const size_type POD_size = calc_POD_size(partition_size);
+		char * const ptr = m_alloc.allocate(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -590,11 +623,11 @@ namespace memory_mgr {
 		BOOST_USING_STD_MIN();
 		if(!max_size)
 		{
-			next_size <<= 1;
+			m_next_size <<= 1;
 		}
-		else if( next_size*partition_size/requested_size < max_size)
+		else if( m_next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
+			m_next_size = min (m_next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  initialize it,
@@ -652,10 +685,10 @@ namespace memory_mgr {
 
 		// Not enougn memory in our storages; make a new storage,
 		BOOST_USING_STD_MAX();
-		next_size = max (next_size, num_chunks);
-		const size_type POD_size = next_size * partition_size +
+		m_next_size = max (m_next_size, num_chunks);
+		const size_type POD_size = m_next_size * partition_size +
 			details::pool::ct_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
-		char * const ptr = (UserAllocator::allocate)(POD_size);
+		char * const ptr = m_alloc.allocate(POD_size);
 		if (ptr == 0)
 		{
 			return 0;
@@ -666,7 +699,7 @@ namespace memory_mgr {
 		//  (we can use "add_block" here because we know that
 		//  the free list is empty, so we don't have to use
 		//  the slower ordered version)
-		if (next_size > num_chunks)
+		if (m_next_size > num_chunks)
 		{
 			store().add_ordered_block(node.begin() + num_chunks * partition_size,
 				node.element_size() - num_chunks * partition_size, partition_size);
@@ -675,11 +708,11 @@ namespace memory_mgr {
 		BOOST_USING_STD_MIN();
 		if(!max_size)
 		{
-			next_size <<= 1;
+			m_next_size <<= 1;
 		}
-		else if( next_size*partition_size/requested_size < max_size)
+		else if( m_next_size*partition_size/requested_size < max_size)
 		{
-			next_size = min (next_size << 1, max_size*requested_size/ partition_size);
+			m_next_size = min (m_next_size << 1, max_size*requested_size/ partition_size);
 		}
 
 		//  insert it into the list,
