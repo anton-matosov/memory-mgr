@@ -57,14 +57,14 @@ namespace memory_mgr
 		inline void* allocate( size_type size )
 		{
 			pre_allocate( size );
-			void* allocated_memory = m_mgr.allocate( size );
+			void* allocated_memory = decorated_mgr::allocate( size );
 			return post_allocate( allocated_memory, size );
 		}
 
 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 		{			
 			pre_allocate( size );
-			void* allocated_memory = m_mgr.allocate( size, nothrow );
+			void* allocated_memory = decorated_mgr::allocate( size, nothrow );
 			return post_allocate( allocated_memory, size );
 		}
 
@@ -75,6 +75,10 @@ namespace memory_mgr
 
 		inline void* post_allocate( void* allocated_memory, size_type size )
 		{
+			if( ! allocated_memory )
+			{
+				return NULL;
+			}
 			fill_allocated( allocated_memory, size );
 
 			size_type* block_start_ptr = detail::size_cast( allocated_memory );
@@ -97,12 +101,16 @@ namespace memory_mgr
 		inline void deallocate( const void* ptr, size_type size )
 		{
 			ptr = pre_deallocate( ptr, size );
-			m_mgr.deallocate( ptr, size );
+			decorated_mgr::deallocate( ptr, size );
 			fill_deallocated( ptr, size );
 		}
 
 		const void* pre_deallocate( const void* allocated_memory, size_type& size )
 		{
+			if( ! allocated_memory )
+			{
+				return NULL;
+			}
 			size_t original_size = size;
 			size += m_debug_marks_size;
 
@@ -117,6 +125,10 @@ namespace memory_mgr
 
 		void fill_deallocated( const void* allocated_memory, size_type size )
 		{
+			if( ! allocated_memory )
+			{
+				return;
+			}
 			memset( const_cast<void*>( allocated_memory ), m_debug_deallocated_memory_fill, size );
 		}
 	};
