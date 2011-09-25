@@ -144,13 +144,9 @@ namespace memory_mgr
 			return this->m_named_alloc.remove_object( name );
 		}
 
-		inline void deallocate( const void* p, size_type size, const char* name )
+		inline void deallocate( const void* p, size_type size, const char* /*name*/ )
 		{
-			lock_type lock( this->get_lockable() );
-			if( this->m_named_alloc.remove_object( name ) )
-			{
-				decorated_mgr::deallocate( p, size );
-			}
+			decorated_mgr::deallocate( p, size );
 		}
 
 		/**
