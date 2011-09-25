@@ -40,6 +40,20 @@ memory_mgr::singleton_manager
 
 MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
 
+
+typedef memory_mgr::singleton_manager< 
+			memory_mgr::size_tracking
+			<
+				memory_mgr::low_fragmentation_manager
+				<
+					memory_mgr::named_objects
+					<
+						heap_sz_mgr
+					>
+				>
+			>
+		> sz_lfm_heap_sz_mgr;
+
 template class memory_mgr::detail::new_proxy<int, memory_mgr::named_objects
 <
 heap_sz_mgr
@@ -55,7 +69,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	typedef int builtin_type;
 
-	typedef boost::mpl::list< sing_name_heap_mgr > managers_list;
+	typedef boost::mpl::list< sing_name_heap_mgr, sz_lfm_heap_sz_mgr > named_managers_list;
 	typedef boost::mpl::list< sing_heap_sz_mgr, sing_name_heap_mgr > named_and_unnamed_managers_list;
 
 	using memory_mgr::new_;
@@ -105,7 +119,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		::delete_array<mgr_type>( class_arr_ptr );
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_delete_from_base, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_delete_from_base, mgr_type, named_managers_list )
 	{
 		const base_test_class* base_ptr = new_<derived_test_class, mgr_type>()( 2 );
 
@@ -123,7 +137,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness, mgr_type, named_managers_list )
 	{
 		// 	typedef typename boost::mpl::if_c< 
 		// 		is_category_supported< MemMgr, pointer_conversion_tag>::value,
@@ -151,7 +165,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		}
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness_arr, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_data_validness_arr, mgr_type, named_managers_list )
 	{
 		// 	typedef typename boost::mpl::if_c< 
 		// 		is_category_supported< MemMgr, pointer_conversion_tag>::value,
@@ -179,7 +193,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		}
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete_named, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( new_delete_named, mgr_type, named_managers_list )
 	{
 		const builtin_type* null_ptr = 0;
 		const builtin_type val_1 = 0xF0F0F0F0;
@@ -244,7 +258,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), false );
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_null_ptr, mgr_type, named_managers_list )
 	{
 		int* null_ptr = 0;
 
@@ -258,7 +272,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECKPOINT( "after deletion of null array" );
 	}
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pointers_array, mgr_type, managers_list )
+	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pointers_array, mgr_type, named_managers_list )
 	{
 		typedef memory_mgr::offset_ptr<builtin_type> builtin_ptr;
 		builtin_ptr* arr( new_<builtin_ptr, mgr_type>( name1_arr )[129]() );

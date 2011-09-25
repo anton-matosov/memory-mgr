@@ -48,7 +48,8 @@ BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 
 		for( size_t i = 0; i < 16384; i += 1 )
 		{
-			size_t resulting_size = memory_mgr::detail::get_allocation_size( i );
+			size_t segment_allocation_size = 1;
+			size_t resulting_size = memory_mgr::detail::get_allocation_size( i, segment_allocation_size );
 
 			if( resulting_size != prevSize )
 			{
