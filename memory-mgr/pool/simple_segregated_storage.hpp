@@ -20,10 +20,19 @@
 
 // std::greater
 #include <functional>
+#include <assert.h>
 
 #include <memory-mgr/get_pointer.h>
 #include <memory-mgr/pool/poolfwd.hpp>
 #include <boost/pointer_to_other.hpp>
+
+#define DEBUG_MEMORY_POOLS
+
+#ifdef DEBUG_MEMORY_POOLS
+#	define MGR_POOL_ASSERT( expr, message ) assert( expr && message )
+#else
+#	define MGR_POOL_ASSERT( expr, message )
+#endif
 
 namespace memory_mgr {
 
@@ -207,6 +216,9 @@ namespace memory_mgr {
 		// pre: !empty()
 		void * allocate()
 		{
+			MGR_POOL_ASSERT( ! empty(),
+				"No memory block is added, yet. Can't allocate any chunk." );
+
 			void_ptr ret = first_;
 
 			// Increment the "first" pointer to point to the next chunk
@@ -221,6 +233,9 @@ namespace memory_mgr {
 		{
 			nextof(chunk) = first_;
 			first_ = chunk;
+
+			MGR_POOL_ASSERT( ! empty(),
+				"Something strange happened... Chunk was deallocated, but it was not set as free." );
 		}
 
 		// pre: chunk was previously returned from a allocate() referring to the
@@ -244,6 +259,9 @@ namespace memory_mgr {
 				nextof(chunk) = nextof(loc);
 				nextof(loc) = chunk;
 			}
+
+			MGR_POOL_ASSERT( ! empty(),
+				"Something strange happened... Chunk was deallocated, but it was not set as free." );
 		}
 
 		// Note: if you're allocating/deallocating n a lot, you should

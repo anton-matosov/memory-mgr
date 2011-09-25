@@ -78,8 +78,7 @@ namespace memory_mgr
 		using base_type::allocate;
 		inline void* allocate( size_type size )
 		{
-			lock_type lock( this->get_lockable() );
-			if( can_allocate_in_pool(size) )
+			if( size && can_allocate_in_pool(size) )
 			{
 				return allocate_in_pool(size);
 			}
@@ -91,7 +90,6 @@ namespace memory_mgr
 
 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )
 		{
-			lock_type lock( this->get_lockable() );
 			if( size && can_allocate_in_pool(size) )
 			{
 				return allocate_in_pool(size);
@@ -105,7 +103,6 @@ namespace memory_mgr
 		using base_type::deallocate;
 		inline void deallocate( const void* ptr, size_type size )
 		{
-			lock_type lock( this->get_lockable() );
 			if( ptr && size && can_allocate_in_pool(size) )
 			{
 				deallocate_in_pool( ptr, size );
@@ -124,11 +121,13 @@ namespace memory_mgr
 
 		void* allocate_in_pool( size_type size )
 		{
+			lock_type lock( this->get_lockable() );
 			return get_pool(size).allocate();
 		}
 
 		void deallocate_in_pool( const void* ptr, size_type size )
 		{
+			lock_type lock( this->get_lockable() );
 			get_pool(size).deallocate( detail::unconst_void( ptr ) );
 		}
 
