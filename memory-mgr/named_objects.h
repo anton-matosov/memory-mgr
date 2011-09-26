@@ -69,47 +69,22 @@ namespace memory_mgr
 		named_allocator_type	m_named_alloc;
 
 	public:
-		/**
-		@brief Type used to store size, commonly std::size_t
-		@see static_bitset::size_type
-		*/
-		//typedef typename base_type::size_type			size_type;
-		typedef typename manager_traits<mgr_type>::size_type		size_type;
+		typedef manager_traits<mgr_type> mgr_traits;
+		typedef typename mgr_traits::size_type		size_type;
 
 		/**
 		@brief type that used to store memory offset
 		@see named_allocator_type::block_offset_type
 		*/
-		typedef typename named_allocator_type::block_offset_type	block_offset_type;
+		typedef typename named_allocator_type::block_offset_type block_offset_type;
 	
-		/**
-		@brief Type of synchronization object passed as template
-		parameter                                               
-		*/
-		typedef typename base_type::sync_object_type		sync_object_type;
+		typedef typename mgr_traits::sync_object_type sync_object_type;
+		typedef typename mgr_traits::lock_type lock_type;
 
-		/**
-		@brief lock type, used for synchronization
-		*/
-		typedef typename base_type::lock_type				lock_type;
-
-		/**
-		@brief Default constructor, creates memory manager 
-		@remarks Can be used only if decorates memory manager with 
-		attached memory segment
-		@see memory_manager::memory_segment                        
-		*/
 		inline named_objects()
 			:m_named_alloc( base_type::get_decorated_mgr() )
 		{}
 
-		/**
-		@brief Constructor, creates memory manager with specified
-		base address
-		@param segment_base  Pointer to memory which will be managed by
-		manager
-		@see memory_manager::memory_manager                        
-		*/
 		inline named_objects( void* segment_base )
 			:base_type( segment_base ),
 			m_named_alloc( base_type::get_decorated_mgr() )
@@ -120,6 +95,9 @@ namespace memory_mgr
 			lock_type lock( this->get_lockable() );
 			return this->m_named_alloc.is_exists( name );
 		}
+
+		using base_type::allocate;
+		using base_type::deallocate;
 
 		inline void* allocate( size_type size, const char* name )
 		{
@@ -164,44 +142,13 @@ namespace memory_mgr
 			}
 		}
 
-
- 		/**
- 		@brief Call this method to allocate memory block
- 		@param size size of memory block in bytes
- 		@exception bad_alloc if manager went out of memory
- 		@return pointer to allocated memory block
- 		*/
- 		inline void* allocate( size_type size )
- 		{			
- 			return decorated_mgr::allocate( size );
- 		}
- 
- 		/**
- 		@brief Call this method to allocate memory block
- 		@param size    size of memory block in bytes 
- 		@param nothrow  unused parameter, just to overload existing
- 		function
- 
- 		@exception newer  throws
- 		@return pointer to allocated memory block         
- 		*/
- 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
- 		{			
- 			return decorated_mgr::allocate( size, nothrow );
- 		}
- 
- 		/**
- 		@brief Call this method to deallocate memory block
- 		@param p  pointer to memory block, returned by allocate method
- 		@param size   size of memory block in bytes
- 		@exception newer  throws
- 		*/
- 		inline void deallocate( const void* p, size_type size = 0 )
- 		{
-			//assert( ! this->m_named_alloc.is_exists( detail::pointer_to_offset( p, *this ) )
-			//	&& "\n!!!You are trying to delete named object via unnamed deallocate operation!!!!" );
- 			decorated_mgr::deallocate( p, size );
- 		}
+		inline void deallocate_named( void* p, size_type size, const char* name )
+		{
+			if( this->remove_object( name ) )
+			{
+				decorated_mgr::deallocate( p, size );
+			}
+		}
 	};
 
 	/**

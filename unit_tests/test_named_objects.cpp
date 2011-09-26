@@ -111,20 +111,20 @@ BOOST_AUTO_TEST_SUITE( test_named_objects )
 		BOOST_CHECK_NE( p2_m2, p1_m2 );
 
 		//Object points to the first mapped segment, not to the second one that is validated.
-		mgr2.deallocate( p1_m2, obj_size, name1 );
+		mgr2.deallocate_named( p1_m2, obj_size, name1 );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), true );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), true );
 
-		mgr1.deallocate( p1_m1, obj_size, name1 );
+		mgr1.deallocate_named( p1_m1, obj_size, name1 );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name1 ), false );
 
 
-		mgr1.deallocate( p2_m1, obj_size, name2 );
+		mgr1.deallocate_named( p2_m1, obj_size, name2 );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), true );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), true );
 
-		mgr2.deallocate( p2_m2, obj_size, name2 );
+		mgr2.deallocate_named( p2_m2, obj_size, name2 );
 		BOOST_CHECK_EQUAL( mgr1.is_exists( name2 ), false );
 		BOOST_CHECK_EQUAL( mgr2.is_exists( name2 ), false );
 		//BOOST_CHECK( mgr1.is_free() );
