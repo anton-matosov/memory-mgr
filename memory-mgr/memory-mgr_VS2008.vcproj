@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\memory_usage_tracker.h"
+				>
+			</File>
+			<File
 				RelativePath=".\named_objects.h"
 				>
 			</File>
@@ -241,15 +245,15 @@
 				RelativePath=".\size_tracking.h"
 				>
 			</File>
-			<File
-				RelativePath=".\usage_tracker.h"
-				>
-			</File>
 			<Filter
 				Name="detail"
 				>
 				<File
 					RelativePath=".\detail\allocator_base.h"
+					>
+				</File>
+				<File
+					RelativePath=".\detail\assert.h"
 					>
 				</File>
 				<File

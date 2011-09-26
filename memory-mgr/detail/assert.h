@@ -21,31 +21,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_USAGE_TRACKER_HEADER
-#define MGR_USAGE_TRACKER_HEADER
+#ifndef MGR_ASSERT_HEADER
+#define MGR_ASSERT_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-namespace memory_mgr
-{
-	template< class MemMgr >
-	class usage_tracker: public MemMgr
-	{
-		/**
-		   @brief Memory manager class that should be tracked
-		*/
-		typedef MemMgr									mgr_type;
+#include <assert.h>
 
-		enum
-		{
-			allocable_memory = manager_traits<mgr_type>::allocable_memory
-		};
-	};
-}
+#define MGR_NULL_ASSERT( expr, message )
 
+#ifdef MGR_ENABLE_ASSERTS
+#	define MGR_ASSERT( expr, message ) assert( expr && message )
+#else
+#	define MGR_ASSERT MGR_NULL_ASSERT
+#endif
 
-
-
-#endif //MGR_USAGE_TRACKER_HEADER
+#endif// MGR_ASSERT_HEADER

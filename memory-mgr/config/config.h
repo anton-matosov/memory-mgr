@@ -28,6 +28,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+//#define DEBUG_MEMORY_POOLS
+//#define MGR_ENABLE_ASSERTS
+
+
 #if defined(linux) || defined(__linux) || defined(__linux__)
 // linux:
 #	include <memory-mgr/config/platform/linux.h>
@@ -38,6 +42,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/detail/helpers.h>
+#include <memory-mgr/detail/assert.h>
 
 #include <boost/static_assert.hpp>
 
