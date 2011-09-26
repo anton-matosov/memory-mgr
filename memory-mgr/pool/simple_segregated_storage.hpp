@@ -22,16 +22,15 @@
 #include <functional>
 #include <assert.h>
 
+#include <memory-mgr/config/config.h>
 #include <memory-mgr/get_pointer.h>
 #include <memory-mgr/pool/poolfwd.hpp>
 #include <boost/pointer_to_other.hpp>
 
-#define DEBUG_MEMORY_POOLS
-
 #ifdef DEBUG_MEMORY_POOLS
-#	define MGR_POOL_ASSERT( expr, message ) assert( expr && message )
+#	define MGR_POOL_ASSERT MGR_ASSERT
 #else
-#	define MGR_POOL_ASSERT( expr, message )
+#	define MGR_POOL_ASSERT MGR_NULL_ASSERT
 #endif
 
 namespace memory_mgr {
