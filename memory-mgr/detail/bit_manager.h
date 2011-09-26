@@ -45,7 +45,13 @@ namespace memory_mgr
 			enum {result = ( (value / base) * base) + (value % base ? base : 0)};
 		};
 
-		enum bitMgrMemCtrl{ mcAuto = static_array, mcNone = external_buffer };
+		enum bitMgrMemCtrl
+		{
+			mcAuto = static_array,
+			mcNone = external_buffer
+		};
+
+
 		template< class ChunkType, size_t BitsCount, bitMgrMemCtrl memoryCtrl = mcAuto >
 		class bit_manager
 		{
@@ -53,12 +59,13 @@ namespace memory_mgr
 			/**
 			   @brief constants
 			*/
-			enum
+			enum isInitialized
 			{
 				not_initialized = 0,
 				initialized
 			};
 		public:
+			typedef bit_manager this_type;
 			/**
 			   @brief memory block type
 			   @see static_bitset::block_type
@@ -78,16 +85,11 @@ namespace memory_mgr
 			typedef typename bitset_t::size_type			size_type;
 
 			/**
-			   @brief auxiliary data type that is used to store bit id hint
-			*/
-			typedef size_type								aux_data_type;
-
-			/**
 			   @brief compile time computed constants
 			*/
 			enum
 			{
-				aux_data_size = sizeof( aux_data_type ) /**< size of auxiliary data required to store bit_manager internal data*/,
+				aux_data_size = 8 /**< size of auxiliary data required to store bit_manager internal data*/,
 				memory_usage = round_int<bitset_t::memory_usage + aux_data_size, 32>::result /**< amount of memory in bytes used by bit_manager*/,
 				num_bits = BitsCount /**< number of bits available for allocations*/
 			};
@@ -104,32 +106,14 @@ namespace memory_mgr
 			   @exception newer throws
 			*/
 			bit_manager()
-				:m_is_init(0),
+				:m_is_init( not_initialized ),
 				m_bit_hint( 0 )
 			{
-				clear();				
-			}
-
-			/**
-			   @brief Constructor
-			  
-			   @param	ptr	pointer to memory that will be used to store bitset
-			   @attention	First four bytes (dword) of memory segment must be zeroed before bit_manager creation\n
-							It will initialize its state only if first four bytes are null\n
-							Bitset will be placed starting from the fifth byte (the second dword)
-
-			   @exception newer throws
-			*/
-			bit_manager( chunk_ptr_type ptr )
-				:m_is_init( detail::size_cast( ptr ) ),
-				 m_bitset( block_ptr_cast( detail::shift( ptr, aux_data_size ) ) ),
-				 m_bit_hint( 0 )
-			{
-				if( *m_is_init == not_initialized )
+				if( m_is_init == not_initialized )
 				{
 					clear();
-					*m_is_init = initialized;
-				}
+					m_is_init = initialized;
+				}				
 			}
 
 			size_type requires_bytes()
@@ -199,13 +183,15 @@ namespace memory_mgr
 				m_bitset.set();
 				m_bit_hint = 0;
 			}
+
+			bool is_constructed() const { return m_is_init == initialized; }
 		private:
 			//Bitset
-			aux_data_type*		m_is_init;
-			bitset_t	m_bitset;
-
-			//Cache
+			isInitialized m_is_init;
 			size_type m_bit_hint;
+
+			bitset_t m_bitset;
+
 
 			static inline size_type block_index(size_type pos) 
 			{

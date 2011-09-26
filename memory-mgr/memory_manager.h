@@ -148,7 +148,7 @@ namespace memory_mgr
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
-		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcNone> bitmgr_type;
+		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcAuto> bitmgr_type;
 
 	public:
 		
@@ -202,9 +202,13 @@ namespace memory_mgr
 							segment must be zeroed                   
 		*/
 		explicit memory_manager( void* segment_base )
-			:m_bitmgr( static_cast< chunk_ptr_type >( segment_base ) ),
+			:m_bitmgr( static_cast<bitmgr_type*>( segment_base ) ),
 			m_segment_base( segment_base )
 		{
+			if( ! m_bitmgr->is_constructed() )
+			{
+				m_bitmgr = new(segment_base) bitmgr_type();
+			}
 			m_offset_base = detail::char_cast( detail::shift( segment_base, bitmgr_type::memory_usage ) );
 		}
 		
@@ -289,7 +293,7 @@ namespace memory_mgr
 		*/
 		inline bool empty()
 		{
-			return m_bitmgr.empty();
+			return m_bitmgr->empty();
 		}
 
 		/**
@@ -300,7 +304,7 @@ namespace memory_mgr
 		*/
 		inline bool is_free()
 		{
-			return m_bitmgr.is_free();
+			return m_bitmgr->is_free();
 		}
 
 		/**
@@ -309,7 +313,7 @@ namespace memory_mgr
 		*/
 		inline void clear()
 		{
-			m_bitmgr.clear();
+			m_bitmgr->clear();
 		}
 
 
@@ -347,7 +351,8 @@ namespace memory_mgr
 		{
 			return m_lockable;
 		}
-	private:
+	
+	protected:
 		/**
 		   @brief Returns offset by chunk index
 		   @param chunk_ind  chunk index
@@ -390,6 +395,7 @@ namespace memory_mgr
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
 
+	private:
 		/**
 		   @brief Call this method to allocate memory block
 		   @return offset in bytes from memory base address.
@@ -402,7 +408,7 @@ namespace memory_mgr
 		inline void* do_allocate( size_type size, OnNoMemory OnNoMemoryOp )
 		{
 			lock_type lock( get_lockable() );
-			size_type chunk_ind = m_bitmgr.allocate( chunks_required( size ) );
+			size_type chunk_ind = m_bitmgr->allocate( chunks_required( size ) );
 			if( chunk_ind == bitmgr_type::npos )
 			{
 				OnNoMemoryOp();
@@ -424,7 +430,7 @@ namespace memory_mgr
 			{
 				lock_type lock( get_lockable() );
 
- 				m_bitmgr.deallocate( chunk_index( offset ), chunks_required( size ) );
+ 				m_bitmgr->deallocate( chunk_index( offset ), chunks_required( size ) );
 			}
  		}
 
@@ -432,7 +438,7 @@ namespace memory_mgr
 		@brief Bit Manager used to store information about allocated
 		memory chunks                                               
 		*/
-		bitmgr_type m_bitmgr;
+		bitmgr_type* m_bitmgr;
 
 		/**
 		@brief Pointer to memory base address from which offset is
