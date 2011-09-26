@@ -41,6 +41,16 @@ public:
         return __sync_add_and_fetch( &value_, -1 );
     }
 
+	long operator+=(long add)
+	{
+		return __sync_add_and_fetch( &value_, add );
+	}
+
+	long operator-=(long substract)
+	{
+		return __sync_add_and_fetch( &value_, -substract );
+	}
+
     operator long() const
     {
         return __sync_fetch_and_add( &value_, 0 );

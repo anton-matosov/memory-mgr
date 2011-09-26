@@ -37,7 +37,17 @@ public:
     long operator--()
     {
         return atomic_dec_32_nv( &value_ );
-    }
+	}
+
+	long operator+=(long add)
+	{
+		return atomic_add_32_nv( &value_, add );
+	}
+
+	long operator-=(long substract)
+	{
+		return atomic_add_32_nv( &value_, -substract );
+	}
 
     operator uint32_t() const
     {

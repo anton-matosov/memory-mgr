@@ -43,6 +43,16 @@ public:
         return BOOST_INTERLOCKED_DECREMENT( &value_ );
     }
 
+	long operator+=(long add)
+	{
+		return BOOST_INTERLOCKED_EXCHANGE_ADD( &value_, add );
+	}
+
+	long operator-=(long substract)
+	{
+		return BOOST_INTERLOCKED_EXCHANGE_ADD( &value_, -substract );
+	}
+
     operator long() const
     {
         return static_cast<long const volatile &>( value_ );

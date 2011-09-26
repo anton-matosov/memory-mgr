@@ -35,6 +35,16 @@ public:
         return atomic_exchange_and_add( &value_, -1 ) - 1;
     }
 
+	long operator+=(long add)
+	{
+		return atomic_exchange_and_add( &value_, add ) + add;
+	}
+
+	long operator-=(long substract)
+	{
+		return atomic_exchange_and_add( &value_, -substract ) - substract;
+	}
+
     operator long() const
     {
         return atomic_exchange_and_add( &value_, 0 );

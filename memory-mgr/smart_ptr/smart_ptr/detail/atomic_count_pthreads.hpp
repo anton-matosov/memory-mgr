@@ -74,6 +74,19 @@ public:
         return --value_;
     }
 
+
+	long operator+=(long add)
+	{
+		scoped_lock lock(mutex_);
+		return value_ += add;
+	}
+
+	long operator-=(long substract)
+	{
+		scoped_lock lock(mutex_);
+		return value_ -= substract;
+	}
+
     operator long() const
     {
         scoped_lock lock(mutex_);
