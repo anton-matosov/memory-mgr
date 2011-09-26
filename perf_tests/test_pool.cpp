@@ -32,7 +32,11 @@ namespace
 
 		TEST_START_LOOP( op_repeat, per_alloc, void* );
 		{
-			p.allocate();
+			TEST_TRACK_PTR = p.allocate();
+		}
+		TEST_SPLIT_LOOP_STOP_TIMER;
+		{
+			p.deallocate( TEST_GET_TRACKED_PTR );
 		}
 		TEST_END_LOOP( std::wcout );
 
