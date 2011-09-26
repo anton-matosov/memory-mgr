@@ -93,7 +93,7 @@ namespace memory_mgr {
 
 		inline char* allocate(const size_type bytes)
 		{
-			return detail::char_cast( m_mgr->allocate( bytes ) );
+			return detail::char_cast( m_mgr->allocate( bytes, std::nothrow ) );
 		}
 
 		inline void deallocate(char * const block, size_type size)
@@ -113,7 +113,7 @@ namespace memory_mgr {
 
 		char* allocate(const size_type bytes)
 		{
-			return detail::char_cast( SingletonMemMgr::instance().allocate( bytes ) );
+			return detail::char_cast( SingletonMemMgr::instance().allocate( bytes, std::nothrow ) );
 		}
 
 		void deallocate(char * const block, size_type size)
