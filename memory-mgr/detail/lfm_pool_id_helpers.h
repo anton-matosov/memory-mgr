@@ -69,7 +69,7 @@ namespace memory_mgr
 
 		inline size_t get_pool_id( size_t requested_size )
 		{
-			const size_t pool_id_by_size[max_lfm_object_size] = {
+			static const size_t pool_id_by_size[max_lfm_object_size] = {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 
 				2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 
 				4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 
