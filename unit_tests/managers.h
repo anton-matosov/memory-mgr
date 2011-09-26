@@ -81,14 +81,22 @@ typedef memory_mgr::heap_segment
 	>
 > heap_sz_mgr;
 
-
-typedef memory_mgr::low_fragmentation_manager
-<
-	typedef  memory_mgr::named_objects
+typedef memory_mgr::size_tracking
 	<
-		heap_sz_mgr
+		memory_mgr::low_fragmentation_manager
+		<
+			memory_mgr::named_objects
+			<
+				heap_sz_mgr
+			>
+		>
 	>
-> lfm_heap_sz_mgr;
+sz_lfm_heap_sz_mgr;
+
+typedef memory_mgr::singleton_manager
+<
+	sz_lfm_heap_sz_mgr
+> sing_sz_lfm_heap_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment

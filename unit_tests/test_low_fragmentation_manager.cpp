@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 
 	BOOST_AUTO_TEST_CASE( test_data_validness )
 	{
-		lfm_heap_sz_mgr mgr;
+		sz_lfm_heap_sz_mgr mgr;
 		test::test_data_validness(mgr);
 	}
 

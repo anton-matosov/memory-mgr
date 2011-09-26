@@ -41,22 +41,10 @@ memory_mgr::singleton_manager
 MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
 
 
-typedef memory_mgr::singleton_manager< 
-			memory_mgr::size_tracking
-			<
-				memory_mgr::low_fragmentation_manager
-				<
-					memory_mgr::named_objects
-					<
-						heap_sz_mgr
-					>
-				>
-			>
-		> sz_lfm_heap_sz_mgr;
 
 template class memory_mgr::detail::new_proxy<int, memory_mgr::named_objects
 <
-heap_sz_mgr
+	heap_sz_mgr
 > >;
 
 BOOST_AUTO_TEST_SUITE( test_new )
@@ -69,7 +57,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 	typedef int builtin_type;
 
-	typedef boost::mpl::list< sing_name_heap_mgr, sz_lfm_heap_sz_mgr > named_managers_list;
+	typedef boost::mpl::list< sing_name_heap_mgr, sing_sz_lfm_heap_sz_mgr > named_managers_list;
 	typedef boost::mpl::list< sing_heap_sz_mgr, sing_name_heap_mgr > named_and_unnamed_managers_list;
 
 	using memory_mgr::new_;
@@ -245,17 +233,23 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_NE( arr11, arr22 );
 
 		delete_<mgr_type>( ptr1, name1 );
-		delete_<mgr_type>( ptr11, name1 );
+		delete_<mgr_type>( ptr22, name2 );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), true );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), true );
+
+		delete_( ptr11, mem_mgr<mgr_type>(), name1 );
 		delete_( ptr2, mem_mgr<mgr_type>(), name2 );
-		delete_( ptr22, mem_mgr<mgr_type>(), name2 );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
 
 
-		delete_<mgr_type>( arr1, name1_arr );
 		delete_<mgr_type>( arr11, name1_arr );
+		delete_<mgr_type>( arr2, name2_arr );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), true );
+		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), true );
+
+		delete_( arr1, mem_mgr<mgr_type>(), name1_arr );
 		delete_( arr22, mem_mgr<mgr_type>(), name2_arr );
-		delete_( arr2, mem_mgr<mgr_type>(), name2_arr );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), false );
 	}

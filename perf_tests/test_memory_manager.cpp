@@ -324,7 +324,7 @@ namespace
 		run_perf_test( simple_alloc_category, "alloc heap mgr",
 			test_alloc_mem_mgr<heap_mgr>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( simple_alloc_category, "alloc LFM heap sz mgr",
-			test_alloc_mem_mgr<lfm_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
+			test_alloc_mem_mgr<sz_lfm_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 // 		run_perf_test( simple_alloc_category, "alloc heap seg sz mgr",
 // 			test_alloc_mem_mgr<seg_heap_sz_mgr>, op_repeat, per_alloc, test_repeat );
 // 		run_perf_test( simple_alloc_category, "alloc heap seg mgr",
@@ -352,7 +352,7 @@ namespace
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap mgr",
 			test_alloc_dealloc_mem_mgr<heap_mgr, int*>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc LFM heap sz mgr",
-			test_alloc_dealloc_mem_mgr<lfm_heap_sz_mgr, pointer_type>, op_repeat, per_alloc, test_repeat );
+			test_alloc_dealloc_mem_mgr<sz_lfm_heap_sz_mgr, pointer_type>, op_repeat, per_alloc, test_repeat );
 // 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap seg sz mgr",
 // 			test_alloc_dealloc_mem_mgr<seg_heap_sz_mgr, pointer_type>, op_repeat, per_alloc, test_repeat );
 
@@ -362,7 +362,7 @@ namespace
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc shared sz mgr",
 			test_alloc_dealloc_mem_mgr<shared_sz_mgr, int*>, op_repeat, per_alloc, test_repeat );
 		run_perf_test( alloc_dealloc_category, "alloc/dealloc LFM heap sz mgr",
-			test_alloc_dealloc_mem_mgr<lfm_heap_sz_mgr, int*>, op_repeat, per_alloc, test_repeat );
+			test_alloc_dealloc_mem_mgr<sz_lfm_heap_sz_mgr, int*>, op_repeat, per_alloc, test_repeat );
 // 		run_perf_test( alloc_dealloc_category, "alloc/dealloc heap seg sz mgr",
 // 			test_alloc_dealloc_mem_mgr<seg_heap_sz_mgr, int*>, op_repeat, per_alloc, test_repeat );
 
