@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif 
 
-#include <assert.h>
+#include <memory-mgr/detail/assert.h>
 
 namespace memory_mgr
 {
@@ -148,7 +148,7 @@ namespace memory_mgr
 		template <typename T>
 		static inline int integer_log2(T x) 
 		{
-			assert(x > 0); // PRE
+			MGR_ASSERT(x > 0, "Logarithm is defined for values only greater than zero"); // PRE
 
 			const int n = detail::max_pow2_less<std::numeric_limits<T>::digits, 4>::value;
 
@@ -172,7 +172,7 @@ namespace memory_mgr
 		template <typename T>
 		static inline  int lowest_bit(T x) 
 		{
-			assert(x >= 1); // PRE
+			MGR_ASSERT(x >= 1, "prcondition check failed"); // PRE
 
 			// clear all bits on except the rightmost one,
 			// then calculate the logarithm base 2
@@ -183,7 +183,7 @@ namespace memory_mgr
 		template <typename T>
 		static inline  int lowest_bit2(T x) 
 		{
-			assert(x != 0);
+			MGR_ASSERT(x != 0, "prcondition check failed");
 
 			static const char num_clear_low_bits[] =
 					  { -1,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,

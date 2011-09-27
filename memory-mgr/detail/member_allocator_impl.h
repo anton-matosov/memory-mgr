@@ -54,14 +54,14 @@ namespace memory_mgr
 
 			// allocate array of count elements
 			inline void* allocate(size_type size)
-			{	
-				assert( m_mgr );
+			{
+				MGR_ASSERT( m_mgr, "manager pointer should not be NULL" );
 				return m_mgr->allocate( size );
 			}
 
 			inline void deallocate( void* ptr, size_type size )
 			{
-				assert( m_mgr );
+				MGR_ASSERT( m_mgr, "manager pointer should not be NULL" );
 				m_mgr->deallocate( ptr, size );
 			}
 

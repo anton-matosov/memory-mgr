@@ -137,7 +137,7 @@ namespace memory_mgr
 			else
 			{
 				m_offset = detail::diff( ptr, this );
-				assert( (m_offset != offset_traits<offset_type>::invalid_offset) && "Invalid offset value" );
+				MGR_ASSERT( (m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
 			}
 		}
 

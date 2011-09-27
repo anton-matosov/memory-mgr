@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <limits>
 #include <ostream>
-#include <assert.h>
+#include <memory-mgr/detail/assert.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/type_manip.h>
@@ -305,14 +305,14 @@ namespace memory_mgr
 
 		inline bool test( size_type pos ) const
 		{
-			assert(pos < num_bits);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			return unchecked_test(pos);
 		}
 
 		inline bool test( size_type pos, size_type count ) const
 		{
-			assert(pos < num_bits);
-			assert(count > 0);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
+			MGR_ASSERT(count > 0, "Count should be bigger than null");
 
 			size_type blk = block_index( pos );
 			size_type ind = pos - blk * bits_per_block;//bit_index( pos );
@@ -342,7 +342,7 @@ namespace memory_mgr
 
 		inline self_ref_type set( size_type pos)
 		{
-			assert(pos < num_bits);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 
 			this->m_bits[block_index(pos)] |= bit_mask(pos);
 			return *this;
@@ -356,7 +356,7 @@ namespace memory_mgr
 
 		inline self_ref_type reset(size_type pos)
 		{
-			assert(pos < num_bits);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			this->m_bits[block_index(pos)] &= ~bit_mask(pos);
 			return *this;
 		}
@@ -374,7 +374,7 @@ namespace memory_mgr
 
 		inline self_ref_type flip(size_type pos)
 		{
-			assert(pos < num_bits);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			this->m_bits[block_index(pos)] ^= bit_mask(pos);
 			return *this;
 		}
@@ -589,10 +589,10 @@ namespace memory_mgr
 		template< class set_op >
 		inline self_ref_type do_set( size_type pos, size_type count )
 		{
-			assert(pos < num_bits);
+			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			count = (count != npos ? count : num_bits - pos); 
 
-			assert( (pos + count) <= num_bits );
+			MGR_ASSERT( (pos + count) <= num_bits, "Specified range is out of range");
 
 			size_type block_ind = block_index(pos);
 			const size_type block_end	= block_index(pos + count);

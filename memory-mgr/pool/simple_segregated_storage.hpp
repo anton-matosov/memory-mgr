@@ -20,7 +20,7 @@
 
 // std::greater
 #include <functional>
-#include <assert.h>
+#include <memory-mgr/detail/assert.h>
 
 #include <memory-mgr/config/config.h>
 #include <memory-mgr/get_pointer.h>

@@ -124,7 +124,11 @@ namespace memory_mgr
 	>
 	class memory_manager
 	{
-		typedef memory_mgr::allocable_memory_calc<ChunkType, MemorySize, ChunkSize> calc_type;
+		struct calc_type
+			: memory_mgr::allocable_memory_calc<ChunkType, MemorySize, ChunkSize>
+		{
+
+		};
 
 		template<class Mgr>
 		friend class decorator_base;
@@ -148,7 +152,12 @@ namespace memory_mgr
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
-		typedef detail::bit_manager<ChunkType, calc_type::result_allocable_chunks, detail::mcAuto> bitmgr_type;
+		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcAuto> bitmgr_type;
+		
+		enum
+		{
+			offset_shift = bitmgr_type::memory_usage
+		};
 
 	public:
 		
@@ -203,13 +212,12 @@ namespace memory_mgr
 		*/
 		explicit memory_manager( void* segment_base )
 			:m_bitmgr( static_cast<bitmgr_type*>( segment_base ) ),
-			m_segment_base( segment_base )
+			m_segment_base( detail::char_cast( segment_base ) )
 		{
 			if( ! m_bitmgr->is_constructed() )
 			{
 				m_bitmgr = new(segment_base) bitmgr_type();
 			}
-			m_offset_base = detail::char_cast( detail::shift( segment_base, bitmgr_type::memory_usage ) );
 		}
 		
 		/**
@@ -219,7 +227,7 @@ namespace memory_mgr
 		   @return offset in bytes from memory base address.
 		*/
 		inline void* allocate( size_type size )
-		{			
+		{
 			return do_allocate( size, helpers::throw_bad_alloc );
 		}
 
@@ -233,7 +241,7 @@ namespace memory_mgr
 		   @return pointer to the allocated memory
 		*/
 		inline void* allocate( size_type size, const std::nothrow_t& /*nothrow*/ )/*throw()*/
-		{			
+		{
 			return do_allocate( size, helpers::do_nothing );
 		}
 
@@ -257,7 +265,7 @@ namespace memory_mgr
 			{
 				return 0;
 			}
-			return detail::shift( m_offset_base, offset );
+			return detail::shift( m_segment_base, offset + offset_shift );
 		}
 
 		/**
@@ -267,9 +275,9 @@ namespace memory_mgr
 		{
 			if( ptr )
 			{
-				assert( ptr >= m_offset_base && "Invalid pointer value");
-				assert(ptr < ( m_offset_base + memory_size ) && "Invalid pointer value" );
-				return detail::diff( ptr, m_offset_base );
+				MGR_ASSERT( ptr >= m_segment_base + offset_shift, "Invalid pointer value");
+				MGR_ASSERT(ptr < ( m_segment_base + offset_shift + memory_size ), "Invalid pointer value" );
+				return detail::diff( ptr, m_segment_base + offset_shift );
 			}
 			return offset_traits<block_offset_type>::invalid_offset;
 		}
@@ -441,15 +449,9 @@ namespace memory_mgr
 		bitmgr_type* m_bitmgr;
 
 		/**
-		@brief Pointer to memory base address from which offset is
-		calculated                                                
-		*/
-		char* m_offset_base;
-
-		/**
 		@brief Pointer to memory segment base address                                                
 		*/
-		void* m_segment_base;
+		char* m_segment_base;
 
 		lockable_type m_lockable;
 	};	

@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #ifndef MGR_TEMP_BUFFER_HEADER
 #define MGR_TEMP_BUFFER_HEADER
 
-#include <assert.h>
+#include <memory-mgr/detail/assert.h>
 #include <stdexcept>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -199,9 +199,7 @@ namespace memory_mgr
 					throw multiple_allocation();
 				}
 
-				assert( count != 0 && "Invalid buffer size!" );
 				m_size = count;	
-
 				m_buffer = new item_type[ m_size ];
 				zero_buffer();
 				return m_buffer;
@@ -215,13 +213,8 @@ namespace memory_mgr
 			*/
 			inline buffer_type reallocate( size_type count )
 			{	
-				if( count )
-				{
-					free_buffer();
-					return allocate( count );
-				}	
-
-				return m_buffer;
+				free_buffer();
+				return allocate( count );
 			}
 
 		private:

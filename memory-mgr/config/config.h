@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 //#define DEBUG_MEMORY_POOLS
-//#define MGR_ENABLE_ASSERTS
+#define MGR_ENABLE_ASSERTS
 
 
 #if defined(linux) || defined(__linux) || defined(__linux__)

@@ -167,7 +167,7 @@ namespace memory_mgr
 			void add_object( const char_type* name, const block_offset_type offset )
 			{
 				string_type object_name( name, m_alloc );
-				assert( !is_exists( object_name ) );
+				MGR_ASSERT( ! is_exists( object_name ), "object with the same name already exists" );
 				
 				(*m_objects)[ object_name ].set_offset(offset);
 			}

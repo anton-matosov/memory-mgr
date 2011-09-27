@@ -36,7 +36,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/detail/segment_storage_map.h>
 #include <memory-mgr/detail/segment_storage_vector.h>
-#include <assert.h>
+#include <memory-mgr/detail/assert.h>
 #include <functional>
 #include <boost/tuple/tuple.hpp>	//For boost::tie
 
@@ -217,7 +217,7 @@ namespace memory_mgr
 			else
 			{
 				size_type seg_id = seg_id_by_offset( offset );
-				assert( seg_id < num_segments );
+				MGR_ASSERT( seg_id < num_segments, "Segment id is out of range" );
 				offset_type real_offset = offset & offset_mask;
 
 				segment_ptr_type seg = get_segment(seg_id);
@@ -254,7 +254,7 @@ namespace memory_mgr
 			else
 			{
 				size_type seg_id = this->seg_id_by_offset( offset );
-				assert( seg_id < num_segments );
+				MGR_ASSERT( seg_id < num_segments, "Segment id is out of range" );
 				offset_type real_offset = offset & offset_mask;
 
 				return this->get_segment(seg_id)->offset_to_pointer( real_offset );

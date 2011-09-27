@@ -148,8 +148,8 @@ namespace memory_mgr
 
 			inline void deallocate( size_type pos, size_type bits_count )
 			{
-				assert( ( this->m_bitset.test( pos, bits_count ) == false ) 
-					&& "Bits are already deallocated or invalid size." );
+				MGR_ASSERT( ( this->m_bitset.test( pos, bits_count ) == false ),
+					"Bits are already deallocated or invalid size." );
 				this->m_bitset.set( pos, bits_count );
 				//cache block index
 				m_bit_hint = pos;

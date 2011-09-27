@@ -115,10 +115,10 @@ namespace memory_mgr
 			size += m_debug_marks_size;
 
 			const size_type* start_ptr = detail::size_cast( allocated_memory ) - 1;
-			assert( m_debug_begin_mark == *start_ptr && "memory block start was overwritten" );
+			MGR_ASSERT( m_debug_begin_mark == *start_ptr, "memory block start was overwritten" );
 
 			const size_type* block_end_ptr = detail::size_cast( detail::shift( allocated_memory, original_size ) );
-			assert( m_debug_end_mark == *block_end_ptr && "memory block end was overwritten" );
+			MGR_ASSERT( m_debug_end_mark == *block_end_ptr, "memory block end was overwritten" );
 
 			return start_ptr;
 		}
