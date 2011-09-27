@@ -770,19 +770,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\temp.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					GeneratePreprocessedFile="1"
-					UsePrecompiledHeader="0"
-				/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
