@@ -48,9 +48,13 @@ namespace memory_mgr
 	{
 		typedef memory_segment< detail::malloc_allocator, MemMgr > base_type;
 	public:
-		 heap_segment( const size_t id = 0 )
-			 :base_type( id )
-		 {}
+		heap_segment( void* segment_base )
+			:base_type( segment_base )
+		{}
+
+		heap_segment( const size_t id = 0 )
+			:base_type( id )
+		{}
 	};
 
 	/**

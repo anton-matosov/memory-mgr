@@ -66,6 +66,10 @@ namespace memory_mgr
 		typedef	SegmentAllocator	memory;
 
 	public:
+		memory_segment( void* segment_base )
+			:memory( 0, 0 ),
+			memmgr_type( segment_base )
+		{}
 		/**
 		   @brief Default constructor
 		   @details Creates memory segment and memory manager linked to this segment

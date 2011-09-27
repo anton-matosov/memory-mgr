@@ -45,9 +45,9 @@ namespace memory_mgr
 			   @param mem_size  memory in bytes            
 			*/
 			virtualmem_allocator( const size_t mem_size, const size_t /*id*/ = 0 )
+				:m_memory( NULL ),
+				m_size( mem_size )
 			{
-				m_memory = VirtualAlloc(0, mem_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE );
-				*detail::size_cast(m_memory) = 0;
 			}
 
 			/**
@@ -64,12 +64,20 @@ namespace memory_mgr
 			                                                               
 			*/
 			void* segment_base()
-			{ return m_memory; }
+			{ 
+				if( ! m_memory && m_size )
+				{
+					m_memory = VirtualAlloc(0, m_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE );
+					*detail::size_cast(m_memory) = 0;
+				}
+				return m_memory;
+			}
 
 			/**
 			   @brief stores memory
 			*/
 			void* m_memory;
+			size_t m_size;
 			
 			/**
 			   @brief Memory type tag

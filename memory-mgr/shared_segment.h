@@ -56,7 +56,7 @@ namespace memory_mgr
 			//Returns address of allocated segment
 			void* segment_base()
 			{ 
-				if( m_base == osapi::invalid_mapping_address )
+				if( m_base == osapi::invalid_mapping_address && m_size )
 				{
 					create_segment();
 				}
@@ -218,6 +218,10 @@ MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 	{
 		typedef memory_segment< shared_allocator<SegNameOp>, MemMgr > base_type;
 	public:
+		shared_segment( void* segment_base )
+			:base_type( segment_base )
+		{}
+
 		shared_segment( const size_t id = 0 )
 			:base_type( id )
 		{}

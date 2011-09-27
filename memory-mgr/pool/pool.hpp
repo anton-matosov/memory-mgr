@@ -86,23 +86,23 @@ namespace memory_mgr {
 		typedef std::ptrdiff_t difference_type;
 
 		mgr_pool_allocator( MemMgr& mgr )
-			:m_mgr( &mgr )
+			:m_memory_base( mgr.get_segment_base() )
 		{
 
 		}
 
 		inline char* allocate(const size_type bytes)
 		{
-			return detail::char_cast( m_mgr->allocate( bytes, std::nothrow ) );
+			return detail::char_cast( MemMgr( get_pointer(m_memory_base) ).allocate( bytes, std::nothrow ) );
 		}
 
 		inline void deallocate(char * const block, size_type size)
 		{
-			m_mgr->deallocate( block, size );
+			MemMgr( get_pointer(m_memory_base) ).deallocate( block, size );
 		}
 
 	private:
-		MemMgr* m_mgr;
+		offset_ptr<void> m_memory_base;
 	};
 
 	template<class SingletonMemMgr>
