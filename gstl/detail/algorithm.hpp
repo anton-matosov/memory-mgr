@@ -450,7 +450,7 @@ page 577
 		mismatch(InputIterator1 first1, InputIterator1 last1,
 		InputIterator2 first2, InputIterator2 last2)
 	{
-		return mismatch( first1, last1, first2, last2 
+		return mismatch( first1, last1, first2, last2,
 			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
 	}
 
@@ -545,7 +545,25 @@ page 577
 	bool equal( InputIterator1 first1, InputIterator1 last1,
 				InputIterator2 first2, BinaryPredicate pred )
 	{
-		return gstl::mismatch( first1, last1, first2, pred ).first == last1;
+		while ( first1 != last1 )
+		{
+			if( ! pred(*first1, *first2) )
+			{
+				return false;
+			}
+			++first1; ++first2;
+		}
+		return true;
+	}
+
+	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+	bool equal( InputIterator1 first1, InputIterator1 last1,
+		InputIterator2 first2, InputIterator2 last2, BinaryPredicate pred )
+	{
+		pair<InputIterator1, InputIterator2> result = 
+			mismatch( first1, last1, first2, last2, pred );
+		return (result.first == last1) 
+			&& (result.second == last2);
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2>
@@ -754,7 +772,7 @@ page 577
 		
 		for( ; first != last && first != --last; ++first )
 		{
-			iter_swap( first, last );
+			gstl::iter_swap( first, last );
 		}
 	}
 

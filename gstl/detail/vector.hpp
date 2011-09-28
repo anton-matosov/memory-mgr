@@ -296,7 +296,10 @@ namespace gstl
 			if( new_size > capacity() )
 			{
 				internal_buffer_type tmp_buff;
-				tmp_buff.reserve( new_size );
+
+				//calculate reservation size here as we are reserving the TEMP buffer
+				size_type new_reserved = capacity() + capacity()/2;
+				tmp_buff.reserve( (gstl::max)(new_size, new_reserved) );
 
 				value_type* tmp_begin = tmp_buff.get_buffer();
 
@@ -304,11 +307,11 @@ namespace gstl
 				try
 				{
 					//Copy prefix
-					tmp_pos = uninitialized_copy( begin(), position, tmp_pos );
+					tmp_pos = gstl::uninitialized_copy( begin(), position, tmp_pos );
 					//Copy new
-					tmp_pos = uninitialized_copy( first, last, tmp_pos );
+					tmp_pos = gstl::uninitialized_copy( first, last, tmp_pos );
 					//Copy suffix
-					tmp_pos = uninitialized_copy( position, end(), tmp_pos );
+					tmp_pos = gstl::uninitialized_copy( position, end(), tmp_pos );
 				}
 				catch(...)
 				{
@@ -326,14 +329,14 @@ namespace gstl
 				//Buffer size is enough to hold new items
 				iterator vec_end = end();
 				//Insert them past the end of existent items
-				iterator new_end = uninitialized_copy( first, last, vec_end );
+				iterator new_end = gstl::uninitialized_copy( first, last, vec_end );
 				
 				if( vec_end != position )
 				{
 					//put new items on their position
-					reverse( position, vec_end );
-					reverse( vec_end, new_end );
-					reverse( position, new_end );
+					gstl::reverse( position, vec_end );
+					gstl::reverse( vec_end, new_end );
+					gstl::reverse( position, new_end );
 				}
 			}
 			set_size( new_size );
