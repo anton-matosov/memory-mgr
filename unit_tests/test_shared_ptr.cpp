@@ -50,7 +50,7 @@ namespace
 	typedef memory_mgr::singleton_manager<name_heap_mgr_type> sing_name_heap_mgr_type2;
 }
 MGR_DECLARE_MANAGER_CLASS( name_heap_mgr, name_heap_mgr_type );
-MGR_DECLARE_MANAGER_CLASS( sing_mgr, sing_name_heap_mgr_type2 );
+MGR_WRAP_SINGLETON_MANAGER_CLASS( sing_mgr, sing_name_heap_mgr_type2 );
 
 
 BOOST_AUTO_TEST_SUITE( test_shared_ptr )

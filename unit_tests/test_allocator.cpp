@@ -43,7 +43,7 @@ typedef memory_mgr::singleton_manager
 	> 
 > alloc_mgr;
 
-MGR_DECLARE_MANAGER_CLASS(allocator_manager, alloc_mgr);
+MGR_WRAP_SINGLETON_MANAGER_CLASS(allocator_manager, alloc_mgr);
 
 //////////////////////////////////////////////////////////////////////////
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 

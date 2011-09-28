@@ -41,7 +41,7 @@ namespace
 	typedef memory_mgr::singleton_manager<name_heap_mgr_type> sing_name_heap_mgr_type2;
 }
 
-MGR_DECLARE_MANAGER_CLASS( sing_mgr, sing_name_heap_mgr_type2 );
+MGR_WRAP_SINGLETON_MANAGER_CLASS( sing_mgr, sing_name_heap_mgr_type2 );
 
 class TestInterusive
 	:public memory_mgr::intrusive_base<TestInterusive, memory_mgr::mgr_deleter<sing_mgr> >

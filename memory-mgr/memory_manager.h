@@ -455,15 +455,13 @@ namespace memory_mgr
 
 		lockable_type m_lockable;
 	};	
+}
 
 /**
    @brief Helper macros, using it you can easily create derived class from memory manager
    @details 
 */
-#define MGR_DECLARE_MANAGER_CLASS(name, manager_type)	\
-	struct name:										\
-		public manager_type								\
-	{};													\
+#define MGR_DECLARE_MANAGER_TRAITS(name, manager_type)	\
 	namespace memory_mgr{								\
 		template<>										\
 		struct manager_traits<name>:					\
@@ -471,7 +469,23 @@ namespace memory_mgr
 		{};												\
 	}
 
-}
+#define MGR_DECLARE_MANAGER_CLASS(name, manager_type)	\
+		struct name										\
+			:public manager_type						\
+		{												\
+			name()										\
+			{}											\
+														\
+			name( void* segment_base )					\
+				:manager_type( segment_base )			\
+			{}											\
+		};												\
+	MGR_DECLARE_MANAGER_TRAITS(name, manager_type)
 
+#define MGR_WRAP_SINGLETON_MANAGER_CLASS(name, manager_type)	\
+		struct name												\
+			:public manager_type								\
+		{};														\
+	MGR_DECLARE_MANAGER_TRAITS(name, manager_type)
 
 #endif// MGR_MEMORY_MANAGER_HEADER

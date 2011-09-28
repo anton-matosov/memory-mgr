@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/new.h>
 
 
-MGR_DECLARE_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
+MGR_WRAP_SINGLETON_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
 template class memory_mgr::offset_ptr< builtin_type >;
 template class memory_mgr::offset_ptr< base_test_class >;

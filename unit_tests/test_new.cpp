@@ -38,7 +38,7 @@ memory_mgr::singleton_manager
 	>
 >	sing_name_heap_mgr_type;
 
-MGR_DECLARE_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
+MGR_WRAP_SINGLETON_MANAGER_CLASS( sing_name_heap_mgr, sing_name_heap_mgr_type );
 
 
 
