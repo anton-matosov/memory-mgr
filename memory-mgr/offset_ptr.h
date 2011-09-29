@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <intrin.h>
 #include <memory-mgr/detail/offset_ptr_base.h>
 
 namespace memory_mgr
@@ -125,7 +126,7 @@ namespace memory_mgr
 
 	private:
 		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		//	__declspec(noinline) //this workaround is needed for msvc > 8.0
 		#endif
 		inline void do_set_pointer( const_pointer ptr )
 		{
@@ -139,10 +140,12 @@ namespace memory_mgr
 				m_offset = detail::diff( ptr, this );
 				MGR_ASSERT( (m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
 			}
+			//MemoryBarrier();
+			__asm{};
 		}
 
 		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		//	__declspec(noinline) //this workaround is needed for msvc > 8.0
 		#endif
 		inline const_pointer do_get_pointer() const
 		{
@@ -150,7 +153,10 @@ namespace memory_mgr
 			{
 				return 0;
 			}
-			return static_cast<const_pointer>( detail::shift( this, m_offset ) );	
+			const_pointer p = static_cast<const_pointer>( detail::shift( this, m_offset ) );
+			//MemoryBarrier();
+			__asm{};
+			return p;
 		}
 	};
 
