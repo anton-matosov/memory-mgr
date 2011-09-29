@@ -71,7 +71,7 @@ namespace memory_mgr
 
 		~low_fragmentation_manager()
 		{
-			::delete_array( m_pools, get_decorated_mgr(), 
+			::delete_array( get_decorated_mgr(), m_pools, 
 				"low_fragmentation_manager_pools" );
 		}
 

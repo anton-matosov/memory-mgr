@@ -267,8 +267,8 @@ namespace memory_mgr
 #define MGR_DEFINE_DELETE_OVERLOADS( _delete_name, _pointer_type,										\
 				_destroy_method, _pointer_getter, _extra_check, _extra_param, _extra_param_forward )	\
 	template<class T, class MemMgr>																		\
-	inline void _delete_name(_pointer_type p,															\
-		const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr _extra_param )							\
+	inline void _delete_name( const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr,					\
+								_pointer_type p _extra_param )											\
 	{																									\
 		T* ptr = _pointer_getter(p);																	\
 		_extra_check																					\
@@ -283,17 +283,17 @@ namespace memory_mgr
 	}																									\
 																										\
 	template<class T, class MemMgr>																		\
-	inline void _delete_name( _pointer_type p, MemMgr& mgr _extra_param )								\
+	inline void _delete_name( MemMgr& mgr, _pointer_type p _extra_param )								\
 	{																									\
 		{																								\
-			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr(mgr) _extra_param_forward );			\
+			_delete_name( memory_mgr::mem_mgr(mgr), _pointer_getter(p) _extra_param_forward );			\
 		}																								\
 	}																									\
 	template<class MemMgr, class T>																		\
 	inline void _delete_name( _pointer_type p _extra_param )											\
 	{																									\
 		{																								\
-			_delete_name( _pointer_getter(p), memory_mgr::mem_mgr<MemMgr>() _extra_param_forward );		\
+			_delete_name( memory_mgr::mem_mgr<MemMgr>(), _pointer_getter(p) _extra_param_forward );		\
 		}																								\
 	}
 
@@ -311,62 +311,4 @@ MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate
 
 MGR_DEFINE_ALL_DELETES( T*, MGR_EMPTY_MACRO );
 
-// 
-// /**
-//    @brief Sort of overloaded operator delete[], deallocates memory block in memory managed by mem_mgr
-//    @param p pointer to memory block
-//    @param mgr helper object returned by mem_mgr( mgr_obj ) function 
-//    @exception newer throws
-//    */
-// template<class T, class MemMgr>
-// inline void delete_array( T* p, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr )
-// {
-// 	if( p )
-// 	{
-// 		typedef MemMgr mgr_type;
-// 		typedef typename memory_mgr::detail::mem_mgr_wrapper<mgr_type>::new_helper_type helper_type;
-// 		
-// //#error This deletion is incorrect if object is class and was constructed with new_()
-// 		helper_type::destroy_and_deallocate_array( p, mgr.get() );
-// 	}
-// }
-// 
-// template<class T, class MemMgr>
-// inline void delete_array( T* p, const memory_mgr::detail::mem_mgr_wrapper<MemMgr>& mgr, const char* name )
-// {
-// 	if( mgr.get().remove_object( name ) )
-// 	{
-// 		::delete_array( p, mgr );
-// 	}
-// }
-// 
-// template<class T, class MemMgr>
-// inline void delete_array( const T* p, MemMgr& mgr )
-// {
-// 	::delete_array( p, memory_mgr::mem_mgr( mgr ) );
-// }
-// 
-// template<class T, class MemMgr>
-// inline void delete_array( const T* p, MemMgr& mgr, const char* name )
-// {
-// 	if( mgr.remove_object( name ) )
-// 	{
-// 		::delete_array( p, mgr );
-// 	}
-// }
-// 
-// template<class MemMgr, class T>
-// inline void delete_array( const T* p )
-// {
-// 	::delete_array( p, memory_mgr::mem_mgr<MemMgr>() );
-// }
-// 
-// template<class MemMgr, class T>
-// inline void delete_array( const T* p, const char* name )
-// {
-// 	if( memory_mgr::mem_mgr<MemMgr>().get().remove_object( name ) )
-// 	{
-// 		::delete_array( p, memory_mgr::mem_mgr<MemMgr>() );
-// 	}
-// }
 #endif //MGR_NEW_HEADER
