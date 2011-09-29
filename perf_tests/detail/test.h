@@ -51,7 +51,7 @@ typedef memory_mgr::singleton_manager
 	>
 > alloc_mgr;
 
-MGR_DECLARE_MANAGER_CLASS(heap_manager, alloc_mgr);
+MGR_WRAP_SINGLETON_MANAGER_CLASS(heap_manager, alloc_mgr);
 
 typedef memory_mgr::allocator<char, heap_manager> char_allocator;
 

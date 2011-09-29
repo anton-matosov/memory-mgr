@@ -81,13 +81,13 @@ BOOST_AUTO_TEST_SUITE( test_new )
 
 		test::check_pointers( p1, p2, p3, p4, p5 );
 
-		delete_( p1, mem_mgr(mgr) );
-		delete_( p2, mgr );
-		delete_( p3, mem_mgr<mgr_type>() );
+		delete_( mem_mgr(mgr), p1 );
+		delete_( mgr, p2 );
+		delete_( mem_mgr<mgr_type>(), p3 );
 		delete_<mgr_type>( p4 );
 
 		void* p5_as_void = p5;
-		delete_( p5_as_void, mgr );
+		delete_( mgr, p5_as_void );
 
 		//const int* p4 = mgr_type::new_<int>()( 4 );
 		//mgr_type::delete_( p4 );
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
  			size_t m_size: 29;
  		};
 
-		::delete_array( arr_ptr, mem_mgr(mgr) );
+		::delete_array( mem_mgr(mgr), arr_ptr );
 		::delete_array<mgr_type>( void_arr_ptr );
 		::delete_array<mgr_type>( class_arr_ptr );
 	}
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		{
 			BOOST_CHECK_EQUAL( *it->first, it->second );
 			//mgr.deallocate( memory_mgr::detail::to_offset( it->first, mgr ), sizeof(int) );
-			delete_( it->first, mem_mgr<mgr_type>() );
+			delete_<mgr_type>( it->first );
 		}
 	}
 
@@ -178,8 +178,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		for( ptrval_map_type::const_iterator it = real_vals.begin(); it != real_vals.end(); ++it )
 		{
 			BOOST_CHECK_EQUAL( *it->first, it->second );
-			//mgr.deallocate( memory_mgr::detail::to_offset( it->first, mgr ), sizeof(int) );
-			delete_array( it->first, mem_mgr<mgr_type>() );
+			delete_array<mgr_type>( it->first );
 		}
 	}
 
@@ -225,9 +224,16 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_NE( arr2, ptr1 );
 		BOOST_CHECK_NE( arr2, ptr2 );
 
+		arr1[0] = val_1;
+		arr2[0] = val_2;
+		BOOST_CHECK_EQUAL( arr1[0], val_1 );
+		BOOST_CHECK_EQUAL( arr2[0], val_2 );
+
 		builtin_type* arr11( new_<builtin_type, mgr_type>( name1_arr )[5]() );
 		builtin_type* arr22( new_<builtin_type, mgr_type>( name2_arr )[5]() );
 
+		BOOST_CHECK_EQUAL( arr1[0], val_1 );
+		BOOST_CHECK_EQUAL( arr2[0], val_2 );
 		BOOST_CHECK_EQUAL( arr1, arr11 );
 		BOOST_CHECK_EQUAL( arr2, arr22 );
 		BOOST_CHECK_NE( arr11, arr22 );
@@ -237,19 +243,22 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), true );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), true );
 
-		delete_( ptr11, mem_mgr<mgr_type>(), name1 );
-		delete_( ptr2, mem_mgr<mgr_type>(), name2 );
+		delete_( mem_mgr<mgr_type>(), ptr11, name1 );
+		delete_( mem_mgr<mgr_type>(), ptr2, name2 );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1 ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2 ), false );
 
 
-		delete_<mgr_type>( arr11, name1_arr );
-		delete_<mgr_type>( arr2, name2_arr );
+		delete_array<mgr_type>( arr11, name1_arr );
+		delete_array<mgr_type>( arr2, name2_arr );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), true );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), true );
 
-		delete_( arr1, mem_mgr<mgr_type>(), name1_arr );
-		delete_( arr22, mem_mgr<mgr_type>(), name2_arr );
+		BOOST_CHECK_EQUAL( arr1[0], val_1 );
+		BOOST_CHECK_EQUAL( arr2[0], val_2 );
+
+		delete_array( mem_mgr<mgr_type>(), arr1, name1_arr );
+		delete_array( mem_mgr<mgr_type>(), arr22, name2_arr );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name1_arr ), false );
 		BOOST_CHECK_EQUAL( mgr_type::instance().is_exists( name2_arr ), false );
 	}
@@ -259,12 +268,12 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		int* null_ptr = 0;
 
 		BOOST_CHECKPOINT( "before deletion of null ptr" );
-		delete_( null_ptr, mem_mgr<mgr_type>() );
+		delete_( mem_mgr<mgr_type>(), null_ptr );
 		BOOST_CHECKPOINT( "after deletion of null ptr" );
 
 
 		BOOST_CHECKPOINT( "before deletion of null array" );
-		delete_array( null_ptr, mem_mgr<mgr_type>() );
+		delete_array( mem_mgr<mgr_type>(), null_ptr );
 		BOOST_CHECKPOINT( "after deletion of null array" );
 	}
 
@@ -274,7 +283,7 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		builtin_ptr* arr( new_<builtin_ptr, mgr_type>( name1_arr )[129]() );
 
 		BOOST_CHECKPOINT( "before deletion of array" );
-		delete_array( arr, mem_mgr<mgr_type>(), name1_arr );
+		delete_array( mem_mgr<mgr_type>(), arr, name1_arr );
 		BOOST_CHECKPOINT( "after deletion of array" );
 	}
 BOOST_AUTO_TEST_SUITE_END();

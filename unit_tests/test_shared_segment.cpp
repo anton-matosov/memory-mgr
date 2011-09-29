@@ -24,13 +24,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "StdAfx.h"
 #include <memory-mgr/memory_manager.h>
 #include <memory-mgr/shared_segment.h>
+#include <memory-mgr/size_tracking.h>
+#include <memory-mgr/low_fragmentation_manager.h>
+#include <memory-mgr/named_objects.h>
 #include "common_manager_tests.h"
 
 namespace
 {
 	typedef unsigned int chunk_type;
 	static const size_t chunk_size = 4;
-	static const size_t memory_size = 256;
+	static const size_t memory_size = 10 * 4 * 1024;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 }
@@ -41,11 +44,13 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 
 	MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
 
-	typedef memory_mgr::shared_segment< memmgr_type, MGR_SEGMENT_NAME(test_segment) > shared_mgr_type;
+typedef memory_mgr::shared_segment< memmgr_type, MGR_SEGMENT_NAME(test_segment) > shared_mgr_type;
+typedef memory_mgr::size_tracking<shared_mgr_type > sz_shared_mgr_type;
+	typedef memory_mgr::low_fragmentation_manager< memory_mgr::named_objects<sz_shared_mgr_type> > lfm_shared_mgr_type;
 
-	typedef boost::mpl::list< shared_mgr_type > managers_list;
+	typedef boost::mpl::list< shared_mgr_type, lfm_shared_mgr_type > managers_list;
 
-#if 0 //Such a behavior is no longer allowed
+#if 1
 	BOOST_AUTO_TEST_CASE_TEMPLATE( shared_segment_alloc_dealloc, mgr_type, managers_list )
 	{
 		typedef memory_mgr::manager_traits<mgr_type> 	traits_type;
@@ -54,7 +59,7 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 		const size_type obj_size = 4;
 
 		mgr_type mgr;
-		BOOST_CHECK( mgr.is_free() );
+		//BOOST_CHECK( mgr.is_free() );
 
 		void* null = NULL;
 		void* p1;
@@ -64,36 +69,37 @@ BOOST_AUTO_TEST_SUITE( test_shared_segment )
 		void* p5;
 		{
 			mgr_type mgr2;
-			BOOST_CHECK( mgr2.is_free() );
+			//BOOST_CHECK( mgr2.is_free() );
 
-			p1 = mgr2.allocate( obj_size );
+			p1 = mgr.allocate( obj_size );
 			BOOST_CHECK_NE( p1, null );
 
 			p2 = mgr2.allocate( obj_size );
 			BOOST_CHECK_NE( p2, null );
 			BOOST_CHECK_NE( p1, p2 );
 
-			mgr_type mgr3;
-			BOOST_CHECK( !mgr3.is_free() );
+			{
+				mgr_type mgr3;
+				//BOOST_CHECK( !mgr3.is_free() );
 
-			p3 = mgr3.allocate( obj_size );
-			BOOST_CHECK_NE( p3, null );
+				p3 = mgr3.allocate( obj_size );
+				BOOST_CHECK_NE( p3, null );
 
-			p4 = mgr3.allocate( obj_size );
-			BOOST_CHECK_NE( p4, null );
+				p4 = mgr3.allocate( obj_size );
+				BOOST_CHECK_NE( p4, null );
 
-			p5 = mgr3.allocate( obj_size );
-			BOOST_CHECK_NE( p5, null );
+				p5 = mgr3.allocate( obj_size );
+				BOOST_CHECK_NE( p5, null );
+
+				mgr3.deallocate( p3, obj_size );
+				mgr3.deallocate( p4, obj_size );
+				mgr3.deallocate( p5, obj_size );
+			}
 
 			test::check_pointers( p1, p2, p3, p4, p5 );
-			mgr2.deallocate( p3, obj_size );
-			mgr3.deallocate( p1, obj_size );
+			mgr2.deallocate( p2, obj_size );
 		}
-		mgr.deallocate( p2, obj_size );
-		mgr.deallocate( p4, obj_size );
-		mgr.deallocate( p5, obj_size );
-
-		BOOST_CHECK( mgr.is_free() );
+		mgr.deallocate( p1, obj_size );
 	}
 #endif
 
