@@ -246,8 +246,9 @@ namespace gstl
 			GSTL_DEBUG_RANGE( first, last );
 			if( first != last )
 			{
-				_destroy( first, last );
-				detail::move( &*first, &*last, end() - last );
+				size_type tail_length = end() - last;
+				detail::move( &*first, &*last, tail_length );
+				_destroy( first + tail_length, end() );
 				set_size( size() - (last - first) );
 			}
 			return first;

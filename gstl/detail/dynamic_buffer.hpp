@@ -173,6 +173,7 @@ namespace gstl
 					//Prevent destroying of the swapped buffer
 					tmp.buffer_ = pointer();
 					tmp.reserved_ = 0;
+					tmp.size_ = 0;
 				}
 			}
 
