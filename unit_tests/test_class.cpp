@@ -28,6 +28,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 test_class::test_class() :i_(0)
 {}
 
+test_class::test_class(int i) :i_(i)
+{}
+
 test_class::~test_class()
 {
 	i_ = 0;
@@ -38,7 +41,47 @@ void test_class::set( int i )
 	i_ = i;
 }
 
-int test_class::get()
+int test_class::get() const
 {
 	return i_;
+}
+
+test_class::operator int()
+{
+	return i_;
+}
+
+std::ostream& operator<<( std::ostream& out, const test_class& val )
+{
+	return out << val.get();
+}
+
+bool operator==( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() == rhs.get();
+}
+
+bool operator!=( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() != rhs.get();
+}
+
+bool operator<=( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() <= rhs.get();
+}
+
+bool operator>=( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() >= rhs.get();
+}
+
+bool operator<( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() < rhs.get();
+}
+
+bool operator>( const test_class& lhs, const test_class& rhs )
+{
+	return lhs.get() > rhs.get();
 }

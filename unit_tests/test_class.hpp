@@ -34,10 +34,24 @@ class test_class
 public:
 
 	test_class();
+	test_class(int i);
 	~test_class();
 
 	void set( int i );
-	int get();
+	int get() const;
+
+	operator int();
 };
+
+std::ostream& operator<<( std::ostream& out, const test_class& val );
+
+bool operator==( const test_class& lhs, const test_class& rhs );
+bool operator!=( const test_class& lhs, const test_class& rhs );
+bool operator<=( const test_class& lhs, const test_class& rhs );
+bool operator>=( const test_class& lhs, const test_class& rhs );
+
+bool operator<( const test_class& lhs, const test_class& rhs );
+bool operator>( const test_class& lhs, const test_class& rhs );
+
 
 #endif //GSTL_TEST_CLASS_UNIT_HEADER

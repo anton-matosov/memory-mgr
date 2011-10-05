@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <vector>
 #include <boost/foreach.hpp>
 #include "operations_tracer.hpp"
+#include "test_class.hpp"
 #include "managers.hpp"
 
 class stack_fixture
@@ -43,7 +44,7 @@ BOOST_FIXTURE_TEST_SUITE( stack_test, stack_fixture )
 
 
 
-typedef int								test_value_type;
+typedef test_class test_value_type;
 typedef std::stack<test_value_type>		std_stack;
 
 typedef gstl::vector<test_value_type>	gstl_vector;

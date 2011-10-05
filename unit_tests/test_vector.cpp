@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/vector>
 #include <vector>
 #include "operations_tracer.hpp"
+#include "test_class.hpp"
 #include "managers.hpp"
 
 class vector_fixture
@@ -38,7 +39,7 @@ public:
 
 BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 
-	typedef int								test_value_type;
+	typedef test_class test_value_type;
 	typedef std::vector<test_value_type>	std_vector;
 	typedef gstl::vector<test_value_type>	gstl_vector;
 	typedef gstl::vector<test_value_type,

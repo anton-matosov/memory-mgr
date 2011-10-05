@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <queue>
 #include <list>
 #include <boost/foreach.hpp>
+#include "test_class.hpp"
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
@@ -43,7 +44,7 @@ BOOST_FIXTURE_TEST_SUITE( queue_test, queue_fixture )
 
 
 
-typedef int								test_value_type;
+typedef test_class test_value_type;
 typedef std::queue<test_value_type>		std_queue;
 typedef std::list<test_value_type>		std_list;
 

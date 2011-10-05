@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/list>
 #include <list>
 #include <boost/foreach.hpp>
+#include "test_class.hpp"
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
@@ -42,7 +43,7 @@ BOOST_FIXTURE_TEST_SUITE( list_test, list_fixture )
 
 
 
-typedef int								test_value_type;
+typedef test_class test_value_type;
 typedef std::list<test_value_type>		std_list;
 typedef gstl::list<test_value_type>		gstl_list;
 typedef gstl::list<test_value_type,
