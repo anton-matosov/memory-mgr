@@ -321,7 +321,7 @@ namespace gstl
 			iterator fres = gstl::find( begin(), end(), value );
 			if( fres != end() )
 			{
-				erase( end() );
+				erase( fres );
 			}
 		}
 
@@ -332,7 +332,7 @@ namespace gstl
 			iterator fres = gstl::find_if( begin(), end(), pred );
 			if( fres != end() )
 			{
-				erase( end() );
+				erase( fres );
 			}
 		}
 
