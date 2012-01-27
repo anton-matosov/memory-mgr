@@ -74,7 +74,7 @@ void testPtrAssign()
 	*variablePtr = 567;
 }
 
-int wmain(int /*argc*/, wchar_t* /*argv*/[])
+void test_offset_ptr_optimizer_bug_1()
 {
 	std::cout << "Start" << std::endl;
 	testAssign();
@@ -83,5 +83,34 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
 	std::cout << *get_var2() << std::endl;
 
 	return 0;
+}
+
+void test_offset_ptr_optimizer_bug_2()
+{
+	typedef memory_mgr::allocator<char, sing_sz_lfm_heap_sz_mgr> Allocator;
+
+	typedef gstl::basic_string<char, gstl::char_traits<char>, Allocator> MyString;
+
+	//for(int i = 0; i < 10000; ++i) 
+	{
+		const MyString orig(boost::lexical_cast<std::string>(rand()).c_str());
+		MyString str(orig.begin(), orig.end());
+
+		if (str != str.c_str()) 
+		{
+			//std::cout << "i = " << i << std::endl;
+			std::cout << "str = '" << str << "'" << std::endl;
+			std::cout << "str.c_str() = '" << str.c_str() << "'" << std::endl;
+			return;
+		}
+	}
+	std::cout << "No problems!" << std::endl;
+	return;
+}
+
+void test_offset_ptr_optimizer_bug()
+{
+	test_offset_ptr_optimizer_bug_1();
+	test_offset_ptr_optimizer_bug_2();
 }
 
