@@ -122,7 +122,7 @@ namespace
 		}
 		TEST_SPLIT_LOOP;
 		{
-			delete_( TEST_GET_TRACKED_PTR, mem_mgr( mgr ) );;
+			delete_( mgr, TEST_GET_TRACKED_PTR );;
 		}
 		TEST_END_LOOP( std::wcout );
 
@@ -174,7 +174,7 @@ namespace
 		}
 		TEST_SPLIT_LOOP;
 		{
-			delete_( TEST_GET_TRACKED_PTR, mem_mgr<MemMgr>() );
+			delete_<MemMgr>( TEST_GET_TRACKED_PTR );
 		}
 		TEST_END_LOOP( std::wcout );
 

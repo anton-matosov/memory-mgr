@@ -46,7 +46,7 @@ int main(int /*argc*/, char* /*argv*/[])
 	test_memory_manager( op_repeat, per_alloc, test_repeat );
 	//test_managed_base( op_repeat, per_alloc, test_repeat );
 	test_pool( op_repeat, per_alloc, test_repeat );
-	//test_offset_pointer( op_repeat, per_alloc, test_repeat );
+	test_offset_pointer( op_repeat, per_alloc, test_repeat );
 
 	MGR_PRINT_RESULTS;
 	return std::cin.get();
