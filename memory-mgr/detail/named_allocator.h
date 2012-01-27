@@ -133,18 +133,18 @@ namespace memory_mgr
 			typedef typename string_type::value_type		char_type;
 
 			named_allocator( mgr_type& mgr )
-				:m_is_first_construct( mgr.is_free() ),
-				m_alloc()
+				:m_alloc()
 			{
-				if( m_is_first_construct )
+				offset_ptr<void>& ptr = mgr.get_internal_ptr( detail::internal_ptr_named_objects );
+				if( ! ptr )
 				{
 					m_objects = (map_type*)mgr.allocate( sizeof( map_type ) );
 					::new( m_objects ) map_type( m_alloc );
+					ptr = m_objects;
 				}
 				else
 				{
-					m_objects = static_cast<map_type*>( detail::offset_to_pointer( 
-						is_category_supported< mgr_type, size_tracking_tag>::value ? 4 : 0, mgr ) );
+					m_objects = get_pointer( static_pointer_cast<map_type>( ptr ) );
 				}
 
 			}
@@ -215,7 +215,6 @@ namespace memory_mgr
 			}
 
 		private:
-			bool m_is_first_construct;
 			allocator_type m_alloc;
 			map_type* m_objects;
 

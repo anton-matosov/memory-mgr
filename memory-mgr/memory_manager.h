@@ -403,6 +403,11 @@ namespace memory_mgr
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
 
+	public:
+		offset_ptr<void>& get_internal_ptr( detail::internal_ptrs id )
+		{
+			return m_bitmgr->get_internal_ptr( id );
+		}
 	private:
 		/**
 		   @brief Call this method to allocate memory block

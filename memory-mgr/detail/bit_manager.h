@@ -30,6 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <memory-mgr/detail/static_bitset.h>
 #include <memory-mgr/detail/ptr_casts.h>
+#include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr
 {
@@ -38,6 +39,16 @@ namespace memory_mgr
 	*/
 	namespace detail
 	{
+		enum internal_ptrs
+		{
+			internal_ptr_named_objects,
+			internal_ptr_lfm_pools,
+
+
+			internal_ptrs_count
+		};
+
+
 		//Rounds integer value to upper value using specified integer base
 		template<size_t value, size_t base>
 		struct round_int
@@ -91,7 +102,7 @@ namespace memory_mgr
 			{
 				aux_data_size = 8 /**< size of auxiliary data required to store bit_manager internal data*/,
 				memory_usage = round_int<bitset_t::memory_usage + aux_data_size, 32>::result /**< amount of memory in bytes used by bit_manager*/,
-				num_bits = BitsCount /**< number of bits available for allocations*/
+				num_bits = BitsCount /**< number of bits available for allocations*/,
 			};
 
 			enum
@@ -185,11 +196,17 @@ namespace memory_mgr
 			}
 
 			bool is_constructed() const { return m_is_init == initialized; }
+
+			offset_ptr<void>& get_internal_ptr( internal_ptrs id )
+			{
+				return m_internal_pointers[id];
+			}
 		private:
 			//Bitset
 			isInitialized m_is_init;
 			size_type m_bit_hint;
 
+			offset_ptr<void> m_internal_pointers[internal_ptrs_count];
 			bitset_t m_bitset;
 
 
