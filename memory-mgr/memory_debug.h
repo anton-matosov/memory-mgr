@@ -119,6 +119,7 @@ namespace memory_mgr
 
 			const size_type* block_end_ptr = detail::size_cast( detail::shift( allocated_memory, original_size ) );
 			MGR_ASSERT( m_debug_end_mark == *block_end_ptr, "memory block end was overwritten" );
+			(void)block_end_ptr;
 
 			return start_ptr;
 		}

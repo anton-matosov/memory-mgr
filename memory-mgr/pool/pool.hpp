@@ -49,12 +49,12 @@ namespace memory_mgr {
 
 	struct default_user_allocator_new_delete
 	{
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
+		typedef detail::size_type size_type;
+		typedef detail::difference_type difference_type;
 
 		inline char* allocate(const size_type bytes)
 		{
-			return new (std::nothrow) char[bytes];
+			return new (std::nothrow) char[static_cast<size_t>(bytes)];
 		}
 
 		inline void deallocate(char* const block, size_type /*size*/)
@@ -65,12 +65,12 @@ namespace memory_mgr {
 
 	struct default_user_allocator_malloc_free
 	{
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
+		typedef detail::size_type size_type;
+		typedef detail::difference_type difference_type;
 
 		inline char* allocate(const size_type bytes)
 		{
-			return detail::char_cast(std::malloc(bytes));
+			return detail::char_cast(std::malloc(static_cast<size_t>(bytes)));
 		}
 		
 		inline void deallocate(char * const block, size_type /*size*/)
@@ -82,8 +82,8 @@ namespace memory_mgr {
 	template<class MemMgr>
 	struct mgr_pool_allocator
 	{
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
+		typedef detail::size_type size_type;
+		typedef detail::difference_type difference_type;
 
 		mgr_pool_allocator( MemMgr& mgr )
 			:m_memory_base( mgr.get_segment_base() )
@@ -93,12 +93,13 @@ namespace memory_mgr {
 
 		inline char* allocate(const size_type bytes)
 		{
-			return detail::char_cast( MemMgr( get_pointer(m_memory_base) ).allocate( bytes, std::nothrow ) );
+			return detail::char_cast( MemMgr( get_pointer(m_memory_base) ).allocate( 
+				static_cast<size_t>(bytes)/*, std::nothrow*/ ) );
 		}
 
 		inline void deallocate(char * const block, size_type size)
 		{
-			MemMgr( get_pointer(m_memory_base) ).deallocate( block, size );
+			MemMgr( get_pointer(m_memory_base) ).deallocate( block, static_cast<size_t>(size) );
 		}
 
 	private:
@@ -108,17 +109,18 @@ namespace memory_mgr {
 	template<class SingletonMemMgr>
 	struct memory_mgr_pool_allocator
 	{
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
+		typedef detail::size_type size_type;
+		typedef detail::difference_type difference_type;
 
 		char* allocate(const size_type bytes)
 		{
-			return detail::char_cast( SingletonMemMgr::instance().allocate( bytes, std::nothrow ) );
+			return detail::char_cast( SingletonMemMgr::instance().allocate( 
+				static_cast<size_t>(bytes) /*, std::nothrow*/ ) );
 		}
 
 		void deallocate(char * const block, size_type size)
 		{
-			SingletonMemMgr::instance().deallocate( block, size );
+			SingletonMemMgr::instance().deallocate( block, static_cast<size_t>(size) );
 		}
 	};
 
@@ -148,7 +150,7 @@ namespace memory_mgr {
 
 			char * ptr_next_size() const
 			{
-				return get_pointer(ptr + sz - sizeof(size_type));
+				return get_pointer(ptr + static_cast<size_t>(sz - sizeof(size_type)));
 			}
 
 			char * ptr_next_ptr() const
@@ -201,7 +203,7 @@ namespace memory_mgr {
 
 			size_type & next_size() const
 			{
-				return *detail::size_cast( ptr_next_size() );
+				return *reinterpret_cast< size_type* >( ptr_next_size() );
 			}
 
 			char_ptr& next_POD_ptr() const
@@ -244,7 +246,7 @@ namespace memory_mgr {
 
 		// Returns 0 if out-of-memory
 		// Called if allocate/ordered_allocate needs to resize the free list
-		void * malloc_need_resize();
+		void * malloc_need_resize( user_allocator& alloc );
 		void * ordered_allocate_need_resize();
 
 	protected:
@@ -342,14 +344,14 @@ namespace memory_mgr {
 		//  free chunks.  Only if we need to get another memory block do we call
 		//  the non-inlined *_need_resize() functions.
 		// Returns 0 if out-of-memory
-		void * allocate()
+		void * allocate( user_allocator* alloc = NULL )
 		{
 			// Look for a non-empty storage
 			if (!store().empty())
 			{
 				return store().allocate();
 			}
-			return malloc_need_resize();
+			return malloc_need_resize( alloc ? *alloc : m_alloc );
 		}
 
 		void * ordered_allocate()
@@ -576,12 +578,13 @@ namespace memory_mgr {
 	}
 
 	template <typename UserAllocator>
-	void * pool<UserAllocator>::malloc_need_resize()
+	void * pool<UserAllocator>::malloc_need_resize( user_allocator& alloc )
 	{
+		(void)alloc;
 		// No memory in any of our storages; make a new storage,
 		const size_type partition_size = alloc_size();
 		const size_type POD_size = calc_POD_size(partition_size);
-		char * const ptr = m_alloc.allocate(POD_size);
+		char * const ptr = alloc.allocate(POD_size);
 		if (ptr == 0)
 		{
 			return 0;

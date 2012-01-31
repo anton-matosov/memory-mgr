@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/type_manip.h>
+#include <memory-mgr/detail/types.h>
 #include <memory-mgr/detail/math.h>
 #include <boost/type_traits/make_unsigned.hpp>
 
@@ -97,7 +98,7 @@ namespace memory_mgr
 			void operator()( BlockType& highest_block )
 			{
 				typedef BlockType block_type;
-				enum {highest_bits_mask = ~(~block_type(0) << ExtraBits::value ) };
+				BlockType highest_bits_mask = ~(~block_type(0) << ExtraBits::value );
 				highest_block &= highest_bits_mask;
 			}
 		};
@@ -110,7 +111,7 @@ namespace memory_mgr
 		};
 
 		//Type traits for all array types
-		template< class BlockType, int BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array_traits
 		{
 			typedef typename boost::make_unsigned<BlockType>::type	block_type;
@@ -139,16 +140,24 @@ namespace memory_mgr
 		struct array{};
 
 		//Array specializations for static array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, static_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
 						
-			block_type m_bits[num_blocks];
+			block_type m_bits[num_blocks ? num_blocks : 1];
+		};
+
+		template<class BlockType>
+		struct array< BlockType, 0, static_array> : public array_traits<BlockType, 0>
+		{		
+			typedef array_traits<BlockType, 0> 		array_traits;
+
+			block_type m_bits[1];
 		};
 
 		//Array specializations for dynamic array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, dynamic_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
@@ -204,7 +213,7 @@ namespace memory_mgr
 		};
 
 		//Array specializations for custom array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, external_buffer> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
@@ -225,7 +234,7 @@ namespace memory_mgr
 
 	}
 
-	template< class BlockType, size_t BitsCount, array_type StaticArr = static_array >
+	template< class BlockType, long BitsCount, array_type StaticArr = static_array >
 	class static_bitset: public detail::array< BlockType, BitsCount, StaticArr >
 	{
 	public:	
@@ -263,7 +272,10 @@ namespace memory_mgr
 		   @brief Type used to store size, commonly std::size_t
 		*/
 		typedef size_t		size_type;
+		//typedef ulonglong	size_type;
 		typedef size_type	block_width_type;
+		typedef ptrdiff_t	difference_type;
+		//typedef long long	difference_type;
 
 		/**
 		   @brief invalid index value (null pos)
@@ -316,7 +328,7 @@ namespace memory_mgr
 
 			size_type blk = block_index( pos );
 			size_type ind = pos - blk * bits_per_block;//bit_index( pos );
-			ptrdiff_t left = count;
+			difference_type left = count;
 			while( left > 0 )
 			{
 				if ( contains_bits(blk, ind, left) )
@@ -411,7 +423,7 @@ namespace memory_mgr
 
 			size_type blk = first_block;
 			size_type ind = lowest_bit;
-			ptrdiff_t left = count;
+			difference_type left = count;
 			while( (left > 0) && (lowest_bit != npos) )
 			{
 				if ( contains_bits(blk, ind, left) )

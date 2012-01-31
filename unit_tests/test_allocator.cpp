@@ -91,9 +91,10 @@ BOOST_AUTO_TEST_SUITE( test_allocator )
 	}
 
  	BOOST_AUTO_TEST_CASE( std_containers_test )
- 	{
+	{
+		const int items_count = 1000;
+		BOOST_REQUIRE( allocator_manager::instance().is_free() );
  		{
- 			const int items_count = 1000;
  			vector_type vec;
  			vec.resize( items_count );
  			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
@@ -107,8 +108,9 @@ BOOST_AUTO_TEST_SUITE( test_allocator )
  			{
  				map[ rand() % items_count ] = *it;
  			}
- 		}
- 		BOOST_CHECK( allocator_manager::instance().is_free() );
+		}
+		BOOST_REQUIRE( allocator_manager::instance().is_free() );
+		
  	}
 
 BOOST_AUTO_TEST_SUITE_END()

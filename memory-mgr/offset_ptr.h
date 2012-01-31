@@ -28,7 +28,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
-#include <intrin.h>
 #include <memory-mgr/detail/offset_ptr_base.h>
 
 namespace memory_mgr
@@ -48,10 +47,10 @@ namespace memory_mgr
 	*/
 	template< class T >
 	class offset_ptr
-		: public detail::offset_ptr_base< T, std::ptrdiff_t, offset_ptr< T > >
+		: public detail::offset_ptr_base< T, long long, offset_ptr< T > >
 	{		
 	public:
-		typedef detail::offset_ptr_base< T, std::ptrdiff_t, offset_ptr< T > > base_type;
+		typedef _offset_ptr_base base_type;
 		friend base_type;
 		typedef offset_ptr self_type;
 		
@@ -126,7 +125,7 @@ namespace memory_mgr
 
 	private:
 		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-		//	__declspec(noinline) //this workaround is needed for msvc > 8.0
+			__declspec(noinline) //this workaround is needed for msvc > 8.0
 		#endif
 		inline void do_set_pointer( const_pointer ptr )
 		{
@@ -137,15 +136,13 @@ namespace memory_mgr
 			}
 			else
 			{
-				m_offset = detail::diff( ptr, this );
+				m_offset = detail::diff<offset_type>( ptr, this );
 				MGR_ASSERT( (m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
 			}
-			//MemoryBarrier();
-			__asm{};
 		}
 
 		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-		//	__declspec(noinline) //this workaround is needed for msvc > 8.0
+			__declspec(noinline) //this workaround is needed for msvc > 8.0
 		#endif
 		inline const_pointer do_get_pointer() const
 		{
@@ -153,10 +150,7 @@ namespace memory_mgr
 			{
 				return 0;
 			}
-			const_pointer p = static_cast<const_pointer>( detail::shift( this, m_offset ) );
-			//MemoryBarrier();
-			__asm{};
-			return p;
+			return static_cast<const_pointer>( detail::shift( this, m_offset ) );	
 		}
 	};
 

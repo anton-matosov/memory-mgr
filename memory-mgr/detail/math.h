@@ -209,7 +209,7 @@ namespace memory_mgr
 				bits_in_byte = 8			
 			};
 			int result = -1;
-			for( size_t i = 0; i < num_bytes && result < 0; ++i )
+			for( int i = 0; i < num_bytes && result < 0; ++i )
 			{
 				unsigned char val = (x >> (i*bits_in_byte)) & 0xFF;
 				if( val )

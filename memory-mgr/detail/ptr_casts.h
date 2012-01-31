@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <memory-mgr/detail/types.h>
+
 namespace memory_mgr
 {
 	namespace detail
@@ -62,12 +64,18 @@ namespace memory_mgr
 			return char_cast(p1) - char_cast(p2);
 		}
 
-		static inline void* shift( void* p, size_t offset )
+		template<typename ResultT>
+		static inline ResultT diff( const void* p1, const void* p2 )
+		{
+			return static_cast<ResultT>(diff(p1, p2));
+		}
+
+		static inline void* shift( void* p, ulonglong offset )
 		{
 			return char_cast(p) + offset;
 		}
 
-		static inline const void* shift( const void* p, const size_t offset )
+		static inline const void* shift( const void* p, const ulonglong offset )
 		{
 			return char_cast(p) + offset;
 		}

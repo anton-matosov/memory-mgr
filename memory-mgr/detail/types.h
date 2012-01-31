@@ -32,6 +32,7 @@ typedef unsigned char	ubyte;
 typedef unsigned short	ushort;
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
+typedef unsigned long long	ulonglong;
 
 namespace memory_mgr
 {
@@ -41,6 +42,9 @@ namespace memory_mgr
 		{
 
 		};
+
+		typedef ulonglong size_type;
+		typedef long long difference_type;
 	}
 }
 

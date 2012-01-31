@@ -37,7 +37,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/singleton_manager.h>
 #include <memory-mgr/detail/ptr_helpers.h>
 
-
 namespace memory_mgr
 {
 	namespace detail
@@ -45,7 +44,7 @@ namespace memory_mgr
 		class named_object
 		{
 		public:
-			typedef size_t	block_offset_type;
+			typedef ulong	block_offset_type;
 
 			named_object()
 				: m_ref_count(1)
@@ -135,18 +134,7 @@ namespace memory_mgr
 			named_allocator( mgr_type& mgr )
 				:m_alloc()
 			{
-				offset_ptr<void>& ptr = mgr.get_internal_ptr( detail::internal_ptr_named_objects );
-				if( ! ptr )
-				{
-					m_objects = (map_type*)mgr.allocate( sizeof( map_type ) );
-					::new( m_objects ) map_type( m_alloc );
-					ptr = m_objects;
-				}
-				else
-				{
-					m_objects = get_pointer( static_pointer_cast<map_type>( ptr ) );
-				}
-
+				m_objects = mgr.get_internal_ptr_as<map_type>( detail::internal_ptr_named_objects, 1, m_alloc );
 			}
 
 			bool is_exists( const char_type* name )
@@ -228,7 +216,8 @@ namespace memory_mgr
 				if( fres == m_objects->end() )
 				{
 					//If object is not in map, than we treat it as already deleted
-					return true;
+					//so there is no need to delete it again
+					return false;
 				}
 
 				bool deleted = false;

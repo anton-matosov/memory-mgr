@@ -79,6 +79,7 @@ static void timing_test_alloc_larger()
 	std::cout << "  Pool:           " << end[0][5] << " seconds" << std::endl;
 }
 
+#if 0
 static void timing_test_alloc()
 {
 	typedef memory_mgr::fast_pool_allocator<int,
@@ -334,7 +335,8 @@ static void timing_test_containers()
 	std::cout << "  Pool /w Sync:   " << end[2][4] << " seconds" << std::endl;
 	std::cout << "  Pool:           not possible" << std::endl;
 }
-/*
+
+
 int main(int argc, char * argv[])
 {
   if (argc != 1 && argc != 2)
@@ -388,6 +390,4 @@ int main(int argc, char * argv[])
 
   return 0;
 }
-
-
-*/
+#endif

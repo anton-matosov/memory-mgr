@@ -47,7 +47,8 @@ namespace memory_mgr
 		public:
 			typedef OffsetT					offset_type;
 
-			typedef offset_ptr_base			self_type;		
+			typedef offset_ptr_base			_offset_ptr_base;
+			typedef offset_ptr_base			self_type;
 			typedef self_type&				self_ref_type;
 			typedef const self_type			const_self_type;
 			typedef const_self_type&		const_self_ref_type;
@@ -64,7 +65,8 @@ namespace memory_mgr
 			typedef typename type_manip::add_reference<value_type>::type reference;
 			typedef typename type_manip::add_reference<const value_type>::type const_reference;
 
-			typedef std::ptrdiff_t						difference_type;
+			//typedef std::ptrdiff_t						difference_type;
+			typedef memory_mgr::detail::difference_type difference_type;
 			
 			typedef std::random_access_iterator_tag		iterator_category;
 
@@ -224,7 +226,7 @@ namespace memory_mgr
 			
 			inline derived_ref_type operator+=(difference_type n)
 			{
-				m_offset += shift_size(n);
+				m_offset = static_cast<offset_type>(m_offset + shift_size(n));
 				return *derived_this();
 			}
 

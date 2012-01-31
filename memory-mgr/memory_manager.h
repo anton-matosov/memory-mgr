@@ -44,6 +44,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 namespace memory_mgr
 {
+	template<long Value>
+	struct PositiveOrNull
+	{
+		enum
+		{
+			value = Value > 0 ? Value : 0
+		};
+	};
+
+
 	template
 	<
 		class  ChunkType, 
@@ -55,31 +65,29 @@ namespace memory_mgr
 		enum
 		{
 			chunk_size  = ChunkSize,
-			memory_size = MemorySize,
-			num_chunks  = memory_size / chunk_size
+			num_chunks  = MemorySize / ChunkSize,
+			memory_size = chunk_size * num_chunks,
 		};
 
-		typedef detail::bit_manager<ChunkType, num_chunks, detail::mcNone> bitmgr_type;
+		typedef detail::bit_manager<ChunkType, num_chunks, detail::mcAuto> bitmgr_type;
 
 		enum
 		{
-			used_memory = bitmgr_type::memory_usage,
+			used_memory = sizeof(bitmgr_type),
 			used_chunks = used_memory / chunk_size,
 
-			allocable_memory = memory_size - used_memory,
-			allocable_chunks = num_chunks - used_chunks,
+			allocable_memory = PositiveOrNull<memory_size - used_memory>::value,
+			allocable_chunks = PositiveOrNull<num_chunks - used_chunks>::value,
 		};
 
-		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcNone> allocable_bitmgr_type;
-
+		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcAuto> allocable_bitmgr_type;
 		enum
 		{
-			required_memory = allocable_bitmgr_type::memory_usage,
-			lost_memory_tmp = used_memory - required_memory,
-			lost_memory		= lost_memory_tmp > 0 ? lost_memory_tmp : 0
+			required_memory = sizeof(allocable_bitmgr_type),
+			lost_memory = PositiveOrNull<used_memory - required_memory>::value,
 		};
-		typedef allocable_memory_calc<ChunkType, lost_memory, chunk_size> lost_calc;
 
+		typedef allocable_memory_calc<ChunkType, lost_memory, chunk_size> lost_calc;
 		enum
 		{
 			result_used_memory		= used_memory + lost_calc::used_memory,
@@ -156,7 +164,7 @@ namespace memory_mgr
 		
 		enum
 		{
-			offset_shift = bitmgr_type::memory_usage
+			offset_shift = sizeof(bitmgr_type),
 		};
 
 	public:
@@ -181,7 +189,7 @@ namespace memory_mgr
 		/**
 		   @brief memory offset type that is used to store offset from the base segment address
 		*/
-		typedef size_t										block_offset_type;
+		typedef ulong block_offset_type;
 		
 		/**
 		@brief	memory block id type
@@ -277,7 +285,7 @@ namespace memory_mgr
 			{
 				MGR_ASSERT( ptr >= m_segment_base + offset_shift, "Invalid pointer value");
 				MGR_ASSERT(ptr < ( m_segment_base + offset_shift + memory_size ), "Invalid pointer value" );
-				return detail::diff( ptr, m_segment_base + offset_shift );
+				return detail::diff<block_offset_type>( ptr, m_segment_base + offset_shift );
 			}
 			return offset_traits<block_offset_type>::invalid_offset;
 		}
@@ -366,8 +374,8 @@ namespace memory_mgr
 		   @param chunk_ind  chunk index
 		   @exception newer  throws
 		*/
-		static inline size_type calc_offset( size_type chunk_ind )
-		{ return chunk_ind * chunk_size; }
+		static inline block_offset_type calc_offset( size_type chunk_ind )
+		{ return static_cast<block_offset_type>( chunk_ind * chunk_size ); }
 
 		/**
 		   @brief Returns chunk index by offset
@@ -407,6 +415,39 @@ namespace memory_mgr
 		offset_ptr<void>& get_internal_ptr( detail::internal_ptrs id )
 		{
 			return m_bitmgr->get_internal_ptr( id );
+		}
+
+		template<class T>
+		T* get_internal_ptr_as( detail::internal_ptrs id, int num_items )
+		{
+			typedef T value_type;
+			offset_ptr<void>& ptr = this->get_internal_ptr( id );
+			if( ! ptr )
+			{
+				ptr = this->allocate( sizeof( value_type ) * num_items );
+				value_type* pp = (value_type*)get_pointer( ptr );
+				
+				for( int i = 0; i < num_items; ++ i )
+				{
+					::new( pp + i ) value_type();
+				}
+			}
+
+			return get_pointer( static_pointer_cast<value_type>( ptr ) );
+		}
+
+		template<class T, class A1>
+		T* get_internal_ptr_as( detail::internal_ptrs id, int /*num_items*/, const A1& a1 )
+		{
+			typedef T value_type;
+			offset_ptr<void>& ptr = this->get_internal_ptr( id );
+			if( ! ptr )
+			{
+				ptr = this->allocate( sizeof( value_type ) );
+				::new( get_pointer( ptr ) ) value_type( a1 );
+			}
+
+			return get_pointer( static_pointer_cast<value_type>( ptr ) );
 		}
 	private:
 		/**

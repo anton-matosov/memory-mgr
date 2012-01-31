@@ -100,15 +100,13 @@ namespace memory_mgr
 			*/
 			enum
 			{
-				aux_data_size = 8 /**< size of auxiliary data required to store bit_manager internal data*/,
-				memory_usage = round_int<bitset_t::memory_usage + aux_data_size, 32>::result /**< amount of memory in bytes used by bit_manager*/,
 				num_bits = BitsCount /**< number of bits available for allocations*/,
 			};
 
-			enum
-			{
-				npos = bitset_t::npos
-			};
+			//STATIC_ASSERT( bitset_t::memory_usage == sizeof(bitset_t), MemeoryUsageCalculatedIncorrectly )
+
+			static const size_type npos = bitset_t::npos;
+			
 			//const static size_type npos = bitset_t::npos;
 
 			/**
@@ -124,7 +122,7 @@ namespace memory_mgr
 				{
 					clear();
 					m_is_init = initialized;
-				}				
+				}
 			}
 
 			size_type requires_bytes()

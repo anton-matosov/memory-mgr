@@ -38,7 +38,7 @@ namespace memory_mgr
 			num_pools_required = 129		
 		};
 
-		inline size_t make_multiple_of( const size_t value, const int multiple )
+		inline size_t make_multiple_of( const size_t value, const ptrdiff_t multiple )
 		{
 			return (value + multiple - 1) & (-multiple);
 		}
@@ -53,7 +53,7 @@ namespace memory_mgr
 				size_t segment_size = allocation_segments[segment];
 				if( requested_size <= segment_size )
 				{
-					const int multiple = segment_size / 32;
+					const ptrdiff_t multiple = segment_size / 32;
 					resulting_size = memory_mgr::detail::make_multiple_of( requested_size, multiple );
 					segment_allocation_size = segment_size;
 					break;
@@ -62,9 +62,14 @@ namespace memory_mgr
 			return resulting_size;
 		}
 
-		inline size_t get_pool_grow_size( size_t segment_allocation_size )
+		inline size_t get_pool_base_grow_size( size_t segment_allocation_size )
 		{
 			return (max_lfm_object_size * 2) / segment_allocation_size;
+		}
+
+		inline size_t get_pool_max_grow_size( size_t segment_allocation_size )
+		{
+			return (max_lfm_object_size * 64) / segment_allocation_size;
 		}
 
 		inline size_t get_pool_id( size_t requested_size )

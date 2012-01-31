@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
 #include <memory-mgr/detail/types.h>
 
 namespace memory_mgr
