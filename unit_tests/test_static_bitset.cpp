@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 		BOOST_CHECK_EQUAL(  bitset.test(6, 5), true );
 
 
-		typename bitset_type::size_type pos = bitset.find_first();
+		typename bitset_type::bit_position_type pos = bitset.find_first();
 		BOOST_CHECK_EQUAL(  pos, sz_null );
 
 		pos = bitset.find_next(pos);

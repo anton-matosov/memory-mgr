@@ -28,7 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 typedef char block_type;
 static const size_t bits_count = 32;
 typedef memory_mgr::detail::bit_manager<block_type, bits_count> bit_manager;
-typedef bit_manager::size_type ptr_type;
+typedef bit_manager::bit_position_type ptr_type;
 
 BOOST_AUTO_TEST_SUITE( test_bit_manager )
 

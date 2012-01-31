@@ -45,7 +45,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/sync/named_mutex.h>
 #include <memory-mgr/sync/critical_section.h>
 
-typedef int chunk_type;
+typedef ulonglong chunk_type;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 200 * 1024 * 1024;
 static const size_t memory_size_small = 32 * 1024;

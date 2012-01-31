@@ -177,6 +177,7 @@ namespace memory_mgr
 		typedef typename bitmgr_type::chunk_ptr_type		chunk_ptr_type;
 
 		typedef typename bitmgr_type::size_type				size_type;
+		typedef typename bitmgr_type::bit_position_type				bit_position_type;
 		
 		typedef SyncObj										sync_object_type;
 		typedef typename sync::object_level_lockable<sync_object_type> lockable_type;
@@ -382,7 +383,7 @@ namespace memory_mgr
 		   @param offset  memory offset in bytes
 		   @exception newer  throws
 		*/
-		static inline size_type chunk_index( size_type offset )
+		static inline bit_position_type chunk_index( block_offset_type offset )
 		{ return offset / chunk_size; }
 
 		/**
@@ -390,8 +391,8 @@ namespace memory_mgr
 		   @param size size in bytes
 		   @exception newer  throws
 		*/
-		static inline size_type chunks_count( size_type size )
-		{ return chunk_index( size ); }
+		static inline bit_position_type chunks_count( size_type size )
+		{ return chunk_index( static_cast<bit_position_type>(size) ); }
 
 		/**
 		   @brief Returns number of extra bytes
@@ -406,7 +407,7 @@ namespace memory_mgr
 		   @param size size in bytes
 		   @exception newer  throws
 		*/
-		static inline size_type chunks_required( size_type size )
+		static inline bit_position_type chunks_required( size_type size )
 		{
 			return chunks_count( size ) + (extra_bytes( size ) ? 1 : 0);
 		};
