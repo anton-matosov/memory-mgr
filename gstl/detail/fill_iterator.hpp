@@ -41,6 +41,7 @@ Table 71 - Relations among iterator categories
 
 #include <iterator>
 #include <xutility>
+#include <gstl/detail/types.hpp>
 #include <gstl/detail/iterator.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/iterator/iterator_facade.hpp>
@@ -67,7 +68,8 @@ namespace gstl
 			typedef typename self_type::iterator_facade_	base_type;
 			typedef Value									value_type;
 			typedef value_type&								reference;
-			typedef long									counter_type;
+			typedef ::gstl::detail::portable_difference_type difference_type;
+			typedef ::gstl::detail::portable_difference_type counter_type;
 
 			static const counter_type npos = static_cast<counter_type>( -1 );
 
