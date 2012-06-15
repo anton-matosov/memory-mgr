@@ -191,6 +191,13 @@ public:
     {
     }
 
+	template<class Y, class D>
+	shared_ptr(const offset_ptr<Y>& p, D d )
+		: px( p ), pn( p, d )
+	{
+		memory_mgr::detail::sp_enable_shared_from_this( this, &*p, &*p );
+	}
+
     // As above, but with allocator. A's copy constructor shall not throw.
 
 	template<class Y, class D, class A>

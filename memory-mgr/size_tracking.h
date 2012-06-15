@@ -46,10 +46,12 @@ namespace memory_mgr
 	   @tparam MemMgr  memory_manager class, with or w/o decorators,
 					must support MemoryManagerConcept.               
 	*/
+
 	template< class MemMgr >
 	class size_tracking
-		: public detail::aux_data_decorator< MemMgr, typename manager_traits<MemMgr>::size_type >
+		: public detail::aux_data_decorator< MemMgr, unsigned long >
 	{
+		typedef unsigned long size_tracking_type;
 		/**
 		   @brief Memory manager class that should be decorated
 		*/
@@ -58,7 +60,7 @@ namespace memory_mgr
 		/**
 		   @brief size tracking implementation base class
 		*/
-		typedef aux_data_decorator< mgr_type, typename manager_traits<MemMgr>::size_type >	impl_base_type;
+		typedef aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
 
 	public:
 		/**
@@ -93,7 +95,7 @@ namespace memory_mgr
 		inline void* allocate( size_type size )
 		{
 			void* ptr = impl_base_type::allocate( size );
-			return this->store_aux_data( ptr, size );
+			return this->store_aux_data( ptr, static_cast<size_tracking_type>(size) );
 		}
 
 		/**
@@ -108,7 +110,7 @@ namespace memory_mgr
 		inline void* allocate( size_type size, const std::nothrow_t& nothrow )/*throw()*/
 		{
 			void* ptr = impl_base_type::allocate( size, nothrow );
-			return this->store_aux_data( ptr, size );
+			return this->store_aux_data( ptr, static_cast<size_tracking_type>(size) );
 		}
 
 		/**
@@ -121,7 +123,9 @@ namespace memory_mgr
 		{
 			if( ptr )
 			{
-				this->get_aux_data( ptr, &size );
+				size_tracking_type sizeGot;
+				this->get_aux_data( ptr, &sizeGot );
+				size = static_cast<size_type>(sizeGot);
 			}
 			impl_base_type::deallocate( ptr, size );
 		}

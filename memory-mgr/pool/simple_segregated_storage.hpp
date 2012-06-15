@@ -128,7 +128,6 @@ namespace memory_mgr {
 		simple_segregated_storage()
 			:first_(0)
 		{
-			STATIC_ASSERT( sizeof(first_) == sizeof(void*), PointerTypeIsBiggerThanVoidPtr )
 		}
 
 		// pre: npartition_sz >= sizeof(void *)

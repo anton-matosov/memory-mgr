@@ -5,6 +5,8 @@
 # pragma once
 #endif
 
+#include <memory-mgr/detail/dynamic_cast_ex.h>
+#include <assert.h>
 //
 //  mgr_deleter.hpp
 //
@@ -46,6 +48,17 @@ namespace memory_mgr
 		{
 			(*ptr).~T();
 			MemMgr::instance().deallocate( ptr );
+		}
+	};
+
+
+	template<class MemMgr>
+	struct mgr_delete_deleter
+	{
+		template<class T>
+		void operator()( T* ptr )
+		{
+			::delete_<MemMgr>( ptr );
 		}
 	};
 }

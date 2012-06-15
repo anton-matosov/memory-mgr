@@ -57,7 +57,7 @@ namespace memory_mgr
 			return *this;
 		}
 
-		~intrusive_base()
+		virtual ~intrusive_base()
 		{
 
 		}

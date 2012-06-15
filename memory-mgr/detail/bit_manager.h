@@ -95,20 +95,20 @@ namespace memory_mgr
 			*/
 			typedef typename bitset_t::size_type			size_type;
 
+			typedef typename bitset_t::bit_position_type			bit_position_type;
+
 			/**
 			   @brief compile time computed constants
 			*/
 			enum
 			{
-				aux_data_size = 8 /**< size of auxiliary data required to store bit_manager internal data*/,
-				memory_usage = round_int<bitset_t::memory_usage + aux_data_size, 32>::result /**< amount of memory in bytes used by bit_manager*/,
 				num_bits = BitsCount /**< number of bits available for allocations*/,
 			};
 
-			enum
-			{
-				npos = bitset_t::npos
-			};
+			//STATIC_ASSERT( bitset_t::memory_usage == sizeof(bitset_t), MemeoryUsageCalculatedIncorrectly )
+
+			static const size_type npos = bitset_t::npos;
+			
 			//const static size_type npos = bitset_t::npos;
 
 			/**
@@ -124,7 +124,7 @@ namespace memory_mgr
 				{
 					clear();
 					m_is_init = initialized;
-				}				
+				}
 			}
 
 			size_type requires_bytes()
@@ -132,9 +132,9 @@ namespace memory_mgr
 				return memory_usage;
 			}
 
-			inline size_type allocate( size_type bits_count )
+			inline bit_position_type allocate( bit_position_type bits_count )
 			{
-				size_type pos = m_bitset.find_n( bits_count,  m_bit_hint );
+				bit_position_type pos = m_bitset.find_n( bits_count,  m_bit_hint );
 				//if found set bits
 				if( pos != npos )
 				{
@@ -157,7 +157,7 @@ namespace memory_mgr
 				return pos;
 			}
 
-			inline void deallocate( size_type pos, size_type bits_count )
+			inline void deallocate( bit_position_type pos, bit_position_type bits_count )
 			{
 				MGR_ASSERT( ( this->m_bitset.test( pos, bits_count ) == false ),
 					"Bits are already deallocated or invalid size." );
@@ -204,7 +204,7 @@ namespace memory_mgr
 		private:
 			//Bitset
 			isInitialized m_is_init;
-			size_type m_bit_hint;
+			bit_position_type m_bit_hint;
 
 			offset_ptr<void> m_internal_pointers[internal_ptrs_count];
 			bitset_t m_bitset;

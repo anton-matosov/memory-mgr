@@ -48,7 +48,8 @@ namespace memory_mgr
 		: public detail::offset_ptr_base< T, typename manager_traits<Mgr>::block_offset_type, offset_pointer< T, Mgr > >
 	{		
 	public:
-		typedef detail::offset_ptr_base< T, typename manager_traits<Mgr>::block_offset_type, offset_pointer< T, Mgr > > base_type;
+
+		typedef _offset_ptr_base base_type;
 		friend base_type;
 		typedef offset_pointer self_type;
 		typedef Mgr mgr_type;

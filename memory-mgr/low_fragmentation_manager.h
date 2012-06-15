@@ -50,7 +50,8 @@ namespace memory_mgr
 		typedef memory_mgr::shared_ptr<pool_type> pool_ptr;
 
 		low_fragmentation_manager()
-			: m_pools(NULL)
+			: m_pools(NULL),
+			m_pool_allocator( get_decorated_mgr() )
 		{
 			create_pools_array();
 		}
@@ -58,21 +59,16 @@ namespace memory_mgr
 		///One more constructor that delegates parameters to the base class
 		inline explicit low_fragmentation_manager( void* segment_base )
 			: base_type( segment_base ),
-			m_pools(NULL)
+			m_pools(NULL),
+			m_pool_allocator( get_decorated_mgr() )
 		{
 			create_pools_array();
 		}
 
 		void create_pools_array()
 		{
-			m_pools = memory_mgr::new_<pool_ptr>( get_decorated_mgr(), 
-				"low_fragmentation_manager_pools" )[detail::num_pools_required]();
-		}
-
-		~low_fragmentation_manager()
-		{
-			::delete_array( get_decorated_mgr(), m_pools, 
-				"low_fragmentation_manager_pools" );
+			m_pools = get_internal_ptr_as<pool_ptr>(
+				detail::internal_ptr_lfm_pools, detail::num_pools_required );
 		}
 
 		using base_type::allocate;
@@ -127,7 +123,7 @@ namespace memory_mgr
 		void* allocate_in_pool( size_type size )
 		{
 			lock_type lock( this->get_lockable() );
-			return get_pool(size).allocate();
+			return get_pool(size).allocate( &m_pool_allocator );
 		}
 
 		void deallocate_in_pool( const void* ptr, size_type size )
@@ -139,7 +135,7 @@ namespace memory_mgr
 
 		pool_type& get_pool( size_type size )
 		{
-			size_t pool_id = detail::get_pool_id(size);
+			size_type pool_id = detail::get_pool_id(size);
 			pool_ptr& pool = m_pools[pool_id];
 			if( ! pool )
 			{
@@ -147,15 +143,16 @@ namespace memory_mgr
 				size_type pool_object_size = detail::get_allocation_size(size, segment_allocation_size);
 				pool = memory_mgr::make_shared<pool_type>( get_decorated_mgr(), 
 					pool_object_size,
-					detail::get_pool_grow_size(segment_allocation_size),
-					0,
-					pool_allocator_type( get_decorated_mgr() )
+					detail::get_pool_base_grow_size(segment_allocation_size),
+					detail::get_pool_max_grow_size(segment_allocation_size),
+					m_pool_allocator
 					);
 			}
 			return *pool;
 		}
 
 		pool_ptr* m_pools;
+		pool_allocator_type m_pool_allocator;
 	};
 
 	template< class MemMgr >

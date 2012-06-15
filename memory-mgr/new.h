@@ -74,7 +74,7 @@ namespace memory_mgr
 
 			virtual void* allocate( size_t num_items )
 			{
-				size_type required_size = sizeof( object_type ) * num_items;
+				size_t required_size = sizeof( object_type ) * num_items;
 				return allocate_impl( required_size, *m_mgr );
 			}
 

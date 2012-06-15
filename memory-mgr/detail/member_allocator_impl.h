@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
 #include <memory-mgr/detail/types.h>
 
 namespace memory_mgr
@@ -43,7 +42,9 @@ namespace memory_mgr
 		public:
 			typedef MemMgr												mgr_type;
 			typedef manager_traits<mgr_type>							traits_type;
-			typedef typename traits_type::size_type						size_type;
+			typedef typename traits_type::size_type						mgr_size_type;
+
+			typedef ::memory_mgr::detail::portable_size_t size_type;
 
 			inline member_allocator_impl( mgr_type* mgr )
 				:m_mgr( mgr )
@@ -56,13 +57,13 @@ namespace memory_mgr
 			inline void* allocate(size_type size)
 			{
 				MGR_ASSERT( m_mgr, "manager pointer should not be NULL" );
-				return m_mgr->allocate( size );
+				return m_mgr->allocate( static_cast<mgr_size_type>(size) );
 			}
 
 			inline void deallocate( void* ptr, size_type size )
 			{
 				MGR_ASSERT( m_mgr, "manager pointer should not be NULL" );
-				m_mgr->deallocate( ptr, size );
+				m_mgr->deallocate( ptr, static_cast<mgr_size_type>(size) );
 			}
 
 			bool equal( const BaseType& rhs ) const /*throw()*/

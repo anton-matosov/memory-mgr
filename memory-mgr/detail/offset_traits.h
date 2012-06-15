@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <memory-mgr/detail/types.h>
+
 namespace memory_mgr
 {	
 	/**
@@ -50,15 +52,60 @@ namespace memory_mgr
 	};
 
 	/**
-	   @brief Memory offset traits for size_t type
+	@brief Memory offset traits for int type
 	*/
 	template<>
-	struct offset_traits<size_t>
+	struct offset_traits<int>
+	{
+		/**
+		@brief type passed as template parameter
+		*/
+		typedef int		offset_type;
+
+		/**
+		@brief Value that represents invalid offset, like NULL for pointers
+		*/
+		static const offset_type	invalid_offset = static_cast< offset_type >(1);
+	};
+
+	template<>
+	struct offset_traits<long>
+	{
+		/**
+		@brief type passed as template parameter
+		*/
+		typedef long		offset_type;
+
+		/**
+		@brief Value that represents invalid offset, like NULL for pointers
+		*/
+		static const offset_type	invalid_offset = static_cast< offset_type >(1);
+	};
+
+	template<>
+	struct offset_traits<long long>
+	{
+		/**
+		@brief type passed as template parameter
+		*/
+		typedef long long		offset_type;
+
+		/**
+		@brief Value that represents invalid offset, like NULL for pointers
+		*/
+		static const offset_type	invalid_offset = static_cast< offset_type >(1);
+	};
+
+	/**
+	   @brief Memory offset traits for ulong type
+	*/
+	template<>
+	struct offset_traits<ulong>
 	{
 		/**
 		   @brief type passed as template parameter
 		*/
-		typedef size_t			offset_type;
+		typedef ulong			offset_type;
 
 		/**
 		   @brief Value that represents invalid offset, like NULL for pointers
@@ -67,21 +114,23 @@ namespace memory_mgr
 	};
 
 	/**
-	   @brief Memory offset traits for size_t type
+	   @brief Memory offset traits for ulonglong type
 	*/
 	template<>
-	struct offset_traits<std::ptrdiff_t>
+	struct offset_traits<ulonglong>
 	{
 		/**
 		   @brief type passed as template parameter
 		*/
-		typedef std::ptrdiff_t		offset_type;
+		typedef ulonglong			offset_type;
 
 		/**
 		   @brief Value that represents invalid offset, like NULL for pointers
 		*/
-		static const offset_type	invalid_offset = static_cast< offset_type >(1);
+		static const offset_type	invalid_offset = static_cast<offset_type>(-1);
 	};
+
+
 	/**
 	@brief Memory offset traits for size_t type
 	*/

@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/manager_traits.h>
-#include <memory-mgr/memory_manager.h>
 #include <memory-mgr/allocator_decorator.h>
 #include <memory-mgr/detail/mgr_impl_allocator.h>
 #include <memory-mgr/detail/member_allocator_impl.h>

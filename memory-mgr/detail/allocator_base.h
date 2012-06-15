@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <memory-mgr/detail/types.h>
 #include <memory-mgr/offset_ptr.h>
 
 namespace memory_mgr
@@ -69,8 +70,8 @@ namespace memory_mgr
 			typedef typename ptr_types::reference reference;
 			typedef typename ptr_types::const_reference const_reference;
 
-			typedef size_t size_type;
-			typedef ptrdiff_t difference_type;
+			typedef ::memory_mgr::detail::portable_size_t size_type;
+			typedef ::memory_mgr::detail::portable_difference_type difference_type;
 
 			// construct default allocator (do nothing)
 			inline allocator_base()

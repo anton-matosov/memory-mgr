@@ -47,9 +47,10 @@ namespace memory_mgr
 			:base_type( segment_base )
 		{}
 
-		static const size_type m_debug_marks_size = 8;
-		static const size_type m_debug_begin_mark = 0xBEF0BEF0;
-		static const size_type m_debug_end_mark = 0xAF7EAF7E;
+		typedef unsigned long mark_type;
+		static const mark_type m_debug_marks_size = sizeof(mark_type)*2;
+		static const mark_type m_debug_begin_mark = 0xBEF0BEF0;
+		static const mark_type m_debug_end_mark = 0xAF7EAF7E;
 		static const unsigned char m_debug_allocated_memory_fill = 0xCC;
 		static const unsigned char m_debug_deallocated_memory_fill = 0xBA;
 
@@ -81,10 +82,10 @@ namespace memory_mgr
 			}
 			fill_allocated( allocated_memory, size );
 
-			size_type* block_start_ptr = detail::size_cast( allocated_memory );
+			mark_type* block_start_ptr = static_cast<mark_type*>( allocated_memory );
 			*block_start_ptr = m_debug_begin_mark;
 
-			size_type* block_end_ptr = detail::size_cast( detail::shift( allocated_memory, size ) );
+			mark_type* block_end_ptr = static_cast<mark_type*>( detail::shift( allocated_memory, size ) );
 			--block_end_ptr;
 			*block_end_ptr = m_debug_end_mark;
 
@@ -114,11 +115,12 @@ namespace memory_mgr
 			size_t original_size = size;
 			size += m_debug_marks_size;
 
-			const size_type* start_ptr = detail::size_cast( allocated_memory ) - 1;
+			const mark_type* start_ptr = static_cast<const mark_type*>( allocated_memory ) - 1;
 			MGR_ASSERT( m_debug_begin_mark == *start_ptr, "memory block start was overwritten" );
 
-			const size_type* block_end_ptr = detail::size_cast( detail::shift( allocated_memory, original_size ) );
+			const mark_type* block_end_ptr = static_cast<const mark_type*>( detail::shift( allocated_memory, original_size ) );
 			MGR_ASSERT( m_debug_end_mark == *block_end_ptr, "memory block end was overwritten" );
+			(void)block_end_ptr;
 
 			return start_ptr;
 		}

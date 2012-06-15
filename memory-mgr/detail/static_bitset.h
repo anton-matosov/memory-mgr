@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/detail/helpers.h>
 #include <memory-mgr/detail/type_manip.h>
+#include <memory-mgr/detail/types.h>
 #include <memory-mgr/detail/math.h>
 #include <boost/type_traits/make_unsigned.hpp>
 
@@ -97,7 +98,7 @@ namespace memory_mgr
 			void operator()( BlockType& highest_block )
 			{
 				typedef BlockType block_type;
-				enum {highest_bits_mask = ~(~block_type(0) << ExtraBits::value ) };
+				BlockType highest_bits_mask = ~(~block_type(0) << ExtraBits::value );
 				highest_block &= highest_bits_mask;
 			}
 		};
@@ -110,7 +111,7 @@ namespace memory_mgr
 		};
 
 		//Type traits for all array types
-		template< class BlockType, int BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array_traits
 		{
 			typedef typename boost::make_unsigned<BlockType>::type	block_type;
@@ -139,16 +140,24 @@ namespace memory_mgr
 		struct array{};
 
 		//Array specializations for static array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, static_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
 						
-			block_type m_bits[num_blocks];
+			block_type m_bits[num_blocks ? num_blocks : 1];
+		};
+
+		template<class BlockType>
+		struct array< BlockType, 0, static_array> : public array_traits<BlockType, 0>
+		{		
+			typedef array_traits<BlockType, 0> 		array_traits;
+
+			block_type m_bits[1];
 		};
 
 		//Array specializations for dynamic array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, dynamic_array> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
@@ -204,7 +213,7 @@ namespace memory_mgr
 		};
 
 		//Array specializations for custom array
-		template< class BlockType, size_t BitsCount >
+		template< class BlockType, long BitsCount >
 		struct array< BlockType, BitsCount, external_buffer> : public array_traits<BlockType, BitsCount>
 		{		
 			typedef array_traits<BlockType, BitsCount> 		array_traits;
@@ -225,7 +234,7 @@ namespace memory_mgr
 
 	}
 
-	template< class BlockType, size_t BitsCount, array_type StaticArr = static_array >
+	template< class BlockType, long BitsCount, array_type StaticArr = static_array >
 	class static_bitset: public detail::array< BlockType, BitsCount, StaticArr >
 	{
 	public:	
@@ -262,13 +271,15 @@ namespace memory_mgr
 		/**
 		   @brief Type used to store size, commonly std::size_t
 		*/
-		typedef size_t		size_type;
-		typedef size_type	block_width_type;
+		typedef size_t size_type;
+		typedef ulong bit_position_type;
+		typedef bit_position_type block_id_type;
+		typedef long difference_type;
 
 		/**
 		   @brief invalid index value (null pos)
 		*/
-		const static size_type npos = ~size_type(0);
+		const static bit_position_type npos = ~bit_position_type(0);
 
 		/**
 		   @brief compile time computed constants
@@ -300,23 +311,23 @@ namespace memory_mgr
 		inline ~static_bitset()
 		{}
 
-		inline size_type size() const
+		inline bit_position_type size() const
 		{ return num_bits; }
 
-		inline bool test( size_type pos ) const
+		inline bool test( bit_position_type pos ) const
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			return unchecked_test(pos);
 		}
 
-		inline bool test( size_type pos, size_type count ) const
+		inline bool test( bit_position_type pos, bit_position_type count ) const
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			MGR_ASSERT(count > 0, "Count should be bigger than null");
 
-			size_type blk = block_index( pos );
-			size_type ind = pos - blk * bits_per_block;//bit_index( pos );
-			ptrdiff_t left = count;
+			bit_position_type blk = block_index( pos );
+			bit_position_type ind = pos - blk * bits_per_block;//bit_index( pos );
+			difference_type left = count;
 			while( left > 0 )
 			{
 				if ( contains_bits(blk, ind, left) )
@@ -340,7 +351,7 @@ namespace memory_mgr
 			return *this;
 		}
 
-		inline self_ref_type set( size_type pos)
+		inline self_ref_type set( bit_position_type pos)
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 
@@ -349,19 +360,19 @@ namespace memory_mgr
 		}
 
 
-		inline self_ref_type set( size_type pos, size_type count )
+		inline self_ref_type set( bit_position_type pos, bit_position_type count )
 		{			
 			return do_set<detail::set_op>( pos, count );
 		}
 
-		inline self_ref_type reset(size_type pos)
+		inline self_ref_type reset(bit_position_type pos)
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			this->m_bits[block_index(pos)] &= ~bit_mask(pos);
 			return *this;
 		}
 
-		inline self_ref_type reset( size_type pos, size_type count )
+		inline self_ref_type reset( bit_position_type pos, bit_position_type count )
 		{			
 			return do_set<detail::reset_op>( pos, count );
 		}
@@ -372,7 +383,7 @@ namespace memory_mgr
 			return *this;
 		}
 
-		inline self_ref_type flip(size_type pos)
+		inline self_ref_type flip(bit_position_type pos)
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			this->m_bits[block_index(pos)] ^= bit_mask(pos);
@@ -381,7 +392,7 @@ namespace memory_mgr
 
 		inline self_ref_type flip()
 		{
-			for (size_type i = 0; i < num_blocks; ++i)
+			for (bit_position_type i = 0; i < num_blocks; ++i)
 			{
 				this->m_bits[i] = ~this->m_bits[i];
 			}
@@ -390,7 +401,7 @@ namespace memory_mgr
 		}
 
 
-		inline size_type find_n( size_type count, /*size_type first_block = 0,*/ size_type bit_hint = 0 )
+		inline bit_position_type find_n( bit_position_type count, /*bit_position_type first_block = 0,*/ bit_position_type bit_hint = 0 )
 		{
 			if( count == 0 )
 			{
@@ -398,9 +409,9 @@ namespace memory_mgr
 			}
 
 			//Calculate the first block id to start search with
- 			size_type first_block = block_index( bit_hint );
+ 			bit_position_type first_block = block_index( bit_hint );
 			//Calculate the first free bit id in the first block
- 			size_type lowest_bit = bit_hint - first_block * bits_per_block; //bit_index( bit_hint );
+ 			bit_position_type lowest_bit = bit_hint - first_block * bits_per_block; //bit_index( bit_hint );
 
 			//Check if the bit specified in the hint is really free
 			if( !unchecked_test( first_block, bit_hint ) )
@@ -409,9 +420,9 @@ namespace memory_mgr
 				lowest_bit = do_find_from(first_block);
 			}
 
-			size_type blk = first_block;
-			size_type ind = lowest_bit;
-			ptrdiff_t left = count;
+			bit_position_type blk = first_block;
+			bit_position_type ind = lowest_bit;
+			difference_type left = count;
 			while( (left > 0) && (lowest_bit != npos) )
 			{
 				if ( contains_bits(blk, ind, left) )
@@ -431,17 +442,17 @@ namespace memory_mgr
 			return (lowest_bit != npos) ? first_block * bits_per_block + lowest_bit : npos;
 		}
 
-		inline size_type find_first() const
+		inline bit_position_type find_first() const
 		{
-			size_type blk_index = 0;
+			bit_position_type blk_index = 0;
 			return blk_index * bits_per_block + do_find_from( blk_index );
 		}
 
-		inline size_type find_next( size_type pos ) const
+		inline bit_position_type find_next( bit_position_type pos ) const
 		{			
 			++pos;
 
-			size_type blk_index = block_index(pos);
+			bit_position_type blk_index = block_index(pos);
 			return blk_index * bits_per_block + do_find_next( bit_index(pos), blk_index );
 		}
 		
@@ -476,19 +487,19 @@ namespace memory_mgr
 		static const block_type one = block_type(1);
 		static const block_type block_max = static_cast<block_type>( ~block_type(0) );
 
-		static inline size_type block_index(size_type pos) 
+		static inline bit_position_type block_index(bit_position_type pos) 
 		{ return pos / bits_per_block; }
 		
-		static inline block_width_type bit_index(size_type pos) 
+		static inline block_id_type bit_index(bit_position_type pos) 
 		{ return pos % bits_per_block; }
 
-		static inline block_type bit_mask(size_type pos) 
+		static inline block_type bit_mask(bit_position_type pos) 
 		{ return unchecked_bit_mask( bit_index(pos) ); }
 
-		static inline block_type unchecked_bit_mask(size_type pos) 
+		static inline block_type unchecked_bit_mask(bit_position_type pos) 
 		{ return static_cast<block_type>( one << pos ); }
 		
-		static inline block_type bit_mask(size_type pos, size_type count) 
+		static inline block_type bit_mask(bit_position_type pos, bit_position_type count) 
 		{
 			block_type bit_mask_for_count_bits = 0;
  			if( count < bits_per_block )
@@ -502,24 +513,24 @@ namespace memory_mgr
  			return bit_mask_for_count_bits << bit_index(pos); 
 		}
 
-		static inline block_type higher_bit_mask(size_type pos) 
+		static inline block_type higher_bit_mask(bit_position_type pos) 
 		{ return block_type( block_max << bit_index(pos) ); }
 
-		static inline block_type lower_bit_mask(size_type pos) 
+		static inline block_type lower_bit_mask(bit_position_type pos) 
 		{ return ~higher_bit_mask(); }
 
-		static inline size_type blocks_count( size_type bits_count ) 
+		static inline bit_position_type blocks_count( bit_position_type bits_count ) 
 		{ return block_index( bits_count ); }
 
-		inline bool unchecked_test(size_type pos) const
+		inline bool unchecked_test(bit_position_type pos) const
 		{ return unchecked_test( block_index(pos), bit_index(pos) ); }
 		
-		inline bool unchecked_test(size_type block_ind, size_type bit_ind) const
+		inline bool unchecked_test(bit_position_type block_ind, bit_position_type bit_ind) const
 		{ return (this->m_bits[block_ind] & unchecked_bit_mask(bit_ind)) != 0; }
 
 
 		//Find first block with at least one bit set to 1
-		inline size_type find_first_block( size_type from ) const
+		inline bit_position_type find_first_block( bit_position_type from ) const
 		{
 			// skip null blocks
 			while (from < num_blocks && this->m_bits[from] == 0)
@@ -530,7 +541,7 @@ namespace memory_mgr
 		}
 
 		//finds the first bit set to 1
-		inline size_type do_find_from( size_type& first_block ) const
+		inline bit_position_type do_find_from( bit_position_type& first_block ) const
 		{
 			first_block = find_first_block( first_block );
 
@@ -543,7 +554,7 @@ namespace memory_mgr
 		}
 
 		//finds the next bit set to 1
-		inline size_type do_find_next( size_type bit_ind, size_type& blk_ind ) const
+		inline bit_position_type do_find_next( bit_position_type bit_ind, bit_position_type& blk_ind ) const
 		{
 			if ( bit_ind >= num_bits )
 			{
@@ -555,7 +566,7 @@ namespace memory_mgr
 				do_find_from( ++blk_ind );
 		}
 
-		inline bool contains_bits( size_type block, size_type first, size_type count ) const
+		inline bool contains_bits( bit_position_type block, bit_position_type first, bit_position_type count ) const
 		{
 			const block_type mask = bit_mask( first, count );
 			return (this->m_bits[block] & mask) == mask;
@@ -587,19 +598,19 @@ namespace memory_mgr
 		}
 
 		template< class set_op >
-		inline self_ref_type do_set( size_type pos, size_type count )
+		inline self_ref_type do_set( bit_position_type pos, bit_position_type count )
 		{
 			MGR_ASSERT(pos < num_bits, "Bit position is out of range");
 			count = (count != npos ? count : num_bits - pos); 
 
 			MGR_ASSERT( (pos + count) <= num_bits, "Specified range is out of range");
 
-			size_type block_ind = block_index(pos);
-			const size_type block_end	= block_index(pos + count);
-			const size_type last_index = bit_index(pos + count);
+			bit_position_type block_ind = block_index(pos);
+			const bit_position_type block_end	= block_index(pos + count);
+			const bit_position_type last_index = bit_index(pos + count);
 
 
-			size_type bits_fill_count = count;
+			bit_position_type bits_fill_count = count;
 			do
 			{
 				set_op::update(this->m_bits[block_ind++], bit_mask(pos, bits_fill_count) );
@@ -621,9 +632,9 @@ namespace memory_mgr
 		char_type space = ' ';
 
 		typedef static_bitset<BlockType, BitsCount, Type> bitset_type;
-		typedef typename bitset_type::size_type size_type;
+		typedef typename bitset_type::bit_position_type bit_position_type;
 		
-		for (size_type i = bitset_type::num_bits - 1; ( i != bitset_type::npos ) && ostr; --i) 
+		for (bit_position_type i = bitset_type::num_bits - 1; ( i != bitset_type::npos ) && ostr; --i) 
 		{
 			ostr << (b.test(i)? one : zero);
 			if ( (i % 8) == 0 )
