@@ -118,12 +118,18 @@ BOOST_AUTO_TEST_SUITE( test_new )
 			mgr_type, memory_mgr::memory_debugging_tag>::value),
 			"Deletion validation can't be performed when memory debbuging is enabled" );
 		
-		int* base_class_data = ((int*)base_ptr) + 1 /*vmptr_ size*/;
+#ifdef _WIN64
+		int* base_class_data = (int*)(((ulonglong*)base_ptr) + 1 /*vmptr_ size*/);
+#else
+		int* base_class_data = (int*)base_ptr + 1 /*vmptr_ size*/;
+#endif
 		BOOST_CHECK_EQUAL( *base_class_data, 0xB );
 
 		//Derived class data
-		BOOST_CHECK_EQUAL( *(base_class_data + 1), 0xD );
-		BOOST_CHECK_EQUAL( *(base_class_data + 2), 0xD );
+		int* derived_class_data = (int*)memory_mgr::detail::shift(
+			base_ptr, sizeof(base_test_class));
+		BOOST_CHECK_EQUAL( *(derived_class_data + 0), 0xD );
+		BOOST_CHECK_EQUAL( *(derived_class_data + 1), 0xD );
 
 	}
 

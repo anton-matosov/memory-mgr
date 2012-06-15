@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 
 	BOOST_AUTO_TEST_CASE( calculate_pools_ids )
 	{
-		size_t prevSize = 0;
+		ULONGLONG prevSize = 0;
 		size_t poolId = 0;
 
 		for( size_t i = 0; i < 16384; i += 1 )

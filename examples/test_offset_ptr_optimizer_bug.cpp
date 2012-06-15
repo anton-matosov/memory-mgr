@@ -26,6 +26,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <string>
 #include <conio.h>
 #include <memory-mgr/offset_ptr.h>
+#include <memory-mgr/allocator.h>
+#include "../unit_tests/managers.h"
 
 static int variable = 123;
 static int* variablePtr = NULL;
@@ -81,8 +83,6 @@ void test_offset_ptr_optimizer_bug_1()
 	std::cout << *get_var2() << std::endl;
 	testPtrAssign();
 	std::cout << *get_var2() << std::endl;
-
-	return 0;
 }
 
 void test_offset_ptr_optimizer_bug_2()
@@ -105,7 +105,6 @@ void test_offset_ptr_optimizer_bug_2()
 		}
 	}
 	std::cout << "No problems!" << std::endl;
-	return;
 }
 
 void test_offset_ptr_optimizer_bug()

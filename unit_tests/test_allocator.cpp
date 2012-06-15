@@ -49,8 +49,8 @@ MGR_WRAP_SINGLETON_MANAGER_CLASS(allocator_manager, alloc_mgr);
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
 				allocator_manager, std::allocator<void> > > string_type;
 
-template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
-				allocator_manager, std::allocator<void> > >;
+//template class std::basic_string<wchar_t, std::char_traits<wchar_t>, memory_mgr::allocator<wchar_t, 
+//				allocator_manager, std::allocator<void> > >;
 
 typedef memory_mgr::allocator<int, allocator_manager, std::allocator<void> > allocator;
 typedef memory_mgr::member_allocator<int, heap_mgr, std::allocator<void> > member_alloc;
@@ -91,12 +91,13 @@ BOOST_AUTO_TEST_SUITE( test_allocator )
 	}
 
  	BOOST_AUTO_TEST_CASE( std_containers_test )
- 	{
+	{
+		const int items_count = 1000;
+		BOOST_REQUIRE( allocator_manager::instance().is_free() );
  		{
- 			const int items_count = 1000;
  			vector_type vec;
  			vec.resize( items_count );
- 			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
+ 			/*for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
  			{
  				*it = rand() % items_count;
  			}
@@ -106,9 +107,10 @@ BOOST_AUTO_TEST_SUITE( test_allocator )
  			for( vector_type::iterator it = vec.begin(); it != vec.end(); ++it )
  			{
  				map[ rand() % items_count ] = *it;
- 			}
- 		}
- 		BOOST_CHECK( allocator_manager::instance().is_free() );
+ 			}*/
+		}
+		BOOST_REQUIRE( allocator_manager::instance().is_free() );
+		
  	}
 
 BOOST_AUTO_TEST_SUITE_END()
