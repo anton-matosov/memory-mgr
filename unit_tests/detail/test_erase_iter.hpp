@@ -50,6 +50,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase_iter, container_type, t_list )
 	cont.erase( it );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont.begin(), cont.end(),
 		arr_wo_beg_end_mid, GSTL_ARRAY_END( arr_wo_beg_end_mid ) );
+
+	while( cont.size() )
+	{
+		cont.erase( --cont.end() );
+	}
+	BOOST_CHECK( cont.begin() == cont.end() );
 }
 
 

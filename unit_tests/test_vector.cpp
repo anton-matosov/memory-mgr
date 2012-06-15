@@ -121,9 +121,17 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
+			destructions += vec2.size();
 			vec2 = traced_container_type();
-			destructions += vec3.size();
 			BOOST_CHECK_EQUAL( tracer_type::creations(), creations );
+			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
+
+			size_t num_erases = vec3.size() / 2;
+			destructions += num_erases;
+			while( num_erases-- )
+			{
+				vec3.erase( vec3.begin() );
+			}
 			BOOST_CHECK_EQUAL( tracer_type::destructions(), destructions );
 
 			//Affect of ~vector
