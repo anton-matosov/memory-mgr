@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef MGR_TYPES_HEADER
-#define MGR_TYPES_HEADER
+#ifndef GSTL_TYPES_HEADER
+#define GSTL_TYPES_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
@@ -32,5 +32,15 @@ typedef unsigned char	ubyte;
 typedef unsigned short	ushort;
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
+typedef unsigned long long	ulonglong;
 
-#endif// MGR_TYPES_HEADER
+namespace gstl
+{
+	namespace detail
+	{
+		typedef ulonglong portable_size_t;
+		typedef long long portable_difference_type;
+	}
+}
+
+#endif// GSTL_TYPES_HEADER

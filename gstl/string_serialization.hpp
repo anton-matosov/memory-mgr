@@ -46,7 +46,9 @@ namespace boost
 			const unsigned int version
 			)
 		{
-			std::basic_string<CharT> chars( str.c_str(), str.length() );
+			typedef std::basic_string<CharT> StdStringType;
+			typedef StdStringType::size_type size_type;
+			StdStringType chars( str.c_str(), static_cast<size_type>( str.length() ) );
 			ar & /*BOOST_SERIALIZATION_NVP*/( chars );
 		}
 
@@ -57,7 +59,8 @@ namespace boost
 			const unsigned int version
 			)
 		{
-			std::basic_string<CharT> chars;
+			typedef std::basic_string<CharT> StdStringType;
+			StdStringType chars;
 			ar & /*BOOST_SERIALIZATION_NVP*/( chars );
 			str.assign( chars.c_str(), chars.length() );
 		}

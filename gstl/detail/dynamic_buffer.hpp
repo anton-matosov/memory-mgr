@@ -41,7 +41,8 @@ namespace gstl
 		template<class T>
 		struct default_sequence_traits
 		{
-			static inline const T* move( T* dst, const T* src, size_t size )
+			template<class SizeType>
+			static inline const T* move( T* dst, const T* src, SizeType size )
 			{	
 				return detail::move( dst, src, size );
 			}

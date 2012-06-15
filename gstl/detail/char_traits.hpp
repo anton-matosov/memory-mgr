@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
+#include <gstl/detail/types.hpp>
 #include <gstl/detail/assert.hpp>
 #include <gstl/detail/buffer_helpers.hpp>
 #include <stdio.h>
@@ -48,6 +49,8 @@ namespace gstl
 		typedef streamoff	off_type;
 		typedef streampos	pos_type;
 		typedef mbstate_t	state_type;
+
+		typedef gstl::detail::portable_size_t size_type;
 		
 		/**
 		   @brief assigns c = d
@@ -80,7 +83,7 @@ namespace gstl
 				X::lt(p[j],q[j]) is true and for each i in
 				[0,j) X::eq(p[i],q[i]) is true; else a positive values
 		*/
-		static inline int compare( const char_type* s1, const char_type* s2, size_t n )
+		static inline int compare( const char_type* s1, const char_type* s2, size_type n )
 		{
 			GSTL_ASSERT( s1 != 0 && "s1 is null" );
 			GSTL_ASSERT( s2 != 0 && "s2 is null" );
@@ -111,10 +114,10 @@ namespace gstl
 			@brief yields: the smallest i such that 
 				X::eq(p[i], charT()) is true.
 		*/
-		static inline size_t length( const char_type* s )
+		static inline size_type length( const char_type* s )
 		{
 			GSTL_ASSERT( s != 0 && "s is null" );
-			size_t len = 0;
+			size_type len = 0;
 			while( !eq( *s, char_type() ) )
 			{
 				++s;
@@ -127,7 +130,7 @@ namespace gstl
 			@brief yields: the smallest q in [p,p+n) such that
 				X::eq(*q,c) is true, zero otherwise
 		*/
-		static inline const char_type* find( const char_type* s, size_t n, const char_type& a )
+		static inline const char_type* find( const char_type* s, size_type n, const char_type& a )
 		{
 			GSTL_ASSERT( s != 0 && "s is null" );
 			//GSTL_ASSERT( n <= length( s ) + 1 && "n exceeds length of the string" );
@@ -149,7 +152,7 @@ namespace gstl
 					Copies correctly even where the ranges [p, p+n) and [s, s+n) overlap. 
 			@return dst pointer.
 		*/
-		static inline char_type* move( char_type* dst, const char_type* src, size_t n )
+		static inline char_type* move( char_type* dst, const char_type* src, size_type n )
 		{
 			return detail::move( dst, src, n );
 		}
@@ -158,7 +161,7 @@ namespace gstl
 			@brief pre: p not in [s,s+n). yields: s. for each i in
 				[0,n), performs X::assign(s[i],p[i]).
 		*/
-		static inline char_type* copy( char_type* s1, const char_type* s2, size_t n )
+		static inline char_type* copy( char_type* s1, const char_type* s2, size_type n )
 		{
 			return move( s1, s2, n );
 		}
@@ -167,7 +170,7 @@ namespace gstl
 			@brief for each i in [0,n), performs
 				X::assign(s[i],c). yields:s.
 		*/
-		static inline char_type* assign( char_type* s, size_t n, char_type a )
+		static inline char_type* assign( char_type* s, size_type n, char_type a )
 		{
 			GSTL_ASSERT( s != 0 && "s is null" );
 

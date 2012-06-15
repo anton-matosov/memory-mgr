@@ -85,14 +85,14 @@ namespace gstl
 			return 0;
 		}
 
-		template<class T1, class T2>
-		static inline int check_overlap( const T1* buf1, const T2* buf2, size_t n )
+		template<class T1, class T2, class SizeType>
+		static inline int check_overlap( const T1* buf1, const T2* buf2, SizeType n )
 		{
 			return check_overlap( buf1, buf1 + n, buf2, buf2 + n );
 		}
 
-		template<class DstItem, class SrcItem>
-		static inline DstItem* move( DstItem* dst, const SrcItem* src, size_t n )
+		template<class DstItem, class SrcItem, class SizeType>
+		static inline DstItem* move( DstItem* dst, const SrcItem* src, SizeType n )
 		{
 			GSTL_ASSERT( dst != 0 && "dst is null" );
 			GSTL_ASSERT( src != 0 && "src is null" );
