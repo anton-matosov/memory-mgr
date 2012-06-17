@@ -76,6 +76,7 @@ void testPtrAssign()
 
 int wmain(int /*argc*/, wchar_t* /*argv*/[])
 {
+	::TerminateProcess(::GetCurrentProcess(), -1);
 	std::cout << "Start" << std::endl;
 	testAssign();
 	std::cout << *get_var2() << std::endl;
