@@ -53,7 +53,7 @@ namespace memory_mgr
 	template
 	< 
 		class MemMgr,
-		class NamedAllocatorTraits = detail::named_allocator_traits<MemMgr>	
+		class NamedAllocatorTraits = detail::gstl_named_allocator_traits<MemMgr>	
 	>	
 	class named_objects
 		:public detail::decorator_base<MemMgr>

@@ -31,6 +31,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <string>
 #include <functional>
 #include <map>
+#include <gstl/string>
+#include <gstl/hash.hpp>
+#include <boost/unordered_map.hpp>
+#include <memory-mgr/allocator_decorator.h>
 #include <memory-mgr/detail/decorator_base.h>
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/offset_allocator.h>
@@ -103,8 +107,25 @@ namespace memory_mgr
 			}
 		};
 
+
 		template<class MemMgr>
-		struct named_allocator_traits
+		struct gstl_named_allocator_traits
+		{
+			typedef singleton_manager<MemMgr> mgr_type;
+
+			typedef typename manager_traits<mgr_type>::block_offset_type block_offset_type;
+			typedef offset_allocator<char, mgr_type> allocator_type;
+			typedef memory_mgr::detail::named_object map_value_type;
+
+			typedef gstl::basic_string< char, gstl::char_traits<char>, allocator_type> string_type;
+			typedef std::equal_to<string_type> compare_type;
+			typedef boost::unordered_map< string_type, map_value_type,
+				boost::hash<string_type>, compare_type, allocator_type> map_type;
+			typedef typename map_type::value_type map_item_type;
+		};
+
+		template<class MemMgr>
+		struct std_named_allocator_traits
 		{
 			typedef singleton_manager<MemMgr> mgr_type;
 
