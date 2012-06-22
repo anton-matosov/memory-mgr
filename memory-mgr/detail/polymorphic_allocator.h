@@ -28,6 +28,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	pragma once
 #endif
 
+#include <memory-mgr/detail/types.h>
+#include <memory-mgr/detail/compatibility_types.h>
 
 namespace memory_mgr
 {

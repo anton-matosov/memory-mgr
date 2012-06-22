@@ -166,9 +166,6 @@
     <ClInclude Include="detail\offset_traits.h">
       <Filter>memory_mgr\detail</Filter>
     </ClInclude>
-    <ClInclude Include="detail\pointer_traits.h">
-      <Filter>memory_mgr\detail</Filter>
-    </ClInclude>
     <ClInclude Include="detail\polymorphic_allocator.h">
       <Filter>memory_mgr\detail</Filter>
     </ClInclude>
@@ -468,6 +465,9 @@
     </ClInclude>
     <ClInclude Include="pool\detail\singleton.hpp">
       <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\compatibility_types.h">
+      <Filter>memory_mgr\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

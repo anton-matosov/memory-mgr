@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/detail/offset_ptr_base.h>
+#include <memory-mgr/detail/compatibility_types.h>
 
 namespace memory_mgr
 {	
@@ -47,7 +48,7 @@ namespace memory_mgr
 	*/
 	template< class T >
 	class offset_ptr
-		: public detail::offset_ptr_base< T, long long, offset_ptr< T > >
+		: public detail::offset_ptr_base< T, detail::portable_difference_type, offset_ptr< T > >
 	{		
 	public:
 		typedef _offset_ptr_base base_type;

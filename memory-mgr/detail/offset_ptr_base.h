@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #endif
 
 #include <memory-mgr/detail/offset_traits.h>
+#include <memory-mgr/detail/compatibility_types.h>
 #include <memory-mgr/detail/cmp_helper.h>
 #include <memory-mgr/detail/static_assert.h>
 #include <memory-mgr/pointer_cast.h>

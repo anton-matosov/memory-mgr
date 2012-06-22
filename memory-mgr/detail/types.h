@@ -42,14 +42,6 @@ namespace memory_mgr
 		{
 
 		};
-
-		//typedef ulong portable_size_t;
-		//typedef long portable_difference_type;
-		typedef ulonglong portable_size_t;
-		typedef long long portable_difference_type;
-
-		typedef ulonglong size_type;
-		typedef long long difference_type;
 	}
 }
 

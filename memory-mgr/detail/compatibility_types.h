@@ -21,26 +21,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_POINTER_TRATS_HEADER
-#define MGR_POINTER_TRATS_HEADER
+#ifndef MGR_COMPATIBILITY_TYPES_HEADER
+#define MGR_COMPATIBILITY_TYPES_HEADER
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
 
-#include <gstl/detail/pointer_traits.hpp>
-#include <memory-mgr/offset_ptr.h>
+#include <memory-mgr/config/config.h>
 
-namespace gstl
+namespace memory_mgr
 {
-
- 	template<class T>
-	struct pointer_traits<memory_mgr::offset_ptr< T > >
-		:public pointer_traits<T>
- 	{
- 	};
- 
+	namespace detail
+	{
+#ifdef MGR_ENABLE_32_64_BIT_PROCESSES_INTEROPERABILITY
+		typedef ulonglong portable_size_t;
+		typedef long long portable_difference_type;
+#else
+		typedef ulong portable_size_t;
+		typedef long portable_difference_type;
+#endif
+	}
 }
 
-
-#endif// MGR_POINTER_TRATS_HEADER
+#endif// MGR_COMPATIBILITY_TYPES_HEADER

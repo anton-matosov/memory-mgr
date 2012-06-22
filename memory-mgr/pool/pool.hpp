@@ -33,6 +33,7 @@
 // memory_mgr::simple_segregated_storage
 #include <memory-mgr/pool/simple_segregated_storage.hpp>
 #include <memory-mgr/detail/ptr_casts.h>
+#include <memory-mgr/detail/compatibility_types.h>
 
 #ifdef BOOST_NO_STDC_NAMESPACE
 namespace std { using ::allocate; using ::free; }
@@ -49,8 +50,8 @@ namespace memory_mgr {
 
 	struct default_user_allocator_new_delete
 	{
-		typedef detail::size_type size_type;
-		typedef detail::difference_type difference_type;
+		typedef detail::portable_size_t size_type;
+		typedef detail::portable_difference_type difference_type;
 
 		inline char* allocate(const size_type bytes)
 		{
@@ -65,8 +66,8 @@ namespace memory_mgr {
 
 	struct default_user_allocator_malloc_free
 	{
-		typedef detail::size_type size_type;
-		typedef detail::difference_type difference_type;
+		typedef detail::portable_size_t size_type;
+		typedef detail::portable_difference_type difference_type;
 
 		inline char* allocate(const size_type bytes)
 		{
@@ -82,8 +83,8 @@ namespace memory_mgr {
 	template<class MemMgr>
 	struct mgr_pool_allocator
 	{
-		typedef detail::size_type size_type;
-		typedef detail::difference_type difference_type;
+		typedef detail::portable_size_t size_type;
+		typedef detail::portable_difference_type difference_type;
 
 		mgr_pool_allocator( MemMgr& mgr )
 			:m_memory_base( mgr.get_segment_base() )
@@ -109,8 +110,8 @@ namespace memory_mgr {
 	template<class SingletonMemMgr>
 	struct memory_mgr_pool_allocator
 	{
-		typedef detail::size_type size_type;
-		typedef detail::difference_type difference_type;
+		typedef detail::portable_size_t size_type;
+		typedef detail::portable_difference_type difference_type;
 
 		char* allocate(const size_type bytes)
 		{
