@@ -70,6 +70,8 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		string_type s("aaazzz");
 		s.resize(3);
+		boost::make_iterator_range(s);
+		boost::make_iterator_range(s.begin(), s.end());
 
 		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
 		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
@@ -97,6 +99,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
  	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
+		typedef typename string_type::size_type size_type;
 		char_type ch = 'x';
 		size_t test_len = 10;
 
@@ -122,7 +125,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_EQUAL( s4.size(), s2.size() );
 		BOOST_CHECK_GE( s4.capacity(), s2.size() );
 
-		size_t s2_len_2 = s2.size() / 2;
+		size_type s2_len_2 = s2.size() / 2;
 		string_type s5( s2, 0, s2_len_2 );
 		BOOST_CHECK_EQUAL( char_traits::compare( s5.c_str(), s2.c_str(), s2_len_2 - 1 ), 0 );
 		BOOST_CHECK_EQUAL( s5.size(), s2_len_2 );
@@ -205,6 +208,8 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
+		typedef typename string_type::size_type size_type;
+
 		char_type ch = 'x';
 		char_type ch_null = char_type();
 		size_t test_add_len = 10;
@@ -224,7 +229,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		first size() elements are a copy of the original string designated by *this, and whose remaining
 		elements are all initialized to c.
 		*/
-		size_t s_len_2 = s.size() / 2; /* 1 */
+		size_type s_len_2 = s.size() / 2; /* 1 */
 		s.resize( s_len_2 );
 		BOOST_CHECK_EQUAL( char_traits::compare( s.c_str(), m_test_str, s_len_2 - 1 ), 0 );
 		BOOST_CHECK_EQUAL( s.size(), s_len_2 );
@@ -347,6 +352,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
+		typedef typename string_type::size_type size_type;
 		char_type ch = 'c';
 
 		size_t str_len_2 = m_test_str_len / 2;
@@ -385,6 +391,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
+		typedef typename string_type::size_type size_type;
 		char_type ch = 'x';
 		size_t test_len = 10;
 
@@ -421,7 +428,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_EQUAL( s4.size(), s2.size() );
 		BOOST_CHECK_GE( s4.capacity(), s2.size() );
 
-		size_t s2_len_2 = s2.size() / 2;
+		size_type s2_len_2 = s2.size() / 2;
 		string_type s5;
 		s5.append( s2, 0, s2_len_2 );
 		BOOST_CHECK_EQUAL( char_traits::compare( s5.c_str(), s2.c_str(), s2_len_2 - 1 ), 0 );
@@ -461,6 +468,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
+		typedef typename string_type::size_type size_type;
 		char_type ch = 'x';
 		size_t test_len = 10;
 
@@ -490,7 +498,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_EQUAL( s4.size(), s2.size() );
 		BOOST_CHECK_GE( s4.capacity(), s2.size() );
 
-		size_t s2_len_2 = s2.size() / 2;
+		size_type s2_len_2 = s2.size() / 2;
 		string_type s5;
 		s5.assign( s2, 0, s2_len_2 );
 		BOOST_CHECK_EQUAL( char_traits::compare( s5.c_str(), s2.c_str(), s2_len_2 - 1 ), 0 );

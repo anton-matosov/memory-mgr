@@ -290,8 +290,9 @@ namespace gstl
 		iterator _do_insert( iterator position,
 			FwdIterator first, FwdIterator last, forward_iterator_tag )
 		{
-			size_type new_items_count = gstl::distance( first, last );
-			size_type new_size = size() + new_items_count;
+			typedef typename iterator_traits<FwdIterator>::difference_type diff_type;
+			diff_type new_items_count = gstl::distance( first, last );
+			size_type new_size = static_cast<size_type>(size() + new_items_count);
 
 			iterator result_pos = position;
 			if( new_size > capacity() )

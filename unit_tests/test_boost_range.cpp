@@ -37,6 +37,8 @@ BOOST_FIXTURE_TEST_SUITE( boost_range_test, boost_range_fixture )
 BOOST_AUTO_TEST_CASE(test_make_range)
 {
 	gstl::string string;
+	boost::make_iterator_range(string);
+	boost::make_iterator_range(string.begin(), string.end());
 
 }
 
