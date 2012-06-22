@@ -32,6 +32,7 @@ namespace test
 
 	void detect_memory_leaks::free_type_info_memory()
 	{
+#ifdef MGR_NEEDS_TO_CLEANUP_TYPEINFO_LEAKS
 		__type_info_node *node = __type_info_root_node.next;
 		__type_info_node *tmpNode = &__type_info_root_node;
 
@@ -40,7 +41,8 @@ namespace test
 			tmpNode = node->next;
 			delete node->memPtr;
 			delete node;
-		}
+		}	
+#endif
 	}
 }
 #endif
