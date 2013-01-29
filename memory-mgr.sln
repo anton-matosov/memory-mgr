@@ -24,7 +24,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "postprocess_tools", "postpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit_tests", "unit_tests\unit_tests.vcxproj", "{BBBC875F-89BB-424D-8626-B0B2D856CFAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gstl", "gstl\gSTL.vcxproj", "{270B347C-65E1-41F9-B1EE-1AE3FBB97515}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gstl", "gstl\gstl\gSTL.vcxproj", "{270B347C-65E1-41F9-B1EE-1AE3FBB97515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
