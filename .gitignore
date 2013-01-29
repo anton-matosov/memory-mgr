@@ -15,6 +15,7 @@
 /*.sdf
 /*.opensdf
 /x64
+/ipch
 
 # /examples/
 /examples/[Bb]in
@@ -37,6 +38,7 @@
 /memory-mgr/*.in
 /memory-mgr/*.ncb
 /memory-mgr/[Rr]elease_DeliverablesDrop
+/memory-mgr/x64
 
 # /memory-mgr/config/
 /memory-mgr/config/*.in
@@ -104,3 +106,4 @@
 /unit_tests/*.eto
 /unit_tests/.deps
 /unit_tests/x64
+*.Build times.csv
