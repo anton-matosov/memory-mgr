@@ -169,6 +169,12 @@ namespace memory_mgr
 	{
 		return offset_ptr<T>(r, memory_mgr::detail::dynamic_cast_tag());
 	}
+
+	template<class T>
+	void swap(offset_ptr<T>& a, offset_ptr<T>& b)
+	{
+		a.swap(b);
+	}
 }
 
 MGR_DEFINE_ALL_DELETES( memory_mgr::offset_ptr<T>, get_pointer_internal );

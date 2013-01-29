@@ -273,6 +273,10 @@ namespace memory_mgr
 				return unconst_pointer( derived_this()->do_get_pointer() );
 			}
 
+			void swap(self_type& b) // never throws
+			{
+				std::swap(this->m_offset, b.m_offset);
+			}
 		private:
 			DerivedT* derived_this()
 			{
@@ -310,7 +314,12 @@ namespace memory_mgr
 		{
 			return lhs.get() - rhs.get();
 		}
-
+		
+		template<class T, class OffsetT, class DerivedT>
+		inline void swap(offset_ptr_base<T, OffsetT, DerivedT>& a, offset_ptr_base<T, OffsetT, DerivedT>& b)
+		{
+			a.swap(b);
+		}
 	} //namespace detail
 
 	template<class T, class OffsetT, class DerivedT>

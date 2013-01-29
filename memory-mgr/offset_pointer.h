@@ -166,6 +166,12 @@ namespace memory_mgr
 	{
 		return ::delete_array<Mgr>( get_pointer_internal(ptr) );
 	}
+
+	template<class T, class Mgr>
+	void swap(offset_pointer<T, Mgr>& a, offset_pointer<T, Mgr>& b)
+	{
+		a.swap(b);
+	}
 }
 
 MGR_DEFINE_ALL_DELETES( memory_mgr::offset_pointer<T MGR_COMA MemMgr>, get_pointer_internal );
