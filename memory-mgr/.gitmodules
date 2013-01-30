@@ -1,0 +1,3 @@
+[submodule "gstl"]
+	path = gstl
+	url = git://git.code.sf.net/p/genericstl/git

@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="memory_mgr">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="memory_mgr\detail">
+      <UniqueIdentifier>{c18be994-cf58-421f-889a-de74e8324638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{ae03ecc5-8ed0-4146-904c-1576f3ea4911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\platform">
+      <UniqueIdentifier>{a66e4736-e993-400a-ba8c-8c11575853a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sync">
+      <UniqueIdentifier>{036dc7f3-f3c5-42a6-87fc-7b7008d8e07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="smart_ptr">
+      <UniqueIdentifier>{9d3de289-fd79-403c-9411-8d63cafd0436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="smart_ptr\smart_ptr">
+      <UniqueIdentifier>{2ec83714-2ce3-4262-9779-7881473c2319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="smart_ptr\smart_ptr\detail">
+      <UniqueIdentifier>{58f2049b-65c9-484e-be59-d5eb9fcf979e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pool">
+      <UniqueIdentifier>{bd7b0595-9f4d-4fb0-8b08-403b194d18de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pool\detail">
+      <UniqueIdentifier>{0821f6ad-7c66-4f6b-83b9-635fd2fe7a4a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="_segment_manager.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="allocator.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="allocator_decorator.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="get_pointer.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="heap_segment.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="low_fragmentation_manager.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="managed_base.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="manager_category.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="manager_traits.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_debug.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_header.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_manager.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_segment.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_usage_tracker.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="named_objects.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="new.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="offset_allocator.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="offset_pointer.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="offset_ptr.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="params_binder.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="pointer_cast.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="segment_traits.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_segment.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton_manager.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="size_tracking.h">
+      <Filter>memory_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\allocator_base.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\assert.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\aux_data_decorator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\bit_manager.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\cmp_helper.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\decorator_base.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\dynamic_cast_ex.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\helpers.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\lfm_pool_id_helpers.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\malloc_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\math.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\member_allocator_impl.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\mgr_impl_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\named_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\new_helpers.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\new_proxy_operator_braces.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\new_proxy_operator_pp.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\offset_ptr_base.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\offset_traits.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\polymorphic_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\ptr_casts.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\ptr_helpers.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\segment_storage_base.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\segment_storage_map.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\segment_storage_vector.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\singleton.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\singleton_allocator_impl.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\sp_typeinfo.hpp">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\static_assert.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\static_bitset.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\temp_buffer.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\type_manip.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\types.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\vector_as_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\virtualmem_allocator.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="config\platform\linux.h">
+      <Filter>config\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="config\platform\win32.h">
+      <Filter>config\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="sync\critical_section.h">
+      <Filter>sync</Filter>
+    </ClInclude>
+    <ClInclude Include="sync\locks.h">
+      <Filter>sync</Filter>
+    </ClInclude>
+    <ClInclude Include="sync\named_mutex.h">
+      <Filter>sync</Filter>
+    </ClInclude>
+    <ClInclude Include="sync\pseudo_sync.h">
+      <Filter>sync</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\enable_shared_from_this.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\intrusive_base.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\intrusive_ptr.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\make_shared.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\mgr_deleter.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\scoped_array.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\scoped_ptr.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\shared_array.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\shared_container_iterator.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\shared_ptr.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr.hpp">
+      <Filter>smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\bad_weak_ptr.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\enable_shared_from_this.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\enable_shared_from_this2.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\intrusive_ptr.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\make_shared.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\memory_order.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\scoped_array.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\scoped_ptr.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\shared_array.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\shared_ptr.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\weak_ptr.hpp">
+      <Filter>smart_ptr\smart_ptr</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_gcc.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_gcc_x86.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_pthreads.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_solaris.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_sync.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_win32.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\cast_tags.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lightweight_mutex.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_nop.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_pthreads.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_win32_cs.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\make_shared_pp_pregenerated.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\make_shared_preprocessor.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\operator_bool.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\quick_allocator.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_array_nmt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_count.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_ptr_nmt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_acc_ia64.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_cw_ppc.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_cw_x86.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_ia64.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_mips.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_ppc.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_sparc.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_x86.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_nt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_pt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_solaris.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_spin.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_sync.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_w32.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_impl.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_has_sync.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_gcc_arm.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_nt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_pool.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_pt.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_sync.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_w32.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr\smart_ptr\detail\yield_k.hpp">
+      <Filter>smart_ptr\smart_ptr\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\object_pool.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\pool.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\pool_alloc.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\poolfwd.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\simple_segregated_storage.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\singleton_pool.hpp">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\detail\ct_gcd_lcm.hpp">
+      <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\detail\gcd_lcm.hpp">
+      <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\detail\guard.hpp">
+      <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\detail\mutex.hpp">
+      <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\detail\singleton.hpp">
+      <Filter>pool\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\compatibility_types.h">
+      <Filter>memory_mgr\detail</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pool\detail\pool_construct.inc">
+      <Filter>pool\detail</Filter>
+    </None>
+    <None Include="pool\detail\pool_construct_simple.inc">
+      <Filter>pool\detail</Filter>
+    </None>
+  </ItemGroup>
+</Project>

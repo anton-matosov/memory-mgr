@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{317AB518-3AB8-4F87-9977-E413EDA3F859}</ProjectGuid>
+    <RootNamespace>BitManager</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\3rdPartyLibs.$(Platform).props"/>
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\3rdPartyLibs.$(Platform).props"/>
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\3rdPartyLibs.$(Platform).props"/>
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\3rdPartyLibs.$(Platform).props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="detail\compatibility_types.h" />
+    <ClInclude Include="_segment_manager.h" />
+    <ClInclude Include="allocator.h" />
+    <ClInclude Include="allocator_decorator.h" />
+    <ClInclude Include="get_pointer.h" />
+    <ClInclude Include="heap_segment.h" />
+    <ClInclude Include="low_fragmentation_manager.h" />
+    <ClInclude Include="managed_base.h" />
+    <ClInclude Include="manager_category.h" />
+    <ClInclude Include="manager_traits.h" />
+    <ClInclude Include="memory_debug.h" />
+    <ClInclude Include="memory_header.h" />
+    <ClInclude Include="memory_manager.h" />
+    <ClInclude Include="memory_segment.h" />
+    <ClInclude Include="memory_usage_tracker.h" />
+    <ClInclude Include="named_objects.h" />
+    <ClInclude Include="new.h" />
+    <ClInclude Include="offset_allocator.h" />
+    <ClInclude Include="offset_pointer.h" />
+    <ClInclude Include="offset_ptr.h" />
+    <ClInclude Include="params_binder.h" />
+    <ClInclude Include="pointer_cast.h" />
+    <ClInclude Include="segment_traits.h" />
+    <ClInclude Include="shared_segment.h" />
+    <ClInclude Include="singleton_manager.h" />
+    <ClInclude Include="size_tracking.h" />
+    <ClInclude Include="detail\allocator_base.h" />
+    <ClInclude Include="detail\assert.h" />
+    <ClInclude Include="detail\aux_data_decorator.h" />
+    <ClInclude Include="detail\bit_manager.h" />
+    <ClInclude Include="detail\cmp_helper.h" />
+    <ClInclude Include="detail\decorator_base.h" />
+    <ClInclude Include="detail\dynamic_cast_ex.h" />
+    <ClInclude Include="detail\helpers.h" />
+    <ClInclude Include="detail\lfm_pool_id_helpers.h" />
+    <ClInclude Include="detail\malloc_allocator.h" />
+    <ClInclude Include="detail\math.h" />
+    <ClInclude Include="detail\member_allocator_impl.h" />
+    <ClInclude Include="detail\mgr_impl_allocator.h" />
+    <ClInclude Include="detail\named_allocator.h" />
+    <ClInclude Include="detail\new_helpers.h" />
+    <ClInclude Include="detail\new_proxy_operator_braces.h" />
+    <ClInclude Include="detail\new_proxy_operator_pp.h" />
+    <ClInclude Include="detail\offset_ptr_base.h" />
+    <ClInclude Include="detail\offset_traits.h" />
+    <ClInclude Include="detail\polymorphic_allocator.h" />
+    <ClInclude Include="detail\ptr_casts.h" />
+    <ClInclude Include="detail\ptr_helpers.h" />
+    <ClInclude Include="detail\segment_storage_base.h" />
+    <ClInclude Include="detail\segment_storage_map.h" />
+    <ClInclude Include="detail\segment_storage_vector.h" />
+    <ClInclude Include="detail\singleton.h" />
+    <ClInclude Include="detail\singleton_allocator_impl.h" />
+    <ClInclude Include="detail\sp_typeinfo.hpp" />
+    <ClInclude Include="detail\static_assert.h" />
+    <ClInclude Include="detail\static_bitset.h" />
+    <ClInclude Include="detail\temp_buffer.h" />
+    <ClInclude Include="detail\type_manip.h" />
+    <ClInclude Include="detail\types.h" />
+    <ClInclude Include="detail\vector_as_allocator.h" />
+    <ClInclude Include="detail\virtualmem_allocator.h" />
+    <ClInclude Include="config\config.h" />
+    <ClInclude Include="config\platform\linux.h" />
+    <ClInclude Include="config\platform\win32.h" />
+    <ClInclude Include="sync\critical_section.h" />
+    <ClInclude Include="sync\locks.h" />
+    <ClInclude Include="sync\named_mutex.h" />
+    <ClInclude Include="sync\pseudo_sync.h" />
+    <ClInclude Include="smart_ptr\enable_shared_from_this.hpp" />
+    <ClInclude Include="smart_ptr\intrusive_base.hpp" />
+    <ClInclude Include="smart_ptr\intrusive_ptr.hpp" />
+    <ClInclude Include="smart_ptr\make_shared.hpp" />
+    <ClInclude Include="smart_ptr\mgr_deleter.hpp" />
+    <ClInclude Include="smart_ptr\scoped_array.hpp" />
+    <ClInclude Include="smart_ptr\scoped_ptr.hpp" />
+    <ClInclude Include="smart_ptr\shared_array.hpp" />
+    <ClInclude Include="smart_ptr\shared_container_iterator.hpp" />
+    <ClInclude Include="smart_ptr\shared_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\bad_weak_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\enable_shared_from_this.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\enable_shared_from_this2.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\intrusive_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\make_shared.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\memory_order.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\scoped_array.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\scoped_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\shared_array.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\shared_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\weak_ptr.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_gcc.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_gcc_x86.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_pthreads.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_solaris.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_sync.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\atomic_count_win32.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\cast_tags.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lightweight_mutex.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_nop.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_pthreads.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\lwm_win32_cs.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\make_shared_pp_pregenerated.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\make_shared_preprocessor.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\operator_bool.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\quick_allocator.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_array_nmt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_count.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\shared_ptr_nmt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_acc_ia64.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_cw_ppc.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_cw_x86.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_ia64.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_mips.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_ppc.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_sparc.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_gcc_x86.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_nt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_pt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_solaris.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_spin.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_sync.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_base_w32.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_counted_impl.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\sp_has_sync.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_gcc_arm.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_nt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_pool.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_pt.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_sync.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\spinlock_w32.hpp" />
+    <ClInclude Include="smart_ptr\smart_ptr\detail\yield_k.hpp" />
+    <ClInclude Include="pool\object_pool.hpp" />
+    <ClInclude Include="pool\pool.hpp" />
+    <ClInclude Include="pool\pool_alloc.hpp" />
+    <ClInclude Include="pool\poolfwd.hpp" />
+    <ClInclude Include="pool\simple_segregated_storage.hpp" />
+    <ClInclude Include="pool\singleton_pool.hpp" />
+    <ClInclude Include="pool\detail\ct_gcd_lcm.hpp" />
+    <ClInclude Include="pool\detail\gcd_lcm.hpp" />
+    <ClInclude Include="pool\detail\guard.hpp" />
+    <ClInclude Include="pool\detail\mutex.hpp" />
+    <ClInclude Include="pool\detail\singleton.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pool\detail\pool_construct.inc" />
+    <None Include="pool\detail\pool_construct_simple.inc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
