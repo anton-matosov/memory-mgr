@@ -1,4 +1,4 @@
-/* 
+/*
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
 Copyright (c) 2007, 2008 Anton (shikin) Matosov
@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/iterator>
 #include <gstl/algorithm>
 #include <gstl/detail/helpers.hpp>
+#include <boost/implicit_cast.hpp>
 
 class iterator_test_fixture
 {
@@ -79,11 +80,11 @@ BOOST_AUTO_TEST_CASE( test_iterator_tags )
 }
 
 //////////////////////////////////////////////////////////////////////////
-// These tests were took from boost\pending\iterator_tests.hpp and adopted to 
-// boost::test framework 
+// These tests were took from boost\pending\iterator_tests.hpp and adopted to
+// boost::test framework
 //
 // Tests whether type Iterator satisfies the requirements for a
-// TrivialIterator. 
+// TrivialIterator.
 // Preconditions: i, j, *i, val
 template <class Iterator, class T>
 void trivial_iterator_test(const Iterator i, const Iterator j, T val)
@@ -124,7 +125,7 @@ void mutable_trivial_iterator_test(const Iterator i, const Iterator j, T val)
 
 // Preconditions: *i, v1, *++i, v2
 template <class Iterator, class T>
-void input_iterator_test(Iterator i, T v1, T v2) 
+void input_iterator_test(Iterator i, T v1, T v2)
 {
 	Iterator i1(i);
 
@@ -190,7 +191,7 @@ template <> struct lvalue_test<true> {
 #endif
 
 template <class Iterator, class T>
-void forward_iterator_test(Iterator i, T v1, T v2) 
+void forward_iterator_test(Iterator i, T v1, T v2)
 {
 	input_iterator_test(i, v1, v2);
 
@@ -256,7 +257,7 @@ void random_access_iterator_test(Iterator i, int N, TrueVals vals)
 
 	typedef typename gstl::iterator_traits<Iterator>::value_type value_type;
 
-	for (c = 0; c < N-1; ++c) 
+	for (c = 0; c < N-1; ++c)
 	{
 		BOOST_CHECK_EQUAL(i, j + c);
 		BOOST_CHECK_EQUAL(*i, vals[c]);
@@ -271,12 +272,12 @@ void random_access_iterator_test(Iterator i, int N, TrueVals vals)
 	}
 
 	Iterator k = j + N - 1;
-	for (c = 0; c < N-1; ++c) 
+	for (c = 0; c < N-1; ++c)
 	{
 		BOOST_CHECK_EQUAL(i, k - c);
 		BOOST_CHECK_EQUAL(*i, vals[N - 1 - c]);
 		BOOST_CHECK_EQUAL(*i, boost::implicit_cast<value_type>(j[N - 1 - c]));
-		Iterator q = k - c; 
+		Iterator q = k - c;
 		BOOST_CHECK_EQUAL(*i, *q);
 		BOOST_CHECK_GT(i, j);
 		BOOST_CHECK_GE(i, j);
@@ -401,7 +402,7 @@ BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 
 	gstl::copy(begin, end, reversed);
 	std::reverse( rev_begin, rev_end );
-	
+
 	riter_t i(rev_end);
 	random_access_iterator_test(i, arr_len, array);
 
@@ -409,7 +410,7 @@ BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 
 	const_riter_t j(rev_end);
 	random_access_iterator_test(j, arr_len, array);
-	
+
 	random_access_iterator_test(boost::make_reverse_iterator(const_rev_end), arr_len, array);
 
 	const_nonconst_iterator_test(i, ++j);

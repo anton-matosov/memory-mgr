@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -22,7 +22,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "StdAfx.h"
-#include <memory-mgr/detail/pointer_traits.h>
 #include <memory-mgr/offset_ptr.h>
 #include <gstl/detail/pointer_traits.hpp>
 #include <boost/type_traits.hpp>
