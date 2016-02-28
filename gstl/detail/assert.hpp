@@ -29,6 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #endif
 
 #include <assert.h>
+#include <stdexcept>
 
 #ifndef GSTL_COMA
 #	define GSTL_COMA ,
@@ -50,11 +51,11 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 namespace gstl
 {
 	class assert_exception
-		:public std::exception
+		:public std::logic_error
 	{
 	public:
 		assert_exception( const char* message )
-			:std::exception( message )
+			:std::logic_error( message )
 		{
 
 		}

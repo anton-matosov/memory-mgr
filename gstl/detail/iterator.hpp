@@ -146,7 +146,7 @@ namespace gstl
 		typedef T __far& reference;
 		typedef random_access_iterator_tag iterator_category;
 	};
-#endif GSTL_HAS_FAR_PTR
+#endif // GSTL_HAS_FAR_PTR
 
 	template<class Category, class T, class Distance = ptrdiff_t,
 	class Pointer = typename boost::add_pointer<T>::type,
@@ -488,9 +488,9 @@ namespace gstl
 			return false;
 		}
 
-		template <class T, class charT, class traits, class Distance>
-		friend bool operator==(const istream_iterator<T,charT,traits,Distance>& x,
-			const istream_iterator<T,charT,traits,Distance>& y)
+		template <class Type, class charType, class traitsType, class DistanceType>
+		friend bool operator==(const istream_iterator<Type,charType,traitsType,DistanceType>& x,
+			const istream_iterator<Type,charType,traitsType,DistanceType>& y)
 		{
 			return x.in_stream_ == y.in_stream_;
 		}

@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
 Copyright (c) 2007, 2008 Anton (shikin) Matosov

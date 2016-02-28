@@ -37,6 +37,10 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 namespace gstl
 {
+
+template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+ForwardIterator1 search( ForwardIterator1 first1, ForwardIterator1 last1,
+	ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred );
 /*
 page 577
 */
@@ -87,18 +91,18 @@ page 577
 			{//Second sequence is empty
 				return last1;
 			}
-			else 
+			else
 			{
 				ForwardIterator1 result = last1;
 				ForwardIterator1 new_result;
-				for(;;) 
+				for(;;)
 				{
-					new_result = gstl::search( first1, last1, first2, last2, pred );
+					new_result = ::gstl::search( first1, last1, first2, last2, pred );
 					if( new_result == last1 )
 					{
 						return result;
 					}
-					else 
+					else
 					{
 						result = new_result;
 						first1 = new_result;
@@ -365,7 +369,7 @@ page 577
 		ForwardIterator last)
 	{
 		return adjacent_find( first, last, 
-			std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator )> );
+			std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator )>() );
 	}
 
 	/**
@@ -438,7 +442,7 @@ page 577
 		InputIterator2 first2)
 	{
 		return mismatch( first1, last1, first2, 
-			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
+			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
 
 	/**
@@ -451,7 +455,7 @@ page 577
 		InputIterator2 first2, InputIterator2 last2)
 	{
 		return mismatch( first1, last1, first2, last2,
-			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )> );
+			std::not_equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
 
 	/**
@@ -570,7 +574,7 @@ page 577
 	ForwardIterator1 search( ForwardIterator1 first1, ForwardIterator1 last1,
 		ForwardIterator2 first2, ForwardIterator2 last2 )
 	{
-		return gstl::search( first1, last1, first2, last2, std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator1 )> );
+		return gstl::search( first1, last1, first2, last2, std::equal_to<GSTL_ITER_VALUE_TYPE( ForwardIterator1 )>() );
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
@@ -606,7 +610,7 @@ page 577
 		GSTL_DEBUG_RANGE( first, last );
 		BOOST_CONCEPT_ASSERT(( boost::ForwardIterator<ForwardIterator> ));
 		BOOST_CONCEPT_ASSERT(( boost::BinaryPredicate<BinaryPredicate,
-			typename gstl::iterator_traits<ForwardIterator>::value_type, T ));
+			typename gstl::iterator_traits<ForwardIterator>::value_type, T> ));
 
 		ForwardIterator limit = first;
 		advance( limit, distance( first, last ) - count );

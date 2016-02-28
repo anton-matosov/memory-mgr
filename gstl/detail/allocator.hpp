@@ -57,7 +57,7 @@ namespace gstl
 		template<class Other>
 		struct rebind
 		{	// convert an allocator<T> to an allocator <Other>
-			typedef typename allocator< Other > other;
+			typedef allocator< Other > other;
 		};
 
 		// return address of mutable val
@@ -134,7 +134,7 @@ namespace gstl
 		// estimate maximum array size
 		inline size_type max_size() const 
 		{	
-			size_type count = ~size_type(0) / sizeof value_type;
+			size_type count = ~size_type(0) / sizeof(value_type);
 			return (0 < count ? count : 1);
 		}
 
@@ -156,4 +156,4 @@ namespace gstl
 	}
 }
 
-#endif GSTL_ALLOCATOR_HEADER
+#endif // GSTL_ALLOCATOR_HEADER
