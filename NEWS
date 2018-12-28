@@ -1,8 +1,0 @@
-
-- implementation of unit tests for type manipulation library finished
-- implementation and stabilization of size_tracking decorator is finished
-- new[]/delete[] operators were implemented for managed_base
-- implemented new/delete_ and new[]/delete_array operators
-  to allocate any data type variables
-- implemented is_class type_manip
-- implemented shared memory segment allocator
