@@ -1,0 +1,17 @@
+{% set std_lib = {"Linux": "libstdc++"}.get(platform.system(), "libc++") %}
+
+[settings]
+build_type=Release
+compiler=clang
+compiler.cppstd=14
+compiler.libcxx={{ std_lib }}
+compiler.version=18
+os={{detect_api.detect_os()}}
+arch={{detect_api.detect_arch()}}
+
+[conf]
+tools.cmake.cmaketoolchain:generator=Ninja
+
+[buildenv]
+CC=clang
+CXX=clang++
