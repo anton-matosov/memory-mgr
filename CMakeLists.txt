@@ -8,9 +8,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 enable_testing()
 
-add_subdirectory(memory-mgr)
-add_subdirectory(unit_tests)
-add_subdirectory(perf_tests)
+set(LIBRARY_NAME memory_mgr)
+add_library(${LIBRARY_NAME} INTERFACE)
+target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_subdirectory(tests/unit_tests)
+add_subdirectory(tests/performance_tests)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
