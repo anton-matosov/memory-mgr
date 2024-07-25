@@ -92,7 +92,7 @@ namespace memory_mgr
 		{
 			void operator()( BlockType& highest_block )
 			{
-				typedef BlockType block_type;
+				using block_type = BlockType;
 				BlockType highest_bits_mask = ~(~block_type(0) << ExtraBits::value );
 				highest_block &= highest_bits_mask;
 			}
@@ -114,8 +114,8 @@ namespace memory_mgr
 			using const_block_ref_type = const block_type&;
 
 
-			typedef block_type*			block_ptr_type;
-			typedef const block_type*	const_block_ptr_type;
+			using block_ptr_type = block_type*;
+			using const_block_ptr_type = const block_type*;
 
 			/**
 			   @brief compile time computed constants
@@ -241,8 +241,8 @@ namespace memory_mgr
 	class static_bitset: public detail::array< BlockType, BitsCount, StaticArr >
 	{
 	public:
-		typedef static_bitset	self_type;
-		typedef self_type&	self_ref_type;
+		using self_type = static_bitset;
+		using self_ref_type = self_type&;
 
 		using base_type = detail::array< BlockType, BitsCount, StaticArr >;
 
@@ -274,10 +274,10 @@ namespace memory_mgr
 		/**
 		   @brief Type used to store size, commonly std::size_t
 		*/
-		typedef size_t size_type;
-		typedef ulong bit_position_type;
-		typedef bit_position_type block_id_type;
-		typedef long difference_type;
+		using size_type = size_t ;
+		using bit_position_type = ulong;
+		using block_id_type = bit_position_type;
+		using difference_type = long;
 
 		/**
 		   @brief invalid index value (null pos)
@@ -629,13 +629,13 @@ namespace memory_mgr
 	template <class Ch, class Tr, class BlockType, size_t BitsCount, array_type Type >
 	std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& ostr, const static_bitset<BlockType, BitsCount, Type>& b )
 	{
-		typedef Ch char_type;
+		using char_type = Ch;
 		char_type one = '1';
 		char_type zero = '0';
 		char_type space = ' ';
 
-		typedef static_bitset<BlockType, BitsCount, Type> bitset_type;
-		using bit_position_type = typename bitset_type::bit_position_type ;
+		using bitset_type = static_bitset<BlockType, BitsCount, Type>;
+		using bit_position_type = typename bitset_type::bit_position_type;
 
 		for (bit_position_type i = bitset_type::num_bits - 1; ( i != bitset_type::npos ) && ostr; --i)
 		{
