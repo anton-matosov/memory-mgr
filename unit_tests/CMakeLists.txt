@@ -1,6 +1,10 @@
 set(TARGET unit_tests)
 
-set(SOURCES
+add_library(${TARGET} ${SOURCES})
+target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(${TARGET} boost_unit_test_framework)
+
+target_sources(${TARGET} PRIVATE
   # pool/sys_allocator.hpp
   # pool/test_pool_alloc.cpp
   # pool/time_pool_alloc.cpp
@@ -37,7 +41,3 @@ set(SOURCES
 )
 
 
-add_library(${TARGET} ${SOURCES})
-
-target_include_directories(${TARGET} PRIVATE . "${CMAKE_CURRENT_SOURCE_DIR}/..")
-target_link_libraries(${TARGET} boost_unit_test_framework)
