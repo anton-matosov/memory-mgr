@@ -2,3 +2,6 @@
 /build
 /.cmake
 CMakeUserPresets.json
+
+# Clangd data
+/.cache
