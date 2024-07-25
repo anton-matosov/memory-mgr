@@ -2,7 +2,7 @@ set(TARGET unit_tests)
 
 add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${TARGET} Boost memory-mgr)
+target_link_libraries(${TARGET} memory-mgr)
 
 target_sources(${TARGET} PRIVATE
   # pool/sys_allocator.hpp
@@ -32,7 +32,7 @@ target_sources(${TARGET} PRIVATE
   # test_shared_ptr.cpp
   # test_shared_segment.cpp
   # test_size_tracking.cpp
-  # test_static_bitset.cpp
+  test_static_bitset.cpp
   # test_temp_buffer.cpp
   # test_type_manip.cpp
   stdafx.cpp

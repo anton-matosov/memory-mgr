@@ -79,15 +79,19 @@ BOOST_AUTO_TEST_SUITE( test_static_bitset )
 		bitset.set( 0, bitset_type::num_bits );
 		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_type::num_bits ), true );
 
-		bitset.set(0, bitset_type::npos);
-		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_type::npos), true );
+		constexpr auto bitset_npos = bitset_type::npos; // Needed to keep npos inline as pass by reference will require a storage definition
+
+		bitset.set(0, bitset_npos);
+		BOOST_CHECK_EQUAL(  bitset.test(0, bitset_npos), true );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_mask_calculation_on_bounds, bitset_type, bitsets_list )
 	{
 		bitset_type bitset;
+		constexpr auto bitset_npos = bitset_type::npos;
+
 		bitset.reset( 0, bitset.size() );
-		BOOST_CHECK_EQUAL( bitset.find_n( 1 ), bitset_type::npos );
+		BOOST_CHECK_EQUAL( bitset.find_n( 1 ), bitset_npos );
 	}
 
 BOOST_AUTO_TEST_SUITE_END();

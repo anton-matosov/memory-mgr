@@ -15,6 +15,7 @@ dependencies:
   - clangxx=18
   - cmake=3.30
   - ninja=1.12
+  - boost=1.85.0
 
   - python=3.12
   - pip:
