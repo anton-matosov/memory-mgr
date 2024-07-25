@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -21,62 +21,53 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_HELPERS_HEADER
-#define MGR_HELPERS_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif 
+#pragma once
 
 #include <memory-mgr/detail/assert.h>
 
+#include <exception>
+
 namespace memory_mgr
 {
-	/**
-	@brief Helper classes
-	*/
-	namespace helpers 
-	{
-		static inline void throw_bad_alloc()
-		{ 
-			throw std::bad_alloc();
-		}
+/**
+@brief Helper classes
+*/
+namespace helpers
+{
+static inline void throw_bad_alloc() { throw std::bad_alloc(); }
 
-		static inline void do_nothing()
-		{}
+static inline void do_nothing() {}
 
-		template<class StringT>
-		static inline StringT& add_leading_slash( StringT& str )
-		{
-			if(str[0] != '/')
-			{
-				str.insert( str.begin(), '/');
-			}
-			return str;
-		}
+template <class StringT>
+static inline StringT& add_leading_slash(StringT& str)
+{
+  if (str[0] != '/')
+  {
+    str.insert(str.begin(), '/');
+  }
+  return str;
+}
 
-		template<class StringT>
-		static inline StringT& add_trailing_slash( StringT& str )
-		{
-			if( str.length() >= 1 )
-			{
-				const typename StringT::traits_type::char_type last = *(str.end() - 1);
-				if(last != '/' || last != '\\')
-				{
-					str.insert( str.end(), '/');
-				}
-			}
-			return str;
-		}
+template <class StringT>
+static inline StringT& add_trailing_slash(StringT& str)
+{
+  if (str.length() >= 1)
+  {
+    const typename StringT::traits_type::char_type last = *(str.end() - 1);
+    if (last != '/' || last != '\\')
+    {
+      str.insert(str.end(), '/');
+    }
+  }
+  return str;
+}
 
-		template<class StringT> static inline StringT get_parent_dir( const StringT& file_path )
-		{
-			size_t pos = file_path.find_last_of( "\\/" );
-			return file_path.substr( 0, (pos == -1 ? 0 : pos) );
-		}
-	}//helpers
+template <class StringT>
+static inline StringT get_parent_dir(const StringT& file_path)
+{
+  size_t pos = file_path.find_last_of("\\/");
+  return file_path.substr(0, (pos == -1 ? 0 : pos));
+}
+}  // namespace helpers
 
-}//memory_mgr
-
-
-#endif// MGR_HELPERS_HEADER
+}  // namespace memory_mgr

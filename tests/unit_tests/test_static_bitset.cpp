@@ -22,9 +22,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include <memory-mgr/detail/static_bitset.h>
-
-#include "stdafx.h"
-
+#include <boost/mpl/list.hpp>
+#include <boost/test/unit_test.hpp>
 
 typedef memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array> bitset_uchar_32_type;
 typedef memory_mgr::static_bitset<unsigned short, 64, memory_mgr::static_array> bitset_ushort_64_type;
@@ -55,13 +54,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(static_bitset, bitset_type, bitsets_list)
   BOOST_CHECK_EQUAL(bitset.test(6, 5), true);
 
   typename bitset_type::bit_position_type pos = bitset.find_first();
-  BOOST_CHECK_EQUAL(pos, sz_null);
+  BOOST_CHECK_EQUAL(pos, 0);
 
   pos = bitset.find_next(pos);
-  BOOST_CHECK_EQUAL(pos, sz_one);
+  BOOST_CHECK_EQUAL(pos, 1);
 
   pos = bitset.find_n(5);
-  BOOST_CHECK_EQUAL(pos, sz_six);
+  BOOST_CHECK_EQUAL(pos, 6);
 
   bitset.flip(0);
   BOOST_CHECK_EQUAL(bitset.test(0), false);
