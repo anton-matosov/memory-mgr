@@ -22,7 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
-#include "stdafx.h"
+
 #include <memory-mgr/detail/bit_manager.h>
 
 typedef char block_type;

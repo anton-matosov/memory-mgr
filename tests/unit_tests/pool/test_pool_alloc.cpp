@@ -5,7 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 // Uncomment this to stub out all MT locking
-#include "stdafx.h"
+
 
 #define BOOST_NO_MT
 

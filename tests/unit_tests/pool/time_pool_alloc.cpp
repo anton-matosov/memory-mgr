@@ -4,7 +4,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "stdafx.h"
+
 
 #include <memory-mgr/pool/pool_alloc.hpp>
 #include <memory-mgr/pool/object_pool.hpp>

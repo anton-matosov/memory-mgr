@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+
 #include <crtdbg.h>
 #include <typeinfo>
 #include "detect_memory_leaks.h"
