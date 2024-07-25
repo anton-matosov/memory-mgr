@@ -19,3 +19,4 @@ dependencies:
   - python=3.12
   - pip:
       - conan>=2.5
+      - requests

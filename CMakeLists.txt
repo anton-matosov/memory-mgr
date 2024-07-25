@@ -8,9 +8,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 enable_testing()
 
+add_subdirectory(vendor)
+
 set(LIBRARY_NAME memory-mgr)
 add_library(${LIBRARY_NAME} INTERFACE)
 target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(${LIBRARY_NAME} INTERFACE Boost)
 
 add_subdirectory(tests/unit_tests)
 add_subdirectory(tests/performance_tests)
