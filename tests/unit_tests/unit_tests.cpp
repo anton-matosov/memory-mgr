@@ -24,8 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "stdafx.h"
 
 #define BOOST_TEST_MODULE memory_mgr_unit_tests
-#include <boost/test/auto_unit_test.hpp>
-
+#include <boost/test/included/unit_test.hpp>
 
 boost::unit_test::test_suite* init_unit_test_suite( int, char* [] )
 {

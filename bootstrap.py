@@ -4,7 +4,8 @@ from hashlib import sha1
 from pathlib import Path
 
 vendor_libs = [
-  ("https://master.dl.sourceforge.net/project/boost/boost/1.51.0/boost_1_51_0.tar.bz2", "SHA1", "52ef06895b97cc9981b8abf1997c375ca79f30c5")
+  # ("https://master.dl.sourceforge.net/project/boost/boost/1.51.0/boost_1_51_0.tar.bz2", "SHA1", "52ef06895b97cc9981b8abf1997c375ca79f30c5"),
+  ("https://master.dl.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2", "SHA1", "ed58c632befe0d299b39f9e23de1fc20d03870d7"),
 ]
 destination = Path.cwd() / "vendor" / "downloads"
 destination.mkdir(parents=True, exist_ok=True)
@@ -21,7 +22,7 @@ def download(destination_file, url, hash_type, hash_value):
         raise NotImplementedError(f"Hash type {hash_type} not implemented")
 
       if hash != hash_value:
-        print(f"Hash mismatch for {url}. Removing download {destination_file}")
+        print(f"Hash mismatch for {url}. Expected {hash_value}, but actual is {hash}. Removing download {destination_file}")
         destination_file.unlink()
 
   if not destination_file.exists():
@@ -30,7 +31,7 @@ def download(destination_file, url, hash_type, hash_value):
     data = response.content
 
     hash = sha1(data).hexdigest()
-    assert hash == hash_value, f"Hash mismatch for {url}"
+    assert hash == hash_value, f"Hash mismatch for {url} Expected {hash_value}, but actual is {hash}"
     with open(destination_file, "wb") as f:
       f.write(data)
 
