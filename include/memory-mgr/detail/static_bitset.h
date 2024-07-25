@@ -282,7 +282,7 @@ namespace memory_mgr
 		/**
 		   @brief invalid index value (null pos)
 		*/
-		const static bit_position_type npos = ~bit_position_type(0);
+		constexpr static bit_position_type npos = ~bit_position_type(0);
 
 		/**
 		   @brief compile time computed constants

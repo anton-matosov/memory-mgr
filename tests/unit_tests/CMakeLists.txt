@@ -1,8 +1,8 @@
 set(TARGET unit_tests)
 
-add_library(${TARGET} ${SOURCES})
+add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${TARGET} Boost)
+target_link_libraries(${TARGET} Boost memory-mgr)
 
 target_sources(${TARGET} PRIVATE
   # pool/sys_allocator.hpp

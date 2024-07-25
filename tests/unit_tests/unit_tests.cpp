@@ -22,13 +22,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/heap_segment.h>
-#include <memory-mgr/allocator.h>
-
 
 #define BOOST_TEST_MODULE memory_mgr_unit_tests
 #include <boost/test/auto_unit_test.hpp>

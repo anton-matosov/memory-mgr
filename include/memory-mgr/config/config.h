@@ -37,8 +37,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #	include <memory-mgr/config/platform/linux.h>
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #	include <memory-mgr/config/platform/win32.h>
-#else 
-#	error "Unsupported platform. In future all the platforms will be supported."
+#elif defined(__APPLE__)
+#	include <memory-mgr/config/platform/osx.h>
+#else
+#	error "Unsupported platform. PRs are welcome."
 #endif
 
 #include <memory-mgr/detail/helpers.h>
