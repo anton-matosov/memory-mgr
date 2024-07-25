@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -26,7 +26,4 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define BOOST_TEST_MODULE memory_mgr_unit_tests
 #include <boost/test/included/unit_test.hpp>
 
-boost::unit_test::test_suite* init_unit_test_suite( int, char* [] )
-{
-	return 0;
-}
+boost::unit_test::test_suite* init_unit_test_suite(int, char*[]) { return 0; }

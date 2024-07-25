@@ -27,14 +27,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 // #define _CRTDBG_MAP_ALLOC
 // #define _CRTDBG_MAP_ALLOC_NEW
 
+#include <algorithm>
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>
-
-#include <algorithm>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
+
 
 static const size_t sz_null = 0;
 static const size_t sz_one = 1;
