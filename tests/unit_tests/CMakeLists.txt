@@ -2,7 +2,7 @@ set(TARGET unit_tests)
 
 add_library(${TARGET} ${SOURCES})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${TARGET} boost_unit_test_framework)
+target_link_libraries(${TARGET} Boost)
 
 target_sources(${TARGET} PRIVATE
   # pool/sys_allocator.hpp
@@ -13,7 +13,7 @@ target_sources(${TARGET} PRIVATE
   # detect_memory_leaks.cpp
   # detect_memory_leaks.h
   managers.h
-  
+
   # test_allocator.cpp
   # test_bit_manager.cpp
   # test_class.cpp

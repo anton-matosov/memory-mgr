@@ -51,7 +51,7 @@ namespace memory_mgr {
 			template <unsigned A, unsigned B>
 			struct ct_gcd
 			{
-				BOOST_STATIC_ASSERT(A != 0 && B != 0);
+				static_assert(A != 0 && B != 0, "");
 				BOOST_STATIC_CONSTANT(unsigned, value =
 					(::memory_mgr::details::pool::details::ct_gcd_helper<A, B, false>::value) );
 			};
@@ -77,7 +77,7 @@ namespace memory_mgr {
 
 			template<unsigned A, unsigned B> struct ct_gcd
 			{
-				BOOST_STATIC_ASSERT(A != 0 && B != 0);
+				static_assert(A != 0 && B != 0);
 				enum { value = details::ct_gcd2<A>::helper<B>::value };
 			};
 

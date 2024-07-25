@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -24,9 +24,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #ifndef MGR_MATH_HEADER
 #define MGR_MATH_HEADER
 
+#include <limits>
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
-#endif 
+#endif
 
 #include <memory-mgr/detail/assert.h>
 
@@ -35,18 +36,18 @@ namespace memory_mgr
 	/**
 	@brief Helper classes
 	*/
-	namespace math 
+	namespace math
 	{
 		/**
 		@brief Helper classes implementation details
 		*/
-		namespace detail 
+		namespace detail
 		{
 			template <typename T>
-			static inline int integer_log2_impl(T x, int n) 
+			static inline int integer_log2_impl(T x, int n)
 			{
 				int result = 0;
-				while( x != 1 ) 
+				while( x != 1 )
 				{
 					const T t = static_cast< const T >( x >> n );
 					if( t )
@@ -109,7 +110,7 @@ namespace memory_mgr
 				enum {t = p::x_ >> p::n_};
 
 				typedef log2_if_t< log2_if_t_params<typename p::T_, t, p::x_, p::n_, p::prev_res_> > u;
-				enum{ result = int_log2_impl< 
+				enum{ result = int_log2_impl<
 					int_log2_params<typename p::T_, u::new_x, p::n_ / 2, u::result> >::result };
 
 			};
@@ -127,14 +128,14 @@ namespace memory_mgr
 			// to avoid PTS)
 			//
 			template <int p, int n>
-			struct max_pow2_less 
+			struct max_pow2_less
 			{
 				enum { c = 2*n < p };
 				enum { value = c ? (max_pow2_less< c*p, 2*c*n>::value) : n};
 			};
 
 			template <>
-			struct max_pow2_less<0, 0> 
+			struct max_pow2_less<0, 0>
 			{
 				enum { value = 0};
 			};
@@ -146,7 +147,7 @@ namespace memory_mgr
 		// ---------------
 		//
 		template <typename T>
-		static inline int integer_log2(T x) 
+		static inline int integer_log2(T x)
 		{
 			MGR_ASSERT(x > 0, "Logarithm is defined for values only greater than zero"); // PRE
 
@@ -158,19 +159,19 @@ namespace memory_mgr
 		template<class T, T x>
 		struct int_log2
 		{
-			BOOST_STATIC_ASSERT( x > 0 ); // PRE
+			static_assert(x > 0, ""); // PRE
 			enum { n = detail::max_pow2_less<std::numeric_limits<T>::digits, 4>::value };
 			enum { result = detail::int_log2_impl<
 				detail::int_log2_params<T, x, n, 0> >::result };
 		};
-		
+
 
 		/**
 		   @brief Returns the number of the first bit in the 'x' that is set to 1
 		   @details Uses int_log2 to find the bit id
 		*/
 		template <typename T>
-		static inline  int lowest_bit(T x) 
+		static inline  int lowest_bit(T x)
 		{
 			MGR_ASSERT(x >= 1, "prcondition check failed"); // PRE
 
@@ -181,7 +182,7 @@ namespace memory_mgr
 		}
 
 		template <typename T>
-		static inline  int lowest_bit2(T x) 
+		static inline  int lowest_bit2(T x)
 		{
 			MGR_ASSERT(x != 0, "prcondition check failed");
 
@@ -202,11 +203,11 @@ namespace memory_mgr
 						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0 };
-			
+
 			enum
 			{
 				num_bytes = sizeof( T ),
-				bits_in_byte = 8			
+				bits_in_byte = 8
 			};
 			int result = -1;
 			for( int i = 0; i < num_bytes && result < 0; ++i )
@@ -219,14 +220,14 @@ namespace memory_mgr
 					{
 						result+=(i*(bits_in_byte));
 					}
-					
+
 				}
-				
+
 			}
 
 			return result;
-			
-						
+
+
 		}
 	}//math
 
