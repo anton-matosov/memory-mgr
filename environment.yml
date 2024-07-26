@@ -11,10 +11,14 @@ channels:
   - nodefaults
 
 dependencies:
-  - clang=18
-  - clangxx=18
+  - clangxx=18 # C/C++ compiler
+
+  - clang-format # C++ code formatter and format enforcement tool
+  - clang-tools  # for clang-tidy, a C++ linter
+
   - cmake=3.30
   - ninja=1.12
+
   - boost=1.85.0
 
   - python=3.12
