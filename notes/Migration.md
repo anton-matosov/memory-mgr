@@ -38,10 +38,22 @@ With the goal of bringing the best modern tools to the project CMake is the natu
 
 Having the build system in our toolbox its time to choose a compiler. I chose Clang without any hesitation. It is the most actively developed compiler, works on all the platforms, has an extensive ecosystem of tools around it (`clangd` - LSP server, `clang-format` - code formatting, `clang-tide` - linter with automatic migration capabilities).
 
+### Dependencies
+
 The next thing would be to bring in all the dependencies. Project heavily relies on `Boost` for `type traits` and `mpl` as well as `unit test` libraries. 2013 was the year of `Boost 1.51` so the first natural choice was to dig it out on the internet and use it as is. However it also got stale and is not compatible with modern clang anymore. Therefore a newer version has to be used and since we are modernizing it all, lets go with the latest and greatest `Boost 1.85`
 
 The second dependency is `generic-stl`, another library of mine that was co-developed. And would need to be ported alongside with the current project.
 
+### IDE
+
 For the IDE I'll stick to my favorite VSCode. It works on all desktop platforms and supports remote development as well as available on Web via GitHub Codespaces and similar products. It is highly extensible and configurable.
 
+
+### Toolchain management
+
+Managing toolchains, especially cross platform, is not an easy task. Doing this by hand is error prone and a burden. For many years before I've been writing a `bootstrap` script that will setup dev environment for me and fellow devs. But its not an easy task, especially when it gets to doing upgrades.
+
+Luckily the python community came up with `Anaconda` project that was designed to simplify environment setup for researchers using python, specifically packages that have native dependencies. The native dependencies handling part evolved into a comprehensive tooling of its own and is now independent of python. And has C++ as a first class citizen.
+
+[`Micromamba`](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html) is tiny and blazing fast self contained `Anaconda` compatible client. It has good extension for VSCode and GitHub Action.
 
