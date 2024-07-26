@@ -57,3 +57,28 @@ Luckily the python community came up with `Anaconda` project that was designed t
 
 [`Micromamba`](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html) is tiny and blazing fast self contained `Anaconda` compatible client. It has good extension for VSCode and GitHub Action.
 
+The definition of all the dependencies and sources for conda can be done via command line or in [`environment.yml`](/environment.yml) file which can be conveniently shared in the repo and will be picked up by [vscode-micromamba](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) extension.
+
+At the current stage [`environment.yml`](/environment.yml) looks as follows:
+
+```yml
+name: default # The name the conda environment
+
+channels:
+  - conda-forge # Main community channel of stable packages
+  # We want to have a reproducible setup, so we don't want default channels,
+  # which may be different for different users. All required channels should
+  # be listed explicitly here.
+  - nodefaults
+
+dependencies:
+  - clangxx=18 # C/C++ compiler
+
+  - clang-format # C++ code formatter and format enforcement tool
+  - clang-tools  # for clang-tidy, a C++ linter
+
+  - cmake=3.30
+  - ninja=1.12
+
+  - boost=1.85.0
+```
