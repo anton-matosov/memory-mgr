@@ -1,0 +1,44 @@
+
+name: ci
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+defaults:
+  run:
+    # This forces shell to be login shell and load the user's profile that activates the conda environment
+    # https://github.com/marketplace/actions/setup-micromamba#about-login-shells
+    shell: bash -leo pipefail {0}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        build_type: [Release]
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CONAN_PROFILE: "${{ github.workspace }}/.conan/profiles/clang"
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: environment.yml
+        init-shell: bash
+
+    - name: configure
+      run: |
+        mkdir -p build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ..
+
+    - name: build
+      run: cmake --build build
