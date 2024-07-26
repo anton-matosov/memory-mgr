@@ -17,7 +17,7 @@ defaults:
 jobs:
   build:
     strategy:
-      fail-fast: true
+      fail-fast: false
 
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
@@ -25,7 +25,8 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      CONAN_PROFILE: "${{ github.workspace }}/.conan/profiles/clang"
+      CC: clang
+      CXX: clang++
     steps:
     - uses: actions/checkout@v4
 
