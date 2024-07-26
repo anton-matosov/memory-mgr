@@ -30,3 +30,18 @@ With all that knowledge about the library history, its time to set the path forw
  - modernize the codebase without breaking it
  - refactor system to reach the best runtime performance without sacrificing build times
 
+## The first steps
+
+The first step in bringing such a legacy system to life will be to build it. The project used two independent build systems. VS2010 projects for Windows and Automake for Linux. Neither of those is ideal for cross platform project. VS2010 is Windows only and IDE specific, making it impossible to use with other IDEs. While Automake is more cross platform, it requires GNU tools on Windows and is generally unmaintained. Moreover, it is not easy to integrate it with msvc compatible compilers on Windows.
+
+With the goal of bringing the best modern tools to the project CMake is the natural choice. It is  cross platform, supports cross compilation, can generate IDE projects if need to and is well documented and maintained.
+
+Having the build system in our toolbox its time to choose a compiler. I chose Clang without any hesitation. It is the most actively developed compiler, works on all the platforms, has an extensive ecosystem of tools around it (`clangd` - LSP server, `clang-format` - code formatting, `clang-tide` - linter with automatic migration capabilities).
+
+The next thing would be to bring in all the dependencies. Project heavily relies on `Boost` for `type traits` and `mpl` as well as `unit test` libraries. 2013 was the year of `Boost 1.51` so the first natural choice was to dig it out on the internet and use it as is. However it also got stale and is not compatible with modern clang anymore. Therefore a newer version has to be used and since we are modernizing it all, lets go with the latest and greatest `Boost 1.85`
+
+The second dependency is `generic-stl`, another library of mine that was co-developed. And would need to be ported alongside with the current project.
+
+For the IDE I'll stick to my favorite VSCode. It works on all desktop platforms and supports remote development as well as available on Web via GitHub Codespaces and similar products. It is highly extensible and configurable.
+
+
