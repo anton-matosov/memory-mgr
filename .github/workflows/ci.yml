@@ -29,9 +29,6 @@ jobs:
         build_type: [Release]
 
     runs-on: ${{ matrix.os }}
-    env:
-      CC: clang
-      CXX: clang++
     steps:
     - uses: actions/checkout@v4
 
@@ -41,10 +38,13 @@ jobs:
         init-shell: bash
 
     - name: configure
+      env:
+        CC: clang
+        CXX: clang++
       run: |
         mkdir -p build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ..
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ..
 
     - name: build
       run: cmake --build build
