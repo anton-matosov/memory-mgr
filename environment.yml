@@ -1,0 +1,26 @@
+# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
+
+name: default
+
+channels:
+  - conda-forge
+  # We want to have a reproducible setup, so we don't want default channels,
+  # which may be different for different users. All required channels should
+  # be listed explicitly here.
+  - nodefaults
+
+dependencies:
+  - clangxx=18 # C/C++ compiler
+
+  - clang-format # C++ code formatter and format enforcement tool
+  - clang-tools  # for clang-tidy, a C++ linter
+
+  - cmake=3.30
+  - ninja=1.12
+
+  - boost=1.85.0
+
+  - python=3.12
+  - pip:
+      - requests # for bootstrap.py

@@ -1,0 +1,55 @@
+
+name: ci
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+  pull_request:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+
+defaults:
+  run:
+    # This forces shell to be login shell and load the user's profile that activates the conda environment
+    # https://github.com/marketplace/actions/setup-micromamba#about-login-shells
+    shell: bash -leo pipefail {0}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        build_type: [Release]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: environment.yml
+        init-shell: bash
+
+    - name: configure
+      env:
+        CC: clang
+        CXX: clang++
+      run: |
+        mkdir -p build
+        cd build
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ..
+
+    - name: build
+      run: cmake --build build
+
+    - name: test
+      run: |
+        cd build
+        ctest --output-on-failure
