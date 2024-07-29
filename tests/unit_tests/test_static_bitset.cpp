@@ -35,7 +35,7 @@ typedef boost::mpl::list<bitset_uchar_32_type, bitset_ushort_64_type, bitset_uin
 
 BOOST_AUTO_TEST_SUITE(test_static_bitset)
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(static_bitset, bitset_type, bitsets_list)
+BOOST_AUTO_TEST_CASE_TEMPLATE(static_bitset_positive_cases, bitset_type, bitsets_list)
 {
   bitset_type bitset;
   const typename bitset_type::size_type bits_count = bitset_type::num_bits;
