@@ -48,3 +48,8 @@ jobs:
 
     - name: build
       run: cmake --build build
+
+    - name: test
+      run: |
+        cd build
+        ctest --output-on-failure
