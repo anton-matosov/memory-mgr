@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_BIT_MANAGER_HEADER
-#define MGR_BIT_MANAGER_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <memory-mgr/detail/static_bitset.h>
 #include <memory-mgr/detail/ptr_casts.h>
@@ -229,5 +224,3 @@ namespace memory_mgr
 		}
 	}
 }
-
-#endif// MGR_BIT_MANAGER_HEADER

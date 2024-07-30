@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SELF_OFFSET_PTR_HEADER
-#define MGR_SELF_OFFSET_PTR_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <memory-mgr/detail/offset_ptr_base.h>
 #include <memory-mgr/detail/compatibility_types.h>
@@ -178,6 +173,3 @@ namespace memory_mgr
 }
 
 MGR_DEFINE_ALL_DELETES( memory_mgr::offset_ptr<T>, get_pointer_internal );
-
-
-#endif// MGR_SELF_OFFSET_PTR_HEADER
