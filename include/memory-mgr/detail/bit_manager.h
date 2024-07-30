@@ -23,9 +23,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/static_bitset.h>
-#include <memory-mgr/detail/ptr_casts.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/detail/static_bitset.h"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr
 {

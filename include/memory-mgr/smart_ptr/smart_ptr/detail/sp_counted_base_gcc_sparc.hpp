@@ -19,7 +19,7 @@
 //
 //  Thanks to Michael van der Westhuizen
 
-#include <memory-mgr/detail/sp_typeinfo.hpp>
+#include "memory-mgr/detail/sp_typeinfo.hpp"
 #include <inttypes.h> // int32_t
 
 namespace memory_mgr

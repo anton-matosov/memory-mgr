@@ -23,8 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/allocator.h>
-#include <memory-mgr/offset_pointer.h>
+#include "memory-mgr/allocator.h"
+#include "memory-mgr/offset_pointer.h"
 
 namespace memory_mgr
 {

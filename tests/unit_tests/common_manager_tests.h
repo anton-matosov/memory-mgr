@@ -23,9 +23,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/ptr_helpers.h>
-#include <memory-mgr/allocator.h>
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/allocator.h"
 
 namespace test
 {

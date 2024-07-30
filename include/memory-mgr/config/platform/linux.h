@@ -35,8 +35,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <sstream>
 #include <iostream>
 
-#include <memory-mgr/detail/temp_buffer.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/temp_buffer.h"
+#include "memory-mgr/detail/types.h"
 
 namespace memory_mgr
 {

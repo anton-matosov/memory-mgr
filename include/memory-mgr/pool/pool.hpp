@@ -24,16 +24,16 @@
 // std::max
 #include <algorithm>
 
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/pool/poolfwd.hpp"
 
 // memory_mgr::details::pool::ct_lcm
-#include <memory-mgr/pool/detail/ct_gcd_lcm.hpp>
+#include "memory-mgr/pool/detail/ct_gcd_lcm.hpp"
 // memory_mgr::details::pool::lcm
-#include <memory-mgr/pool/detail/gcd_lcm.hpp>
+#include "memory-mgr/pool/detail/gcd_lcm.hpp"
 // memory_mgr::simple_segregated_storage
-#include <memory-mgr/pool/simple_segregated_storage.hpp>
-#include <memory-mgr/detail/ptr_casts.h>
-#include <memory-mgr/detail/compatibility_types.h>
+#include "memory-mgr/pool/simple_segregated_storage.hpp"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 #ifdef BOOST_NO_STDC_NAMESPACE
 namespace std { using ::allocate; using ::free; }

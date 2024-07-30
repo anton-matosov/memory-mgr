@@ -23,9 +23,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/types.h>
-#include <memory-mgr/detail/compatibility_types.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/detail/types.h"
+#include "memory-mgr/detail/compatibility_types.h"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr
 {

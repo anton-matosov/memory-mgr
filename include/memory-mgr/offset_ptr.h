@@ -23,8 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/offset_ptr_base.h>
-#include <memory-mgr/detail/compatibility_types.h>
+#include "memory-mgr/detail/offset_ptr_base.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 namespace memory_mgr
 {	

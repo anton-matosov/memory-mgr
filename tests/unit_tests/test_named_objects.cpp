@@ -24,14 +24,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/named_objects.h>
-#include <memory-mgr/shared_segment.h>
-//#include <memory-mgr/segment_manager.h>
-#include <memory-mgr/offset_ptr.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/detail/offset_traits.h>
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/named_objects.h"
+#include "memory-mgr/shared_segment.h"
+//#include "memory-mgr/segment_manager.h"
+#include "memory-mgr/offset_ptr.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/singleton_manager.h"
+#include "memory-mgr/detail/offset_traits.h"
 #include "common_manager_tests.h"
 
 MGR_DECLARE_SEGMENT_NAME( segmentName, "shared segment" );

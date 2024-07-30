@@ -25,7 +25,7 @@
 //  formulation
 //
 
-#include <memory-mgr/detail/sp_typeinfo.hpp>
+#include "memory-mgr/detail/sp_typeinfo.hpp"
 
 namespace memory_mgr
 {

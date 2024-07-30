@@ -23,11 +23,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/sync/locks.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/new_helpers.h>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/sync/locks.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/new_helpers.h"
 
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -215,7 +215,7 @@ namespace memory_mgr
 				}
 			}
 
-#include <memory-mgr/detail/new_proxy_operator_braces.h>
+#include "memory-mgr/detail/new_proxy_operator_braces.h"
 		};
 
 	}

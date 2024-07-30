@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp"
 
 namespace memory_mgr
 {

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <memory-mgr/detail/static_bitset.h>
+#include "memory-mgr/detail/static_bitset.h"
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>
 

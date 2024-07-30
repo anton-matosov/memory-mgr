@@ -9,14 +9,14 @@
 #ifndef MEMORY_MGR_SINGLETON_POOL_HPP
 #define MEMORY_MGR_SINGLETON_POOL_HPP
 
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/pool/poolfwd.hpp"
 
 // memory_mgr::pool
-#include <memory-mgr/pool/pool.hpp>
+#include "memory-mgr/pool/pool.hpp"
 // memory_mgr::details::pool::singleton_default
-#include <memory-mgr/pool/detail/singleton.hpp>
+#include "memory-mgr/pool/detail/singleton.hpp"
 // memory_mgr::details::pool::guard
-#include <memory-mgr/pool/detail/guard.hpp>
+#include "memory-mgr/pool/detail/guard.hpp"
 
 namespace memory_mgr {
 

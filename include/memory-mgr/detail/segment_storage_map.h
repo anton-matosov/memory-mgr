@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/segment_storage_base.h>
+#include "memory-mgr/detail/segment_storage_base.h"
 #include <map>
 
 namespace memory_mgr

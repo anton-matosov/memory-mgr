@@ -18,6 +18,6 @@
 //  See http://www.boost.org/libs/smart_ptr/make_shared.html
 //  for documentation.
 
-#include <memory-mgr/smart_ptr/smart_ptr/make_shared.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/make_shared.hpp"
 
 #endif // #ifndef MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED

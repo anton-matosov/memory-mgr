@@ -23,8 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <vector>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/size_tracking.h>
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/size_tracking.h"
 #include "common_manager_tests.h"
 
 namespace

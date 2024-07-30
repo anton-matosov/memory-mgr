@@ -22,7 +22,7 @@
 //
 
 #include <boost/config.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/spinlock.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/spinlock.hpp"
 #include <cstddef>
 
 namespace memory_mgr

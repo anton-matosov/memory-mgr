@@ -22,6 +22,6 @@
 //  See http://www.boost.org/libs/smart_ptr/shared_array.htm for documentation.
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/scoped_array.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/scoped_array.hpp"
 
 #endif  // #ifndef MEMORY_MGR_SCOPED_ARRAY_HPP_INCLUDED

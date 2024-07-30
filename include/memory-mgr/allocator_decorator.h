@@ -23,9 +23,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/polymorphic_allocator.h>
-#include <memory-mgr/detail/allocator_base.h>
-#include <memory-mgr/smart_ptr/shared_ptr.hpp>
+#include "memory-mgr/detail/polymorphic_allocator.h"
+#include "memory-mgr/detail/allocator_base.h"
+#include "memory-mgr/smart_ptr/shared_ptr.hpp"
 
 namespace memory_mgr
 {

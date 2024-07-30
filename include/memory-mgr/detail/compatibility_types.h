@@ -23,8 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/detail/types.h"
 
 namespace memory_mgr
 {

@@ -23,11 +23,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/named_allocator.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/named_allocator.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr
 {	

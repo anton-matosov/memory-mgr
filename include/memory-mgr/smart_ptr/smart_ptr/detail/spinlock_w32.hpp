@@ -18,7 +18,7 @@
 //
 
 #include <boost/detail/interlocked.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp"
 
 // BOOST_COMPILER_FENCE
 

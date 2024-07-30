@@ -38,7 +38,7 @@ without stopping it.
 
 #pragma once
 
-#include <memory-mgr/config/config.h>
+#include "memory-mgr/config/config.h"
 
 #ifdef MGR_WINDOWS_PLATFORM
 

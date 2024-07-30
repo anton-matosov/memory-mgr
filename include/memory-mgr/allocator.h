@@ -23,14 +23,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/allocator_decorator.h>
-#include <memory-mgr/detail/mgr_impl_allocator.h>
-#include <memory-mgr/detail/member_allocator_impl.h>
-#include <memory-mgr/detail/polymorphic_allocator.h>
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/allocator_decorator.h"
+#include "memory-mgr/detail/mgr_impl_allocator.h"
+#include "memory-mgr/detail/member_allocator_impl.h"
+#include "memory-mgr/detail/polymorphic_allocator.h"
 
-#include <memory-mgr/detail/singleton_allocator_impl.h>
-#include <memory-mgr/smart_ptr/make_shared.hpp>
+#include "memory-mgr/detail/singleton_allocator_impl.h"
+#include "memory-mgr/smart_ptr/make_shared.hpp"
 
 namespace memory_mgr
 {

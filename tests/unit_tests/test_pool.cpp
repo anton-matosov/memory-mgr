@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include "managers.h"
-#include <memory-mgr/pool/pool.hpp>
+#include "memory-mgr/pool/pool.hpp"
 
 template class memory_mgr::pool<>;
 

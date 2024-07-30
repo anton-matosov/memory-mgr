@@ -20,8 +20,8 @@
 //  http://www.boost.org/libs/smart_ptr/enable_shared_from_this.html
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/weak_ptr.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/weak_ptr.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp"
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 

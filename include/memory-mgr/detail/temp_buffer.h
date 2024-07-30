@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/assert.h>
+#include "memory-mgr/detail/assert.h"
 #include <stdexcept>
 
 namespace memory_mgr

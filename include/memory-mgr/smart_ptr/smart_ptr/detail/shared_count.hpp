@@ -27,10 +27,10 @@
 #include <boost/config.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/bad_weak_ptr.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_impl.hpp>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/bad_weak_ptr.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_impl.hpp"
+#include "memory-mgr/offset_ptr.h"
 #include <boost/detail/workaround.hpp>
 // In order to avoid circular dependencies with Boost.TR1
 // we make sure that our include of <memory> doesn't try to

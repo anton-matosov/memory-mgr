@@ -23,10 +23,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/detail/math.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/detail/math.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
 #include <vector>
 
 

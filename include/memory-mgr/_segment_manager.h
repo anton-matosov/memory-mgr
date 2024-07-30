@@ -23,15 +23,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/math.h>
-#include <memory-mgr/detail/ptr_helpers.h>
-#include <memory-mgr/detail/offset_traits.h>
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/segment_storage_map.h>
-#include <memory-mgr/detail/segment_storage_vector.h>
-#include <memory-mgr/detail/assert.h>
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/math.h"
+#include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/detail/offset_traits.h"
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/segment_storage_map.h"
+#include "memory-mgr/detail/segment_storage_vector.h"
+#include "memory-mgr/detail/assert.h"
 #include <functional>
 #include <boost/tuple/tuple.hpp>	//For boost::tie
 

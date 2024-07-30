@@ -23,10 +23,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/new.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/ptr_helpers.h>
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/new.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/ptr_helpers.h"
 
 namespace memory_mgr
 {

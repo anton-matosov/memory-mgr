@@ -23,12 +23,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/assert.h>
-#include <memory-mgr/detail/helpers.h>
-#include <memory-mgr/detail/math.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/type_manip.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/assert.h"
+#include "memory-mgr/detail/helpers.h"
+#include "memory-mgr/detail/math.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/type_manip.h"
+#include "memory-mgr/detail/types.h"
 
 #include <boost/type_traits/make_unsigned.hpp>
 #include <ostream>

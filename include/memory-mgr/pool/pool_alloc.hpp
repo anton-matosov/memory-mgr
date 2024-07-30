@@ -15,10 +15,10 @@
 #include <new>
 
 #include <boost/throw_exception.hpp>
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/pool/poolfwd.hpp"
 
 // memory_mgr::singleton_pool
-#include <memory-mgr/pool/singleton_pool.hpp>
+#include "memory-mgr/pool/singleton_pool.hpp"
 
 #include <boost/detail/workaround.hpp>
 

@@ -16,9 +16,9 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 //
 
-#include <memory-mgr/smart_ptr/mgr_deleter.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/intrusive_ptr.hpp>
+#include "memory-mgr/smart_ptr/mgr_deleter.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/intrusive_ptr.hpp"
 
 namespace memory_mgr
 {

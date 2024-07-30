@@ -17,7 +17,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp"
 
 #if defined( __ia64__ ) && defined( __INTEL_COMPILER )
 # include <ia64intrin.h>

@@ -27,8 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <fcntl.h>  //O_CREAT, O_*...
 #include <libproc.h>
-#include <memory-mgr/detail/temp_buffer.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/temp_buffer.h"
+#include "memory-mgr/detail/types.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>

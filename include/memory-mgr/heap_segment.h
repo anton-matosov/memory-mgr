@@ -23,13 +23,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/types.h>
-#include <memory-mgr/detail/ptr_helpers.h>
-#include <memory-mgr/memory_segment.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/segment_traits.h>
-#include <memory-mgr/detail/malloc_allocator.h>
+#include "memory-mgr/detail/types.h"
+#include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/memory_segment.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/segment_traits.h"
+#include "memory-mgr/detail/malloc_allocator.h"
 
 namespace memory_mgr
 {	

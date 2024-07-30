@@ -22,7 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
-#include <memory-mgr/new.h>
+#include "memory-mgr/new.h"
 
 namespace
 {

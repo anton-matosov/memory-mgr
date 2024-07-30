@@ -22,11 +22,11 @@
 //  for documentation.
 
 #include <boost/config.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp"
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <cstddef>
-#include <memory-mgr/allocator.h>
+#include "memory-mgr/allocator.h"
 
 namespace memory_mgr
 {
@@ -148,7 +148,7 @@ template< class T, class A, class Arg1, class... Args > memory_mgr::shared_ptr< 
 #else
 
 // C++03 version
-#include <memory-mgr/smart_ptr/smart_ptr/detail/make_shared_pp_pregenerated.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/make_shared_pp_pregenerated.hpp"
 
 #endif
 

@@ -23,12 +23,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/lfm_pool_id_helpers.h>
-#include <memory-mgr/pool/pool.hpp>
-#include <memory-mgr/smart_ptr/shared_ptr.hpp>
-#include <memory-mgr/smart_ptr/make_shared.hpp>
-#include <memory-mgr/new.h>
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/lfm_pool_id_helpers.h"
+#include "memory-mgr/pool/pool.hpp"
+#include "memory-mgr/smart_ptr/shared_ptr.hpp"
+#include "memory-mgr/smart_ptr/make_shared.hpp"
+#include "memory-mgr/new.h"
 
 
 namespace memory_mgr

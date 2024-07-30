@@ -86,7 +86,7 @@ memory_mgr::shared_ptr< T > make_shared(MAKE_SHARED_PARMS)
 #define MAKE_SHARED_NUM_ARGS 10
 
 #define BOOST_PP_ITERATION_LIMITS (0, MAKE_SHARED_NUM_ARGS - 1)
-#define BOOST_PP_FILENAME_1       <memory-mgr/smart_ptr/smart_ptr/detail/make_shared_preprocessor.hpp>
+#define BOOST_PP_FILENAME_1       "memory-mgr/smart_ptr/smart_ptr/detail/make_shared_preprocessor.hpp"
 #include BOOST_PP_ITERATE()
 
 #endif //MAKE_SHARED_PREPROCESSOR_HPP_INCLUDED
