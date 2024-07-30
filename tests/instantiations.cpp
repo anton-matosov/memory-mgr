@@ -8,10 +8,13 @@
 #include "memory-mgr/manager_category.h"
 #include "memory-mgr/detail/decorator_base.h"
 #include "memory-mgr/detail/aux_data_decorator.h"
-// #include "memory-mgr/detail/decorator_base.h"
-// #include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/detail/ptr_helpers.h"
 
-// #include "memory-mgr/size_tracking.h"
+#include "memory-mgr/size_tracking.h"
+
+#include "memory-mgr/detail/offset_ptr_base.h"
+#include "memory-mgr/offset_ptr.h"
+
 
 // #include "memory-mgr/detail/bit_manager.h"
 

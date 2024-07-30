@@ -54,9 +54,11 @@ namespace memory_mgr
 		/**
 		   @brief size tracking implementation base class
 		*/
-		typedef aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
+		typedef detail::aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
 
 	public:
+		using typename impl_base_type::size_type;
+
 		/**
 		   @brief Default constructor, creates memory manager 
 		   @remarks Can be used only if decorates memory manager with 

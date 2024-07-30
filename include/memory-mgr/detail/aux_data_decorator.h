@@ -27,6 +27,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/manager_category.h"
 #include "memory-mgr/detail/decorator_base.h"
 
+#include <new>
+
 namespace memory_mgr
 {
 	namespace detail

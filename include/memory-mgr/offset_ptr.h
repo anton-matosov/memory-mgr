@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/detail/offset_ptr_base.h"
 #include "memory-mgr/detail/compatibility_types.h"
+#include "memory-mgr/detail/ptr_casts.h"
 
 namespace memory_mgr
 {	
@@ -46,10 +47,11 @@ namespace memory_mgr
 		: public detail::offset_ptr_base< T, detail::portable_difference_type, offset_ptr< T > >
 	{		
 	public:
-		typedef _offset_ptr_base base_type;
+		typedef detail::offset_ptr_base< T, detail::portable_difference_type, offset_ptr< T > > base_type;
 		friend base_type;
 		typedef offset_ptr self_type;
-		
+		using typename base_type::const_pointer;
+		using typename base_type::offset_type;
 
 		//Default constructor
 		//Constructs null pointer
@@ -128,12 +130,12 @@ namespace memory_mgr
 			//offset == invalid_offset1 && ptr != 0 is not legal for this pointer
 			if( ptr == NULL )
 			{
-				m_offset = offset_traits<offset_type>::invalid_offset;
+				this->m_offset = offset_traits<offset_type>::invalid_offset;
 			}
 			else
 			{
-				m_offset = detail::diff<offset_type>( ptr, this );
-				MGR_ASSERT( (m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
+				this->m_offset = detail::diff<offset_type>( ptr, this );
+				MGR_ASSERT( (this->m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
 			}
 		}
 
@@ -142,11 +144,11 @@ namespace memory_mgr
 		#endif
 		inline const_pointer do_get_pointer() const
 		{
-			if( m_offset == offset_traits<offset_type>::invalid_offset )
+			if( this->m_offset == offset_traits<offset_type>::invalid_offset )
 			{
 				return 0;
 			}
-			return static_cast<const_pointer>( detail::shift( this, m_offset ) );	
+			return static_cast<const_pointer>( detail::shift( this,this->m_offset ) );	
 		}
 	};
 
