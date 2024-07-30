@@ -35,7 +35,7 @@ namespace memory_mgr
 		public:
 			typedef ::memory_mgr::detail::portable_size_t size_type;
 
-			virtual ~polymorphic_allocator() = 0
+			virtual ~polymorphic_allocator()
 			{
 			}
 

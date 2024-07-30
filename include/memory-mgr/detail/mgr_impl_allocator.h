@@ -44,6 +44,15 @@ namespace memory_mgr
 			typedef MemMgr mgr_type;
 			typedef mgr_impl_allocator self_type;
 
+			using typename base_type::value_type;
+			using typename base_type::raw_pointer;
+			using typename base_type::const_raw_pointer;
+			using typename base_type::pointer;
+			using typename base_type::const_pointer;
+			using typename base_type::reference;
+			using typename base_type::const_reference;
+			using typename base_type::size_type;
+
 			// construct default allocator (do nothing)
 			inline mgr_impl_allocator()
 			{

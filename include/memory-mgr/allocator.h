@@ -82,6 +82,8 @@ namespace memory_mgr
 		typedef detail::mgr_impl_allocator<T, MemMgr, detail::singleton_allocator_impl< MemMgr >, RebindPointersFrom > base_type;
 		
 		typedef allocator	self_type;
+		typedef MemMgr	mgr_type;
+		using typename base_type::pointers_types;
 
 		allocator()
 		{
@@ -97,11 +99,12 @@ namespace memory_mgr
 		:public allocator_decorator<T, RebindPointersFrom>
 	{
 	public:
-		typedef typename MemMgr		mgr_type;
+		typedef MemMgr		mgr_type;
 		typedef allocator_decorator<T, RebindPointersFrom> base_type;
 		typedef detail::singleton_allocator_impl<MemMgr, detail::polymorphic_allocator > impl_type;
 
 		typedef polymorphic_allocator	self_type;
+		using typename base_type::pointers_types;
 
 		// construct default allocator (do nothing)
 		inline polymorphic_allocator()
@@ -121,6 +124,7 @@ namespace memory_mgr
 		typedef detail::mgr_impl_allocator<T, MemMgr, detail::member_allocator_impl< MemMgr >, RebindPointersFrom > base_type;
 
 		typedef typename base_type::mgr_type		mgr_type;
+		using typename base_type::pointers_types;
 		// construct allocator from pointer to manager
 		inline member_allocator( mgr_type* mgr )
 			:base_type( mgr )
@@ -139,6 +143,7 @@ namespace memory_mgr
 		typedef MemMgr mgr_type;
 		typedef allocator_decorator<T, RebindPointersFrom> base_type;
 		typedef detail::member_allocator_impl< MemMgr, detail::polymorphic_allocator > impl_type;
+		using typename base_type::pointers_types;
 
 		// construct allocator from pointer to manager
 		inline polymorphic_member_allocator( mgr_type* mgr )

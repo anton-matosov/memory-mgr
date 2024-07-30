@@ -35,8 +35,8 @@ namespace memory_mgr
 		class offset_pointers
 		{
 		public:
-			typedef typename offset_ptr<T> pointer;
-			typedef typename offset_ptr<const T> const_pointer;
+			typedef offset_ptr<T> pointer;
+			typedef offset_ptr<const T> const_pointer;
 
 			typedef typename type_manip::add_reference<T>::type reference;
 			typedef typename type_manip::add_reference<const T>::type const_reference;
