@@ -39,13 +39,15 @@ namespace memory_mgr
 		class aux_data_decorator
 			:public decorator_base<MemMgr>
 		{
-			typedef decorator_base<MemMgr> base_type;
+			using base_type = decorator_base<MemMgr>;
 		public:
 			/**
 			   @brief Type which represents auxilary data
 			   @see static_bitset::size_type
 			*/
-			typedef typename AuxDataType			aux_data_type;
+			using aux_data_type = AuxDataType;
+			using typename base_type::size_type;
+			using typename base_type::decorated_mgr;
 
 
 			/**

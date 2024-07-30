@@ -2,6 +2,16 @@
 #include "memory-mgr/config/config.h"
 #include "memory-mgr/detail/types.h"
 #include "memory-mgr/segment_traits.h"
+#include "memory-mgr/singleton_manager.h"
+
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/aux_data_decorator.h"
+// #include "memory-mgr/detail/decorator_base.h"
+// #include "memory-mgr/detail/ptr_helpers.h"
+
+// #include "memory-mgr/size_tracking.h"
 
 // #include "memory-mgr/detail/bit_manager.h"
 
