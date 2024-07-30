@@ -25,7 +25,7 @@
 //      class scoped_lock;
 //  };
 //
-//  #define BOOST_DETAIL_SPINLOCK_INIT <unspecified>
+//  #define MGR_DETAIL_SPINLOCK_INIT <unspecified>
 //
 
 #include <boost/config.hpp>

@@ -84,6 +84,6 @@ public:
 } // namespace detail
 } // namespace memory_mgr
 
-#define BOOST_DETAIL_SPINLOCK_INIT { false }
+#define MGR_DETAIL_SPINLOCK_INIT { false }
 
 #endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_NT_HPP_INCLUDED

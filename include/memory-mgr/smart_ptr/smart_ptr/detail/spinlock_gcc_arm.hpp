@@ -82,6 +82,6 @@ public:
 } // namespace detail
 } // namespace memory_mgr
 
-#define BOOST_DETAIL_SPINLOCK_INIT {0}
+#define MGR_DETAIL_SPINLOCK_INIT {0}
 
 #endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_GCC_ARM_HPP_INCLUDED
