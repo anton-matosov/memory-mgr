@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_NEW_HEADER
-#define MGR_NEW_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <memory-mgr/config/config.h>
 #include <memory-mgr/sync/locks.h>
@@ -317,5 +312,3 @@ MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate
 							MGR_NAMED_OBJECT_DELETE_CHECK, MGR_COMA const char* name, MGR_COMA name );
 
 MGR_DEFINE_ALL_DELETES( T*, MGR_EMPTY_MACRO );
-
-#endif //MGR_NEW_HEADER

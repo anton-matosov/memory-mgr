@@ -21,15 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEMP_BUFFER_HEADER
-#define MGR_TEMP_BUFFER_HEADER
+#pragma once
 
 #include <memory-mgr/detail/assert.h>
 #include <stdexcept>
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
 
 namespace memory_mgr
 {
@@ -256,5 +251,3 @@ namespace memory_mgr
 		typedef temp_buffer<wchar_t> wchar_buffer;
 	}
 }
-#endif//MGR_TEMP_BUFFER_HEADER
-

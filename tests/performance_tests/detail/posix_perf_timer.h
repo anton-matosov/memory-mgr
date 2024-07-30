@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_POSIX_PERF_TIMER_HEADER
-#define MGR_POSIX_PERF_TIMER_HEADER
+#pragma once
 
 #include <memory-mgr/config/config.h>
 #include <time.h>
@@ -190,6 +189,4 @@ namespace memory_mgr
 }
 
 #endif//MGR_LINUX_PLATFORM
-
-#endif//MGR_POSIX_PERF_TIMER_HEADER
 

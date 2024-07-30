@@ -1,4 +1,7 @@
 #include <memory-mgr/detail/static_bitset.h>
+#include <memory-mgr/config/config.h>
+#include <memory-mgr/detail/types.h>
+// #include <memory-mgr/detail/bit_manager.h>
 
 // #include <memory-mgr/config/config.h>
 // #include <memory-mgr/memory_manager.h>

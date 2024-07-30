@@ -21,13 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MALLOC_ALLOCATOR_HEADER
-#define MGR_MALLOC_ALLOCATOR_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
 #include <malloc.h>
 
 namespace memory_mgr
@@ -86,5 +79,3 @@ namespace memory_mgr
 		};
 	}
 }
-
-#endif //MGR_MALLOC_ALLOCATOR_HEADER

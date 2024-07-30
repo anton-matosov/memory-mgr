@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ALLOCATOR_DECORATOR_HEADER
-#define MGR_ALLOCATOR_DECORATOR_HEADER
+#pragma once
 
 #include <memory-mgr/detail/polymorphic_allocator.h>
 #include <memory-mgr/detail/allocator_base.h>
 #include <memory-mgr/smart_ptr/shared_ptr.hpp>
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
 
 namespace memory_mgr
 {
@@ -134,5 +129,3 @@ namespace memory_mgr
 		return std::rel_ops::operator !=( lhs, rhs );
 	}
 }
-
-#endif //MGR_ALLOCATOR_DECORATOR_HEADER

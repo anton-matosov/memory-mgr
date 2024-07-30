@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ALLOCATOR_HEADER
-#define MGR_ALLOCATOR_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <memory-mgr/manager_traits.h>
 #include <memory-mgr/allocator_decorator.h>
@@ -155,5 +150,3 @@ namespace memory_mgr
 	};
 	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( polymorphic_member_allocator );
 }
-
-#endif //MGR_ALLOCATOR_HEADER

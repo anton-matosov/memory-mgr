@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEST_MT_HEADER
-#define MGR_TEST_MT_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include "test.h"
 #include <numeric>
@@ -111,6 +106,3 @@ namespace perf_tests
 	TEST_START_MT_TESTS_IMPL( num_threads, start_delay, (boost::bind( &test_thread::do_test2, _1, _2, _3, boost::ref( custom_param ) ) ) )
 
 #define TEST_ELAPCED_MCS_MT threads_holder__.average_time()
-
-
-#endif //MGR_TEST_MT_HEADER

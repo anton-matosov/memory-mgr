@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_STATIC_ASSERT_HEADER
-#define MGR_STATIC_ASSERT_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 namespace memory_mgr
 {
@@ -48,5 +43,3 @@ namespace memory_mgr
 #define STATIC_ASSERT(expr, msg) static_assert(expr, #msg)
 	// ::memory_mgr::detail::compile_time_error<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
 }
-
-#endif// MGR_STATIC_ASSERT_HEADER
