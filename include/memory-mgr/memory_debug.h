@@ -24,6 +24,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/detail/assert.h"
+
+#include <new>
 
 namespace memory_mgr
 {
@@ -33,6 +37,8 @@ namespace memory_mgr
 	{
 	public:
 		typedef detail::decorator_base<MemMgr> base_type;
+		using typename base_type::size_type;
+		using typename base_type::decorated_mgr;
 
 		inline memory_debug()
 		{}

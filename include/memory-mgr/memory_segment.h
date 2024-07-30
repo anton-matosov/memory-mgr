@@ -53,6 +53,7 @@ namespace memory_mgr
 		   @brief Memory manager that will be linked with allocated memory segment
 		*/
 		typedef MemMgr				memmgr_type;
+		using typename memmgr_type::size_type;
 		
 		/**
 		   @brief Memory segment allocator type
@@ -69,7 +70,7 @@ namespace memory_mgr
 		   @brief Default constructor
 		   @details Creates memory segment and memory manager linked to this segment
 		*/
-		memory_segment( const size_t id = 0 )
+		memory_segment( const size_type id = 0 )
 			:memory( manager_traits<memmgr_type>::memory_size, id ),
 			memmgr_type( memory::segment_base() )
 		{}

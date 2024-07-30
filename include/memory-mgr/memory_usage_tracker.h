@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp"
+#include "memory-mgr/detail/decorator_base.h"
 
 namespace memory_mgr
 {
@@ -31,12 +32,17 @@ namespace memory_mgr
 	class memory_usage_tracker
 		:public detail::decorator_base<MemMgr>
 	{
+	private:
+		using base_type = detail::decorator_base<MemMgr>;
+		using typename base_type::decorated_mgr;
+
 	public:
-		typedef CounterType counter_type;
+		using counter_type = CounterType;
+		using typename MemMgr::size_type;
 
 		static inline size_type chunked_size( size_type size )
 		{
-			return chunks_required( size ) * chunk_size;
+			return chunks_required( size ) * base_type::chunk_size;
 		}
 
 		inline memory_usage_tracker()
