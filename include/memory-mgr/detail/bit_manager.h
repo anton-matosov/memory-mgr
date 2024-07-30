@@ -124,7 +124,7 @@ namespace memory_mgr
 
 			size_type requires_bytes()
 			{
-				return memory_usage;
+				return this->memory_usage;
 			}
 
 			inline bit_position_type allocate( bit_position_type bits_count )

@@ -16,13 +16,12 @@
 #include "memory-mgr/offset_ptr.h"
 
 
-// #include "memory-mgr/detail/bit_manager.h"
+#include "memory-mgr/detail/bit_manager.h"
 
-// #include "memory-mgr/config/config.h"
+#include "memory-mgr/singleton_manager.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/heap_segment.h"
 // #include "memory-mgr/memory_manager.h"
-// #include "memory-mgr/singleton_manager.h"
-// #include "memory-mgr/size_tracking.h"
-// #include "memory-mgr/heap_segment.h"
 // #include "memory-mgr/allocator.h"
 
 template class memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array>;

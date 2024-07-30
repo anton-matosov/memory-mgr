@@ -21,7 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include <malloc.h>
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/manager_category.h"
+#include <malloc/_malloc.h>
+
+#include <cstddef>
 
 namespace memory_mgr
 {	
