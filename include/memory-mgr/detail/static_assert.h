@@ -45,8 +45,8 @@ namespace memory_mgr
 // If expr is zero, msg will appear in a compile-time error message.
 ////////////////////////////////////////////////////////////////////////////////
 
-#define STATIC_ASSERT(expr, msg)\
-	::memory_mgr::detail::compile_time_error<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
+#define STATIC_ASSERT(expr, msg) static_assert(expr, #msg)
+	// ::memory_mgr::detail::compile_time_error<((expr) != 0)> ERROR_##msg; (void)ERROR_##msg;
 }
 
 #endif// MGR_STATIC_ASSERT_HEADER
