@@ -21,15 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_NEW_HELPERS_HEADER
-#define MGR_NEW_HELPERS_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
-#endif
 
-#include <memory-mgr/manager_category.h>
 #include <memory-mgr/detail/static_assert.h>
+#include <memory-mgr/manager_category.h>
+
+#include <cstddef>
+
 
 namespace memory_mgr
 {
@@ -50,32 +48,32 @@ namespace memory_mgr
 
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}
 
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}	
 
 			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type )
+				STATIC_ASSERT( false, Invalid_manager_type );
 			}			
 		};
 
@@ -282,7 +280,7 @@ namespace memory_mgr
 			@brief Reference to memory manager
 			@details that was passed as constructor parameter
 			*/
-			mutable mgr_type& m_mgr;
+			mgr_type& m_mgr;
 		};
 
 
@@ -337,5 +335,3 @@ namespace memory_mgr
 		}
 	};
 }
-
-#endif //MGR_NEW_HELPERS_HEADER
