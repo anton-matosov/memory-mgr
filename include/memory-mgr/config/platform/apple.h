@@ -92,8 +92,6 @@ static inline int close_file_mapping(const std::string& name, mapping_handle_t m
 
 static inline std::string get_executable_path()
 {
-  // Get executable path on macOS
-
   int ret;
   pid_t pid;
   char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
