@@ -34,6 +34,6 @@ namespace memory_mgr
 	template<class To, class From>
 	To dynamic_cast_ex( From* ptr )
 	{
-		return detail::dynamic_cast_impl<boost::is_polymorphic<From>::value >::cast<To>( ptr );
+		return detail::dynamic_cast_impl<boost::is_polymorphic<From>::value >::template cast<To>( ptr );
 	}
 }
