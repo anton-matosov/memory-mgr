@@ -1,4 +1,10 @@
 
+#include "memory-mgr/pool/object_pool.hpp"
+#include "memory-mgr/pool/pool.hpp"
+// #include "memory-mgr/pool/pool_alloc.hpp"
+// #include "memory-mgr/pool/poolfwd.hpp"
+// #include "memory-mgr/pool/simple_segregated_storage.hpp"
+// #include "memory-mgr/pool/singleton_pool.hpp"
 
 #include "memory-mgr/allocator.h"
 #include "memory-mgr/allocator_decorator.h"

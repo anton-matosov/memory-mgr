@@ -33,10 +33,14 @@ namespace memory_mgr {
 		: protected pool<UserAllocator>
 	{
 	public:
+	
+		using base_type = pool<UserAllocator>;
+		using typename base_type::void_ptr;
+		using typename base_type::size_type;
+		using typename base_type::difference_type;
+
 		typedef T element_type;
 		typedef UserAllocator user_allocator;
-		typedef typename pool<UserAllocator>::size_type size_type;
-		typedef typename pool<UserAllocator>::difference_type difference_type;
 
 	protected:
 		pool<UserAllocator> & store()
@@ -153,7 +157,7 @@ namespace memory_mgr {
 			}
 
 			// free storage
-			m_alloc.deallocate(iter.begin(), iter.total_size());
+			this->m_alloc.deallocate(iter.begin(), iter.total_size());
 
 			// increment iter
 			iter = next;

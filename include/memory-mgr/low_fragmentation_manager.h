@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
+#include "memory-mgr/detail/bit_manager.h"
 #include "memory-mgr/detail/decorator_base.h"
 #include "memory-mgr/detail/lfm_pool_id_helpers.h"
 #include "memory-mgr/pool/pool.hpp"
@@ -38,7 +39,11 @@ namespace memory_mgr
 		:public detail::decorator_base<MemMgr>
 	{
 	public:
-		typedef detail::decorator_base<MemMgr> base_type;
+		using base_type = detail::decorator_base<MemMgr>;
+		using typename base_type::void_ptr;
+		using typename base_type::lock_type;
+		using typename base_type::size_type;
+		using typename base_type::decorated_mgr;
 
 		typedef memory_mgr::mgr_pool_allocator<base_type> pool_allocator_type;
 		typedef memory_mgr::pool<pool_allocator_type> pool_type;
@@ -46,7 +51,7 @@ namespace memory_mgr
 
 		low_fragmentation_manager()
 			: m_pools(NULL),
-			m_pool_allocator( get_decorated_mgr() )
+			m_pool_allocator( this->get_decorated_mgr() )
 		{
 			create_pools_array();
 		}
@@ -55,14 +60,14 @@ namespace memory_mgr
 		inline explicit low_fragmentation_manager( void* segment_base )
 			: base_type( segment_base ),
 			m_pools(NULL),
-			m_pool_allocator( get_decorated_mgr() )
+			m_pool_allocator( this->get_decorated_mgr() )
 		{
 			create_pools_array();
 		}
 
 		void create_pools_array()
 		{
-			m_pools = get_internal_ptr_as<pool_ptr>(
+			m_pools = this->template get_internal_ptr_as<pool_ptr>(
 				detail::internal_ptr_lfm_pools, detail::num_pools_required );
 		}
 
@@ -136,7 +141,7 @@ namespace memory_mgr
 			{
 				size_type segment_allocation_size = 1;
 				size_type pool_object_size = detail::get_allocation_size(size, segment_allocation_size);
-				pool = memory_mgr::make_shared<pool_type>( get_decorated_mgr(), 
+				pool = memory_mgr::make_shared<pool_type>( this->get_decorated_mgr(), 
 					pool_object_size,
 					detail::get_pool_base_grow_size(segment_allocation_size),
 					detail::get_pool_max_grow_size(segment_allocation_size),

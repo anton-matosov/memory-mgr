@@ -241,6 +241,9 @@ namespace memory_mgr {
 		typedef typename UserAllocator::size_type size_type;
 		typedef typename UserAllocator::difference_type difference_type;
 
+		using base_type = simple_segregated_storage<size_type>;
+		using typename base_type::void_ptr;
+
 	private:
 		BOOST_STATIC_CONSTANT(unsigned, min_alloc_size =
 			(::memory_mgr::details::pool::ct_lcm<sizeof(void *), sizeof(size_type)>::value) );
