@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#define MGR_OSX_PLATFORM
+#define MGR_APPLE_PLATFORM
 
 #include <fcntl.h>  //O_CREAT, O_*...
 #include <libproc.h>

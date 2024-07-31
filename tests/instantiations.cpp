@@ -27,7 +27,7 @@
 #include "memory-mgr/params_binder.h"
 #include "memory-mgr/pointer_cast.h"
 #include "memory-mgr/segment_traits.h"
-// #include "memory-mgr/shared_segment.h"
+#include "memory-mgr/shared_segment.h"
 #include "memory-mgr/singleton_manager.h"
 #include "memory-mgr/size_tracking.h"
 

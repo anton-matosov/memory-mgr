@@ -23,13 +23,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <stdexcept>
-#include <sstream>
 #include "memory-mgr/config/config.h"
-#include "memory-mgr/detail/helpers.h"
-#include "memory-mgr/memory_segment.h"
 #include "memory-mgr/manager_traits.h"
+#include "memory-mgr/memory_segment.h"
 #include "memory-mgr/segment_traits.h"
+
+#include "memory-mgr/detail/helpers.h"
+
+#include <sstream>
+#include <stdexcept>
+
 
 namespace memory_mgr
 {	
@@ -151,7 +154,7 @@ namespace memory_mgr
 		{}
 	};
 
-#elif defined( MGR_LINUX_PLATFORM )
+#elif defined( MGR_LINUX_PLATFORM ) || defined( MGR_APPLE_PLATFORM )
 	
 	//Posix shared memory allocator to SegmentAllocatorConcept 
 	template<class SegmentParams>
