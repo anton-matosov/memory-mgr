@@ -460,7 +460,7 @@ namespace memory_mgr
 #define MGR_NULL_MACRO
 #define MGR_EMPTY_MACRO(x) x
 #define MGR_COMA ,
-
+#define MGR_UNPACK(...) __VA_ARGS__
 
 #define MGR_DEFINE_DELETE_OVERLOADS( _delete_name, _pointer_type,										\
 				_destroy_method, _pointer_getter, _extra_check, _extra_param, _extra_param_forward )	\
@@ -498,13 +498,13 @@ namespace memory_mgr
 #define MGR_NAMED_OBJECT_DELETE_CHECK if( mgr.get().remove_object( name ) )
 
 #define MGR_DEFINE_ALL_DELETES( _pointer_type, _pointer_getter )										\
-MGR_DEFINE_DELETE_OVERLOADS( delete_, _pointer_type, destroy_and_deallocate, _pointer_getter,			\
+MGR_DEFINE_DELETE_OVERLOADS( delete_, MGR_UNPACK(_pointer_type), destroy_and_deallocate, _pointer_getter,			\
 							MGR_NULL_MACRO, MGR_NULL_MACRO, MGR_NULL_MACRO );							\
-MGR_DEFINE_DELETE_OVERLOADS( delete_, _pointer_type, destroy_and_deallocate, _pointer_getter,			\
+MGR_DEFINE_DELETE_OVERLOADS( delete_, MGR_UNPACK(_pointer_type), destroy_and_deallocate, _pointer_getter,			\
 							MGR_NAMED_OBJECT_DELETE_CHECK, MGR_COMA const char* name, MGR_COMA name );	\
-MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate_array, _pointer_getter,\
+MGR_DEFINE_DELETE_OVERLOADS( delete_array, MGR_UNPACK(_pointer_type), destroy_and_deallocate_array, _pointer_getter,\
 							MGR_NULL_MACRO, MGR_NULL_MACRO, MGR_NULL_MACRO );							\
-MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate_array, _pointer_getter,\
+MGR_DEFINE_DELETE_OVERLOADS( delete_array, MGR_UNPACK(_pointer_type), destroy_and_deallocate_array, _pointer_getter,\
 							MGR_NAMED_OBJECT_DELETE_CHECK, MGR_COMA const char* name, MGR_COMA name );
 
 MGR_DEFINE_ALL_DELETES( T*, MGR_EMPTY_MACRO );
