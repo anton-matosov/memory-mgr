@@ -13,7 +13,7 @@ add_subdirectory(vendor)
 set(LIBRARY_NAME memory-mgr)
 add_library(${LIBRARY_NAME} INTERFACE)
 target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${LIBRARY_NAME} INTERFACE VendorBoost)
+target_link_libraries(${LIBRARY_NAME} INTERFACE VendorBoost VendorGSTL)
 
 add_subdirectory(tests)
 

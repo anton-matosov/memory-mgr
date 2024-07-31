@@ -34,8 +34,8 @@ namespace memory_mgr
 		class old_offset_pointers
 		{
 		public:
-			typedef typename offset_pointer<T, MemMgr> pointer;
-			typedef typename offset_pointer<const T, MemMgr> const_pointer;
+			typedef offset_pointer<T, MemMgr> pointer;
+			typedef offset_pointer<const T, MemMgr> const_pointer;
 			typedef typename type_manip::add_reference<T>::type reference;
 			typedef typename type_manip::add_reference<const T>::type const_reference;
 
@@ -55,6 +55,7 @@ namespace memory_mgr
 		typedef allocator<T, MemMgr, detail::old_offset_pointers<T, MemMgr> > base_type;
 
 		typedef offset_allocator	self_type;
+		using typename base_type::mgr_type;
 
 		template<class Other>
 		struct rebind

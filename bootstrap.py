@@ -1,11 +1,14 @@
+#!/usr/bin/env python
+
 import requests
 import tarfile
+import subprocess
 from hashlib import sha1
 from pathlib import Path
 
 vendor_libs = [
   # ("https://master.dl.sourceforge.net/project/boost/boost/1.51.0/boost_1_51_0.tar.bz2", "SHA1", "52ef06895b97cc9981b8abf1997c375ca79f30c5"),
-  ("https://master.dl.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2", "SHA1", "ed58c632befe0d299b39f9e23de1fc20d03870d7"),
+  # ("https://master.dl.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2", "SHA1", "ed58c632befe0d299b39f9e23de1fc20d03870d7"),
 ]
 destination = Path.cwd() / "vendor" / "downloads"
 destination.mkdir(parents=True, exist_ok=True)
@@ -49,3 +52,5 @@ for url, hash_type, hash_value in vendor_libs:
 
   with tarfile.open(destination_file, mode) as tar:
     tar.extractall(destination, filter='data')
+
+subprocess.run(["git", "submodule", "update", "--init"], check=True)
