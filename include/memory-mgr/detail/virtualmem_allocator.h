@@ -23,7 +23,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <windows.h>
+#include "memory-mgr/config/config.h"
+
+#ifdef MGR_WINDOWS_PLATFORM
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/ptr_casts.h"
+
+#include <cstddef>
+
 
 namespace memory_mgr
 {	
@@ -81,3 +88,4 @@ namespace memory_mgr
 		};
 	}
 }
+#endif //MGR_WINDOWS_PLATFORM

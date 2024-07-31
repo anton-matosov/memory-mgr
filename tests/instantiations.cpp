@@ -48,7 +48,7 @@
 #include "memory-mgr/detail/type_manip.h"
 #include "memory-mgr/detail/types.h"
 #include "memory-mgr/detail/vector_as_allocator.h"
-// #include "memory-mgr/detail/virtualmem_allocator.h"
+#include "memory-mgr/detail/virtualmem_allocator.h"
 
 template class memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array>;
 template class memory_mgr::static_bitset<unsigned short, 64, memory_mgr::static_array>;
