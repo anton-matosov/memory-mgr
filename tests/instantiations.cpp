@@ -30,7 +30,6 @@
 #include "memory-mgr/detail/mgr_impl_allocator.h"
 // #include "memory-mgr/detail/named_allocator.h"
 #include "memory-mgr/detail/new_helpers.h"
-// #include "memory-mgr/detail/new_proxy_operator_braces.h"
 
 #include "memory-mgr/detail/offset_ptr_base.h"
 #include "memory-mgr/detail/offset_traits.h"
