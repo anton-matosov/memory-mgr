@@ -25,8 +25,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/detail/ptr_casts.h"
 #include "memory-mgr/manager_category.h"
-#include <malloc/_malloc.h>
 
+#include <cstdlib>
 #include <cstddef>
 
 namespace memory_mgr
