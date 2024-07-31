@@ -24,7 +24,7 @@
 #include "memory-mgr/detail/dynamic_cast_ex.h"
 #include "memory-mgr/detail/helpers.h"
 #include "memory-mgr/detail/lfm_pool_id_helpers.h"
-// #include "memory-mgr/detail/malloc_allocator.h"
+#include "memory-mgr/detail/malloc_allocator.h"
 #include "memory-mgr/detail/math.h"
 #include "memory-mgr/detail/member_allocator_impl.h"
 #include "memory-mgr/detail/mgr_impl_allocator.h"
