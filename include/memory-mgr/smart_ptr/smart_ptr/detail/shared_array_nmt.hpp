@@ -23,7 +23,7 @@
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp"
 
 #include <cstddef>          // for std::ptrdiff_t
 #include <algorithm>        // for std::swap

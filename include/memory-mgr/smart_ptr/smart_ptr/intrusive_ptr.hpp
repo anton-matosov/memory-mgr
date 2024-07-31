@@ -30,8 +30,8 @@
 
 #include <boost/assert.hpp>
 #include <boost/detail/workaround.hpp>
-#include <memory-mgr/offset_ptr.h>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp>
+#include "memory-mgr/offset_ptr.h"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp"
 
 #include <boost/config/no_tr1/functional.hpp>           // for std::less
 
@@ -194,7 +194,7 @@ public:
     }
 
 // implicit conversion to "bool"
-#include <memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp"
 
     void swap(intrusive_ptr & rhs)
     {

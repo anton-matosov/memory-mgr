@@ -21,29 +21,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MANAGERS_HEADER
-#define MGR_MANAGERS_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/heap_segment.h"
+#include "memory-mgr/shared_segment.h"
+#include "memory-mgr/named_objects.h"
+#include "memory-mgr/low_fragmentation_manager.h"
+#include "memory-mgr/new.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/memory_debug.h"
+#include "memory-mgr/managed_base.h"
+#include "memory-mgr/singleton_manager.h"
+//#include "memory-mgr/segment_manager.h"
+#include "memory-mgr/sync/pseudo_sync.h"
 
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/heap_segment.h>
-#include <memory-mgr/shared_segment.h>
-#include <memory-mgr/named_objects.h>
-#include <memory-mgr/low_fragmentation_manager.h>
-#include <memory-mgr/new.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/memory_debug.h>
-#include <memory-mgr/managed_base.h>
-#include <memory-mgr/singleton_manager.h>
-//#include <memory-mgr/segment_manager.h>
-#include <memory-mgr/sync/pseudo_sync.h>
-
-#include <memory-mgr/params_binder.h>
-#include <memory-mgr/sync/named_mutex.h>
-#include <memory-mgr/sync/critical_section.h>
+#include "memory-mgr/params_binder.h"
+#include "memory-mgr/sync/named_mutex.h"
+#include "memory-mgr/sync/critical_section.h"
 
 typedef int chunk_type;
 static const size_t chunk_size = 4;
@@ -183,5 +178,3 @@ typedef memory_mgr::singleton_manager
 	>
 > sing_shared_sz_mgr;
 
-
-#endif//MGR_MANAGERS_HEADER

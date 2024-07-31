@@ -21,14 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MEMORY_DEBUG_HEADER
-#define MGR_MEMORY_DEBUG_HEADER
+#pragma once
 
-#include <memory-mgr/detail/decorator_base.h>
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/detail/assert.h"
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include <new>
 
 namespace memory_mgr
 {
@@ -38,6 +37,8 @@ namespace memory_mgr
 	{
 	public:
 		typedef detail::decorator_base<MemMgr> base_type;
+		using typename base_type::size_type;
+		using typename base_type::decorated_mgr;
 
 		inline memory_debug()
 		{}
@@ -145,8 +146,3 @@ namespace memory_mgr
 		{};
 	};
 }
-
-
-
-
-#endif //MGR_MEMORY_DEBUG_HEADER

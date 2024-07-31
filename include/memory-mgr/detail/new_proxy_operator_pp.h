@@ -82,7 +82,7 @@
 #define MGR_MAX_NEW_PARAMETERS 10
 
 #define BOOST_PP_ITERATION_LIMITS (0, MGR_MAX_NEW_PARAMETERS)
-#define BOOST_PP_FILENAME_1       <memory-mgr/detail/new_proxy_operator_pp.h>
+#define BOOST_PP_FILENAME_1       "memory-mgr/detail/new_proxy_operator_pp.h"
 #include BOOST_PP_ITERATE()
 
 #endif //MGR_NEW_PROXY_OPERATOR_PP_INCLUDED

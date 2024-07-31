@@ -21,23 +21,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MEMORY_MANAGER_HEADER
-#define MGR_MEMORY_MANAGER_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 //#define MEMORY_MGR_DEBUG_MEMORY
 
-#include <memory-mgr/detail/ptr_helpers.h>
-#include <memory-mgr/detail/bit_manager.h>
-#include <memory-mgr/detail/offset_traits.h>
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/ptr_casts.h>
-#include <memory-mgr/sync/critical_section.h>
-#include <memory-mgr/sync/locks.h>
-#include <memory-mgr/manager_category.h>
+#include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/detail/bit_manager.h"
+#include "memory-mgr/detail/offset_traits.h"
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/sync/critical_section.h"
+#include "memory-mgr/sync/locks.h"
+#include "memory-mgr/manager_category.h"
 
 /**
    @brief Main namespace
@@ -534,5 +529,3 @@ namespace memory_mgr
 			:public manager_type								\
 		{};														\
 	MGR_DECLARE_MANAGER_TRAITS(name, manager_type)
-
-#endif// MGR_MEMORY_MANAGER_HEADER

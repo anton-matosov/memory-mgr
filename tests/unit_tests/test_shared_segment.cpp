@@ -22,11 +22,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/shared_segment.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/low_fragmentation_manager.h>
-#include <memory-mgr/named_objects.h>
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/shared_segment.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/low_fragmentation_manager.h"
+#include "memory-mgr/named_objects.h"
 #include "common_manager_tests.h"
 
 namespace

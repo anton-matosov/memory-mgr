@@ -21,20 +21,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SHARED_SEGMENT_HEADER
-#define MGR_SHARED_SEGMENT_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/memory_segment.h"
+#include "memory-mgr/segment_traits.h"
 
-#include <stdexcept>
+#include "memory-mgr/detail/helpers.h"
+
 #include <sstream>
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/detail/helpers.h>
-#include <memory-mgr/memory_segment.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/segment_traits.h>
+#include <stdexcept>
+
 
 namespace memory_mgr
 {	
@@ -156,7 +154,7 @@ namespace memory_mgr
 		{}
 	};
 
-#elif defined( MGR_LINUX_PLATFORM )
+#elif defined( MGR_LINUX_PLATFORM ) || defined( MGR_APPLE_PLATFORM )
 	
 	//Posix shared memory allocator to SegmentAllocatorConcept 
 	template<class SegmentParams>
@@ -237,5 +235,3 @@ MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 		typedef MemMgr base_manager_type;
 	};
 }
-
-#endif// MGR_SHARED_SEGMENT_HEADER

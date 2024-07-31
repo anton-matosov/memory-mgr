@@ -9,10 +9,10 @@
 #ifndef MEMORY_MGR_OBJECT_POOL_HPP
 #define MEMORY_MGR_OBJECT_POOL_HPP
 
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/pool/poolfwd.hpp"
 
 // memory_mgr::pool
-#include <memory-mgr/pool/pool.hpp>
+#include "memory-mgr/pool/pool.hpp"
 
 // The following code will be put into Boost.Config in a later revision
 #if defined(BOOST_MSVC) || defined(__KCC)
@@ -33,10 +33,14 @@ namespace memory_mgr {
 		: protected pool<UserAllocator>
 	{
 	public:
+	
+		using base_type = pool<UserAllocator>;
+		using typename base_type::void_ptr;
+		using typename base_type::size_type;
+		using typename base_type::difference_type;
+
 		typedef T element_type;
 		typedef UserAllocator user_allocator;
-		typedef typename pool<UserAllocator>::size_type size_type;
-		typedef typename pool<UserAllocator>::difference_type difference_type;
 
 	protected:
 		pool<UserAllocator> & store()
@@ -96,9 +100,9 @@ namespace memory_mgr {
 		// Include automatically-generated file for family of template construct()
 		//  functions
 #ifndef BOOST_NO_TEMPLATE_CV_REF_OVERLOADS
-#   include <memory-mgr/pool/detail/pool_construct.inc>
+#   include "memory-mgr/pool/detail/pool_construct.inc"
 #else
-#   include <memory-mgr/pool/detail/pool_construct_simple.inc>
+#   include "memory-mgr/pool/detail/pool_construct_simple.inc"
 #endif
 
 		void destroy(element_type * const chunk)
@@ -153,7 +157,7 @@ namespace memory_mgr {
 			}
 
 			// free storage
-			m_alloc.deallocate(iter.begin(), iter.total_size());
+			this->m_alloc.deallocate(iter.begin(), iter.total_size());
 
 			// increment iter
 			iter = next;

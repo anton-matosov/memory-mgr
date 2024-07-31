@@ -22,6 +22,6 @@
 //  See http://www.boost.org/libs/smart_ptr/shared_ptr.htm for documentation.
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/scoped_ptr.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/scoped_ptr.hpp"
 
 #endif  // #ifndef MEMORY_MGR_SCOPED_PTR_HPP_INCLUDED

@@ -21,14 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_OFFSET_POINTER_HEADER
-#define MGR_OFFSET_POINTER_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/offset_ptr_base.h>
+#include "memory-mgr/detail/offset_ptr_base.h"
+#include "memory-mgr/detail/ptr_helpers.h"
 
 namespace memory_mgr
 {	
@@ -49,10 +45,12 @@ namespace memory_mgr
 	{		
 	public:
 
-		typedef _offset_ptr_base base_type;
+		typedef detail::offset_ptr_base< T, typename manager_traits<Mgr>::block_offset_type, offset_pointer< T, Mgr > > base_type;
 		friend base_type;
 		typedef offset_pointer self_type;
 		typedef Mgr mgr_type;
+
+		using typename base_type::const_pointer;
 
 
 		//Default constructor
@@ -126,13 +124,13 @@ namespace memory_mgr
 		inline const_pointer do_get_pointer() const
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
-			return static_cast<const_pointer>( detail::offset_to_pointer( m_offset, mgr_type::instance() ) );
+			return static_cast<const_pointer>( detail::offset_to_pointer( this->m_offset, mgr_type::instance() ) );
 		}
 
 		inline void do_set_pointer( const_pointer ptr )
 		{
 			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
-			m_offset = detail::pointer_to_offset( ptr, mgr_type::instance() );
+			this->m_offset = detail::pointer_to_offset( ptr, mgr_type::instance() );
 		}
 	
 	};
@@ -175,6 +173,3 @@ namespace memory_mgr
 }
 
 MGR_DEFINE_ALL_DELETES( memory_mgr::offset_pointer<T MGR_COMA MemMgr>, get_pointer_internal );
-
-
-#endif// MGR_OFFSET_POINTER_HEADER

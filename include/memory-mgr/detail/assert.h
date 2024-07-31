@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ASSERT_HEADER
-#define MGR_ASSERT_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <assert.h>
 
@@ -37,5 +32,3 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #else
 #	define MGR_ASSERT MGR_NULL_ASSERT
 #endif
-
-#endif// MGR_ASSERT_HEADER

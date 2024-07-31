@@ -18,7 +18,7 @@
 //
 
 #include <boost/detail/interlocked.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp"
 
 // BOOST_COMPILER_FENCE
 
@@ -110,6 +110,6 @@ public:
 } // namespace detail
 } // namespace memory_mgr
 
-#define BOOST_DETAIL_SPINLOCK_INIT {0}
+#define MGR_DETAIL_SPINLOCK_INIT {0}
 
 #endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_W32_HPP_INCLUDED

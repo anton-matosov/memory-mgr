@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "stdafx.h"
 #include "detail/test_mt.h"
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/offset_ptr.h"
 
 #ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
 #	include <boost/interprocess/managed_shared_memory.hpp>

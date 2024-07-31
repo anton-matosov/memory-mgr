@@ -21,17 +21,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_LFM_POOL_ID_HELPERS_HEADER
-#define MGR_LFM_POOL_ID_HELPERS_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include <cstddef>
 
 namespace memory_mgr
 {
 	namespace detail
 	{
+		template <typename T, std::size_t N>
+		constexpr std::size_t array_count(const T(&)[N]) noexcept
+		{
+				return N;
+		}
+
 		enum LFM_constants
 		{
 			max_lfm_object_size = 16384,
@@ -48,7 +51,7 @@ namespace memory_mgr
 			const size_t allocation_segments[] = { 256, 512, 1024, 2048, 4096, 8196, 16384 };
 			size_t resulting_size = requested_size;
 
-			for( int segment = 0; segment < _countof( allocation_segments ); ++segment )
+			for( int segment = 0; segment < array_count( allocation_segments ); ++segment )
 			{
 				size_t segment_size = allocation_segments[segment];
 				if( requested_size <= segment_size )
@@ -901,5 +904,3 @@ namespace memory_mgr
 		}
 	}
 }
-
-#endif //MGR_LFM_POOL_ID_HELPERS_HEADER

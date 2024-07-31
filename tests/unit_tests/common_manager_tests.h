@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_COMMON_MANAGER_TESTS_HEADER
-#define MGR_COMMON_MANAGER_TESTS_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/ptr_helpers.h>
-#include <memory-mgr/allocator.h>
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/allocator.h"
 
 namespace test
 {
@@ -169,8 +164,3 @@ namespace test
 		test_null_pointer_dealloc_impl( mgr );
 	}
 };
-
-
-#endif //MGR_COMMON_MANAGER_TESTS_HEADER
-
-

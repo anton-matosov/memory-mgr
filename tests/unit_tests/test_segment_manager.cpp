@@ -22,11 +22,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
-#include <memory-mgr/segment_manager.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/pointer_convert.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/heap_segment.h>
+#include "memory-mgr/segment_manager.h"
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/pointer_convert.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/heap_segment.h"
 
 BOOST_AUTO_TEST_SUITE( test_segment_manager )
 

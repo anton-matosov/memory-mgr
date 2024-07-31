@@ -21,6 +21,6 @@
 //  http://www.boost.org/libs/smart_ptr/enable_shared_from_this.html
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/enable_shared_from_this.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/enable_shared_from_this.hpp"
 
 #endif  // #ifndef MEMORY_MGR_ENABLE_SHARED_FROM_THIS_HPP_INCLUDED

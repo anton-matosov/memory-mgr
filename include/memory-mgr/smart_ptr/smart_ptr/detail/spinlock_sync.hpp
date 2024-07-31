@@ -17,7 +17,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/yield_k.hpp"
 
 #if defined( __ia64__ ) && defined( __INTEL_COMPILER )
 # include <ia64intrin.h>
@@ -84,6 +84,6 @@ public:
 } // namespace detail
 } // namespace memory_mgr
 
-#define BOOST_DETAIL_SPINLOCK_INIT {0}
+#define MGR_DETAIL_SPINLOCK_INIT {0}
 
 #endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_SYNC_HPP_INCLUDED

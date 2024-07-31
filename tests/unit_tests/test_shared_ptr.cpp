@@ -26,16 +26,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_class.h"
 
 
-#include <memory-mgr/smart_ptr/shared_ptr.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/weak_ptr.hpp>
-#include <memory-mgr/smart_ptr/scoped_ptr.hpp>
-#include <memory-mgr/smart_ptr/scoped_array.hpp>
+#include "memory-mgr/smart_ptr/shared_ptr.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/weak_ptr.hpp"
+#include "memory-mgr/smart_ptr/scoped_ptr.hpp"
+#include "memory-mgr/smart_ptr/scoped_array.hpp"
 
 
-#include <memory-mgr/smart_ptr/mgr_deleter.hpp>
-#include <memory-mgr/smart_ptr/make_shared.hpp>
+#include "memory-mgr/smart_ptr/mgr_deleter.hpp"
+#include "memory-mgr/smart_ptr/make_shared.hpp"
 #include "managers.h"
-#include <memory-mgr/new.h>
+#include "memory-mgr/new.h"
 //template class memory_mgr::scoped_ptr<int>;
 //template class memory_mgr::scoped_array<int>;
 template class memory_mgr::shared_ptr<int>;

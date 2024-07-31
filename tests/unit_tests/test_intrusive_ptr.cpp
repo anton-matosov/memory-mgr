@@ -26,12 +26,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "test_class.h"
 
 
-#include <memory-mgr/smart_ptr/mgr_deleter.hpp>
-#include <memory-mgr/smart_ptr/intrusive_ptr.hpp>
-#include <memory-mgr/smart_ptr/intrusive_base.hpp>
+#include "memory-mgr/smart_ptr/mgr_deleter.hpp"
+#include "memory-mgr/smart_ptr/intrusive_ptr.hpp"
+#include "memory-mgr/smart_ptr/intrusive_base.hpp"
 
 #include "managers.h"
-#include <memory-mgr/new.h>
+#include "memory-mgr/new.h"
 
 
 // 

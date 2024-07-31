@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_CONFIG_HEADER
-#define MGR_CONFIG_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 //#define DEBUG_MEMORY_POOLS
 #define MGR_ENABLE_ASSERTS
@@ -34,17 +29,17 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
 // linux:
-#	include <memory-mgr/config/platform/linux.h>
+#	include "memory-mgr/config/platform/linux.h"
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#	include <memory-mgr/config/platform/win32.h>
+#	include "memory-mgr/config/platform/win32.h"
 #elif defined(__APPLE__)
-#	include <memory-mgr/config/platform/osx.h>
+#	include "memory-mgr/config/platform/apple.h"
 #else
 #	error "Unsupported platform. PRs are welcome."
 #endif
 
-#include <memory-mgr/detail/helpers.h>
-#include <memory-mgr/detail/assert.h>
+#include "memory-mgr/detail/helpers.h"
+#include "memory-mgr/detail/assert.h"
 
 #include <boost/static_assert.hpp>
 
@@ -105,5 +100,3 @@ namespace memory_mgr
 		}
 	}
 }
-
-#endif// MGR_CONFIG_HEADER

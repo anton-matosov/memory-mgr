@@ -23,16 +23,16 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <memory-mgr/detail/assert.h>
-#include <memory-mgr/detail/helpers.h>
-#include <memory-mgr/detail/math.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/type_manip.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/assert.h"
+#include "memory-mgr/detail/helpers.h"
+#include "memory-mgr/detail/math.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/type_manip.h"
+#include "memory-mgr/detail/types.h"
 
 #include <boost/type_traits/make_unsigned.hpp>
-#include <limits>
 #include <ostream>
+#include <type_traits>
 
 namespace memory_mgr
 {
@@ -298,7 +298,8 @@ class static_bitset : public detail::array<BlockType, BitsCount, StaticArr>
 
   // Constructor used only by custom arrays to initialize
   // array's pointer
-  inline explicit static_bitset(block_ptr_type bits_ptr) : base_type(bits_ptr) { STATIC_ASSERT(num_bits != 0, Bitset_cant_be_empty); }
+  template<typename U = block_ptr_type>
+  inline explicit static_bitset(block_ptr_type bits_ptr, std::enable_if_t<std::is_constructible<base_type, U>::value>* = 0) : base_type(bits_ptr) { STATIC_ASSERT(num_bits != 0, Bitset_cant_be_empty); }
 
   inline ~static_bitset() {}
 
@@ -493,7 +494,7 @@ class static_bitset : public detail::array<BlockType, BitsCount, StaticArr>
 
   static inline block_type higher_bit_mask(bit_position_type pos) { return block_type(block_max << bit_index(pos)); }
 
-  static inline block_type lower_bit_mask(bit_position_type pos) { return ~higher_bit_mask(); }
+  static inline block_type lower_bit_mask(bit_position_type pos) { return ~higher_bit_mask(pos); }
 
   static inline bit_position_type blocks_count(bit_position_type bits_count) { return block_index(bits_count); }
 

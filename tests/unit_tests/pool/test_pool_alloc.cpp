@@ -9,8 +9,8 @@
 
 #define BOOST_NO_MT
 
-#include <memory-mgr/pool/pool_alloc.hpp>
-#include <memory-mgr/pool/object_pool.hpp>
+#include "memory-mgr/pool/pool_alloc.hpp"
+#include "memory-mgr/pool/object_pool.hpp"
 
 #include <stdlib.h>
 #include <stdexcept>

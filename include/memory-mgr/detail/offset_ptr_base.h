@@ -21,21 +21,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_OFFSET_PTR_BASE_HEADER
-#define MGR_OFFSET_PTR_BASE_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/offset_traits.h>
-#include <memory-mgr/detail/compatibility_types.h>
-#include <memory-mgr/detail/cmp_helper.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/pointer_cast.h>
-#include <memory-mgr/new.h>
-#include <memory-mgr/detail/type_manip.h>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp>
+#include "memory-mgr/detail/offset_traits.h"
+#include "memory-mgr/detail/compatibility_types.h"
+#include "memory-mgr/detail/cmp_helper.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/pointer_cast.h"
+#include "memory-mgr/new.h"
+#include "memory-mgr/detail/type_manip.h"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp"
 
 namespace memory_mgr
 {	
@@ -328,6 +323,3 @@ namespace memory_mgr
 		return p.get();
 	}
 }
-
-
-#endif// MGR_OFFSET_PTR_BASE_HEADER

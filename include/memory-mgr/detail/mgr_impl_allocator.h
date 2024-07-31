@@ -21,15 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_IMPL_ALLOCATOR_HEADER
-#define MGR_IMPL_ALLOCATOR_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/detail/allocator_base.h>
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/detail/allocator_base.h"
 
 namespace memory_mgr
 {
@@ -48,6 +43,15 @@ namespace memory_mgr
 			typedef allocator_base<T, RebindPointersFrom> base_type;
 			typedef MemMgr mgr_type;
 			typedef mgr_impl_allocator self_type;
+
+			using typename base_type::value_type;
+			using typename base_type::raw_pointer;
+			using typename base_type::const_raw_pointer;
+			using typename base_type::pointer;
+			using typename base_type::const_pointer;
+			using typename base_type::reference;
+			using typename base_type::const_reference;
+			using typename base_type::size_type;
 
 			// construct default allocator (do nothing)
 			inline mgr_impl_allocator()
@@ -103,5 +107,3 @@ namespace memory_mgr
 	}
 
 }
-
-#endif //MGR_IMPL_ALLOCATOR_HEADER

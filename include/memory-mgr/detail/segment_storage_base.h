@@ -21,18 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SEGMENT_STORAGE_HEADER
-#define MGR_SEGMENT_STORAGE_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/detail/math.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/detail/math.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
 #include <vector>
 
 
@@ -266,7 +260,3 @@ namespace memory_mgr
 
 	}
 }
-
-#endif //MGR_SEGMENT_STORAGE_HEADER
-
-

@@ -21,14 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MEMORY_USAGE_TRACKER_HEADER
-#define MGR_MEMORY_USAGE_TRACKER_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/atomic_count.hpp"
+#include "memory-mgr/detail/decorator_base.h"
 
 namespace memory_mgr
 {
@@ -36,12 +32,17 @@ namespace memory_mgr
 	class memory_usage_tracker
 		:public detail::decorator_base<MemMgr>
 	{
+	private:
+		using base_type = detail::decorator_base<MemMgr>;
+		using typename base_type::decorated_mgr;
+
 	public:
-		typedef CounterType counter_type;
+		using counter_type = CounterType;
+		using typename MemMgr::size_type;
 
 		static inline size_type chunked_size( size_type size )
 		{
-			return chunks_required( size ) * chunk_size;
+			return chunks_required( size ) * base_type::chunk_size;
 		}
 
 		inline memory_usage_tracker()
@@ -120,8 +121,3 @@ namespace memory_mgr
 		typedef manager_traits<base_manager_type> base_traits;
 	};
 }
-
-
-
-
-#endif //MGR_MEMORY_USAGE_TRACKER_HEADER

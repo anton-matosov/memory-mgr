@@ -21,14 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_OFFSET_TRAITS_HEADER
-#define MGR_OFFSET_TRAITS_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/types.h"
 
 namespace memory_mgr
 {	
@@ -151,6 +146,3 @@ namespace memory_mgr
 	template<class T>
 	const typename offset_traits<T*>::offset_type offset_traits<T*>::invalid_offset = 0;
 }
-
-
-#endif// MGR_OFFSET_TRAITS_HEADER

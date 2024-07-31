@@ -15,19 +15,19 @@
 #include <cstddef>
 
 // memory_mgr::details::pool::default_mutex
-#include <memory-mgr/pool/detail/mutex.hpp>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/pool/detail/mutex.hpp"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr {
 
 	//
-	// Location: <memory-mgr/pool/simple_segregated_storage.hpp>
+	// Location: "memory-mgr/pool/simple_segregated_storage.hpp"
 	//
 	template <typename SizeType = std::size_t, class Pointer = offset_ptr<void> >
 	class simple_segregated_storage;
 
 	//
-	// Location: <memory-mgr/pool/pool.hpp>
+	// Location: "memory-mgr/pool/pool.hpp"
 	//
 	struct default_user_allocator_new_delete;
 	struct default_user_allocator_malloc_free;
@@ -36,13 +36,13 @@ namespace memory_mgr {
 	class pool;
 
 	//
-	// Location: <memory-mgr/pool/object_pool.hpp>
+	// Location: "memory-mgr/pool/object_pool.hpp"
 	//
 	template <typename T, typename UserAllocator = default_user_allocator_new_delete>
 	class object_pool;
 
 	//
-	// Location: <memory-mgr/pool/singleton_pool.hpp>
+	// Location: "memory-mgr/pool/singleton_pool.hpp"
 	//
 	template <typename Tag, unsigned RequestedSize,
 		typename UserAllocator = default_user_allocator_new_delete,
@@ -52,7 +52,7 @@ namespace memory_mgr {
 	struct singleton_pool;
 
 	//
-	// Location: <memory-mgr/pool/pool_alloc.hpp>
+	// Location: "memory-mgr/pool/pool_alloc.hpp"
 	//
 	struct pool_allocator_tag;
 

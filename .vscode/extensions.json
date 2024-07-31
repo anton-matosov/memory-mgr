@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "corker.vscode-micromamba",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "ms-vscode.cmake-tools",
+    "twxs.cmake",
+    "jeff-hykin.better-cpp-syntax"
+  ]
+}

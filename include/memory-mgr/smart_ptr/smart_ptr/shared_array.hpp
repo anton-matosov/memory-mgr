@@ -23,7 +23,7 @@
 #include <boost/config.hpp>   // for broken compiler workarounds
 
 #if defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-#include <memory-mgr/smart_ptr/smart_ptr/detail/shared_array_nmt.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/shared_array_nmt.hpp"
 #else
 
 #include <memory>             // TR1 cyclic inclusion fix
@@ -31,7 +31,7 @@
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 
-#include <memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp"
 #include <boost/detail/workaround.hpp>
 
 #include <cstddef>            // for std::ptrdiff_t
@@ -101,7 +101,7 @@ public:
     }
 
 // implicit conversion to "bool"
-#include <memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp"
 
     bool unique() const // never throws
     {

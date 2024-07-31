@@ -8,3 +8,7 @@ find_package(Boost 1.85.0 EXACT REQUIRED COMPONENTS headers)
 
 
 target_link_libraries(VendorBoost INTERFACE Boost::headers)
+
+
+add_library(VendorGSTL INTERFACE)
+target_include_directories(VendorGSTL INTERFACE ${CMAKE_CURRENT_LIST_DIR}/gstl)

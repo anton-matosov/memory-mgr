@@ -25,7 +25,7 @@
 #include <boost/config.hpp>   // for broken compiler workarounds
 
 #if defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-#include <memory-mgr/smart_ptr/smart_ptr/detail/shared_ptr_nmt.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/shared_ptr_nmt.hpp"
 #else
 
 // In order to avoid circular dependencies with Boost.TR1
@@ -38,15 +38,15 @@
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/detail/workaround.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/shared_count.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/sp_convertible.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/detail/cast_tags.hpp"
 
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/offset_ptr.h"
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
-#include <memory-mgr/smart_ptr/smart_ptr/detail/spinlock_pool.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/memory_order.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/spinlock_pool.hpp"
+#include "memory-mgr/smart_ptr/smart_ptr/memory_order.hpp"
 #endif
 
 #include <algorithm>            // for std::swap
@@ -422,7 +422,7 @@ public:
     }
 
 // implicit conversion to "bool"
-#include <memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp"
 
     bool unique() const // never throws
     {

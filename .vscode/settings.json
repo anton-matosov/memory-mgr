@@ -1,0 +1,28 @@
+{
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  // VSCode-micromamba extension injects path to environment's bin folder
+  // to the PATH variable. This will make all the binaries available by name
+  // Reset them to the default values, to ensure correct binaries are used.
+  "python.defaultInterpreterPath": "python",
+  "cmake.cmakePath": "cmake",
+
+  "cmake.generator": "Ninja",
+
+  "cmake.configureArgs": [
+    "-DCMAKE_BUILD_TYPE=Debug",
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+    "-DCMAKE_CXX_COMPILER=clang++",
+    "-DCMAKE_C_COMPILER=clang",
+  ],
+
+  "git.branchPrefix": "feature/",
+  "git.enableSmartCommit": false,
+  "git.pruneOnFetch": true,
+  "git.pullBeforeCheckout": true,
+  "git.branchProtection": [
+    "master"
+  ],
+  "git.defaultBranchName": "master",
+}

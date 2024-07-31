@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MEMORY_SEGMENT_HEADER
-#define MGR_MEMORY_SEGMENT_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/segment_traits.h>
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/segment_traits.h"
 
 namespace memory_mgr
 {	
@@ -58,6 +53,7 @@ namespace memory_mgr
 		   @brief Memory manager that will be linked with allocated memory segment
 		*/
 		typedef MemMgr				memmgr_type;
+		using typename memmgr_type::size_type;
 		
 		/**
 		   @brief Memory segment allocator type
@@ -74,7 +70,7 @@ namespace memory_mgr
 		   @brief Default constructor
 		   @details Creates memory segment and memory manager linked to this segment
 		*/
-		memory_segment( const size_t id = 0 )
+		memory_segment( const size_type id = 0 )
 			:memory( manager_traits<memmgr_type>::memory_size, id ),
 			memmgr_type( memory::segment_base() )
 		{}
@@ -115,4 +111,3 @@ namespace memory_mgr
 	};
 
 }
-#endif// MGR_MEMORY_SEGMENT_HEADER

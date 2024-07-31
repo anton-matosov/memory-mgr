@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_LINUX_HEADER
-#define MGR_LINUX_HEADER
+#pragma once
 
 #define MGR_LINUX_PLATFORM
 
@@ -36,8 +35,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <sstream>
 #include <iostream>
 
-#include <memory-mgr/detail/temp_buffer.h>
-#include <memory-mgr/detail/types.h>
+#include "memory-mgr/detail/temp_buffer.h"
+#include "memory-mgr/detail/types.h"
 
 namespace memory_mgr
 {
@@ -132,4 +131,3 @@ namespace memory_mgr
 	}
 }
 
-#endif// MGR_LINUX_HEADER

@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ALLOCATOR_DECORATOR_HEADER
-#define MGR_ALLOCATOR_DECORATOR_HEADER
+#pragma once
 
-#include <memory-mgr/detail/polymorphic_allocator.h>
-#include <memory-mgr/detail/allocator_base.h>
-#include <memory-mgr/smart_ptr/shared_ptr.hpp>
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "memory-mgr/detail/polymorphic_allocator.h"
+#include "memory-mgr/detail/allocator_base.h"
+#include "memory-mgr/smart_ptr/shared_ptr.hpp"
 
 namespace memory_mgr
 {
@@ -40,9 +35,18 @@ namespace memory_mgr
 	{
 	public:
 		typedef allocator_decorator self_type;
+		typedef detail::allocator_base<T, RebindPointersFrom> base_type;
 		typedef detail::polymorphic_allocator impl_type;
 		typedef shared_ptr<impl_type> pimpl_type;
-		typedef allocator_base<T, RebindPointersFrom> base_type;
+
+		using typename base_type::value_type;
+		using typename base_type::raw_pointer;
+		using typename base_type::const_raw_pointer;
+		using typename base_type::pointer;
+		using typename base_type::const_pointer;
+		using typename base_type::reference;
+		using typename base_type::const_reference;
+		using typename base_type::size_type;
 
 		template<class Other>
 		struct rebind
@@ -56,19 +60,19 @@ namespace memory_mgr
 		}
 
 		// construct allocator from pointer to manager
-		inline allocator_decorator( pimpl_type pimpl )
-			:m_pimpl( pimpl )
-		{
-		}
+		// inline allocator_decorator( pimpl_type pimpl )
+		// 	:m_pimpl( pimpl )
+		// {
+		// }
 
-		template<class other, class RebindPointersFrom>
-		inline allocator_decorator( const allocator_decorator<other, RebindPointersFrom>& rhs ) /*throw()*/
+		template<class other, class OtherRebindPointersFrom>
+		inline allocator_decorator( const allocator_decorator<other, OtherRebindPointersFrom>& rhs ) /*throw()*/
 			:m_pimpl( rhs.get_pimpl() )
 		{	// construct from a related allocator
 		}
 
-		template<class other, class RebindPointersFrom>
-		inline self_type& operator=( const allocator_decorator<other, RebindPointersFrom>& rhs )
+		template<class other, class OtherRebindPointersFrom>
+		inline self_type& operator=( const allocator_decorator<other, OtherRebindPointersFrom>& rhs )
 		{	// assign from a related allocator
 			m_pimpl = rhs.m_impl;
 			return (*this);
@@ -105,34 +109,32 @@ namespace memory_mgr
 			(&*ptr)->~value_type();
 		}
 
-		template<class other, class RebindPointersFrom>
-		bool equal( const allocator_decorator<other, RebindPointersFrom>& rhs ) const /*throw()*/
+		template<class other, class OtherRebindPointersFrom>
+		bool equal( const allocator_decorator<other, OtherRebindPointersFrom>& rhs ) const /*throw()*/
 		{
 			return m_pimpl->equal( *rhs.get_pimpl() );
 		}
 		
 		pimpl_type get_pimpl() const
 		{
-			return m_pimpl;
+			return this->m_pimpl;
 		}
 	private:
 		pimpl_type m_pimpl;
 		
 	};
 
-	template<class T, class U, class RebindPointersFrom>
-	inline bool operator==(const allocator_decorator<T, RebindPointersFrom>& lhs,
-		const allocator_decorator<U, RebindPointersFrom>& rhs) /*throw()*/
+	template<class T, class U, class Trebind, class Urebind>
+	inline bool operator==(const allocator_decorator<T, Trebind>& lhs,
+		const allocator_decorator<U, Urebind>& rhs) /*throw()*/
 	{
 		return lhs.equal( rhs );
 	}
 
-	template<class T, class U, class RebindPointersFrom>
-	inline bool operator!=(const allocator_decorator<T, RebindPointersFrom>& lhs,
-		const allocator_decorator<U, RebindPointersFrom>& rhs) /*throw()*/
+	template<class T, class U, class Trebind, class Urebind>
+	inline bool operator!=(const allocator_decorator<T, Trebind>& lhs,
+		const allocator_decorator<U, Urebind>& rhs) /*throw()*/
 	{
 		return std::rel_ops::operator !=( lhs, rhs );
 	}
 }
-
-#endif //MGR_ALLOCATOR_DECORATOR_HEADER

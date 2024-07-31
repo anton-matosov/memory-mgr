@@ -36,10 +36,9 @@ without stopping it.
 
 */
 
-#ifndef MGR_WIN_PERF_TIMER_HEADER
-#define MGR_WIN_PERF_TIMER_HEADER
+#pragma once
 
-#include <memory-mgr/config/config.h>
+#include "memory-mgr/config/config.h"
 
 #ifdef MGR_WINDOWS_PLATFORM
 
@@ -226,5 +225,3 @@ namespace memory_mgr
 }
 
 #endif //MGR_WINDOWS_PLATFORM
-
-#endif //MGR_WIN_PERF_TIMER_HEADER

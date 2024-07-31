@@ -21,19 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SIZE_TRACKING_HEADER
-#define MGR_SIZE_TRACKING_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/aux_data_decorator.h>
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/detail/ptr_helpers.h>
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/aux_data_decorator.h"
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/ptr_helpers.h"
 
 namespace memory_mgr
 {
@@ -60,9 +54,11 @@ namespace memory_mgr
 		/**
 		   @brief size tracking implementation base class
 		*/
-		typedef aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
+		typedef detail::aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
 
 	public:
+		using typename impl_base_type::size_type;
+
 		/**
 		   @brief Default constructor, creates memory manager 
 		   @remarks Can be used only if decorates memory manager with 
@@ -160,5 +156,3 @@ namespace memory_mgr
 		};
 	};
 }
-
-#endif //MGR_SIZE_TRACKING_HEADER

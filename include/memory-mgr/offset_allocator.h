@@ -21,15 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_OFFSET_ALLOCATOR_HEADER
-#define MGR_OFFSET_ALLOCATOR_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/allocator.h>
-#include <memory-mgr/offset_pointer.h>
+#include "memory-mgr/allocator.h"
+#include "memory-mgr/offset_pointer.h"
 
 namespace memory_mgr
 {
@@ -39,8 +34,8 @@ namespace memory_mgr
 		class old_offset_pointers
 		{
 		public:
-			typedef typename offset_pointer<T, MemMgr> pointer;
-			typedef typename offset_pointer<const T, MemMgr> const_pointer;
+			typedef offset_pointer<T, MemMgr> pointer;
+			typedef offset_pointer<const T, MemMgr> const_pointer;
 			typedef typename type_manip::add_reference<T>::type reference;
 			typedef typename type_manip::add_reference<const T>::type const_reference;
 
@@ -60,6 +55,7 @@ namespace memory_mgr
 		typedef allocator<T, MemMgr, detail::old_offset_pointers<T, MemMgr> > base_type;
 
 		typedef offset_allocator	self_type;
+		using typename base_type::mgr_type;
 
 		template<class Other>
 		struct rebind
@@ -104,5 +100,3 @@ namespace memory_mgr
 	}
 
 }
-
-#endif //MGR_OFFSET_ALLOCATOR_HEADER

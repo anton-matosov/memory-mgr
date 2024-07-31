@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_DECORATOR_BASE_HEADER
-#define MGR_DECORATOR_BASE_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/detail/static_assert.h>
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/detail/static_assert.h"
 
 namespace memory_mgr
 {
@@ -91,7 +86,3 @@ namespace memory_mgr
 		typedef MemMgr base_manager_type;
 	};
 }
-
-#endif //MGR_DECORATOR_BASE_HEADER
-
-

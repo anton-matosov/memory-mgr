@@ -29,7 +29,7 @@
 
 #include <boost/detail/interlocked.hpp>
 #include <boost/detail/workaround.hpp>
-#include <memory-mgr/detail/sp_typeinfo.hpp>
+#include "memory-mgr/detail/sp_typeinfo.hpp"
 
 namespace memory_mgr
 {

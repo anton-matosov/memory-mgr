@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_BIT_MANAGER_HEADER
-#define MGR_BIT_MANAGER_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/static_bitset.h>
-#include <memory-mgr/detail/ptr_casts.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/detail/static_bitset.h"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr
 {
@@ -129,7 +124,7 @@ namespace memory_mgr
 
 			size_type requires_bytes()
 			{
-				return memory_usage;
+				return this->memory_usage;
 			}
 
 			inline bit_position_type allocate( bit_position_type bits_count )
@@ -229,5 +224,3 @@ namespace memory_mgr
 		}
 	}
 }
-
-#endif// MGR_BIT_MANAGER_HEADER

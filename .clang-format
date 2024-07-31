@@ -5,3 +5,24 @@ IndentWidth: 2
 UseTab: Never
 
 BreakBeforeBraces: Allman
+
+# Sort includes, system includes last
+IncludeCategories:
+  - Regex:           '^((<|")(memory-mgr/detail)/)'
+    Priority:        3
+    SortPriority:    3
+    CaseSensitive:   true
+  - Regex:           '^((<|")(memory-mgr)/)'
+    Priority:        2
+    CaseSensitive:   true
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        5
+    CaseSensitive:   true
+  - Regex:           '<[[:alnum:]./_-]+>'
+    Priority:        4
+    CaseSensitive:   true
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0
+
+IncludeBlocks: Regroup

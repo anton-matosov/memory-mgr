@@ -22,7 +22,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include "stdafx.h"
-#include <memory-mgr/detail/math.h>
+#include "memory-mgr/detail/math.h"
 #include <boost/type_traits/make_unsigned.hpp>
 
 

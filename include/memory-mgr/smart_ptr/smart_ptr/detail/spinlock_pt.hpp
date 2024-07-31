@@ -74,6 +74,6 @@ public:
 } // namespace detail
 } // namespace memory_mgr
 
-#define BOOST_DETAIL_SPINLOCK_INIT { PTHREAD_MUTEX_INITIALIZER }
+#define MGR_DETAIL_SPINLOCK_INIT { PTHREAD_MUTEX_INITIALIZER }
 
 #endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_PT_HPP_INCLUDED

@@ -20,7 +20,7 @@
 //  http://www.boost.org/libs/smart_ptr/scoped_array.htm
 //
 
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/offset_ptr.h"
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/config.hpp>   // in case ptrdiff_t not in std
@@ -99,7 +99,7 @@ public:
     }
 
 // implicit conversion to "bool"
-#include <memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/operator_bool.hpp"
 
     void swap(scoped_array & b) // never throws
     {

@@ -21,17 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_MANAGED_BASE_HEADER
-#define MGR_MANAGED_BASE_HEADER
+#pragma once
 
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/new.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/ptr_helpers.h>
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/new.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/ptr_helpers.h"
 
 namespace memory_mgr
 {
@@ -139,5 +134,3 @@ namespace memory_mgr
 	
 	
 }
-
-#endif// MGR_MANAGED_BASE_HEADER

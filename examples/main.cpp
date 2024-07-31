@@ -25,7 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <algorithm>
 #include <string>
 #include <conio.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/offset_ptr.h"
 
 static int variable = 123;
 static int* variablePtr = NULL;

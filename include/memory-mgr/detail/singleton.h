@@ -21,15 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_SINGLETON_HEADER
-#define MGR_SINGLETON_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/sync/locks.h>
-#include <memory-mgr/sync/critical_section.h>
+#include "memory-mgr/sync/locks.h"
+#include "memory-mgr/sync/critical_section.h"
 
 namespace memory_mgr
 {
@@ -129,6 +124,3 @@ namespace memory_mgr
 	InstT* singleton<T, InstT, SyncObj, ThreadingModel>::m_instance = NULL;
 
 }
-
-
-#endif// MGR_SINGLETON_HEADER

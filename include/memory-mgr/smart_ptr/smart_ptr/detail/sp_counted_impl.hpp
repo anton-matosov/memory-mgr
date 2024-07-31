@@ -26,9 +26,9 @@
 # error BOOST_SP_USE_QUICK_ALLOCATOR is not supported by the current addoptation.
 #endif
 
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/offset_ptr.h"
 #include <boost/checked_delete.hpp>
-#include <memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/sp_counted_base.hpp"
 
 
 #include <memory>           // std::allocator

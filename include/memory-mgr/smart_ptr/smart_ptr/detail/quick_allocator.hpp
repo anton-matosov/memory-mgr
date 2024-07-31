@@ -20,7 +20,7 @@
 
 #include <boost/config.hpp>
 
-#include <memory-mgr/smart_ptr/smart_ptr/detail/lightweight_mutex.hpp>
+#include "memory-mgr/smart_ptr/smart_ptr/detail/lightweight_mutex.hpp"
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 

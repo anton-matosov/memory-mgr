@@ -21,21 +21,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEST_CLASS_UNIT_HEADER
-#define MGR_TEST_CLASS_UNIT_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/managed_base.h>
-#include <memory-mgr/named_objects.h>
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/heap_segment.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/params_binder.h>
-#include <memory-mgr/sync/named_mutex.h>
+#include "memory-mgr/managed_base.h"
+#include "memory-mgr/named_objects.h"
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/heap_segment.h"
+#include "memory-mgr/singleton_manager.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/params_binder.h"
+#include "memory-mgr/sync/named_mutex.h"
 
 MGR_DECLARE_BIND_PARAM( MutexName, const char*, "Default memory sync" );
 typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName ) def_named_mutex;
@@ -128,5 +123,3 @@ public:
 		i5_ = 0xD;
 	}
 };
-
-#endif //MGR_TEST_CLASS_UNIT_HEADER

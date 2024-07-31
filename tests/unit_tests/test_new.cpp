@@ -24,9 +24,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "test_class.h"
 #include "managers.h"
-#include <memory-mgr/new.h>
-#include <memory-mgr/named_objects.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/new.h"
+#include "memory-mgr/named_objects.h"
+#include "memory-mgr/offset_ptr.h"
 #include "common_manager_tests.h"
 
 typedef 

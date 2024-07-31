@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_TEST_HEADER
-#define MGR_TEST_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -35,9 +30,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <algorithm>
 #include <limits>
 #include <iterator>
-#include <memory-mgr/allocator.h>
-#include <memory-mgr/detail/helpers.h>
-#include <memory-mgr/detail/singleton.h>
+#include "memory-mgr/allocator.h"
+#include "memory-mgr/detail/helpers.h"
+#include "memory-mgr/detail/singleton.h"
 #include "../perf_timer.h"
 
 typedef memory_mgr::singleton_manager
@@ -197,7 +192,3 @@ void print_perf_test_header( const std::wstring& name,
 }
 
 #define MGR_PRINT_RESULTS perf_test_manager::instance().print_results();
-
-
-
-#endif

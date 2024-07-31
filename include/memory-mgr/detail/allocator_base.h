@@ -21,16 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_ALLOCATOR_BASE_HEADER
-#define MGR_ALLOCATOR_BASE_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/detail/types.h>
-#include <memory-mgr/detail/compatibility_types.h>
-#include <memory-mgr/offset_ptr.h>
+#include "memory-mgr/detail/types.h"
+#include "memory-mgr/detail/compatibility_types.h"
+#include "memory-mgr/offset_ptr.h"
 
 namespace memory_mgr
 {
@@ -40,8 +35,8 @@ namespace memory_mgr
 		class offset_pointers
 		{
 		public:
-			typedef typename offset_ptr<T> pointer;
-			typedef typename offset_ptr<const T> const_pointer;
+			typedef offset_ptr<T> pointer;
+			typedef offset_ptr<const T> const_pointer;
 
 			typedef typename type_manip::add_reference<T>::type reference;
 			typedef typename type_manip::add_reference<const T>::type const_reference;
@@ -152,4 +147,3 @@ namespace memory_mgr
 	}
 
 }
-#endif //MGR_ALLOCATOR_BASE_HEADER

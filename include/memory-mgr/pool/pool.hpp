@@ -24,16 +24,16 @@
 // std::max
 #include <algorithm>
 
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/pool/poolfwd.hpp"
 
 // memory_mgr::details::pool::ct_lcm
-#include <memory-mgr/pool/detail/ct_gcd_lcm.hpp>
+#include "memory-mgr/pool/detail/ct_gcd_lcm.hpp"
 // memory_mgr::details::pool::lcm
-#include <memory-mgr/pool/detail/gcd_lcm.hpp>
+#include "memory-mgr/pool/detail/gcd_lcm.hpp"
 // memory_mgr::simple_segregated_storage
-#include <memory-mgr/pool/simple_segregated_storage.hpp>
-#include <memory-mgr/detail/ptr_casts.h>
-#include <memory-mgr/detail/compatibility_types.h>
+#include "memory-mgr/pool/simple_segregated_storage.hpp"
+#include "memory-mgr/detail/ptr_casts.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 #ifdef BOOST_NO_STDC_NAMESPACE
 namespace std { using ::allocate; using ::free; }
@@ -240,6 +240,9 @@ namespace memory_mgr {
 		typedef UserAllocator user_allocator;
 		typedef typename UserAllocator::size_type size_type;
 		typedef typename UserAllocator::difference_type difference_type;
+
+		using base_type = simple_segregated_storage<size_type>;
+		using typename base_type::void_ptr;
 
 	private:
 		BOOST_STATIC_CONSTANT(unsigned, min_alloc_size =

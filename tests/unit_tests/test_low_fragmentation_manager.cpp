@@ -23,13 +23,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 
-#include <memory-mgr/memory_manager.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/low_fragmentation_manager.h>
-#include <memory-mgr/size_tracking.h>
-#include <memory-mgr/heap_segment.h>
-#include <memory-mgr/allocator.h>
-#include <memory-mgr/offset_allocator.h>
+#include "memory-mgr/memory_manager.h"
+#include "memory-mgr/singleton_manager.h"
+#include "memory-mgr/low_fragmentation_manager.h"
+#include "memory-mgr/size_tracking.h"
+#include "memory-mgr/heap_segment.h"
+#include "memory-mgr/allocator.h"
+#include "memory-mgr/offset_allocator.h"
 #include "common_manager_tests.h"
 #include "managers.h"
 #include <string>

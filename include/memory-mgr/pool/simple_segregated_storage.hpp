@@ -20,11 +20,11 @@
 
 // std::greater
 #include <functional>
-#include <memory-mgr/detail/assert.h>
+#include "memory-mgr/detail/assert.h"
 
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/get_pointer.h>
-#include <memory-mgr/pool/poolfwd.hpp>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/get_pointer.h"
+#include "memory-mgr/pool/poolfwd.hpp"
 #include <boost/pointer_to_other.hpp>
 
 #ifdef DEBUG_MEMORY_POOLS

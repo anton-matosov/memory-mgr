@@ -21,25 +21,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_NAMED_ALLOCATOR_HEADER
-#define MGR_NAMED_ALLOCATOR_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include "memory-mgr/allocator_decorator.h"
+#include "memory-mgr/manager_traits.h"
+#include "memory-mgr/offset_allocator.h"
+#include "memory-mgr/singleton_manager.h"
 
-#include <string>
-#include <functional>
-#include <map>
-#include <gstl/string>
-#include <gstl/hash.hpp>
+#include "memory-mgr/detail/bit_manager.h"
+#include "memory-mgr/detail/decorator_base.h"
+#include "memory-mgr/detail/ptr_helpers.h"
+
 #include <boost/unordered_map.hpp>
-#include <memory-mgr/allocator_decorator.h>
-#include <memory-mgr/detail/decorator_base.h>
-#include <memory-mgr/manager_traits.h>
-#include <memory-mgr/offset_allocator.h>
-#include <memory-mgr/singleton_manager.h>
-#include <memory-mgr/detail/ptr_helpers.h>
+#include <functional>
+#include <gstl/hash.hpp>
+#include <gstl/string>
+#include <map>
+#include <string>
+
 
 namespace memory_mgr
 {
@@ -155,7 +154,7 @@ namespace memory_mgr
 			named_allocator( mgr_type& mgr )
 				:m_alloc()
 			{
-				m_objects = mgr.get_internal_ptr_as<map_type>( detail::internal_ptr_named_objects, 1, m_alloc );
+				m_objects = mgr.template get_internal_ptr_as<map_type>( detail::internal_ptr_named_objects, 1, m_alloc );
 			}
 
 			bool is_exists( const char_type* name )
@@ -255,5 +254,3 @@ namespace memory_mgr
 		};
 	}
 }
-
-#endif //MGR_NAMED_ALLOCATOR_HEADER

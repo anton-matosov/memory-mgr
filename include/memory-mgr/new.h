@@ -21,18 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MGR_NEW_HEADER
-#define MGR_NEW_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
-
-#include <memory-mgr/config/config.h>
-#include <memory-mgr/sync/locks.h>
-#include <memory-mgr/manager_category.h>
-#include <memory-mgr/detail/static_assert.h>
-#include <memory-mgr/detail/new_helpers.h>
+#include "memory-mgr/config/config.h"
+#include "memory-mgr/sync/locks.h"
+#include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/static_assert.h"
+#include "memory-mgr/detail/new_helpers.h"
 
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -48,7 +43,7 @@ namespace memory_mgr
 		class allocate_base
 		{
 		public:
-			typedef MemMgr			mgr_type;
+			using mgr_type = MemMgr;
 
 			typedef T				object_type;
 			typedef object_type*	object_pointer_type;
@@ -62,7 +57,7 @@ namespace memory_mgr
 
 			}
 
-			virtual ~allocate_base() = 0
+			virtual ~allocate_base()
 			{
 
 			}
@@ -91,7 +86,11 @@ namespace memory_mgr
 		class allocate_unnamed_impl
 			:public allocate_base<T, MemMgr>
 		{
-			typedef allocate_base<T, MemMgr> base_type;
+			using base_type = allocate_base<T, MemMgr>;
+			using typename base_type::mgr_type;
+			using typename base_type::helper_type;
+			using typename base_type::lockable_type;
+
 		public:
 
 			allocate_unnamed_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
@@ -124,6 +123,9 @@ namespace memory_mgr
 			:public allocate_unnamed_impl<T, MemMgr>
 		{
 			typedef allocate_unnamed_impl<T, MemMgr> base_type;
+			using typename base_type::mgr_type;
+			using typename base_type::helper_type;
+			using typename base_type::lockable_type;
 
 			std::string m_object_name;
 			bool m_construction_needed;
@@ -140,7 +142,7 @@ namespace memory_mgr
 
 			virtual lockable_type& get_lockable()
 			{
-				return m_mgr->get_lockable();
+				return this->m_mgr->get_lockable();
 			}
 		protected:
 			virtual void* allocate_impl( size_t size, mgr_type& mgr )
@@ -213,7 +215,203 @@ namespace memory_mgr
 				}
 			}
 
-#include <memory-mgr/detail/new_proxy_operator_braces.h>
+			object_pointer_type operator()()
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type();
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 >
+			object_pointer_type operator()( const A0& a0)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4 , a5);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4 , a5 , a6);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4 , a5 , a6 , a7);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 , typename A8 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7 , const A8& a8)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4 , a5 , a6 , a7 , a8);
+					}
+				}				
+
+				return m_object;
+			}
+
+			template<  typename A0 , typename A1 , typename A2 , typename A3 , typename A4 , typename A5 , typename A6 , typename A7 , typename A8 , typename A9 >
+			object_pointer_type operator()( const A0& a0 , const A1& a1 , const A2& a2 , const A3& a3 , const A4& a4 , const A5& a5 , const A6& a6 , const A7& a7 , const A8& a8 , const A9& a9)
+			{
+				lock_type lock( m_alloc->get_lockable() );
+				allocate();
+				object_pointer_type object = m_object;
+
+				if( m_alloc->construction_needed() )
+				{
+					for( size_t i = 0; i < m_num_items; ++i )
+					{
+						::new( object + i ) object_type( a0 , a1 , a2 , a3 , a4 , a5 , a6 , a7 , a8 , a9);
+					}
+				}				
+
+				return m_object;
+			}
+
 		};
 
 	}
@@ -262,7 +460,7 @@ namespace memory_mgr
 #define MGR_NULL_MACRO
 #define MGR_EMPTY_MACRO(x) x
 #define MGR_COMA ,
-
+#define MGR_UNPACK(...) __VA_ARGS__
 
 #define MGR_DEFINE_DELETE_OVERLOADS( _delete_name, _pointer_type,										\
 				_destroy_method, _pointer_getter, _extra_check, _extra_param, _extra_param_forward )	\
@@ -300,15 +498,13 @@ namespace memory_mgr
 #define MGR_NAMED_OBJECT_DELETE_CHECK if( mgr.get().remove_object( name ) )
 
 #define MGR_DEFINE_ALL_DELETES( _pointer_type, _pointer_getter )										\
-MGR_DEFINE_DELETE_OVERLOADS( delete_, _pointer_type, destroy_and_deallocate, _pointer_getter,			\
+MGR_DEFINE_DELETE_OVERLOADS( delete_, MGR_UNPACK(_pointer_type), destroy_and_deallocate, _pointer_getter,			\
 							MGR_NULL_MACRO, MGR_NULL_MACRO, MGR_NULL_MACRO );							\
-MGR_DEFINE_DELETE_OVERLOADS( delete_, _pointer_type, destroy_and_deallocate, _pointer_getter,			\
+MGR_DEFINE_DELETE_OVERLOADS( delete_, MGR_UNPACK(_pointer_type), destroy_and_deallocate, _pointer_getter,			\
 							MGR_NAMED_OBJECT_DELETE_CHECK, MGR_COMA const char* name, MGR_COMA name );	\
-MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate_array, _pointer_getter,\
+MGR_DEFINE_DELETE_OVERLOADS( delete_array, MGR_UNPACK(_pointer_type), destroy_and_deallocate_array, _pointer_getter,\
 							MGR_NULL_MACRO, MGR_NULL_MACRO, MGR_NULL_MACRO );							\
-MGR_DEFINE_DELETE_OVERLOADS( delete_array, _pointer_type, destroy_and_deallocate_array, _pointer_getter,\
+MGR_DEFINE_DELETE_OVERLOADS( delete_array, MGR_UNPACK(_pointer_type), destroy_and_deallocate_array, _pointer_getter,\
 							MGR_NAMED_OBJECT_DELETE_CHECK, MGR_COMA const char* name, MGR_COMA name );
 
 MGR_DEFINE_ALL_DELETES( T*, MGR_EMPTY_MACRO );
-
-#endif //MGR_NEW_HEADER
