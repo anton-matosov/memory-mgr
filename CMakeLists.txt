@@ -10,12 +10,13 @@ enable_testing()
 
 add_subdirectory(vendor)
 
+set(MEMORY_MGR_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/code/memory-mgr/)
 set(LIBRARY_NAME memory-mgr)
 add_library(${LIBRARY_NAME} INTERFACE)
-target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} INTERFACE ${MEMORY_MGR_ROOT}/include)
 target_link_libraries(${LIBRARY_NAME} INTERFACE VendorBoost VendorGSTL)
 
-add_subdirectory(tests)
+add_subdirectory(${MEMORY_MGR_ROOT}/tests)
 
 
 # set(CPACK_PROJECT_NAME ${LIBRARY_NAME})
