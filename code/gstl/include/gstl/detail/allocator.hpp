@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #ifndef GSTL_ALLOCATOR_HEADER
 #define GSTL_ALLOCATOR_HEADER
 
+#include <cstddef>
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #	pragma once
 #endif
@@ -51,8 +52,8 @@ namespace gstl
 		typedef value_type&			reference;
 		typedef const value_type&	const_reference;
 		
-		typedef size_t								size_type;
-		typedef ptrdiff_t							difference_type;
+		typedef std::size_t								size_type;
+		typedef std::ptrdiff_t							difference_type;
 
 		template<class Other>
 		struct rebind

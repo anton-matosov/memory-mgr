@@ -28,11 +28,14 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #	pragma once
 #endif
 
-#include <boost/iterator/iterator_adaptor.hpp>
-#include <gstl/detail/iterator_declarer.hpp>
-#include <boost/pointer_to_other.hpp>
 #include <gstl/detail/assert.hpp>
 #include <gstl/detail/helpers.hpp>
+#include <gstl/detail/iterator_declarer.hpp>
+
+#include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/pointer_to_other.hpp>
+#include <boost/utility/enable_if.hpp>
+
 
 namespace gstl
 {

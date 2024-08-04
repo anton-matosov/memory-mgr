@@ -130,7 +130,7 @@ namespace gstl
 
 			void throw_out_of_range() const
 			{
-				throw std::out_of_range( __FUNCTION__ " invalid position" );
+				throw std::out_of_range( "out of range. invalid position" );
 			}
 
 			void throw_length_error() const
