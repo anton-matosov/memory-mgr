@@ -21,12 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_ITERATOR_HEADER
-#define GSTL_ITERATOR_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 /*
 Starts on page 541 C++ std 2003
@@ -753,4 +749,3 @@ namespace gstl
 	};
 }
 
-#endif //GSTL_ITERATOR_HEADER

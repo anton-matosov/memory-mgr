@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_TEST_COMMON_HEADER
-#define GSTL_TEST_COMMON_HEADER
+#pragma once
 
 #define _CRTDBG_MAP_ALLOC
 //#define _CRTDBG_MAP_ALLOC_NEW
@@ -126,4 +125,3 @@ namespace boost
 	}
 }
 
-#endif //GSTL_TEST_COMMON_HEADER

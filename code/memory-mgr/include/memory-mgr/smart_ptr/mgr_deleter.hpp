@@ -1,9 +1,5 @@
-#ifndef MEMORY_MGR_DELETER_HPP_INCLUDED
-#define MEMORY_MGR_DELETER_HPP_INCLUDED
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 #include "memory-mgr/detail/dynamic_cast_ex.h"
 #include <assert.h>
@@ -63,4 +59,3 @@ namespace memory_mgr
 	};
 }
 
-#endif //MEMORY_MGR_DELETER_HPP_INCLUDED

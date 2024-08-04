@@ -33,8 +33,8 @@ Will be patched to:
 ```
 """
 
-include_guard = re.compile(r'.*HPP_INCLUDED\n')
-enclosed_pragma_once = re.compile(r'\n// MS compatible.*\n\n#if.*_MSC_VER.*\n# pragma once\n#endif')
+include_guard = re.compile(r'.*(HPP_INCLUDED|_HEADER[\n]*)')
+enclosed_pragma_once = re.compile(r'(\n// MS compatible.*\n\n)*#if.*_MSC_VER.*\n#\spragma once\n#endif')
 
 is_verbose = False
 
