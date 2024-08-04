@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_MEMORY_ORDER_HPP_INCLUDED
-#define MEMORY_MGR_MEMORY_ORDER_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 // 
@@ -53,4 +46,3 @@ enum memory_order
 
 } // namespace boost
 
-#endif // #ifndef MEMORY_MGR_MEMORY_ORDER_HPP_INCLUDED

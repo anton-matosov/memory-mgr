@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_WEAK_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_WEAK_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 //
@@ -236,4 +229,3 @@ template<class T> void swap(weak_ptr<T> & a, weak_ptr<T> & b)
 # pragma warning(pop)
 #endif    
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_WEAK_PTR_HPP_INCLUDED

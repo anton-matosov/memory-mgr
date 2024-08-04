@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_INTRUSIVE_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_INTRUSIVE_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 //
@@ -322,4 +315,3 @@ template<class E, class T, class Y> std::basic_ostream<E, T> & operator<< (std::
 # pragma warning(pop)
 #endif    
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_INTRUSIVE_PTR_HPP_INCLUDED

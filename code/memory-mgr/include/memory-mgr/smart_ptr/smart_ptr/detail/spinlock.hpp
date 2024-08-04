@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  boost/detail/spinlock.hpp
@@ -50,4 +43,3 @@
 #  error Unrecognized threading platform
 #endif
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_HPP_INCLUDED

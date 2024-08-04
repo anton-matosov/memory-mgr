@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_POOL_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_POOL_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  boost/detail/spinlock_pool.hpp
@@ -84,4 +77,3 @@ template< int I > spinlock spinlock_pool< I >::pool_[ 41 ] =
 } // namespace detail
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_POOL_HPP_INCLUDED

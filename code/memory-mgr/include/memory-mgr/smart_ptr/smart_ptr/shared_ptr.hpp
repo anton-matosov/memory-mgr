@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_SHARED_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_SHARED_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 // 
@@ -695,4 +688,3 @@ template<class T> inline bool atomic_compare_exchange_explicit( shared_ptr<T> * 
 
 #endif  // #if defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_SHARED_PTR_HPP_INCLUDED

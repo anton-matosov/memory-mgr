@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SHARED_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SHARED_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 //  shared_ptr.hpp
@@ -23,4 +16,3 @@
 
 #include "memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp"
 
-#endif  // #ifndef MEMORY_MGR_SHARED_PTR_HPP_INCLUDED

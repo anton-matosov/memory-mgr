@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_SCOPED_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_SCOPED_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
 // 
@@ -141,4 +134,3 @@ template<class T> inline T * get_pointer(scoped_ptr<T> const & p)
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_SCOPED_PTR_HPP_INCLUDED
