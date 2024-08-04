@@ -21,14 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#ifndef MEMORY_MGR_TYPE_INFO_HPP_INCLUDED
-#define MEMORY_MGR_TYPE_INFO_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 #include <boost/detail/sp_typeinfo.hpp>
 
@@ -43,4 +36,3 @@ namespace memory_mgr
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_TYPE_INFO_HPP_INCLUDED
