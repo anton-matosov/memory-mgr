@@ -36,7 +36,6 @@ Table 71 - Relations among iterator categories
 */
 
 #include <iterator>
-#include <xutility>
 #include <gstl/detail/types.hpp>
 #include <gstl/detail/iterator.hpp>
 #include <boost/utility/enable_if.hpp>

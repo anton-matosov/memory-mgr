@@ -24,13 +24,15 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
+#include "gstl/detail/vector.hpp"
+
 namespace gstl
 {
 	template 
 	<
 		class T,
 		class Container = vector<T>,
-		class Compare = less<typename Container::value_type>
+		class Compare = std::less<typename Container::value_type>
 	>
 	class priority_queue
 	{

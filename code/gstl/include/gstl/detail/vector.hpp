@@ -128,22 +128,22 @@ namespace gstl
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( get_buffer(), this );
+			return iter_helper::build_iter( this->get_buffer(), this );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( get_buffer(), this );
+			return iter_helper::build_const_iter( this->get_buffer(), this );
 		}
 
 		iterator end()
 		{
-			return begin() + size_;
+			return begin() + this->size_;
 		}
 
 		const_iterator end() const
 		{
-			return begin() + size_;
+			return begin() + this->size_;
 		}
 
 		reverse_iterator rbegin()
@@ -245,7 +245,7 @@ namespace gstl
 				size_type tail_length = end() - last;
 				detail::move( &*first, &*last, tail_length );
 				_destroy( first + tail_length, end() );
-				set_size( size() - (last - first) );
+				this->set_size( size() - (last - first) );
 			}
 			return first;
 		}
@@ -337,7 +337,7 @@ namespace gstl
 					gstl::reverse( position, new_end );
 				}
 			}
-			set_size( new_size );
+			this->set_size( new_size );
 			return result_pos;
 		}
 
@@ -350,14 +350,14 @@ namespace gstl
 		{
 			while( first != last )
 			{
-				alloc_.destroy( first );
+				this->alloc_.destroy( first );
 				++first;
 			}
 		}
 
-		template<class T>
-		void _destroy( T* first, T* last, 
-			typename boost::disable_if< boost::is_pointer<pointer>, T >::type* = 0 )
+		template<class U>
+		void _destroy( U* first, U* last, 
+			typename boost::disable_if< boost::is_pointer<pointer>, U >::type* = 0 )
 		{
 			_destroy( iter_helper::build_iter( first, this ),
 				iter_helper::build_iter( last, this ) );

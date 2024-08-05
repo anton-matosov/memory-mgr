@@ -49,10 +49,11 @@ namespace gstl
 			struct enabler {};  // a private type avoids misuse
 
 		public:
-			typedef self_type/*from base*/	base_type;
+			using base_type = checked_iterator<NodePtrT, ContainerT, boost::bidirectional_traversal_tag, list_iterator<NodePtrT, ContainerT>, typename ContainerT::value_type>;
 			typedef list_iterator			self_type;
 			typedef NodePtrT								pointer_type;
 			typedef typename base_type::value_type			value_type;
+			typedef typename base_type::container_type			container_type;
 
 			list_iterator()
 			{}

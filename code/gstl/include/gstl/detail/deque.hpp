@@ -25,6 +25,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #pragma once
 
 #include <gstl/allocator>
+#include "gstl/detail/algorithm.hpp"
+#include <iterator>
 
 namespace gstl
 {

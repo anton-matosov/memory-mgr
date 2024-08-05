@@ -24,6 +24,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
+#include "gstl/detail/allocator.hpp"
+
 namespace gstl
 {
 

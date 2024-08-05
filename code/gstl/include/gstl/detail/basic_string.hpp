@@ -506,7 +506,7 @@ namespace gstl
 				//TODO: erase chars
 				//size_type rlen = last - first;
 				traits_type::copy( &*first, &*last, end() - last );
-				set_end( size() - (last - first) );
+				this->set_end( size() - (last - first) );
 			}
 			return last;
 		}
@@ -625,7 +625,7 @@ namespace gstl
 
 			put_new_fn( &*new_i1 );
 
-			reset_ptr( &*new_str, new_size, new_size + 1 );
+			this->reset_ptr( &*new_str, new_size, new_size + 1 );
 			return res;
 		}
 

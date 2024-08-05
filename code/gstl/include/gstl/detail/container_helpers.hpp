@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
+#include "gstl/detail/iterator.hpp"
 
 namespace gstl
 {
@@ -45,7 +46,7 @@ namespace gstl
 				else if( newSize < cont->size() )
 				{
 					typename Container::iterator it = cont->begin();
-					advance( it, newSize );
+					gstl::advance( it, newSize );
 					cont->erase( it, cont->end() );
 				}
 			}
