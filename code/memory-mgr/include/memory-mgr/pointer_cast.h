@@ -9,8 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef MEMORY_MGR_POINTER_CAST_H
-#define MEMORY_MGR_POINTER_CAST_H
+#pragma once
 
 namespace memory_mgr
 { 
@@ -44,5 +43,3 @@ namespace memory_mgr
 	}
 
 } // namespace memory_mgr
-
-#endif   //MEMORY_MGR_POINTER_CAST_H

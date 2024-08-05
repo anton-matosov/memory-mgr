@@ -1,6 +1,3 @@
-#ifndef MEMORY_MGR_INTRUSIVE_PTR_HPP_INCLUDED
-#define MEMORY_MGR_INTRUSIVE_PTR_HPP_INCLUDED
-
 //
 //  intrusive_ptr.hpp
 //
@@ -12,7 +9,7 @@
 //
 //  See http://www.boost.org/libs/smart_ptr/intrusive_ptr.html for documentation.
 //
+#pragma once
 
 #include "memory-mgr/smart_ptr/smart_ptr/intrusive_ptr.hpp"
 
-#endif  // #ifndef MEMORY_MGR_INTRUSIVE_PTR_HPP_INCLUDED

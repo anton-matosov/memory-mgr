@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_SINGLETON_HPP
-#define MEMORY_MGR_POOL_SINGLETON_HPP
+#pragma once
 
 // The following code might be put into some Boost.Config header in a later revision
 #ifdef __BORLANDC__
@@ -102,6 +101,4 @@ namespace memory_mgr {
 // The following code might be put into some Boost.Config header in a later revision
 #ifdef __BORLANDC__
 # pragma option pop
-#endif
-
 #endif

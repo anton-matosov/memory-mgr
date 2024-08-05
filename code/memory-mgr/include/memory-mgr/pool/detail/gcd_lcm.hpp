@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_GCD_LCM_HPP
-#define MEMORY_MGR_POOL_GCD_LCM_HPP
+#pragma once
 
 namespace memory_mgr {
 
@@ -54,5 +53,3 @@ namespace memory_mgr {
 	} // namespace details
 
 } // namespace memory_mgr
-
-#endif

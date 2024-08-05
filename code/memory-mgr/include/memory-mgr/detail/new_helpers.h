@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#	pragma once
+#pragma once
 
 #include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/manager_category.h"
