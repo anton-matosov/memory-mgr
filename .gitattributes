@@ -6,3 +6,4 @@
 *.inl text eol=lf
 *.txt text eol=lf
 *.md text eol=lf
+*.cmake text eol=lf
