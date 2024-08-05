@@ -23,8 +23,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
-
-
 #include <gstl/string>
 
 #include <boost/serialization/string.hpp>

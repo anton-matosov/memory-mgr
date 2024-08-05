@@ -1,6 +1,9 @@
 {
   "[cpp]": {
-    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+  },
+  "files.associations": {
+    "**/include/gstl/*": "cpp", // STL public headers do not have extension
   },
   // VSCode-micromamba extension injects path to environment's bin folder
   // to the PATH variable. This will make all the binaries available by name
