@@ -1042,6 +1042,9 @@ namespace gstl
 		}
 	};
 
+	template<class CharT, class Traits, class Alloc>
+	const typename basic_string<CharT, Traits, Alloc>::size_type
+								basic_string<CharT, Traits, Alloc>::npos;
 
 	template<class value_type, class traits, class allocator_type>
 	basic_string<value_type, traits, allocator_type>

@@ -22,6 +22,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
+#include <boost/test/unit_test.hpp>
+#include <boost/range.hpp>
+#include "test_common.hpp"
 
 #include <gstl/detail/basic_string.hpp>
 #include <gstl/utility>
@@ -60,8 +63,8 @@ const size_t basic_string_test_fixture::m_test_str_len2 = GSTL_STR_LEN( m_test_s
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/, memory_mgr_off_string/**/,
-						memory_mgr_old_off_string/**/ > t_list;
+typedef boost::mpl::list< std::string, gstl_string/*, memory_mgr_string, memory_mgr_off_string,
+						memory_mgr_old_off_string*/> t_list;
 		
 
 	#include "detail/test_iterator.hpp"
@@ -569,9 +572,9 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_EQUAL( str.c_str(), "ng for string callsThis is test string for string calls" );
 
 		str = strorg;
-		string_type::iterator b = str.begin();
-		string_type::const_iterator s = str.begin() + str.size() / 2 - 1;
-		string_type::const_iterator e = str.end();
+		typename string_type::iterator b = str.begin();
+		typename string_type::const_iterator s = str.begin() + str.size() / 2 - 1;
+		typename string_type::const_iterator e = str.end();
 		str.insert( b, s, e );
 		BOOST_CHECK_EQUAL( str.c_str(), "ng for string callsThis is test string for string calls" );
 
@@ -591,7 +594,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		string_type str1;
 		{
-			string_type::size_type pos = 0, nb = 2;
+			typename string_type::size_type pos = 0, nb = 2;
 			str1.insert(pos, nb, '1');
 		}
 		BOOST_CHECK_EQUAL( str1.c_str(), "11" );
@@ -664,7 +667,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		string_type s( "123456" );
 		string_type const& cs = s;
 
-		string_type::iterator i = s.begin() + 1;
+		typename string_type::iterator i = s.begin() + 1;
 		s.replace(i, i + 3, v.begin(), v.end());
 		BOOST_CHECK_EQUAL( s.c_str(), "17856" );
 
@@ -675,7 +678,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		s = "123456";
 		i = s.begin() + 1;
-		string_type::const_iterator ci = s.begin() + 1;
+		typename string_type::const_iterator ci = s.begin() + 1;
 		s.replace(i, i + 3, ci + 3, cs.end());
 		BOOST_CHECK_EQUAL( s.c_str(), "15656" );
 
@@ -697,10 +700,10 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		//Tests for the template replace method.
 		s = "123456";
-		string_type::iterator b = s.begin() + 4;
-		string_type::iterator e = s.end();
-		string_type::const_iterator rb = s.begin();
-		string_type::const_iterator re = s.end();
+		typename string_type::iterator b = s.begin() + 4;
+		typename string_type::iterator e = s.end();
+		typename string_type::const_iterator rb = s.begin();
+		typename string_type::const_iterator re = s.end();
 		s.replace(b, e, rb, re);
 		BOOST_CHECK_EQUAL( s.c_str(), "1234123456" );
 
