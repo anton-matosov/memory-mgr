@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 
 #include <utility>
+#include <iostream>
 #include "test_class.hpp"
 
 test_class::test_class() :i_(0)
