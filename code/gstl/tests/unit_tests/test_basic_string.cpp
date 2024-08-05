@@ -908,7 +908,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_GE( s2.capacity(), test_len );
 
 		//Throws: out_of_range if pos > size()
-		BOOST_CHECK_THROW( s.substr( s.size() + 1 ), std::out_of_range );
+		BOOST_CHECK_THROW( (void)s.substr( s.size() + 1 ), std::out_of_range );
 	}
 
 	//21.3.6.8 basic_string::compare
