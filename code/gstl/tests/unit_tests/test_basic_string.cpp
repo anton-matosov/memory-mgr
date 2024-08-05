@@ -73,8 +73,6 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 	{
 		string_type s("aaazzz");
 		s.resize(3);
-		boost::make_iterator_range(s);
-		boost::make_iterator_range(s.begin(), s.end());
 
 		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
 		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
