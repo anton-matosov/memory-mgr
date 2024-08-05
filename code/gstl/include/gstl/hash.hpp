@@ -23,6 +23,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
+#include "gstl/string"
+
 namespace boost
 {
 	template<class char_type, class traits, class allocator_type>
