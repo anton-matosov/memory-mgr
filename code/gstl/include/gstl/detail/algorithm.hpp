@@ -974,11 +974,6 @@ page 577
 #ifdef min
 #	undef min
 #endif
-	template<class T>
-	static inline const T min( const T& v1, const T& v2 )
-	{
-		return (gstl::min)( v1, v2, std::less<T>() );
-	}
 
 	template<class T, class Pred>
 	static inline const T min( const T& v1, const T& v2, Pred pred )
@@ -986,22 +981,29 @@ page 577
 		return pred(v1, v2) ? v1 : v2;
 	}
 
+	template<class T>
+	static inline const T min( const T& v1, const T& v2 )
+	{
+		return (gstl::min)( v1, v2, std::less<T>() );
+	}
+
 #pragma pop_macro("min")
 #pragma push_macro("max")
 #ifdef max
 #	undef max
 #endif
+	template<class T, class Pred>
+	static inline const T max( const T& v1, const T& v2, Pred pred )
+	{
+		return pred(v2, v1) ? v1 : v2;
+	}
+
 	template<class T>
 	static inline const T max( const T& v1, const T& v2 )
 	{
 		return gstl::max( v1, v2, std::less<T>() );
 	}
 
-	template<class T, class Pred>
-	static inline const T max( const T& v1, const T& v2, Pred pred )
-	{
-		return pred(v2, v1) ? v1 : v2;
-	}
 
 #pragma pop_macro("max")
 

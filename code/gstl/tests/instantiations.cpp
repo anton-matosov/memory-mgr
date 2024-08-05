@@ -51,6 +51,9 @@
 #include "gstl/utility"
 #include "gstl/vector"
 
+template class gstl::basic_string<char>;
+// template class gstl::map<int, int>;
+
 int main()
 {
     return 0;
