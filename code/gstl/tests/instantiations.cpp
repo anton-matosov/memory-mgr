@@ -52,6 +52,9 @@
 #include "gstl/vector"
 
 template class gstl::basic_string<char>;
+template class gstl::basic_string<wchar_t>;
+
+template class gstl::vector<int>;
 // template class gstl::map<int, int>;
 
 int main()

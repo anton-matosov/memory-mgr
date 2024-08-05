@@ -245,7 +245,7 @@ namespace gstl
 				size_type tail_length = end() - last;
 				detail::move( &*first, &*last, tail_length );
 				_destroy( first + tail_length, end() );
-				set_size( size() - (last - first) );
+				this->set_size( size() - (last - first) );
 			}
 			return first;
 		}
@@ -337,7 +337,7 @@ namespace gstl
 					gstl::reverse( position, new_end );
 				}
 			}
-			set_size( new_size );
+			this->set_size( new_size );
 			return result_pos;
 		}
 
