@@ -87,4 +87,3 @@ namespace gstl
 
 }
 
-#endif GSTL_POINTER_TRAITS_HEADER

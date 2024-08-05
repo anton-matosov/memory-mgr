@@ -54,13 +54,16 @@ def patch_file(file_path):
   if enclosed_pragma_once.search(data):
     print(f'Patching {file_path}')
     data = enclosed_pragma_once.sub('#pragma once', data)
-    data = include_guard.sub('', data)
 
-    with open(file_path, 'w') as f:
-      f.write(data)
   else:
     verbose(f'File {file_path} already patched')
 
+  if include_guard.search(data):
+    data = include_guard.sub('', data) # remove include guards
+    data = ensure_pragma_once_data(data, file_path)
+
+  with open(file_path, 'w') as f:
+    f.write(data)
 
 # Puts pragma once at the top of the file if it's not there
 # doesn't look good with license comments
@@ -72,11 +75,16 @@ def ensure_pragma_once(file_path):
     print(f'Error reading {file_path}: {e}')
     return
 
+  data = ensure_pragma_once_data(data, file_path)
+
+  with open(file_path, 'w') as f:
+    f.write(data)
+
+def ensure_pragma_once_data(data, file_path):
   if not pragma_once_only.search(data):
     print(f'Patching {file_path} with pragma once')
     data = '#pragma once\n' + data
-    with open(file_path, 'w') as f:
-      f.write(data)
+  return data
 
 if __name__ == '__main__':
   for root, dirs, files in os.walk('code'):
