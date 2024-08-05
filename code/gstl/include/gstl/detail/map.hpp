@@ -24,10 +24,15 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
+#include "gstl/detail/allocator.hpp"
+#include "gstl/detail/utility.hpp"
+
+#include <functional>
+
 namespace gstl
 {
-	template <class Key, class T, class Compare = less<Key>,
-	class Allocator = allocator<pair<const Key, T> > >
+	template <class Key, class T, class Compare = std::less<Key>,
+	class Allocator = allocator<std::pair<const Key, T> > >
 	class map {
 	public:
 		// types:
@@ -56,7 +61,7 @@ namespace gstl
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 		
 		class value_compare
-			: public binary_function<value_type,value_type,bool> {
+			: public std::binary_function<value_type,value_type,bool> {
 				friend class map;
 		protected:
 			Compare comp;
