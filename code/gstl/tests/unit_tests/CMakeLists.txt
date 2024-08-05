@@ -11,8 +11,8 @@ target_sources(${TARGET} PRIVATE
   test_boost_range.cpp
   test_char_traits.cpp
   test_class.cpp
-  # test_deque.cpp
-  # test_dynamic_buffer.cpp
+  # test_deque.cpp # TODO: Implement deque
+  test_dynamic_buffer.cpp
   # test_iterator.cpp
   test_list.cpp
   # test_named_allocator.cpp
