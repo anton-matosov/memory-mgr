@@ -1,9 +1,5 @@
-#ifndef MEMORY_MGR_INTRUSIVE_BASE_HPP_INCLUDED
-#define MEMORY_MGR_INTRUSIVE_BASE_HPP_INCLUDED
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  intrusive_base.hpp
@@ -81,4 +77,3 @@ namespace memory_mgr
 	};
 }
 
-#endif  // #ifndef MEMORY_MGR_INTRUSIVE_BASE_HPP_INCLUDED

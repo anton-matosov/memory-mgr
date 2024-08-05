@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#include "stdafx.h"
+
 
 #include <gstl/utility>
 #include "operations_tracer.hpp"

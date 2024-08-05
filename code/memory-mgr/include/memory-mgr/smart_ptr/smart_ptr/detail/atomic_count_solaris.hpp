@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SOLARIS_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SOLARIS_HPP_INCLUDED
-
+#pragma once
 //
 //  boost/detail/atomic_count_solaris.hpp
 //   based on: boost/detail/atomic_count_win32.hpp
@@ -66,4 +64,3 @@ private:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SOLARIS_HPP_INCLUDED

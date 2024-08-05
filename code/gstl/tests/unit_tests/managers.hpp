@@ -21,12 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef TEST_MANAGERS_HEADER
-#define TEST_MANAGERS_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <memory-mgr/allocator.h>
 #include <memory-mgr/offset_allocator.h>
@@ -45,4 +41,3 @@ typedef memory_mgr::singleton_manager<heap_mgr > ptr_alloc_mgr;
 
 typedef memory_mgr::singleton_manager<heap_mgr> off_alloc_mgr;
 
-#endif //TEST_MANAGERS_HEADER

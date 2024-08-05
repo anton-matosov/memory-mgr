@@ -31,12 +31,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_construction, container_type, t_list )
 
 	//Default constructor
 	container_type cont1;
-	BOOST_CHECK_EQUAL( cont1.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont1.size(), 0 );
 
 
 	//Iterators constructor
 	container_type cont2( arr, GSTL_ARRAY_END( arr ) );
-	BOOST_CHECK_EQUAL( cont2.size(), sz_three );
+	BOOST_CHECK_EQUAL( cont2.size(), 3 );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
 
 	//Fill constructor

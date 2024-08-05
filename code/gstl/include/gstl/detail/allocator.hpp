@@ -21,12 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_ALLOCATOR_HEADER
-#define GSTL_ALLOCATOR_HEADER
+#pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#include <cstddef>
 
 // 
 // 
@@ -51,8 +48,8 @@ namespace gstl
 		typedef value_type&			reference;
 		typedef const value_type&	const_reference;
 		
-		typedef size_t								size_type;
-		typedef ptrdiff_t							difference_type;
+		typedef std::size_t								size_type;
+		typedef std::ptrdiff_t							difference_type;
 
 		template<class Other>
 		struct rebind
@@ -156,4 +153,3 @@ namespace gstl
 	}
 }
 
-#endif // GSTL_ALLOCATOR_HEADER

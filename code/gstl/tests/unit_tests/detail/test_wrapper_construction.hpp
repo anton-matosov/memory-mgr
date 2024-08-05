@@ -24,14 +24,14 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_wrapper_construction, wrapper_type, t_list )
 {
 	wrapper_type wrap1;
-	BOOST_CHECK_EQUAL( wrap1.size(), sz_null );
+	BOOST_CHECK_EQUAL( wrap1.size(), 0 );
 	BOOST_CHECK_EQUAL( wrap1.empty(), true );
 
 	typedef typename wrapper_type::container_type container_type;
 
 	container_type cont1;
 	wrapper_type wrap2( cont1 );
-	BOOST_CHECK_EQUAL( wrap2.size(), sz_null );
+	BOOST_CHECK_EQUAL( wrap2.size(), 0 );
 	BOOST_CHECK_EQUAL( wrap2.empty(), true );
 
 
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_wrapper_construction, wrapper_type, t_list )
 	value_type arr[] = { 1, 2, 3 };
 	//Iterators constructor
 	container_type cont2( arr, GSTL_ARRAY_END( arr ) );
-	BOOST_CHECK_EQUAL( cont2.size(), sz_three );
+	BOOST_CHECK_EQUAL( cont2.size(), 3 );
 	BOOST_CHECK_EQUAL_COLLECTIONS( cont2.begin(), cont2.end(), arr, GSTL_ARRAY_END( arr ) );
 
 	wrapper_type wrap3( cont2 );

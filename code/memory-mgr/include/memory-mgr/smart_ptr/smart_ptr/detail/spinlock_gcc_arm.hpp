@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_GCC_ARM_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_GCC_ARM_HPP_INCLUDED
-
+#pragma once
 //  This file is the adaptation for Generic Memory Manager library
 //
 //  Copyright (c) 2008 Peter Dimov
@@ -84,4 +82,3 @@ public:
 
 #define MGR_DETAIL_SPINLOCK_INIT {0}
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_GCC_ARM_HPP_INCLUDED

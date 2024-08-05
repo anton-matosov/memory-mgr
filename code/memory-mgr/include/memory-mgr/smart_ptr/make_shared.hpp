@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED
-#define MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //  make_shared.hpp
 //
@@ -20,4 +13,3 @@
 
 #include "memory-mgr/smart_ptr/smart_ptr/make_shared.hpp"
 
-#endif // #ifndef MEMORY_MGR_MAKE_SHARED_HPP_INCLUDED

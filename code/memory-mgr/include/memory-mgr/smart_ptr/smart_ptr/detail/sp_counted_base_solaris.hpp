@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SOLARIS_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SOLARIS_HPP_INCLUDED
-
+#pragma once
 //
 //  detail/sp_counted_base_solaris.hpp
 //   based on: detail/sp_counted_base_w32.hpp
@@ -110,4 +108,3 @@ public:
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SOLARIS_HPP_INCLUDED

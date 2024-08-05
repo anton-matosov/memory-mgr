@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SHARED_ARRAY_NMT_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SHARED_ARRAY_NMT_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  detail/shared_array_nmt.hpp - shared_array.hpp without member templates
@@ -154,4 +147,3 @@ template<class T> void swap(shared_array<T> & a, shared_array<T> & b)
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SHARED_ARRAY_NMT_HPP_INCLUDED

@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED
-
+#pragma once
 //
 //  boost/detail/atomic_count_gcc.hpp
 //
@@ -9,7 +7,7 @@
 //  http://gcc.gnu.org/onlinedocs/porting/Thread-safety.html
 //
 //  Copyright (c) 2001, 2002 Peter Dimov and Multi Media Ltd.
-//  Copyright (c) 2002 Lars Gullik Bjønnes <larsbj@lyx.org>
+//  Copyright (c) 2002 Lars Gullik Bjï¿½nnes <larsbj@lyx.org>
 //  Copyright 2003-2005 Peter Dimov
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
@@ -79,4 +77,3 @@ private:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED

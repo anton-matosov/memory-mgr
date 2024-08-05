@@ -21,8 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#include "stdafx.h"
 #include <gstl/detail/char_traits.hpp>
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 typedef gstl::char_traits<char> traits_type;
 
@@ -114,10 +115,24 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 		boost::tie( str1, size1, str2, size2 ) = params;
 
 		BOOST_CHECK( size1 == size2 );
+
+		auto compare_str = []( const char* str1, const char* str2, size_t size )
+		{
+			int result = memcmp( str1, str2, size );
+			if( result < 0 ) // Avoid implementation specific values
+			{
+				return -1;
+			}
+			else if( result > 0 )
+			{
+				return 1;
+			}
+			return 0;
+		};
 		
-		BOOST_CHECK_EQUAL( traits_type::compare( str1, str1, size1 ), memcmp( str1, str1, size1 ) );
-		BOOST_CHECK_EQUAL( traits_type::compare( str1, str2, size1 ), memcmp( str1, str2, size1 ) );
-		BOOST_CHECK_EQUAL( traits_type::compare( str2, str1, size1 ), memcmp( str2, str1, size1 ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( str1, str1, size1 ), compare_str( str1, str1, size1 ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( str1, str2, size1 ), compare_str( str1, str2, size1 ) );
+		BOOST_CHECK_EQUAL( traits_type::compare( str2, str1, size1 ), compare_str( str2, str1, size1 ) );
 	}
 
 	GSTL_AUTO_PARAMS_TEST_CASE( test_compare, test_compare_impl,

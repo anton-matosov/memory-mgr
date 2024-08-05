@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_QUICK_ALLOCATOR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_QUICK_ALLOCATOR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  detail/quick_allocator.hpp
@@ -196,4 +189,3 @@ struct quick_allocator: public allocator_impl< sizeof(T), boost::alignment_of<T>
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_QUICK_ALLOCATOR_HPP_INCLUDED

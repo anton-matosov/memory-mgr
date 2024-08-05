@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_CT_GCD_LCM_HPP
-#define MEMORY_MGR_POOL_CT_GCD_LCM_HPP
+#pragma once
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/ice.hpp>
@@ -100,5 +99,3 @@ namespace memory_mgr {
 	} // namespace details
 
 } // namespace memory_mgr
-
-#endif

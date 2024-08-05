@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_CAST_TAGS_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_CAST_TAGS_HPP_INCLUDED
-
+#pragma once
 //  This file is the adaptation for Generic Memory Manager library
 // 
 // 
@@ -18,4 +16,3 @@ namespace memory_mgr
 	}
 }
 
-#endif //MEMORY_MGR_SMART_PTR_CAST_TAGS_HPP_INCLUDED

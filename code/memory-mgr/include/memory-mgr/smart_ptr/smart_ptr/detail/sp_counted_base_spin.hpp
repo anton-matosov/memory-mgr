@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SPIN_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SPIN_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  detail/sp_counted_base_spin.hpp - spinlock pool atomic emulation
@@ -128,4 +121,3 @@ public:
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_SPIN_HPP_INCLUDED

@@ -21,12 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_SEQUENCE_ITERATOR_HEADER
-#define GSTL_SEQUENCE_ITERATOR_HEADER
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <gstl/detail/checked_iterator.hpp>
 
@@ -45,9 +40,17 @@ namespace gstl
 			>
 		{
 		public:
-			typedef self_type/*from base*/	base_type;
+			using base_type = checked_iterator<PtrT, ContainerT, boost::random_access_traversal_tag, sequence_iterator<PtrT, ContainerT>,	boost::use_default>;
 			typedef sequence_iterator		self_type;
 
+			using typename base_type::value_type;
+			using typename base_type::pointer_type;
+			using typename base_type::container_type;
+
+		protected:
+			using typename base_type::enabler;
+
+		public:
 
 			sequence_iterator()
 			{}
@@ -78,4 +81,3 @@ namespace gstl
 	}
 }
 
-#endif //GSTL_SEQUENCE_ITERATOR_HEADER

@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, container_type, t_list )
 	container_type cont( arr, GSTL_ARRAY_END( arr ) );
 
 	cont.clear();
-	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
+	BOOST_REQUIRE_EQUAL( cont.size(), 0 );
 
 }
 

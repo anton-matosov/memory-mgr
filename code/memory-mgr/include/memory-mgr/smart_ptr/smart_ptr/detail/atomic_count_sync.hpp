@@ -1,6 +1,3 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SYNC_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SYNC_HPP_INCLUDED
-
 //
 //  boost/detail/atomic_count_sync.hpp
 //
@@ -14,6 +11,8 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
+
+#pragma once
 
 #if defined( __ia64__ ) && defined( __INTEL_COMPILER )
 # include <ia64intrin.h>
@@ -68,4 +67,3 @@ private:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_SYNC_HPP_INCLUDED

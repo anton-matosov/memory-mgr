@@ -1,5 +1,4 @@
-#ifndef MEMORY_VISUALIZER_H
-#define MEMORY_VISUALIZER_H
+#pragma once
 
 #include "memory_visualizer_global.h"
 
@@ -13,4 +12,3 @@ private:
 
 };
 
-#endif // MEMORY_VISUALIZER_H

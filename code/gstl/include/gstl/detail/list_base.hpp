@@ -21,12 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_LIST_BASE_HEADER
-#define GSTL_LIST_BASE_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <gstl/algorithm>
 #include <gstl/detail/list_node.hpp>
@@ -222,7 +218,6 @@ namespace gstl
 	
 }
 
-#endif //GSTL_LIST_BASE_HEADER
 
 
 

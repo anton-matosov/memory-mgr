@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_NT_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_NT_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  Copyright (c) 2008 Peter Dimov
@@ -86,4 +79,3 @@ public:
 
 #define MGR_DETAIL_SPINLOCK_INIT { false }
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SPINLOCK_NT_HPP_INCLUDED

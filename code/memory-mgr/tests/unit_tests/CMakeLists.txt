@@ -1,4 +1,4 @@
-set(TARGET unit_tests)
+set(TARGET memory-mgr_unit_tests)
 
 add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

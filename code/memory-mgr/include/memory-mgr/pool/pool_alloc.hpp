@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_ALLOC_HPP
-#define MEMORY_MGR_POOL_ALLOC_HPP
+#pragma once
 
 // std::numeric_limits
 #include <limits>
@@ -314,4 +313,3 @@ namespace memory_mgr {
 
 } // namespace memory_mgr
 
-#endif

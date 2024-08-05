@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOLFWD_HPP
-#define MEMORY_MGR_POOLFWD_HPP
+#pragma once
 
 //#include <boost/config.hpp> // for workarounds
 
@@ -73,5 +72,3 @@ namespace memory_mgr {
 	class fast_pool_allocator;
 
 } // namespace memory_mgr
-
-#endif

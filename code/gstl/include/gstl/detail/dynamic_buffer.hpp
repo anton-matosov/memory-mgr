@@ -21,12 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_DYNAMIC_SEQUENCE_HEADER
-#define GSTL_DYNAMIC_SEQUENCE_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <gstl/allocator>
 #include <gstl/algorithm>
@@ -130,7 +126,7 @@ namespace gstl
 
 			void throw_out_of_range() const
 			{
-				throw std::out_of_range( __FUNCTION__ " invalid position" );
+				throw std::out_of_range( "out of range. invalid position" );
 			}
 
 			void throw_length_error() const
@@ -231,4 +227,3 @@ namespace gstl
 	}
 }
 
-#endif //GSTL_DYNAMIC_SEQUENCE_HEADER

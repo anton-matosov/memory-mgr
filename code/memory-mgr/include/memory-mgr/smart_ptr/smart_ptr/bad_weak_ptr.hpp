@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_BAD_WEAK_PTR_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_BAD_WEAK_PTR_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  memory-mgr/smart_ptr/smart_ptr/bad_weak_ptr.hpp
@@ -56,4 +49,3 @@ public:
 # pragma warn .8026     // Functions with excep. spec. are not expanded inline
 #endif
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_BAD_WEAK_PTR_HPP_INCLUDED

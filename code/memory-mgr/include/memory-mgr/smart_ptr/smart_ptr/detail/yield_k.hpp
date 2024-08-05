@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_YIELD_K_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_YIELD_K_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  yield_k.hpp
@@ -146,4 +139,3 @@ inline void yield( unsigned )
 
 #endif
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_YIELD_K_HPP_INCLUDED

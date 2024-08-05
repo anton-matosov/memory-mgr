@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_HPP
-#define MEMORY_MGR_POOL_HPP
+#pragma once
 
 #include <boost/config.hpp>  // for workarounds
 
@@ -776,4 +775,3 @@ namespace memory_mgr {
 
 } // namespace memory_mgr
 
-#endif

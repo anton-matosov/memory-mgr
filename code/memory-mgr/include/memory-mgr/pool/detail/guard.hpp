@@ -6,8 +6,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_POOL_GUARD_HPP
-#define MEMORY_MGR_POOL_GUARD_HPP
+#pragma once
 
 // Extremely Light-Weight guard glass
 
@@ -44,5 +43,3 @@ namespace memory_mgr
 	} // namespace details
 
 } // namespace memory_mgr
-
-#endif

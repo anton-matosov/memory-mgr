@@ -8,11 +8,11 @@ BreakBeforeBraces: Allman
 
 # Sort includes, system includes last
 IncludeCategories:
-  - Regex:           '^((<|")(memory-mgr/detail)/)'
+  - Regex:           '^((<|")(.*/detail)/)'
     Priority:        3
     SortPriority:    3
     CaseSensitive:   true
-  - Regex:           '^((<|")(memory-mgr)/)'
+  - Regex:           '^((<|")(memory-mgr|gstl)/)'
     Priority:        2
     CaseSensitive:   true
   - Regex:           '<[[:alnum:].]+>'

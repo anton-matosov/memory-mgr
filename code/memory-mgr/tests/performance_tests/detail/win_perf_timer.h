@@ -42,9 +42,6 @@ without stopping it.
 
 #ifdef MGR_WINDOWS_PLATFORM
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
 
 namespace memory_mgr
 {

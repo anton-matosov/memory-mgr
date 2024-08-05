@@ -21,12 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#ifndef GSTL_BASIC_STRING_HEADER
-#define GSTL_BASIC_STRING_HEADER
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#	pragma once
-#endif
+#pragma once
 
 #include <iosfwd>
 #include <gstl/algorithm>
@@ -82,14 +78,14 @@ namespace gstl
 			string_base( const allocator_type& alloc = allocator_type() )
 				:base_type( alloc )
 			{
-				reserve( min_buff_size );
+				this->reserve( min_buff_size );
 				set_end(0);
 			}
 
 			void set_end( size_type n )
 			{
-				size_ = n;
-				buffer_[size_] = value_type();
+				this->size_ = n;
+				this->buffer_[n] = value_type();
 			}
 			
 			void reset_ptr( pointer new_str, size_type new_size, size_type new_reserved )
@@ -114,11 +110,11 @@ namespace gstl
 	public:
 		//////////////////////////////////////////////////////////////////////////
 		// types:
+		typedef basic_string			self_type;
 		typedef typename base_type::value_type			value_type;
 		typedef typename base_type::traits_type	traits_type;
 		typedef typename base_type::allocator_type		allocator_type;
 
-		typedef typename base_type::value_type		value_type;
 		typedef typename base_type::pointer			pointer;
 		typedef typename base_type::const_pointer	const_pointer;
 		typedef typename base_type::reference		reference;
@@ -241,22 +237,22 @@ namespace gstl
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( get_buffer(), this );
+			return iter_helper::build_iter( this->get_buffer(), this );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( get_buffer(), this );
+			return iter_helper::build_const_iter( this->get_buffer(), this );
 		}
 
 		iterator end()
 		{
-			return begin() + size_;
+			return begin() + this->size_;
 		}
 		
 		const_iterator end() const
 		{
-			return begin() + size_;
+			return begin() + this->size_;
 		}
 
 		reverse_iterator rbegin()
@@ -282,7 +278,7 @@ namespace gstl
 		// 21.3.3 capacity:
 		size_type length() const
 		{
-			return size_;
+			return this->size_;
 		}
 
 		void resize( size_type n, value_type c )
@@ -390,19 +386,19 @@ namespace gstl
 			GSTL_ASSERT( s != 0 );
 			GSTL_ASSERT( n < npos );
 
-			set_end( 0 );
+			this->set_end( 0 );
 			insert( 0, s, n );
 			return *this;
 		}
 		basic_string& assign(const value_type* s)
 		{
-			set_end( 0 );
+			this->set_end( 0 );
 			insert( 0, s );
 			return *this;
 		}
 		basic_string& assign(size_type n, value_type c)
 		{
-			set_end( 0 );
+			this->set_end( 0 );
 			insert( begin(), n, c );
 			return *this;
 		}
@@ -410,7 +406,7 @@ namespace gstl
 		template<class InputIterator>
 		basic_string& assign(InputIterator first, InputIterator last)
 		{
-			set_end( 0 );
+			this->set_end( 0 );
 			insert( begin(), first, last );
 			return *this;
 		}
@@ -440,7 +436,7 @@ namespace gstl
 			size_type rlen = _validate_pos_and_off( pos2, str, n );
 			if( size() > npos - rlen )
 			{
-				throw_length_error();
+				this->throw_length_error();
 			}
 			insert( begin() + pos1, str.begin() + pos2, str.begin() + pos2 + rlen );
 			//grow( size() + rlen );
@@ -490,7 +486,7 @@ namespace gstl
 		{
 			if( pos > size() )
 			{
-				throw_out_of_range();
+				this->throw_out_of_range();
 			}
 			iterator first = begin() + pos;
 			iterator last = first + min( n, size() - pos );
@@ -531,7 +527,7 @@ namespace gstl
 			//Throws: length_error if size() - xlen >= npos - rlen
 			if( size() - xlen >= npos - rlen )
 			{
-				throw_length_error();
+				this->throw_length_error();
 			}
 			return replace( begin() + pos1, begin() + pos1 + xlen,
 				str.begin() + pos2, str.begin() + pos2 + rlen);
@@ -556,7 +552,7 @@ namespace gstl
 			size_type xlen = _validate_pos_and_off( pos, *this, n1 );
 
 			return replace( begin() + pos, begin() + pos + xlen,
-				n, c );
+				n2, c );
 		}
 
 		basic_string& replace(iterator i1, iterator i2,
@@ -608,24 +604,24 @@ namespace gstl
 			size_type new_size = size() + xlen - removed_size;
 
 			pointer new_str;
-			if( new_size >= reserved_ || overlaped )
+			if( new_size >= this->reserved_ || overlaped )
 			{//New string will be larger than current
 				if( new_size >= max_size() )
 				{
-					throw_length_error();
+					this->throw_length_error();
 				}
-				new_str = alloc_.allocate( new_size + 1 );
+				new_str = this->alloc_.allocate( new_size + 1 );
 				//Copy to the new string [begin, i1) chars 
-				traits_type::move( &*new_str, get_buffer(), pos1 );
+				traits_type::move( &*new_str, this->get_buffer(), pos1 );
 			}
 			else
 			{//Existing string is long enough to store new one
-				new_str = buffer_;
+				new_str = this->buffer_;
 			}
 			iterator new_i1 = iter_helper::build_iter( &*( new_str + pos1 ), this );
 			//iterator new_i2 = iterator( alloc_.address( new_str + pos2 ) );
 			iterator res = new_i1 + xlen;
-			traits_type::move( &*res, get_buffer() + pos2, size() - pos2 );
+			traits_type::move( &*res, this->get_buffer() + pos2, size() - pos2 );
 
 			put_new_fn( &*new_i1 );
 
@@ -638,7 +634,7 @@ namespace gstl
 			GSTL_ASSERT( s != 0 );
 			
 			size_type rlen = _validate_pos_and_off( pos, *this, n );
-			traits_type::move( s, get_buffer(), rlen );
+			traits_type::move( s, this->get_buffer(), rlen );
 			return rlen;
 		}
 
@@ -650,12 +646,12 @@ namespace gstl
 		// 21.3.6 string operations:
 		const value_type* c_str() const // explicit
 		{
-			return get_buffer();
+			return this->get_buffer();
 		}
 
 		const value_type* data() const
 		{
-			return get_buffer();
+			return this->get_buffer();
 		}
 		
 		size_type find (const basic_string& str, size_type pos = 0) const
@@ -673,15 +669,15 @@ namespace gstl
 		{//Most generic
 			if( n == 0 )
 			{//Null string always matches, if it is inside the string
-				return pos < size_ ? pos : npos;
+				return pos < this->size_ ? pos : npos;
 			}
  
- 			size_type sub_size = size_ - pos;
- 			if( pos < size_ && n <= sub_size )
+ 			size_type sub_size = this->size_ - pos;
+ 			if( pos < this->size_ && n <= sub_size )
  			{	
 				//Search for sub string
  				const value_type* fres_str;
-				const value_type* my_sub_str = get_buffer() + pos;
+				const value_type* my_sub_str =this->get_buffer() + pos;
 				//Truncate search size 
 				sub_size -= n - 1;
  				while( ( fres_str = traits_type::find( my_sub_str, sub_size, *s ) ) != 0 )
@@ -689,7 +685,7 @@ namespace gstl
 					if( traits_type::compare(fres_str, s, n) == 0 )
 					{
 						//Match found
- 						return fres_str - get_buffer();	
+ 						return fres_str - this->get_buffer();	
 					}
 					sub_size -= fres_str - my_sub_str + 1;
 					my_sub_str = fres_str + 1;
@@ -714,22 +710,22 @@ namespace gstl
 		{//Most generic
  			if( n == 0 )
 			{//Null string always matches, if it is inside the string
-				return pos < size_ ? pos : npos;
+				return pos < this->size_ ? pos : npos;
 			}
 
- 			if( n <= size_ )
+ 			if( n <= this->size_ )
  			{	
 				//Search for sub string in the reverse direction
-				const value_type* fres_str = get_buffer() + (gstl::min)( pos, size_ - n );
+				const value_type* fres_str = this->get_buffer() + (gstl::min)( pos, this->size_ - n );
 				for( ;; --fres_str )
 				{
  					if( traits_type::eq( *fres_str, *s )
  						&& traits_type::compare( fres_str, s, n ) == 0 )
 					{
 						//Match found
-						return fres_str - get_buffer();
+						return fres_str - this->get_buffer();
 					}
-					if( fres_str == get_buffer() )
+					if( fres_str == this->get_buffer() )
 					{
 						//Beginning of the string reached
 						break;
@@ -760,16 +756,16 @@ namespace gstl
 		size_type find_first_of(const value_type* s,
 			size_type pos, size_type n) const
 		{
- 			if( n > 0 && pos < size_ )
+ 			if( n > 0 && pos < this->size_ )
  			{	
 				//Search for the first occurrence of any character from s in *this
- 				const value_type *const my_end = get_buffer() + size_;
- 				for( const value_type *curr_pos = get_buffer() + pos; curr_pos < my_end; ++curr_pos )
+ 				const value_type *const my_end = this->get_buffer() + this->size_;
+ 				for( const value_type *curr_pos = this->get_buffer() + pos; curr_pos < my_end; ++curr_pos )
 				{
 					if( traits_type::find( s, n, *curr_pos ) != 0 )
 					{
 						//Match found
-						return curr_pos - get_buffer();
+						return curr_pos - this->get_buffer();
 					}
 				}
  			}
@@ -797,18 +793,18 @@ namespace gstl
 		size_type find_last_of (const value_type* s,
 			size_type pos, size_type n) const
 		{
-			if( n > 0 && size_ )
+			if( n > 0 && this->size_ )
 			{
 				//Search for the last occurrence of any character from s in *this
-				const value_type *curr_pos = get_buffer() + (gstl::min)( pos, size_ - 1 );
+				const value_type *curr_pos = this->get_buffer() + (gstl::min)( pos, this->size_ - 1 );
 				for( ;; --curr_pos )
 				{
 					if( traits_type::find( s, n, *curr_pos ) != 0 )
 					{
 						//Match found
-						return curr_pos - get_buffer();
+						return curr_pos - this->get_buffer();
 					}
- 					if( curr_pos == get_buffer() )
+ 					if( curr_pos == this->get_buffer() )
 					{
 						//Beginning of the string reached
 						break;
@@ -839,17 +835,17 @@ namespace gstl
 		size_type find_first_not_of(const value_type* s, size_type pos,
 			size_type n) const
 		{
-			if( n > 0 && pos < size_ )
+			if( n > 0 && pos < this->size_ )
 			{
 				//Search for the first occurrence of any character 
 				//in *this not from s
- 				const value_type *const my_end = get_buffer() + size_;
- 				for( const value_type *curr_pos = get_buffer() + pos; curr_pos < my_end; ++curr_pos )
+ 				const value_type *const my_end = this->get_buffer() + this->size_;
+ 				for( const value_type *curr_pos = this->get_buffer() + pos; curr_pos < my_end; ++curr_pos )
 				{
 					if( traits_type::find(s, n, *curr_pos) == 0 )
 					{
 						//Match found
-						return curr_pos - get_buffer();
+						return curr_pos - this->get_buffer();
 					}
 				}
  			}
@@ -877,19 +873,19 @@ namespace gstl
 		size_type find_last_not_of (const value_type* s, size_type pos,
 			size_type n) const
 		{
-			if( n > 0 && size_ )
+			if( n > 0 && this->size_ )
 			{
 				//Search for the last occurrence of any character 
 				//in *this not from s
-				const value_type *curr_pos = get_buffer() + (gstl::min)( pos, size_ - 1 );
+				const value_type *curr_pos = this->get_buffer() + (gstl::min)( pos, this->size_ - 1 );
  				for( ;; --curr_pos )
 				{
 					if( traits_type::find( s, n, *curr_pos ) == 0 )
 					{
 						//Match found
-						return curr_pos - get_buffer();
+						return curr_pos - this->get_buffer();
 					}
- 					if( curr_pos == get_buffer() )
+ 					if( curr_pos == this->get_buffer() )
 					{
 						//Beginning of the string reached
 						break;
@@ -915,7 +911,7 @@ namespace gstl
 
 		basic_string substr(size_type pos = 0, size_type n = npos) const
 		{
-			return basic_string( *this, pos, n, alloc_ ) ;
+			return basic_string( *this, pos, n, this->alloc_ ) ;
 		}
 
 		int compare(const basic_string& str) const
@@ -978,7 +974,7 @@ namespace gstl
 		{
 			if( pos > str.size() )
 			{
-				throw_out_of_range();
+				this->throw_out_of_range();
 			}
 		}
 		size_type _validate_pos_and_off( size_type pos, const basic_string& str, size_type n ) const
@@ -1041,8 +1037,8 @@ namespace gstl
 
 		bool _inside_string( const value_type* p )
 		{
-			difference_type d = p - get_buffer();
-			return d >= 0 && d < static_cast<difference_type>( size_ );
+			difference_type d = p - this->get_buffer();
+			return d >= 0 && d < static_cast<difference_type>( this->size_ );
 		}
 	};
 
@@ -1268,4 +1264,3 @@ namespace gstl
 }
 
 
-#endif //GSTL_BASIC_STRING_HEADER

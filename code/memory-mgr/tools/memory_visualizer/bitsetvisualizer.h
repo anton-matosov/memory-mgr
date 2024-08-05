@@ -1,5 +1,4 @@
-#ifndef BITSETVISUALIZER_H
-#define BITSETVISUALIZER_H
+#pragma once
 
 #include <QWidget>
 #include <string>
@@ -30,5 +29,3 @@ private:
 	Ui::BitsetVisualizer ui;
 	std::list<BitsetMemInfo> bitsets_;
 };
-
-#endif // BITSETVISUALIZER_H

@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_LWM_WIN32_CS_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_LWM_WIN32_CS_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  boost/detail/lwm_win32_cs.hpp
@@ -105,4 +98,3 @@ public:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_LWM_WIN32_CS_HPP_INCLUDED

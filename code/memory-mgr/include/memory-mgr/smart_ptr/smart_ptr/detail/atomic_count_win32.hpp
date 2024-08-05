@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_WIN32_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_WIN32_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  boost/detail/atomic_count_win32.hpp
@@ -70,4 +63,3 @@ private:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_WIN32_HPP_INCLUDED

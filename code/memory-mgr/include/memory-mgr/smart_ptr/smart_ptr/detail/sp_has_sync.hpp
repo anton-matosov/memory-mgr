@@ -1,11 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_HAS_SYNC_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SP_HAS_SYNC_HPP_INCLUDED
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 //
 //  memory-mgr/smart_ptr/smart_ptr/detail/sp_has_sync.hpp
@@ -46,4 +39,3 @@
 
 #endif // __GNUC__ * 100 + __GNUC_MINOR__ >= 401
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_HAS_SYNC_HPP_INCLUDED

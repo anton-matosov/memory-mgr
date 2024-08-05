@@ -9,14 +9,7 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
-#define MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 // std::greater
 #include <functional>
@@ -320,4 +313,3 @@ namespace memory_mgr {
 
 } // namespace memory_mgr
 
-#endif
