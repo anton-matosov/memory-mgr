@@ -26,13 +26,15 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/config/config.h"
 #include "memory-mgr/detail/types.h"
 
+#include <inttypes.h>
+
 namespace memory_mgr
 {
 	namespace detail
 	{
 #ifdef MGR_ENABLE_32_64_BIT_PROCESSES_INTEROPERABILITY
-		typedef ulonglong portable_size_t;
-		typedef long long portable_difference_type;
+		typedef uint64_t portable_size_t;
+		typedef int64_t portable_difference_type;
 #else
 		typedef ulong portable_size_t;
 		typedef long portable_difference_type;
