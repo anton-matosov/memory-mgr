@@ -20,7 +20,7 @@
 // #include "gstl/detail/list_iterator.hpp"
 #include "gstl/detail/list_node.hpp"
 // #include "gstl/detail/map.hpp"
-// #include "gstl/detail/pointer_traits.hpp"
+#include "gstl/detail/pointer_traits.hpp"
 // #include "gstl/detail/priority_queue.hpp"
 #include "gstl/detail/queue.hpp"
 #include "gstl/detail/raw_memory.hpp"
@@ -29,7 +29,7 @@
 #include "gstl/detail/temp_buffer.hpp"
 #include "gstl/detail/types.hpp"
 #include "gstl/detail/utility.hpp"
-// #include "gstl/detail/vector.hpp"
+#include "gstl/detail/vector.hpp"
 
 
 #include "gstl/algorithm"

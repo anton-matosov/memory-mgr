@@ -39,7 +39,7 @@ namespace gstl
 		template<class Other>
 		struct rebind
 		{	// convert an pointer_traits<T> to an pointer_traits <Other>
-			typedef typename pointer_traits<Other> other;
+			typedef pointer_traits<Other> other;
 		};
 	};
 
