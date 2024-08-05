@@ -332,8 +332,8 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		Returns: operator[](pos).
 		*/
 		BOOST_CHECK_EQUAL( s.at( ch_id ),  s[ch_id] );
-		BOOST_CHECK_THROW( s.at( s.size() ),  std::out_of_range );
-		BOOST_CHECK_THROW( s.at( s.size() + 1 ),  std::out_of_range );
+		BOOST_CHECK_THROW( (void)s.at( s.size() ),  std::out_of_range );
+		BOOST_CHECK_THROW( (void)s.at( s.size() + 1 ),  std::out_of_range );
 
 		const string_type cs( m_test_str, m_test_str_len );
 		BOOST_CHECK_EQUAL( cs.c_str(), m_test_str );
@@ -344,8 +344,8 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( cs[ch_id],  m_test_str[ch_id] );
 		BOOST_CHECK_EQUAL( cs[cs.size()],  ch_null );
 		BOOST_CHECK_EQUAL( cs.at( ch_id ),  cs[ch_id] );
-		BOOST_CHECK_THROW( cs.at( s.size() ),  std::out_of_range );
-		BOOST_CHECK_THROW( cs.at( s.size() + 1 ),  std::out_of_range );
+		BOOST_CHECK_THROW( (void)cs.at( s.size() ),  std::out_of_range );
+		BOOST_CHECK_THROW( (void)cs.at( s.size() + 1 ),  std::out_of_range );
 	}
 
 	//21.3.5.1 basic_string::operator+=
@@ -408,14 +408,14 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 		//Throws: out_of_range if pos > str.size().
 		string_type se;
-		BOOST_CHECK_THROW( se.append(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
+		BOOST_CHECK_THROW( (void)se.append(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
 		/*
 		Determines the effective length rlen of the string to append as the smaller of n and
 		str.size() - pos. The function then throws length_error if size() >= npos -
 		rlen.
 		*/
 		//TODO: implement this test case, don't know how to implement it
-		//BOOST_CHECK_THROW( se.append(s2, string_type::npos, string_type::npos ), std::length_error );
+		//BOOST_CHECK_THROW( (void)se.append(s2, string_type::npos, string_type::npos ), std::length_error );
 
 		string_type s3;
 		s3.append( m_test_str );
@@ -485,7 +485,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 		//Throws: out_of_range if pos > str.size().
 		string_type se;
-		BOOST_CHECK_THROW( se.assign(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
+		BOOST_CHECK_THROW( (void)se.assign(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
 		
 		string_type s3;
 		s3.assign( m_test_str );
