@@ -22,6 +22,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 #include <gstl/algorithm>
 #include <vector>
@@ -42,6 +44,7 @@ public:
 	}
 };
 
+#define UNPACK(...) __VA_ARGS__
 #define ARRAY_NAME( name )	name##array
 
 #define DECLARE_INT_CONTAINER( name, array_values, cont_type )	\
@@ -51,16 +54,16 @@ public:
 
 
 #define DECLARE_INT_VECTOR( name, array_values )	\
-	DECLARE_INT_CONTAINER( name, array_values, std::vector )
+	DECLARE_INT_CONTAINER( name, UNPACK(array_values), std::vector )
 
 #define DECLARE_INT_LIST( name, array_values )	\
-	DECLARE_INT_CONTAINER( name, array_values, std::list )
+	DECLARE_INT_CONTAINER( name, UNPACK(array_values), std::list )
 
 #define DECLARE_INT_CONST_VECTOR( name, array_values )	\
-	DECLARE_INT_CONTAINER( name, array_values, const std::vector )
+	DECLARE_INT_CONTAINER( name, UNPACK(array_values), const std::vector )
 
 #define DECLARE_INT_CONST_LIST( name, array_values )	\
-	DECLARE_INT_CONTAINER( name, array_values, const std::list )
+	DECLARE_INT_CONTAINER( name, UNPACK(array_values), const std::list )
 
 #define DECLARE_ITER( name, offset, cont_type, cont )	\
 	cont_type::const_iterator name = cont.begin();		\

@@ -22,6 +22,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 #include <deque>
 #include <boost/foreach.hpp>
