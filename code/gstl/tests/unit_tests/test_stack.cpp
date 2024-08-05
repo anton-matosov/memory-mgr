@@ -51,7 +51,7 @@ typedef std::stack<test_value_type>		std_stack;
 
 typedef gstl::vector<test_value_type>	gstl_vector;
 typedef gstl::vector<test_value_type,
-	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr, memory_mgr::detail::raw_pointers<test_value_type>> >			memory_mgr_vector;
 typedef gstl::vector<test_value_type,
 	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_vector;
 

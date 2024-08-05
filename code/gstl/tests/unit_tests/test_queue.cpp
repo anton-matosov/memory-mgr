@@ -52,7 +52,7 @@ typedef std::list<test_value_type>		std_list;
 
 typedef gstl::list<test_value_type>		gstl_list;
 typedef gstl::list<test_value_type,
-	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr, memory_mgr::detail::raw_pointers<test_value_type>> >			memory_mgr_vector;
 typedef gstl::list<test_value_type,
 	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_vector;
 

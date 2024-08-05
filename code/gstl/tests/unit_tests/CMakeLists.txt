@@ -17,9 +17,9 @@ target_sources(${TARGET} PRIVATE
   # test_list.cpp
   # test_named_allocator.cpp
   test_pointer_traits.cpp
-  # test_queue.cpp
-  # test_stack.cpp
-  # test_utilities.cpp
+  test_queue.cpp
+  test_stack.cpp
+  test_utilities.cpp
   test_vector.cpp
   unit_tests.cpp
 )
