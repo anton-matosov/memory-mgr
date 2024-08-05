@@ -242,7 +242,7 @@ namespace gstl
 			typename Traits::reference>
 		{
 		};
-	}
+	} // namespace detail
 
 	// 24.3.4, iterator operations:
 	template <class InputIterator, class Distance>

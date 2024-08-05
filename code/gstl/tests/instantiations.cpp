@@ -55,6 +55,10 @@ template class gstl::basic_string<char>;
 template class gstl::basic_string<wchar_t>;
 
 template class gstl::vector<int>;
+template class gstl::vector<std::pair<int,int>>;
+
+// template class gstl::list<int>;
+
 // template class gstl::map<int, int>;
 
 int main()
