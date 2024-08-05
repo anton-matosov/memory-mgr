@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_GCC_IA64_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_GCC_IA64_HPP_INCLUDED
-
+#pragma once
 //
 //  detail/sp_counted_base_gcc_ia64.hpp - g++ on IA64
 //
@@ -154,4 +152,3 @@ public:
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SP_COUNTED_BASE_GCC_IA64_HPP_INCLUDED

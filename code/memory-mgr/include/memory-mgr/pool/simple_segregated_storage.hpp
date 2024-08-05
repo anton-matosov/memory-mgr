@@ -9,8 +9,6 @@
 //
 // See http://www.memory-mgr.org for updates, documentation, and revision history.
 
-#ifndef MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
-#define MEMORY_MGR_SIMPLE_SEGREGATED_STORAGE_HPP
 #pragma once
 
 // std::greater
@@ -315,4 +313,3 @@ namespace memory_mgr {
 
 } // namespace memory_mgr
 
-#endif

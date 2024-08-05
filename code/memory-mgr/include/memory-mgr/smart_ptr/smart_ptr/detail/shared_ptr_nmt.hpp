@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_SHARED_PTR_NMT_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_SHARED_PTR_NMT_HPP_INCLUDED
-
+#pragma once
 //
 //  detail/shared_ptr_nmt.hpp - shared_ptr.hpp without member templates
 //
@@ -181,4 +179,3 @@ template<class T> inline T * get_pointer(shared_ptr<T> const & p)
 
 } // namespace memory_mgr
 
-#endif  // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_SHARED_PTR_NMT_HPP_INCLUDED

@@ -1,6 +1,4 @@
-#ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED
-#define MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED
-
+#pragma once
 //
 //  boost/detail/atomic_count_gcc.hpp
 //
@@ -79,4 +77,3 @@ private:
 
 } // namespace memory_mgr
 
-#endif // #ifndef MEMORY_MGR_SMART_PTR_DETAIL_ATOMIC_COUNT_GCC_HPP_INCLUDED
