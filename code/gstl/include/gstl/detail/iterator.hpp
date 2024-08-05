@@ -261,7 +261,8 @@ namespace gstl
 
 	// 24.4, predefined iterators:
 	//template <class Iterator> class reverse_iterator;
-	using boost::reverse_iterator;
+	template <class Iterator>
+	using reverse_iterator = boost::reverse_iterator<Iterator>;
 
 	
 
