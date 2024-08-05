@@ -49,21 +49,21 @@ BOOST_AUTO_TEST_CASE( test_assign_throw )
 	BOOST_CHECK_THROW( cont2 = cont, value_type::test_exception );
 	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
 	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
-	BOOST_CHECK_EQUAL( cont2.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont2.size(), 0 );
 
 	value_type::clear();
 	value_type::set_throw_ctor( throw_on );
 	BOOST_CHECK_THROW( cont2.assign( cont.begin(), cont.end() ), value_type::test_exception );
 	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
 	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
-	BOOST_CHECK_EQUAL( cont2.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont2.size(), 0 );
 
 	value_type::clear();
 	value_type::set_throw_ctor( throw_on );
 	BOOST_CHECK_THROW( cont2.assign( arr_len, val ), value_type::test_exception );
 	BOOST_CHECK_EQUAL( value_type::creations(), throw_on );
 	BOOST_CHECK_EQUAL( value_type::destructions(), throw_on - 1 );
-	BOOST_CHECK_EQUAL( cont2.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont2.size(), 0 );
 }
 
 

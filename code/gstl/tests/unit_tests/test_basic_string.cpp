@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
-#include "stdafx.h"
+
 
 #include <gstl/detail/basic_string.hpp>
 #include <gstl/utility>
@@ -105,7 +105,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
  		string_type s;
  		BOOST_CHECK( s.data() != 0 );
- 		BOOST_CHECK_EQUAL( s.size(), sz_null );
+ 		BOOST_CHECK_EQUAL( s.size(), 0 );
 
 		string_type s2( m_test_str, m_test_str_len );
 		BOOST_CHECK_EQUAL( s2.c_str(), m_test_str );
@@ -179,8 +179,8 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		string_type s4;
 		s4 = ch;
 		BOOST_CHECK_EQUAL( *s4.c_str(), ch );
-		BOOST_CHECK_EQUAL( s4.size(), sz_one );
-		BOOST_CHECK_GE( s4.capacity(), sz_one );
+		BOOST_CHECK_EQUAL( s4.size(), 1 );
+		BOOST_CHECK_GE( s4.capacity(), 1 );
  	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_begin_end, string_type, t_list )
@@ -223,9 +223,9 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
 		
 		/*
-		— If n <= size(), the function replaces the string designated by *this with a string of length n
+		ï¿½ If n <= size(), the function replaces the string designated by *this with a string of length n
 		whose elements are a copy of the initial elements of the original string designated by *this.
-		— If n > size(), the function replaces the string designated by *this with a string of length n whose
+		ï¿½ If n > size(), the function replaces the string designated by *this with a string of length n whose
 		first size() elements are a copy of the original string designated by *this, and whose remaining
 		elements are all initialized to c.
 		*/
@@ -296,8 +296,8 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
 
 		s.clear();
-		BOOST_CHECK_EQUAL( s.size(), sz_null );
-		BOOST_CHECK_GE( s.capacity(), sz_null );
+		BOOST_CHECK_EQUAL( s.size(), 0 );
+		BOOST_CHECK_GE( s.capacity(), 0 );
 		BOOST_CHECK_EQUAL( s.c_str(), "" );
 	}
 
@@ -305,7 +305,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, string_type, t_list )
 	{
 		string_type s;
-		BOOST_CHECK_EQUAL( s.size(), sz_null );
+		BOOST_CHECK_EQUAL( s.size(), 0 );
 		BOOST_CHECK( s.empty() );
 	}
 
@@ -382,7 +382,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		string_type s5;
 		//basic_string<charT,traits,Allocator>& operator+=(charT c);
 		s5 += ch;
-		BOOST_CHECK_EQUAL( s5.size(), sz_one );
+		BOOST_CHECK_EQUAL( s5.size(), 1 );
 		BOOST_CHECK_EQUAL( *s5.c_str(), ch );
 	}
 
@@ -397,7 +397,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		string_type s;
 		BOOST_CHECK( s.data() != 0 );
-		BOOST_CHECK_EQUAL( s.size(), sz_null );
+		BOOST_CHECK_EQUAL( s.size(), 0 );
 
 		string_type s2;
 		s2.append( m_test_str, m_test_str_len );
@@ -474,7 +474,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		string_type s;
 		BOOST_CHECK( s.data() != 0 );
-		BOOST_CHECK_EQUAL( s.size(), sz_null );
+		BOOST_CHECK_EQUAL( s.size(), 0 );
 
 		string_type s2;
 		s2.assign( m_test_str, m_test_str_len );
@@ -631,7 +631,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		
 		s.erase(s.begin() + 1, s.end() - 1); // Erase all but first and last.
 
-		BOOST_CHECK_EQUAL( s.size(), sz_two );
+		BOOST_CHECK_EQUAL( s.size(), 2 );
 		BOOST_CHECK_EQUAL( *s.c_str(), 'H' );
 		BOOST_CHECK_EQUAL( s[s.size() - 1], '!' );
 		
@@ -644,7 +644,7 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		s = m_test_str;
 		s.erase( 1, s.size() - 2 ); // Erase all but first and last.
-		BOOST_CHECK_EQUAL( s.size(), sz_two );
+		BOOST_CHECK_EQUAL( s.size(), 2 );
 		BOOST_CHECK_EQUAL( *s.c_str(), 'H' );
 		BOOST_CHECK_EQUAL( s[s.size() - 1], '!' );
 
@@ -777,9 +777,9 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find, string_type, t_list )
 	{
 		string_type s("one two three one two three");
-		BOOST_CHECK_EQUAL( s.find("one"), sz_null );
-		BOOST_CHECK_EQUAL( s.find('t'), sz_four );
-		BOOST_CHECK_EQUAL( s.find('t', 5), sz_eight );
+		BOOST_CHECK_EQUAL( s.find("one"), 0 );
+		BOOST_CHECK_EQUAL( s.find('t'), 4 );
+		BOOST_CHECK_EQUAL( s.find('t', 5), 8 );
 		
 		BOOST_CHECK_EQUAL( s.find("four"), string_type::npos );
 		BOOST_CHECK_EQUAL( s.find("one", string_type::npos), string_type::npos );
@@ -793,35 +793,35 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 		//BOOST_CHECK_EQUAL( s.rfind("two", string_type::npos/2), string_type::npos );
 		BOOST_CHECK_EQUAL( s.rfind("two"), size_t(18) );
 		BOOST_CHECK_EQUAL( s.rfind("two", 0), string_type::npos );
-		BOOST_CHECK_EQUAL( s.rfind("two", 11), sz_four );
+		BOOST_CHECK_EQUAL( s.rfind("two", 11), 4 );
 		BOOST_CHECK_EQUAL( s.rfind('w'), size_t(19) );
 
 		string_type test( "aba" );
 
-		BOOST_CHECK_EQUAL( test.rfind( "a", 2, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.rfind( "a", 1, 1 ), sz_null );
-		BOOST_CHECK_EQUAL( test.rfind( "a", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 2, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 1, 1 ), 0 );
+		BOOST_CHECK_EQUAL( test.rfind( "a", 0, 1 ), 0 );
 
-		BOOST_CHECK_EQUAL( test.rfind( 'a', 2 ), sz_two );
-		BOOST_CHECK_EQUAL( test.rfind( 'a', 1 ), sz_null );
-		BOOST_CHECK_EQUAL( test.rfind( 'a', 0 ), sz_null );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 2 ), 2 );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 1 ), 0 );
+		BOOST_CHECK_EQUAL( test.rfind( 'a', 0 ), 0 );
 	}
 
 	//21.3.6.3 basic_string::find_first_of
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_find_first_of, string_type, t_list )
 	{
 		string_type s("one two three one two three");
-		BOOST_CHECK_EQUAL( s.find_first_of("abcde"), sz_two );
+		BOOST_CHECK_EQUAL( s.find_first_of("abcde"), 2 );
 
 		string_type test( "aba" );
 
-		BOOST_CHECK_EQUAL( test.find_first_of( "a", 2, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_of( "a", 1, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_of( "a", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 2, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 1, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_of( "a", 0, 1 ), 0 );
 
-		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 2 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 0 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 2 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_of( 'a', 0 ), 0 );
 	}
 
 	//21.3.6.4 basic_string::find_last_of
@@ -833,13 +833,13 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		string_type test( "aba" );
 
-		BOOST_CHECK_EQUAL( test.find_last_of( "a", 2, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_last_of( "a", 1, 1 ), sz_null );
-		BOOST_CHECK_EQUAL( test.find_last_of( "a", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 2, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 1, 1 ), 0 );
+		BOOST_CHECK_EQUAL( test.find_last_of( "a", 0, 1 ), 0 );
 
-		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 2 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 1 ), sz_null );
-		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 0 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 2 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 1 ), 0 );
+		BOOST_CHECK_EQUAL( test.find_last_of( 'a', 0 ), 0 );
 	}
 
 	//21.3.6.5 basic_string::find_first_not_of
@@ -847,23 +847,23 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 	{
 		string_type s("one two three one two three");
 
-		BOOST_CHECK_EQUAL( s.find_first_not_of("enotw "), sz_nine );
+		BOOST_CHECK_EQUAL( s.find_first_not_of("enotw "), 9 );
 
 		string_type test( "aba" );
 
 		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 2, 1 ), string_type::npos );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 2, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 1, 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 1, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 0, 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 2, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 1, 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 1, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "a", 0, 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( "b", 0, 1 ), 0 );
 
 		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 2 ), string_type::npos );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 2 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 0 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 0 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 2 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'a', 0 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_first_not_of( 'b', 0 ), 0 );
 	}
 
 	//21.3.6.6 basic_string::find_last_not_of
@@ -875,19 +875,19 @@ typedef boost::mpl::list< /**std::string,/**/ gstl_string, memory_mgr_string/**/
 
 		string_type test( "aba" );
 
-		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 2, 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 2, 1 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 1, 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 1, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 2, 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 2, 1 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 1, 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 1, 1 ), 0 );
 		BOOST_CHECK_EQUAL( test.find_last_not_of( "a", 0, 1 ), string_type::npos );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 0, 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( "b", 0, 1 ), 0 );
 
-		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 2 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 2 ), sz_two );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 1 ), sz_one );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 1 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 2 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 2 ), 2 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 1 ), 1 );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 1 ), 0 );
 		BOOST_CHECK_EQUAL( test.find_last_not_of( 'a', 0 ), string_type::npos );
-		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 0 ), sz_null );
+		BOOST_CHECK_EQUAL( test.find_last_not_of( 'b', 0 ), 0 );
 	}
 
 	//21.3.6.7 basic_string::substr

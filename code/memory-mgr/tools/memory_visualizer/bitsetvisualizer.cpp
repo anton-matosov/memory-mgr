@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "bitsetvisualizer.h"
 
 BitsetVisualizer::BitsetVisualizer(QWidget *parent)

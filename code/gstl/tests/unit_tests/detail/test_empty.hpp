@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_empty, container_type, t_list )
 {
 	container_type cont;
-	BOOST_REQUIRE_EQUAL( cont.size(), sz_null );
+	BOOST_REQUIRE_EQUAL( cont.size(), 0 );
 	BOOST_CHECK( cont.empty() );
 }
 

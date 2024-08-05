@@ -27,21 +27,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_push_pop_back, container_type, t_list )
 	value_type val = value_type();
 
 	container_type cont;
-	BOOST_CHECK_EQUAL( cont.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont.size(), 0 );
 
 	cont.push_back( val );
-	BOOST_CHECK_EQUAL( cont.size(), sz_one );
+	BOOST_CHECK_EQUAL( cont.size(), 1 );
 	cont.push_back( val );
-	BOOST_CHECK_EQUAL( cont.size(), sz_two );
+	BOOST_CHECK_EQUAL( cont.size(), 2 );
 	cont.push_back( val );
-	BOOST_CHECK_EQUAL( cont.size(), sz_three );
+	BOOST_CHECK_EQUAL( cont.size(), 3 );
 
 	cont.pop_back();
-	BOOST_CHECK_EQUAL( cont.size(), sz_two );
+	BOOST_CHECK_EQUAL( cont.size(), 2 );
 	cont.pop_back();
-	BOOST_CHECK_EQUAL( cont.size(), sz_one );
+	BOOST_CHECK_EQUAL( cont.size(), 1 );
 	cont.pop_back();
-	BOOST_CHECK_EQUAL( cont.size(), sz_null );
+	BOOST_CHECK_EQUAL( cont.size(), 0 );
 }
 
 

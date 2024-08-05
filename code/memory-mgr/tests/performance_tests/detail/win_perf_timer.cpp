@@ -25,7 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 // win_perf_timer - a simple Win32 performance counter wrapper
 // by Dean Wyant dwyant@mindspring.com
 
-#include "stdafx.h"
+
 #include "win_perf_timer.h"
 
 #ifdef MGR_WINDOWS_PLATFORM

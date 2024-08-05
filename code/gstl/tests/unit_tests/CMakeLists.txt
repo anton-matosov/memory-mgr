@@ -6,6 +6,7 @@ target_link_libraries(${TARGET} gstl memory-mgr)
 
 target_sources(${TARGET} PRIVATE
   # test_basic_string.cpp # Not ready yet
+  test_char_traits.cpp
   unit_tests.cpp
 )
 
