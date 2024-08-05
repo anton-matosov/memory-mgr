@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
-class vector_fixture
+class deque_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
@@ -38,7 +38,7 @@ public:
 };
 
 
-BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
+BOOST_FIXTURE_TEST_SUITE( deque_test, deque_fixture )
 
 
 
