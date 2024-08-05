@@ -148,8 +148,7 @@ namespace memory_mgr
 
 			// destroy object at ptr
 			inline void destroy(pointer ptr)
-			{	
-				ptr;//VS 2008 warning
+			{
 				(*ptr).~value_type();
 			}
 

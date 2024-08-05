@@ -20,7 +20,7 @@ target_sources(${TARGET} PRIVATE
   # test_queue.cpp
   # test_stack.cpp
   # test_utilities.cpp
-  # test_vector.cpp
+  test_vector.cpp
   unit_tests.cpp
 )
 
