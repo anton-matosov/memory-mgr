@@ -50,9 +50,9 @@ typedef std::list<test_value_type>		std_list;
 
 typedef gstl::list<test_value_type>		gstl_list;
 typedef gstl::list<test_value_type,
-	memory_mgr::allocator<test_value_type, ptr_alloc_mgr> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >			memory_mgr_vector;
 typedef gstl::list<test_value_type,
-	memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_vector;
 
 typedef gstl::queue<test_value_type, std_list>		gstl_std_list_queue;
  typedef gstl::queue<test_value_type, gstl_list>		gstl_vec_queue;

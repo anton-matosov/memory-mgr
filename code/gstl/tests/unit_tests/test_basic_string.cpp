@@ -34,13 +34,13 @@ typedef gstl::string gstl_string;
 
 //String with custom allocator and explicit passing of pointer traits
 typedef gstl::basic_string<char, gstl::char_traits<char>,
-	memory_mgr::allocator<char, ptr_alloc_mgr> > memory_mgr_string; // ptr_alloc_mgr and off_alloc_mgr are the same now
+	memory_mgr::allocator<char, heap_singleton_mgr, memory_mgr::detail::raw_pointers<char>> > memory_mgr_string;
 
 typedef gstl::basic_string<char, gstl::char_traits<char>,
-	memory_mgr::allocator<char, off_alloc_mgr> > memory_mgr_off_string;
+	memory_mgr::allocator<char, heap_singleton_mgr> > memory_mgr_off_string;
 
 typedef gstl::basic_string<char, gstl::char_traits<char>,
-	memory_mgr::offset_allocator<char, off_alloc_mgr> > memory_mgr_old_off_string;
+	memory_mgr::offset_allocator<char, heap_singleton_mgr> > memory_mgr_old_off_string;
 
 //template gstl::string;
 //template memory_mgr_string;
@@ -63,7 +63,7 @@ const size_t basic_string_test_fixture::m_test_str_len2 = GSTL_STR_LEN( m_test_s
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< std::string, gstl_string/*, memory_mgr_string*/, memory_mgr_off_string,
+typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mgr_off_string,
 						memory_mgr_old_off_string> t_list;
 		
 

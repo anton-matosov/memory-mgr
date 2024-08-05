@@ -48,6 +48,23 @@ namespace memory_mgr
 			};
 		};
 
+		template<class T>
+		class raw_pointers
+		{
+		public:
+			typedef T* pointer;
+			typedef const T* const_pointer;
+
+			typedef typename type_manip::add_reference<T>::type reference;
+			typedef typename type_manip::add_reference<const T>::type const_reference;
+
+			template<class Other>
+			struct rebind
+			{
+				typedef raw_pointers<Other> other;
+			};
+		};
+
 		template<class T, class RebindPointersFrom = detail::offset_pointers<T> >
 		class allocator_base
 		{
