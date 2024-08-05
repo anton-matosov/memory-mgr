@@ -52,6 +52,7 @@ namespace gstl
 		typedef typename base_type::node_allocator_type		node_allocator_type;
 		typedef typename base_type::node_pointer			node_pointer;
 		typedef typename base_type::node_const_pointer		node_const_pointer;
+		typedef typename node_type::node_ptr_reference		node_ptr_reference;
 
 		//////////////////////////////////////////////////////////////////////////
 		//Standard types
@@ -137,29 +138,29 @@ namespace gstl
 
 		allocator_type get_allocator() const
 		{
-			return alloc_;
+			return this->alloc_;
 		}
 
 		// iterators:
 		// 21.3.2 iterators:
 		iterator begin()
 		{
-			return iter_helper::build_iter( base_type::_next( tail_ ), this );
+			return iter_helper::build_iter( base_type::_next( this->tail_ ), this );
 		}
 
 		const_iterator begin() const
 		{
-			return iter_helper::build_const_iter( this->_next( tail_ ), this );
+			return iter_helper::build_const_iter( this->_next( this->tail_ ), this );
 		}
 
 		iterator end()
 		{
-			return iter_helper::build_iter( tail_, this );
+			return iter_helper::build_iter( this->tail_, this );
 		}
 
 		const_iterator end() const
 		{
-			return iter_helper::build_const_iter( tail_, this );
+			return iter_helper::build_const_iter( this->tail_, this );
 		}
 
 		reverse_iterator rbegin()
@@ -195,12 +196,12 @@ namespace gstl
 
 		size_type size() const
 		{
-			return size_;
+			return this->size_;
 		}
 
 		size_type max_size() const
 		{
-			size_type max = alloc_.max_size();
+			size_type max = this->alloc_.max_size();
 			return max <= 1 ? 1 : max - 1;
 		}
 
@@ -276,12 +277,12 @@ namespace gstl
 			++position;
 
 			//If node is not the tail (end) entry of the list
-			if( node != tail_ )
+			if( node != this->tail_ )
 			{
 				//We can remove it
 				this->_remove_node( node );
 				this->_free_node( node );
-				--size_;
+				--this->size_;
 			}
 			return position;
 		}
@@ -359,8 +360,8 @@ namespace gstl
 		//////////////////////////////////////////////////////////////////////////
 		void reverse()
 		{
-			node_pointer	first = first_;
-			node_pointer	last = last_;
+			node_pointer	first = this->first_;
+			node_pointer	last = this->last_;
 // 			for( ; first != last && first != --last; ++first )
 // 			{
 // 				iter_swap( first, last );
@@ -409,7 +410,7 @@ namespace gstl
 				
 
 				++first;
-				++size_;
+				++this->size_;
 			}
 			
 			return position;
@@ -419,7 +420,7 @@ namespace gstl
 		{
 			while( first != last )
 			{
-				alloc_.destroy( &this->_value( first.base() ) );
+				this->alloc_.destroy( &this->_value( first.base() ) );
 				++first;
 			}
 		};
