@@ -26,7 +26,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/string>
 
 #include <boost/serialization/string.hpp>
-//#include <boost/serialization/array.hpp>
+#include <boost/serialization/split_free.hpp>
 #include <boost/serialization/tracking.hpp>
 
 namespace boost
@@ -41,7 +41,7 @@ namespace boost
 			)
 		{
 			typedef std::basic_string<CharT> StdStringType;
-			typedef StdStringType::size_type size_type;
+			typedef typename StdStringType::size_type size_type;
 			StdStringType chars( str.c_str(), static_cast<size_type>( str.length() ) );
 			ar & /*BOOST_SERIALIZATION_NVP*/( chars );
 		}
