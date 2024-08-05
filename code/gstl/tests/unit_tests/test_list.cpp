@@ -49,14 +49,14 @@ typedef test_class test_value_type;
 typedef std::list<test_value_type>		std_list;
 typedef gstl::list<test_value_type>		gstl_list;
 typedef gstl::list<test_value_type,
-	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >			memory_mgr_list;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr, memory_mgr::detail::raw_pointers<test_value_type>> >			memory_mgr_list;
 typedef gstl::list<test_value_type,
 	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_list;
 typedef gstl::list<test_value_type,
 	memory_mgr::offset_allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_old_off_list;
 
-typedef boost::mpl::list< /**std_list,/**/ gstl_list/**/, memory_mgr_list/**/, memory_mgr_off_list/**/,
-							memory_mgr_old_off_list/**/> t_list;
+typedef boost::mpl::list< std_list, gstl_list, memory_mgr_list, memory_mgr_off_list,
+							memory_mgr_old_off_list> t_list;
 
 
 #include "detail/test_construction.hpp"

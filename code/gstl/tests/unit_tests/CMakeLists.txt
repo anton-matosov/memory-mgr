@@ -14,7 +14,7 @@ target_sources(${TARGET} PRIVATE
   # test_deque.cpp
   # test_dynamic_buffer.cpp
   # test_iterator.cpp
-  # test_list.cpp
+  test_list.cpp
   # test_named_allocator.cpp
   test_pointer_traits.cpp
   test_queue.cpp
