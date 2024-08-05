@@ -24,11 +24,5 @@ target_sources(${TARGET} PRIVATE
   unit_tests.cpp
 )
 
-add_test(NAME  ${TARGET} COMMAND  ${TARGET} --color_output=no --report_level=detailed)
+add_boost_test(${TARGET})
 
-# Set properties for the test
-set_tests_properties( ${TARGET} PROPERTIES
-    PASS_REGULAR_EXPRESSION "assertions.*passed"
-    FAIL_REGULAR_EXPRESSION "assertions.*failed"
-    # SKIP_REGULAR_EXPRESSION "skipped"
-)
