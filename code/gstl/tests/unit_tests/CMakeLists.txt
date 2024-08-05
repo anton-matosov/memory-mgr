@@ -8,7 +8,7 @@ target_sources(${TARGET} PRIVATE
   test_algorithm.cpp
   test_allocator.cpp
   test_basic_string.cpp
-  # test_boost_range.cpp
+  test_boost_range.cpp
   test_char_traits.cpp
   test_class.cpp
   # test_deque.cpp
