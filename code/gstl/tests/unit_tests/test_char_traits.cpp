@@ -121,8 +121,8 @@ BOOST_FIXTURE_TEST_SUITE( char_traits_test, char_traits_test_fixture )
 		BOOST_CHECK_EQUAL( traits_type::compare( str2, str1, size1 ), memcmp( str2, str1, size1 ) );
 	}
 
-	// GSTL_AUTO_PARAMS_TEST_CASE( test_compare, test_compare_impl,
-	// 	params, params + sizeof(params)/sizeof(test_compare_param_type) );
+	GSTL_AUTO_PARAMS_TEST_CASE( test_compare, test_compare_impl,
+		params, params + sizeof(params)/sizeof(test_compare_param_type) );
 
 
 	BOOST_AUTO_TEST_CASE(test_length)

@@ -66,9 +66,10 @@ template<class type_name1>																			\
 
 
 #define GSTL_AUTO_PARAMS_TEST_CASE( test_name, function, begin, end )	\
-struct BOOST_AUTO_TC_UNIQUE_ID( test_name ) {};											\
-	BOOST_AUTO_TU_REGISTRAR( test_name )(												\
-	BOOST_PARAM_TEST_CASE( function, begin, end ) );	
+struct BOOST_AUTO_TC_UNIQUE_ID( test_name ) {};												\
+	BOOST_AUTO_TU_REGISTRAR( test_name )(																\
+	BOOST_PARAM_TEST_CASE( function, begin, end ),											\
+	boost::unit_test::decorator::collector_t::instance() );
 
 //#define GSTL_STATIC_ARR_END( arr )\
 //	template<class T, T[]
