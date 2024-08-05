@@ -61,7 +61,7 @@ namespace gstl
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 		
 		class value_compare
-			: public std::binary_function<value_type,value_type,bool> {
+		{
 				friend class map;
 		protected:
 			Compare comp;

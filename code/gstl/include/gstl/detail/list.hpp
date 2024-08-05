@@ -348,20 +348,21 @@ namespace gstl
 		//////////////////////////////////////////////////////////////////////////
 		void sort()
 		{
-			
+			throw std::runtime_error( "Not implemented" );
 		}
 
 		template <class Compare>
 		void sort( Compare comp )
 		{
-
+			throw std::runtime_error( "Not implemented" );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		void reverse()
 		{
-			node_pointer	first = this->first_;
-			node_pointer	last = this->last_;
+			throw std::runtime_error( "Not implemented" );
+			// node_pointer	first = first_;
+			// node_pointer	last = last_;
 // 			for( ; first != last && first != --last; ++first )
 // 			{
 // 				iter_swap( first, last );
@@ -400,13 +401,13 @@ namespace gstl
 			node_pointer curr = position.base();
 			while( first != last )
 			{
-				node_ptr_reference prev = _prev( curr );
-				node_pointer new_node = _create_node( curr, prev, *first );
+				node_ptr_reference prev = this->_prev( curr );
+				node_pointer new_node = this->_create_node( curr, prev, *first );
 
 				//curr->prev_ = new_node
 				prev = new_node;
 				//new_node->prev_->next_ = new_node
-				_next( _prev( new_node ) ) = new_node;
+				this->_next( this->_prev( new_node ) ) = new_node;
 				
 
 				++first;

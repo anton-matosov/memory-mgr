@@ -35,7 +35,6 @@
 #include "gstl/algorithm"
 #include "gstl/allocator"
 #include "gstl/deque"
-
 #include "gstl/functional"
 #include "gstl/hash.hpp"
 #include "gstl/iterator"
@@ -51,15 +50,22 @@
 #include "gstl/utility"
 #include "gstl/vector"
 
+
 template class gstl::basic_string<char>;
 template class gstl::basic_string<wchar_t>;
 
 template class gstl::vector<int>;
-template class gstl::vector<std::pair<int,int>>;
+template class gstl::vector<std::pair<int, int>>;
 
-// template class gstl::list<int>;
+template class gstl::list<int>;
+template class gstl::list<std::pair<gstl::string, gstl::wstring>>;
 
-// template class gstl::map<int, int>;
+template class gstl::deque<int>;
+template class gstl::stack<int>;
+
+// template class gstl::queue<int>; // queue needs deque which is not implemented yet
+template class gstl::map<int, int>;
+template class gstl::map<gstl::string, gstl::wstring>;
 
 int main()
 {

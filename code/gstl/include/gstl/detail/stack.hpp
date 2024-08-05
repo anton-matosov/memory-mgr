@@ -24,14 +24,14 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #pragma once
 
-#include <gstl/deque>
+#include <gstl/vector>
 
 namespace gstl
 {
 	template
 	<
 		class T,
-		class Container = deque<T>
+		class Container = vector<T> //TODO: Switch to deque once implemented
 	>
 	class stack
 	{
