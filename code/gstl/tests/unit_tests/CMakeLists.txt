@@ -5,6 +5,7 @@ target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${TARGET} gstl memory-mgr)
 
 target_sources(${TARGET} PRIVATE
+  test_allocator.cpp
   test_basic_string.cpp
   test_char_traits.cpp
   test_pointer_traits.cpp
