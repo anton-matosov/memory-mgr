@@ -503,9 +503,10 @@ namespace gstl
 			GSTL_DEBUG_RANGE( first, last );
 			if( first != last )
 			{
-				//TODO: erase chars
-				//size_type rlen = last - first;
-				traits_type::copy( &*first, &*last, end() - last );
+				// Move characters from the tail
+				traits_type::move( &*first, &*last, end() - last );
+
+				// Update the end of the string
 				this->set_end( size() - (last - first) );
 			}
 			return last;
