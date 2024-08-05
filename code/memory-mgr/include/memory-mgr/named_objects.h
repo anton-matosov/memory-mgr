@@ -54,6 +54,7 @@ namespace memory_mgr
 		:public detail::decorator_base<MemMgr>
 	{
 		typedef detail::decorator_base<MemMgr>								base_type;
+		typedef typename base_type::decorated_mgr					decorated_mgr;
 
 		typedef MemMgr														mgr_type;
 		typedef NamedAllocatorTraits										named_allocator_traits;
