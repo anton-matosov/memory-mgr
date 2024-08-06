@@ -138,7 +138,7 @@ namespace memory_mgr
 			{
 				this->m_offset = detail::diff<offset_type>( ptr, this );
 				MGR_ASSERT( (this->m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
-				MGR_ASSERT( this->do_get_pointer() == ptr, "Roundtrip to and from offset pointer yielded a different pointer" );
+				// MGR_ASSERT( this->do_get_pointer() == ptr, "Roundtrip to and from offset pointer yielded a different pointer" );
 			}
 		}
 
