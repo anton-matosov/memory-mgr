@@ -67,7 +67,6 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 						memory_mgr_old_off_string> t_list;
 
 
-	#include "detail/test_iterator.hpp"
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
 	{
@@ -78,6 +77,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
 		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
 	}
+	// #include "detail/test_iterator.hpp"
 
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_with_reconstruction, string_type, t_list )
