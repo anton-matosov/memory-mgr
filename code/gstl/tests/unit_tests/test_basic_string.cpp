@@ -71,6 +71,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
 	{
+		BOOST_CHECKPOINT("before allocating string");
 		string_type s("aaazzz");
 		BOOST_REQUIRE_NO_THROW(s.resize(3));
 
