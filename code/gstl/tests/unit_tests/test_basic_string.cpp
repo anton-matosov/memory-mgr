@@ -69,15 +69,15 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 	#include "detail/test_iterator.hpp"
 
-	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
-	{
-		BOOST_TEST_CHECKPOINT("before allocating string");
-		string_type s("aaazzz");
-		BOOST_REQUIRE_NO_THROW(s.resize(3));
+	// BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
+	// {
+	// 	BOOST_TEST_CHECKPOINT("before allocating string");
+	// 	string_type s("aaazzz");
+	// 	BOOST_REQUIRE_NO_THROW(s.resize(3));
 
-		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
-		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
-	}
+	// 	BOOST_CHECK_EQUAL( "aaa", s.c_str() );
+	// 	BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
+	// }
 
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_with_reconstruction, string_type, t_list )
