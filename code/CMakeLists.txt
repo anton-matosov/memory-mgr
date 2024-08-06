@@ -1,6 +1,6 @@
 
 function(add_boost_test TARGET)
-  add_test(NAME  ${TARGET} COMMAND  ${TARGET} --color_output=no --log_level=all)
+  add_test(NAME  ${TARGET} COMMAND  ${TARGET} --color_output=no --log_level=all --catch_system_errors=no)
 
   # Set properties for the test
   set_tests_properties( ${TARGET} PROPERTIES
