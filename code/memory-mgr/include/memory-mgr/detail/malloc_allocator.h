@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <cstddef>
 
 namespace memory_mgr
-{	
+{
 	namespace detail
 	{
 		/**
@@ -38,10 +38,10 @@ namespace memory_mgr
 		*/
 		struct malloc_allocator
 		{
-			
+
 			/**
 			   @brief Default constructor, allocates memory
-			   @param mem_size  memory in bytes            
+			   @param mem_size  memory in bytes
 			*/
 			malloc_allocator( const size_t mem_size, const size_t /*id*/ = 0 )
 				:m_memory( NULL ),
@@ -60,14 +60,14 @@ namespace memory_mgr
 			/**
 			   @brief Call this method to get  address of allocated segment
 			   @return  address of allocated segment
-			                                                               
+
 			*/
 			void* segment_base()
 			{
 				if( ! m_memory && m_size )
 				{
-					m_memory = malloc( m_size );
-					*detail::size_cast(m_memory) = 0;
+					// Use calloc to ensure that memory is zeroed
+					m_memory = calloc(1,  m_size);
 				}
 				return m_memory;
 			}
@@ -77,7 +77,7 @@ namespace memory_mgr
 			*/
 			void* m_memory;
 			size_t m_size;
-			
+
 			/**
 			   @brief Memory type tag
 			*/
