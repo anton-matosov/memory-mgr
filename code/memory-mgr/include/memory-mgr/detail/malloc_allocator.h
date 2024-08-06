@@ -66,8 +66,8 @@ namespace memory_mgr
 			{
 				if( ! m_memory && m_size )
 				{
-					// Use calloc to ensure that memory is zeroed
-					m_memory = calloc(1,  m_size);
+					m_memory = malloc( m_size );
+					*detail::size_cast(m_memory) = 0;
 				}
 				return m_memory;
 			}
