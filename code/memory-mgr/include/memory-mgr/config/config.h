@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 //#define DEBUG_MEMORY_POOLS
-#define MGR_ENABLE_ASSERTS
+// #define MGR_ENABLE_ASSERTS
 #define MGR_ENABLE_32_64_BIT_PROCESSES_INTEROPERABILITY
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
@@ -79,7 +79,7 @@ MSVC++ 5.0  _MSC_VER = 1100 (Visual Studio 5)
 #		define MGR_VISUAL_STUDIO_VERSION 1996
 #	endif
 
-#else 
+#else
 #	define MGR_VISUAL_STUDIO_VERSION 0
 #endif
 
