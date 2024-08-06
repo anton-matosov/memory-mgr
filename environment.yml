@@ -17,6 +17,7 @@ dependencies:
   - clang-format # C++ code formatter and format enforcement tool
   - clang-tools  # for clang-tidy, a C++ linter
   - llvm-tools # for llvm-rc, llvm-cov
+  - lld # for lld-link
 
   - cmake=3.30
   - ninja=1.12
