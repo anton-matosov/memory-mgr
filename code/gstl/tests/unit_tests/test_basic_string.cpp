@@ -1,4 +1,4 @@
-/* 
+/*
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
 Copyright (c) 2007, 2008 Anton (shikin) Matosov
@@ -53,7 +53,7 @@ public:
 	static const char m_test_str2[];
 	static const size_t m_test_str_len;
 	static const size_t m_test_str_len2;
-	
+
 };
 
 const char basic_string_test_fixture::m_test_str[] = "Hello World!";
@@ -65,14 +65,14 @@ BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
 typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mgr_off_string,
 						memory_mgr_old_off_string> t_list;
-		
+
 
 	#include "detail/test_iterator.hpp"
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
 	{
 		string_type s("aaazzz");
-		s.resize(3);
+		BOOST_REQUIRE_NO_THROW(s.resize(3));
 
 		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
 		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
@@ -85,7 +85,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 			string_type s("aaazzz");
 		}
 		string_type z;
-		z.resize(3);
+		BOOST_REQUIRE_NO_THROW(z.resize(3));
 		BOOST_CHECK_EQUAL( "", z.c_str() );
 		BOOST_CHECK_EQUAL( 0u, strlen( z.c_str() ) );
 
@@ -162,7 +162,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		typedef gstl::char_traits< char_type > char_traits;
 		char_type ch = 'x';
 
- 
+
  		string_type s( m_test_str, m_test_str_len );
 
 		string_type s2;
@@ -222,7 +222,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( s.length(), m_test_str_len );
 		BOOST_CHECK_EQUAL( s.size(), s.length() );
 		BOOST_CHECK_GE( s.capacity(), m_test_str_len );
-		
+
 		/*
 		� If n <= size(), the function replaces the string designated by *this with a string of length n
 		whose elements are a copy of the initial elements of the original string designated by *this.
@@ -235,7 +235,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( char_traits::compare( s.c_str(), m_test_str, s_len_2 - 1 ), 0 );
 		BOOST_CHECK_EQUAL( s.size(), s_len_2 );
 		BOOST_CHECK_GE( s.capacity(), s_len_2 );
-		
+
 		string_type s2( m_test_str, m_test_str_len ); /* 2 */
 		s2.resize( test_len, ch );
 		BOOST_CHECK_EQUAL( s2.size(), test_len );
@@ -255,14 +255,14 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( s4.size(), test_len );
 		BOOST_CHECK_GE( s4.capacity(), test_len );
 		test_compare_n_values( s4.c_str(), ch_null, test_len );
-		
+
 		s4.reserve( test_len_x2 );
 		BOOST_CHECK_GE( s4.capacity(), test_len_x2 );
 		/*
 		Calling reserve() with a res_arg argument less than capacity() is in effect a non-binding shrink
 		request. A call with res_arg <= size() is in effect a non-binding shrink-to-fit request.
 		*/
-		//Doesn't work for std::basic_string in VC9 (VS 2008) 
+		//Doesn't work for std::basic_string in VC9 (VS 2008)
 		//s4.reserve();
 		//BOOST_CHECK_LT( s4.capacity(), test_len_x2 );
 		//BOOST_CHECK_GE( s4.capacity(), s4.size() );
@@ -272,7 +272,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		string_type st;
 		BOOST_CHECK_THROW( st.resize( st.max_size() + 1 ), std::length_error );
 		BOOST_CHECK_THROW( st.reserve( st.max_size() + 1 ), std::length_error );
-		BOOST_CHECK_THROW( st.resize( st.max_size() + 1, ch ), std::length_error );	
+		BOOST_CHECK_THROW( st.resize( st.max_size() + 1, ch ), std::length_error );
 	}
 
 	//21.3.6 basic_string string operations
@@ -287,7 +287,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( s.c_str(), "" );
 		BOOST_CHECK_EQUAL( s.data(), "" );
 	}
-	
+
 	//21.3.3 basic_string capacity
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_clear, string_type, t_list )
 	{
@@ -325,7 +325,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 		BOOST_CHECK_EQUAL( m_test_str[ch_id],  s.c_str()[ch_id] );
 		BOOST_CHECK_EQUAL( s[ch_id],  m_test_str[ch_id] );
-		
+
 		/*
 		Requires: pos < size()
 		Throws: out_of_range if pos >= size().
@@ -359,10 +359,10 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		size_t str_len_2 = m_test_str_len / 2;
 		string_type s( m_test_str, 0, str_len_2 );
 		string_type s2( m_test_str, str_len_2, string_type::npos );
-		
+
 		BOOST_CHECK_EQUAL( s.size(), str_len_2 );
 		BOOST_CHECK_EQUAL( s2.size(), m_test_str_len - str_len_2 );
-		
+
 		string_type s3;
 		//basic_string<charT,traits,Allocator>&
 		//	operator+=(const basic_string<charT,traits,Allocator>& str);
@@ -376,7 +376,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 
 		string_type s4;
 		//basic_string<charT,traits,Allocator>& operator+=(const charT* s);
-		s4 += m_test_str; 
+		s4 += m_test_str;
 		BOOST_CHECK_EQUAL( s4.size(), m_test_str_len );
 		BOOST_CHECK_EQUAL( s4.c_str(), m_test_str );
 
@@ -486,7 +486,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		//Throws: out_of_range if pos > str.size().
 		string_type se;
 		BOOST_CHECK_THROW( (void)se.assign(s2, s2.size() + 1, string_type::npos ), std::out_of_range );
-		
+
 		string_type s3;
 		s3.assign( m_test_str );
 		BOOST_CHECK_EQUAL( s3.c_str(), m_test_str );
@@ -629,13 +629,13 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_erase, string_type, t_list )
 	{
 		string_type s( m_test_str );
-		
+
 		s.erase(s.begin() + 1, s.end() - 1); // Erase all but first and last.
 
 		BOOST_CHECK_EQUAL( s.size(), 2 );
 		BOOST_CHECK_EQUAL( *s.c_str(), 'H' );
 		BOOST_CHECK_EQUAL( s[s.size() - 1], '!' );
-		
+
 		s.insert( 1, m_test_str );
 		s.erase( s.begin()); // Erase first element.
 		s.erase( s.end() - 1); // Erase last element.
@@ -729,7 +729,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 	{
 		typedef typename string_type::value_type char_type;
 		typedef gstl::char_traits< char_type > char_traits;
-		
+
 		size_t test_len = m_test_str_len / 2;
 		char_type str[m_test_str_len];// = new char_type[m_test_str_len];
 
@@ -756,10 +756,10 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( str, s2.c_str() );
 
 	}
-	
+
 	//21.3.5.8 basic_string::swap
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_swap, string_type, t_list )
-	{		
+	{
 		string_type s( m_test_str, m_test_str_len );
 
 		string_type s2( m_test_str2, m_test_str_len2 );
@@ -781,7 +781,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( s.find("one"), 0 );
 		BOOST_CHECK_EQUAL( s.find('t'), 4 );
 		BOOST_CHECK_EQUAL( s.find('t', 5), 8 );
-		
+
 		BOOST_CHECK_EQUAL( s.find("four"), string_type::npos );
 		BOOST_CHECK_EQUAL( s.find("one", string_type::npos), string_type::npos );
 
@@ -966,8 +966,8 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		in Table 44:
 		size() < str.size() < 0
 		size() == str.size() 0
-		size() > str.size() > 0  
-		
+		size() > str.size() > 0
+
 		//////////////////////////////////////////////////////////////////////////
 		int compare(size_type pos1, size_type n1,
 		const basic_string<charT,traits,Allocator>& str) const;
@@ -1006,7 +1006,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 	//21.3.7 basic_string non-member functions
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_non_member_ops, string_type, t_list )
 	{
-		
+
 		string_type s( m_test_str );
 		string_type s2( m_test_str2 );
 		string_type s3( m_test_str );
@@ -1023,7 +1023,7 @@ typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mg
 		BOOST_CHECK_EQUAL( s, m_test_str );
 		BOOST_CHECK_EQUAL( m_test_str2, s2 );
 
-		
+
 		//21.3.7.3 operator!=
 		BOOST_CHECK_NE( s3, s2 );
 		BOOST_CHECK_NE( m_test_str, s2 );
