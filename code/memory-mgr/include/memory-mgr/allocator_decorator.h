@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -81,30 +81,30 @@ namespace memory_mgr
 		// deallocate object at ptr, ignore size
 		inline void deallocate( pointer ptr, size_type count )
 		{
-			m_pimpl->deallocate( &*ptr, count * sizeof(value_type) );
+			m_pimpl->deallocate( ptr, count * sizeof(value_type) );
 		}
 
 		// allocate array of count elements
 		inline raw_pointer allocate(size_type count)
-		{	
+		{
 			return static_cast<raw_pointer>( m_pimpl->allocate( count * sizeof(value_type) ) );
 		}
 
 		// allocate array of count elements, ignore hint
 		inline raw_pointer allocate(size_type count, const void *)
-		{	
+		{
 			return (allocate(count));
 		}
 
 		// construct object at ptr with value val
 		inline void construct(pointer ptr, const_reference val)
-		{	
+		{
 			::new (&*ptr) value_type(val);
 		}
 
 		// destroy object at ptr
 		inline void destroy(pointer ptr)
-		{	
+		{
 			ptr;//VS 2008 warning
 			(&*ptr)->~value_type();
 		}
@@ -114,14 +114,14 @@ namespace memory_mgr
 		{
 			return m_pimpl->equal( *rhs.get_pimpl() );
 		}
-		
+
 		pimpl_type get_pimpl() const
 		{
 			return this->m_pimpl;
 		}
 	private:
 		pimpl_type m_pimpl;
-		
+
 	};
 
 	template<class T, class U, class Trebind, class Urebind>

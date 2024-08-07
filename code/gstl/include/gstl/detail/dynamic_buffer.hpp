@@ -1,4 +1,4 @@
-/* 
+/*
 Generic STL (genericstl)
 http://genericstl.sourceforge.net/
 Copyright (c) 2007, 2008 Anton (shikin) Matosov
@@ -29,7 +29,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <gstl/detail/buffer_helpers.hpp>
 #include <gstl/detail/sequence_iterator.hpp>
 
-
 namespace gstl
 {
 	namespace detail
@@ -39,7 +38,7 @@ namespace gstl
 		{
 			template<class SizeType>
 			static inline const T* move( T* dst, const T* src, SizeType size )
-			{	
+			{
 				return detail::move( dst, src, size );
 			}
 		};
@@ -82,10 +81,10 @@ namespace gstl
 				alloc_( alloc )
 			{
 			}
-			
+
 			~dynamic_buffer()
 			{
-				alloc_.deallocate( &*buffer_, reserved_ );
+				alloc_.deallocate( buffer_, reserved_ );
 			}
 
 			void reserve( size_type requested_capacity = 0 )
@@ -100,7 +99,7 @@ namespace gstl
 					new_reserved = (gstl::max)(requested_capacity, new_reserved);
 
 					pointer new_buffer = alloc_.allocate( new_reserved );
-					
+
 					if( !! buffer_ )
 					{
 						traits_type::move( &*new_buffer, get_buffer(), size_ );
@@ -141,7 +140,7 @@ namespace gstl
 				{
 					pointer old_buffer = buffer_;
 					buffer_ = new_buffer;
-					alloc_.deallocate( &*old_buffer, reserved_ );
+					alloc_.deallocate( old_buffer, reserved_ );
 					reserved_ = new_reserved;
 					set_size( new_size );
 				}
