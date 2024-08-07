@@ -61,7 +61,7 @@ namespace memory_mgr
 			inline decorator_base()
 			{
 				static_assert( (is_category_supported< mgr_type, memory_segment_tag >::value),
-					Memory_manager_does_not_have_attached_memory_segment );
+					"Memory manager does not have attached memory segment" );
 			}
 
 			///One more constructor that delegates parameters to the base class

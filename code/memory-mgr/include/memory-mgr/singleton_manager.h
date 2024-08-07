@@ -125,7 +125,7 @@ namespace memory_mgr
 	{
 		typedef SingletonManager mgr_type;
 		typedef is_category_supported< mgr_type, singleton_manager_tag > singleton_support;
-		static_assert( singleton_support::value, Memeory_manager_must_implement_singleton_concept );
+		static_assert( singleton_support::value, "Memeory manager must implement singleton concept" );
 		return detail::mem_mgr_wrapper< typename manager_traits< mgr_type >::base_manager_type >( mgr_type::instance() );
 	};
 }

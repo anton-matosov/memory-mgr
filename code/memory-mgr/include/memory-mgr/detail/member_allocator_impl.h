@@ -45,7 +45,7 @@ namespace memory_mgr
 				:m_mgr( mgr )
 			{
  				static_assert( (is_category_supported< mgr_type, memory_manager_tag >::value)
-					, invalid_memory_manager_class );
+					, "invalid memory manager class" );
 			}
 
 			// allocate array of count elements

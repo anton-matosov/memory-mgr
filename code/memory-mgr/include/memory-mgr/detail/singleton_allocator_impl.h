@@ -23,8 +23,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
+#include "memory-mgr/manager_category.h"
 #include "memory-mgr/manager_traits.h"
 #include "memory-mgr/detail/types.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 namespace memory_mgr
 {
@@ -43,7 +45,7 @@ namespace memory_mgr
 			inline singleton_allocator_impl()
 			{
 				static_assert( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
-					(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
+					(is_category_supported< mgr_type, singleton_manager_tag >::value), "Invalid memory manager class" );
 
 			}
 
