@@ -71,7 +71,7 @@ namespace memory_mgr
 		~managed_base()
 		{
 			static_assert( (is_category_supported< mem_mgr, singleton_manager_tag>::value),
-				Memory_manager_does_not_implement_required_concepts );
+				"Memory manager does not implement required concepts" );
 		}
 
 		typedef MemMgr mem_mgr;
