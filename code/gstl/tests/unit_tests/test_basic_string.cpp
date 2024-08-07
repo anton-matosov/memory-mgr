@@ -63,12 +63,10 @@ const size_t basic_string_test_fixture::m_test_str_len2 = GSTL_STR_LEN( m_test_s
 
 BOOST_FIXTURE_TEST_SUITE( basic_string_test, basic_string_test_fixture )
 
-typedef boost::mpl::list< memory_mgr_old_off_string, memory_mgr_off_string, memory_mgr_string > t_list;
-// TODO: undo once issue is fixed for windows runners
-// typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mgr_off_string,
-// 						memory_mgr_old_off_string> t_list;
+typedef boost::mpl::list< std::string, gstl_string, memory_mgr_string, memory_mgr_off_string,
+						memory_mgr_old_off_string> t_list;
 
-
+	#include "detail/test_iterator.hpp"
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resizing, string_type, t_list )
 	{
@@ -79,8 +77,6 @@ typedef boost::mpl::list< memory_mgr_old_off_string, memory_mgr_off_string, memo
 		BOOST_CHECK_EQUAL( "aaa", s.c_str() );
 		BOOST_CHECK_EQUAL( 3u, strlen( s.c_str() ) );
 	}
-	#include "detail/test_iterator.hpp"
-
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_resize_with_reconstruction, string_type, t_list )
 	{
