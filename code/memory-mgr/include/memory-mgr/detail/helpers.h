@@ -26,6 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/assert.h"
 
 #include <exception>
+#include <new>
 
 namespace memory_mgr
 {

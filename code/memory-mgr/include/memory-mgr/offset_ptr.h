@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -28,12 +28,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/ptr_casts.h"
 
 namespace memory_mgr
-{	
+{
 	/**
 		@brief		Offset pointer class.
 		@details	Smart pointer class which stores offset between 'this' and object it points.
 					This allows to put this pointer	to the shared memory and/or
-					memory mapped file which are mapped to the different base 
+					memory mapped file which are mapped to the different base
 					addresses in different processes.
 
 		@note		Declaration examples:
@@ -45,7 +45,7 @@ namespace memory_mgr
 	template< class T >
 	class offset_ptr
 		: public detail::offset_ptr_base< T, detail::portable_difference_type, offset_ptr< T > >
-	{		
+	{
 	public:
 		typedef detail::offset_ptr_base< T, detail::portable_difference_type, offset_ptr< T > > base_type;
 		friend base_type;
@@ -68,7 +68,7 @@ namespace memory_mgr
 		//Pointer constructor
 		inline offset_ptr( const_pointer p )
 			:base_type( p )
-		{	
+		{
 		}
 
 		//Polymorph copy constructor
@@ -101,13 +101,13 @@ namespace memory_mgr
 
 		//////////////////////////////////////////////////////////////////////////
 		//Polymorph copy operators
-		inline offset_ptr& operator=( const_pointer p )			
+		inline offset_ptr& operator=( const_pointer p )
 		{
-			base_type::operator =( p );				
+			base_type::operator =( p );
 			return *this;
 		}
 
-		inline offset_ptr& operator=( const offset_ptr& ptr )			
+		inline offset_ptr& operator=( const offset_ptr& ptr )
 		{
 			base_type::operator =( ptr );
 			return *this;
@@ -115,17 +115,19 @@ namespace memory_mgr
 
 		//Polymorph copy operator
 		template < typename U >
-		inline offset_ptr& operator=( const offset_ptr< U >& ptr )			
+		inline offset_ptr& operator=( const offset_ptr< U >& ptr )
 		{
 			base_type::operator =( ptr );
 			return *this;
 		}
 
 	private:
-		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+		#if defined(MGR_WINDOWS_PLATFORM)
 			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		#else
+			inline
 		#endif
-		inline void do_set_pointer( const_pointer ptr )
+		void do_set_pointer( const_pointer ptr )
 		{
 			//offset == invalid_offset1 && ptr != 0 is not legal for this pointer
 			if( ptr == NULL )
@@ -136,19 +138,22 @@ namespace memory_mgr
 			{
 				this->m_offset = detail::diff<offset_type>( ptr, this );
 				MGR_ASSERT( (this->m_offset != offset_traits<offset_type>::invalid_offset), "Invalid offset value" );
+				// MGR_ASSERT( this->do_get_pointer() == ptr, "Roundtrip to and from offset pointer yielded a different pointer" );
 			}
 		}
 
-		#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+		#if defined(MGR_WINDOWS_PLATFORM)
 			__declspec(noinline) //this workaround is needed for msvc > 8.0
+		#else
+			inline
 		#endif
-		inline const_pointer do_get_pointer() const
+		const_pointer do_get_pointer() const
 		{
 			if( this->m_offset == offset_traits<offset_type>::invalid_offset )
 			{
 				return 0;
 			}
-			return static_cast<const_pointer>( detail::shift( this,this->m_offset ) );	
+			return static_cast<const_pointer>( detail::shift( this,this->m_offset ) );
 		}
 	};
 

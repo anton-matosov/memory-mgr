@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-#include "StdAfx.h"
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
+
 #include <memory-mgr/offset_ptr.h>
 #include <gstl/detail/pointer_traits.hpp>
 #include <boost/type_traits.hpp>
@@ -29,8 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 namespace
 {
 	using memory_mgr::offset_ptr;
-	typedef boost::mpl::list< int, const int, int const,
-		volatile int, int volatile,
+	typedef boost::mpl::list< int, const int, volatile int,
 		int*, const int*, const int* const,
 		volatile int*, int* volatile, volatile int* volatile,
 		const int* volatile, volatile int* const,
@@ -44,13 +45,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_ptr_traits, ptr_type, pointer_types_list )
 {
 	typedef gstl::pointer_traits<ptr_type> ptr_traits;
 
-	BOOST_STATIC_ASSERT( boost::is_pointer<ptr_traits::pointer>::value );
-	BOOST_STATIC_ASSERT( boost::is_pointer<ptr_traits::const_pointer>::value );
-	BOOST_STATIC_ASSERT( boost::is_reference<ptr_traits::reference>::value );
-	BOOST_STATIC_ASSERT( boost::is_reference<ptr_traits::const_reference>::value );
+	BOOST_STATIC_ASSERT( boost::is_pointer<typename ptr_traits::pointer>::value );
+	BOOST_STATIC_ASSERT( boost::is_pointer<typename ptr_traits::const_pointer>::value );
+	BOOST_STATIC_ASSERT( boost::is_reference<typename ptr_traits::reference>::value );
+	BOOST_STATIC_ASSERT( boost::is_reference<typename ptr_traits::const_reference>::value );
 
-	BOOST_STATIC_ASSERT( ! boost::is_const<ptr_traits::value_type>::value );
-	BOOST_STATIC_ASSERT( ! boost::is_volatile<ptr_traits::value_type>::value );
+	BOOST_STATIC_ASSERT( ! boost::is_const<typename ptr_traits::value_type>::value );
+	BOOST_STATIC_ASSERT( ! boost::is_volatile<typename ptr_traits::value_type>::value );
 	//BOOST_STATIC_ASSERT( boost::is_const<ptr_traits::const_reference>::value );
 }
 

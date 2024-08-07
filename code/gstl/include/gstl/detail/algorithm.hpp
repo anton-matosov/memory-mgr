@@ -491,31 +491,6 @@ page 577
 		}
 		return gstl::make_pair( first1, first2 );
 	}
-	/**
-		@brief Test whether the elements in two ranges are equal 
-		@details Compares the elements in the range [first1,last1)
-				with those in the range beginning at first2,
-				and returns true if the elements in both ranges are considered equal.
-
-				The elements are compared by either applying the == comparison operator
-				to each pair of corresponding elements, or the template parameter comp (for the second version).
-		
-		@param	first	Input iterators to the initial positions in a sequence
-		@param	last	Input iterators to the final positions in a sequence
-		@param	first2	Forward iterator to the initial position of the second sequence.
-						The comparison includes up to as many elements in this sequence
-						as in the above sequence.
-		@exception newer throws
-		
-		@return true if all the elements in the range [first1,last1)
-				compare equal to those of the range starting at first2, and false otherwise. 
-	*/
-	template<class InputIterator1, class InputIterator2>
-	bool equal( InputIterator1 first1, InputIterator1 last1,
-		InputIterator2 first2 )
-	{
-		return gstl::equal( first1, last1, first2, std::equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
-	}
 
 	/**
 		@brief Test whether the elements in two ranges are equal 
@@ -564,6 +539,31 @@ page 577
 			mismatch( first1, last1, first2, last2, pred );
 		return (result.first == last1) 
 			&& (result.second == last2);
+	}
+	/**
+		@brief Test whether the elements in two ranges are equal 
+		@details Compares the elements in the range [first1,last1)
+				with those in the range beginning at first2,
+				and returns true if the elements in both ranges are considered equal.
+
+				The elements are compared by either applying the == comparison operator
+				to each pair of corresponding elements, or the template parameter comp (for the second version).
+		
+		@param	first	Input iterators to the initial positions in a sequence
+		@param	last	Input iterators to the final positions in a sequence
+		@param	first2	Forward iterator to the initial position of the second sequence.
+						The comparison includes up to as many elements in this sequence
+						as in the above sequence.
+		@exception newer throws
+		
+		@return true if all the elements in the range [first1,last1)
+				compare equal to those of the range starting at first2, and false otherwise. 
+	*/
+	template<class InputIterator1, class InputIterator2>
+	bool equal( InputIterator1 first1, InputIterator1 last1,
+		InputIterator2 first2 )
+	{
+		return gstl::equal( first1, last1, first2, std::equal_to<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2>
@@ -1022,17 +1022,6 @@ page 577
 	ForwardIterator max_element( ForwardIterator first, ForwardIterator last,
 		Compare comp );
 
-	template<class InputIterator1, class InputIterator2>
-	bool lexicographical_compare( InputIterator1 first1, InputIterator1 last1,
-		InputIterator2 first2, InputIterator2 last2 )
-	{
-		BOOST_CONCEPT_ASSERT(( boost::LessThanOp< 
-			GSTL_ITER_VALUE_TYPE( InputIterator1 ),
-			GSTL_ITER_VALUE_TYPE( InputIterator2 )> ));
-		return gstl::lexicographical_compare( first1, last1, first2, last2, 
-			std::less<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
-	}
-
 	/**
 		@brief		Lexicographical less-than comparison
 
@@ -1079,6 +1068,17 @@ page 577
  		}
 
 		return first1 == last1 && first2 != last2;
+	}
+
+	template<class InputIterator1, class InputIterator2>
+	bool lexicographical_compare( InputIterator1 first1, InputIterator1 last1,
+		InputIterator2 first2, InputIterator2 last2 )
+	{
+		BOOST_CONCEPT_ASSERT(( boost::LessThanOp< 
+			GSTL_ITER_VALUE_TYPE( InputIterator1 ),
+			GSTL_ITER_VALUE_TYPE( InputIterator2 )> ));
+		return gstl::lexicographical_compare( first1, last1, first2, last2, 
+			std::less<GSTL_ITER_VALUE_TYPE( InputIterator1 )>() );
 	}
 
 	// 25.3.9, permutations

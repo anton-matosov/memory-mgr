@@ -21,9 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 
 #include <gstl/vector>
+#include "memory-mgr/detail/allocator_base.h"
 #include <vector>
 #include "operations_tracer.hpp"
 #include "test_class.hpp"
@@ -43,14 +46,14 @@ BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
 	typedef std::vector<test_value_type>	std_vector;
 	typedef gstl::vector<test_value_type>	gstl_vector;
 	typedef gstl::vector<test_value_type,
-		memory_mgr::allocator<test_value_type, ptr_alloc_mgr> >			memory_mgr_vector;
+		memory_mgr::allocator<test_value_type, heap_singleton_mgr, memory_mgr::detail::raw_pointers<test_value_type>> >			memory_mgr_vector;
 	typedef gstl::vector<test_value_type,
-		memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
+		memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_vector;
 	typedef gstl::vector<test_value_type,
-		memory_mgr::offset_allocator<test_value_type, off_alloc_mgr> >	memory_mgr_old_off_vector;
+		memory_mgr::offset_allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_old_off_vector;
 
-	typedef boost::mpl::list< /**std_vector,/**/ gstl_vector/**/, memory_mgr_vector/**/,
-		memory_mgr_off_vector/**/, 	memory_mgr_old_off_vector/**/ > t_list;
+	typedef boost::mpl::list< std_vector, gstl_vector, memory_mgr_vector,
+		memory_mgr_off_vector, 	memory_mgr_old_off_vector > t_list;
 
 	#include "detail/test_construction_throw.hpp"
 	#include "detail/test_assign_throw.hpp"

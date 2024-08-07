@@ -37,7 +37,5 @@ typedef memory_mgr::heap_segment
 	memory_mgr::memory_manager<size_t, 64 * 1024, 4> 
 > heap_mgr;
 
-typedef memory_mgr::singleton_manager<heap_mgr > ptr_alloc_mgr;
-
-typedef memory_mgr::singleton_manager<heap_mgr> off_alloc_mgr;
+typedef memory_mgr::singleton_manager<heap_mgr > heap_singleton_mgr;
 

@@ -39,8 +39,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_access_operators, container_type, t_list )
 	Returns: operator[](pos).
 	*/
 	BOOST_CHECK_EQUAL( cont.at( test_pos ),  cont[test_pos] );
-	BOOST_CHECK_THROW( cont.at( cont.size() ),  std::out_of_range );
-	BOOST_CHECK_THROW( cont.at( cont.size() + 1 ),  std::out_of_range );
+	BOOST_CHECK_THROW( (void)cont.at( cont.size() ),  std::out_of_range );
+	BOOST_CHECK_THROW( (void)cont.at( cont.size() + 1 ),  std::out_of_range );
 
 	//Constant container test
 	const container_type const_cont( cont );
@@ -48,8 +48,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_access_operators, container_type, t_list )
 
 	BOOST_CHECK_EQUAL( const_cont[test_pos],  arr[test_pos] );
 	BOOST_CHECK_EQUAL( const_cont.at( test_pos ),  cont[test_pos] );
-	BOOST_CHECK_THROW( const_cont.at( const_cont.size() ),  std::out_of_range );
-	BOOST_CHECK_THROW( const_cont.at( const_cont.size() + 1 ),  std::out_of_range );
+	BOOST_CHECK_THROW( (void)const_cont.at( const_cont.size() ),  std::out_of_range );
+	BOOST_CHECK_THROW( (void)const_cont.at( const_cont.size() + 1 ),  std::out_of_range );
 }
 
 

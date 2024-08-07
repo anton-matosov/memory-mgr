@@ -1,7 +1,7 @@
 #pragma once
 
 //  This file is the adaptation for Generic Memory Manager library
-//  
+//
 //  make_shared.hpp
 //
 //  Copyright (c) 2007, 2008 Peter Dimov
@@ -15,6 +15,7 @@
 //  for documentation.
 
 #include <boost/config.hpp>
+#include "memory-mgr/offset_ptr.h"
 #include "memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp"
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/alignment_of.hpp>
@@ -106,9 +107,10 @@ template< class T > T&& sp_forward( T & t )
 
 template< class T, class Arg1, class... Args > memory_mgr::shared_ptr< T > make_shared( Arg1 && arg1, Args && ... args )
 {
-    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >() );
+    using deleter_type = memory_mgr::detail::sp_ms_deleter< T >;
+    memory_mgr::shared_ptr< T > pt( memory_mgr::offset_ptr<T>(), deleter_type() );
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
+    deleter_type* pd = memory_mgr::get_deleter<deleter_type>(pt);
 
     void * pv = pd->address();
 

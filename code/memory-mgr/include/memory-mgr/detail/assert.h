@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -23,12 +23,24 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <assert.h>
+#include <iostream> // std::cerr
+#include <cstdlib> // std::abort
 
 #define MGR_NULL_ASSERT( expr, message )
 
+#define MGR_VERIFY( expr, message ) \
+    do { \
+        if (!(expr)) { \
+            std::cerr << "Assertion failed: (" << #expr << "), function " << __FUNCTION__ \
+                      << ", file " << __FILE__ << ", line " << __LINE__ << ".\n" \
+                      << "Message: " << message << std::endl; \
+            __builtin_trap(); \
+            std::abort(); \
+        } \
+    } while (false)
+
 #ifdef MGR_ENABLE_ASSERTS
-#	define MGR_ASSERT( expr, message ) assert( expr && message )
+#	define MGR_ASSERT( expr, message ) MGR_VERIFY( expr, message )
 #else
 #	define MGR_ASSERT MGR_NULL_ASSERT
 #endif

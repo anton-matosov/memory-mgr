@@ -19,7 +19,7 @@
 #include "memory-mgr/memory_manager.h"
 #include "memory-mgr/memory_segment.h"
 #include "memory-mgr/memory_usage_tracker.h"
-// #include "memory-mgr/named_objects.h"
+#include "memory-mgr/named_objects.h"
 #include "memory-mgr/new.h"
 #include "memory-mgr/offset_allocator.h"
 #include "memory-mgr/offset_pointer.h"
@@ -46,7 +46,7 @@
 #include "memory-mgr/detail/math.h"
 #include "memory-mgr/detail/member_allocator_impl.h"
 #include "memory-mgr/detail/mgr_impl_allocator.h"
-// #include "memory-mgr/detail/named_allocator.h" // Requires fixing Generic STL
+#include "memory-mgr/detail/named_allocator.h"
 #include "memory-mgr/detail/new_helpers.h"
 #include "memory-mgr/detail/offset_ptr_base.h"
 #include "memory-mgr/detail/offset_traits.h"

@@ -65,7 +65,7 @@ template class gstl::stack<int>;
 
 template class gstl::priority_queue<int>;
 
-// template class gstl::queue<int>; // queue needs deque which is not implemented yet
+template class gstl::queue<int, gstl::list<int>>; // queue needs deque which is not implemented yet, so use list instead
 template class gstl::map<int, int>;
 template class gstl::map<gstl::string, gstl::wstring>;
 

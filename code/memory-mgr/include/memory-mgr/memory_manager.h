@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -51,7 +51,7 @@ namespace memory_mgr
 
 	template
 	<
-		class  ChunkType, 
+		class  ChunkType,
 		size_t MemorySize,
 		size_t ChunkSize
 	>
@@ -116,11 +116,11 @@ namespace memory_mgr
 	   @tparam OffsetType  type that will be used to store memory offset
 	   @tparam SyncObj     Synchronization object that will be used to
 	                      synchronize access to internal structures
-	                      during management operations               
+	                      during management operations
 	*/
 	template
 	<
-		class ChunkType, 
+		class ChunkType,
 		size_t MemorySize,
  		size_t ChunkSize,
 		class SyncObj = sync::critical_section
@@ -148,22 +148,22 @@ namespace memory_mgr
 			allocable_memory	= calc_type::result_allocable_memory /**< size of memory that can be allocated*/,
 			allocable_chunks	= calc_type::result_allocable_chunks /**< number of memory chunks that can be allocated*/
 		};
-		
-	private:	
 
-		
+	private:
+
+
 		/**
 		   @brief bit manager type, used to manipulate chunks bitmap
 		*/
 		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcAuto> bitmgr_type;
-		
+
 		enum
 		{
 			offset_shift = sizeof(bitmgr_type),
 		};
 
 	public:
-		
+
 		typedef memory_manager								self_type;
 
 		typedef memory_manager_tag							manager_category;
@@ -173,7 +173,7 @@ namespace memory_mgr
 
 		typedef typename bitmgr_type::size_type				size_type;
 		typedef typename bitmgr_type::bit_position_type				bit_position_type;
-		
+
 		typedef SyncObj										sync_object_type;
 		typedef typename sync::object_level_lockable<sync_object_type> lockable_type;
 
@@ -186,7 +186,7 @@ namespace memory_mgr
 		   @brief memory offset type that is used to store offset from the base segment address
 		*/
 		typedef ulonglong block_offset_type;
-		
+
 		/**
 		@brief	memory block id type
 		@details objects of this type identify memory blocks
@@ -212,7 +212,7 @@ namespace memory_mgr
 					memory passed as parameter
 		   @param segment_base  Pointer to memory which will be managed by
 		                    manager, before first use First four bytes (dword) of memory
-							segment must be zeroed                   
+							segment must be zeroed
 		*/
 		explicit memory_manager( void* segment_base )
 			:m_bitmgr( static_cast<bitmgr_type*>( segment_base ) ),
@@ -223,7 +223,7 @@ namespace memory_mgr
 				m_bitmgr = new(segment_base) bitmgr_type();
 			}
 		}
-		
+
 		/**
 		   @brief Call this method to allocate memory block
 		   @param size size of memory block in bytes
@@ -237,10 +237,10 @@ namespace memory_mgr
 
 		/**
 		   @brief Call this method to allocate memory block
-		   @param size    size of memory block in bytes 
+		   @param size    size of memory block in bytes
 		   @param nothrow  unused parameter, just to overload existing
 		                   function
-		   
+
 		   @exception newer  throws
 		   @return pointer to the allocated memory
 		*/
@@ -275,7 +275,15 @@ namespace memory_mgr
 		/**
 		   @add_comments
 		*/
-		inline block_offset_type pointer_to_offset( const void* ptr )
+		#if defined(MGR_WINDOWS_PLATFORM)
+			// Inlining causes wrong optimization at O2 and ends up generating wrong bad pointer on Windows only
+			// I am yet to find what is going wrong there
+			// https://matosov.atlassian.net/browse/CODECRAFT-33
+			__declspec(noinline)
+		#else
+			inline
+		#endif
+		block_offset_type pointer_to_offset( const void* ptr )
 		{
 			if( ptr )
 			{
@@ -297,11 +305,11 @@ namespace memory_mgr
 		/**
 		   @brief Call this method to know is there available memory in
 		   manager
-		   
+
 		   @exception newer  throws
 		   @retval true   if there is no more free memory to
 		                  allocate
-		   @retval false  otherwise                                    
+		   @retval false  otherwise
 		*/
 		inline bool empty()
 		{
@@ -312,7 +320,7 @@ namespace memory_mgr
 		   @brief Call this method to know that there is no allocated blocks
 		   @exception newer  throws
 		   @retval true   no blocks are allocated by this manager
-		   @retval false  otherwise                                     
+		   @retval false  otherwise
 		*/
 		inline bool is_free()
 		{
@@ -321,7 +329,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Call this method to deallocate all allocated memory
-		   @exception newer  throws                                     
+		   @exception newer  throws
 		*/
 		inline void clear()
 		{
@@ -334,18 +342,18 @@ namespace memory_mgr
 // 		   is calculated
 // 		   @param offset offset for which base address should be returned
 // 		   @exception newer  throws
-// 		   @return pointer to memory base address                               
+// 		   @return pointer to memory base address
 // 		*/
 // 		inline const char* get_offset_base( const block_offset_type /*offset*/ = 0 ) const
 // 		{
 // 			return m_offset_base;
 // 		}
-// 
+//
 // 		inline char* get_offset_base( block_offset_type /*offset*/ = 0 )
 // 		{
 // 			return m_offset_base;
 // 		}
-// 
+//
 // 		/**
 // 		   @add_comments
 // 		*/
@@ -353,7 +361,7 @@ namespace memory_mgr
 // 		{
 // 			return m_offset_base;
 // 		}
-// 
+//
 // 		inline char* get_ptr_base( void* /*ptr*/ ) const
 // 		{
 // 			return m_offset_base;
@@ -363,7 +371,7 @@ namespace memory_mgr
 		{
 			return m_lockable;
 		}
-	
+
 	protected:
 		/**
 		   @brief Returns offset by chunk index
@@ -398,7 +406,7 @@ namespace memory_mgr
 
 		/**
 		   @brief Returns number of chunks required to store requested
-		   bytes number		   
+		   bytes number
 		   @param size size in bytes
 		   @exception newer  throws
 		*/
@@ -422,7 +430,7 @@ namespace memory_mgr
 			{
 				ptr = this->allocate( sizeof( value_type ) * num_items );
 				value_type* pp = (value_type*)get_pointer( ptr );
-				
+
 				for( int i = 0; i < num_items; ++ i )
 				{
 					::new( pp + i ) value_type();
@@ -451,7 +459,7 @@ namespace memory_mgr
 		   @return offset in bytes from memory base address.
 		   @param size         size of memory block in bytes
 		   @param OnNoMemoryOp  Callback for "out of memory" event
-		   @exception n/a Callback function can throw an exception, 
+		   @exception n/a Callback function can throw an exception,
 		   but by itself method never throws
 		*/
 		template< class OnNoMemory >
@@ -467,7 +475,7 @@ namespace memory_mgr
 			return offset_to_pointer( calc_offset( chunk_ind ) );
 		}
 
-		
+
 		/**
 		   @brief Call this method to deallocate memory block
 		   @param offset  offset returned by allocate method
@@ -486,22 +494,22 @@ namespace memory_mgr
 
 		/**
 		@brief Bit Manager used to store information about allocated
-		memory chunks                                               
+		memory chunks
 		*/
 		bitmgr_type* m_bitmgr;
 
 		/**
-		@brief Pointer to memory segment base address                                                
+		@brief Pointer to memory segment base address
 		*/
 		char* m_segment_base;
 
 		lockable_type m_lockable;
-	};	
+	};
 }
 
 /**
    @brief Helper macros, using it you can easily create derived class from memory manager
-   @details 
+   @details
 */
 #define MGR_DECLARE_MANAGER_TRAITS(name, manager_type)	\
 	namespace memory_mgr{								\

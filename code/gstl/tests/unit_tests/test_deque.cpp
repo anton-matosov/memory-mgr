@@ -29,7 +29,7 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include "operations_tracer.hpp"
 #include "managers.hpp"
 
-class vector_fixture
+class deque_fixture
 {
 public:
 	typedef gstl::test::operations_tracer<int>	tracer_type;
@@ -38,15 +38,15 @@ public:
 };
 
 
-BOOST_FIXTURE_TEST_SUITE( vector_test, vector_fixture )
+BOOST_FIXTURE_TEST_SUITE( deque_test, deque_fixture )
 
 
 
 typedef int								test_value_type;
 typedef std::deque<test_value_type>		std_deque;
 typedef gstl::deque<test_value_type>		gstl_deque;
-typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, ptr_alloc_mgr> > memory_mgr_deque;
-typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_deque;
+typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, heap_singleton_mgr> > memory_mgr_deque;
+typedef gstl::deque<test_value_type, memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_deque;
 
 typedef boost::mpl::list< /**/std_deque/**/, gstl_deque/**/, memory_mgr_deque/**/, memory_mgr_off_deque/**/> t_list;
 

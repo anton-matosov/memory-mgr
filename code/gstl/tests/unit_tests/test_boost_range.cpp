@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 #include <gstl/string>
 #include <boost/range.hpp>
@@ -36,7 +38,7 @@ BOOST_FIXTURE_TEST_SUITE( boost_range_test, boost_range_fixture )
 
 BOOST_AUTO_TEST_CASE(test_make_range)
 {
-	gstl::string string;
+	gstl::string string = "hello range";
 	boost::make_iterator_range(string);
 	boost::make_iterator_range(string.begin(), string.end());
 

@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 
 #include <gstl/stack>
@@ -49,9 +51,9 @@ typedef std::stack<test_value_type>		std_stack;
 
 typedef gstl::vector<test_value_type>	gstl_vector;
 typedef gstl::vector<test_value_type,
-	memory_mgr::allocator<test_value_type, ptr_alloc_mgr> >			memory_mgr_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr, memory_mgr::detail::raw_pointers<test_value_type>> >			memory_mgr_vector;
 typedef gstl::vector<test_value_type,
-	memory_mgr::allocator<test_value_type, off_alloc_mgr> >	memory_mgr_off_vector;
+	memory_mgr::allocator<test_value_type, heap_singleton_mgr> >	memory_mgr_off_vector;
 
 typedef gstl::stack<test_value_type, gstl_vector>		gstl_vec_stack;
 typedef gstl::stack<test_value_type, memory_mgr_vector>		gstl_memory_mgr_vec_stack;

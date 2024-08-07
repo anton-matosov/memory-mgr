@@ -22,6 +22,9 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
 
+#include <boost/iterator/reverse_iterator.hpp>
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 #include <deque>
 #include <boost/foreach.hpp>
@@ -52,6 +55,24 @@ template struct gstl::iterator_traits<int_iter_t>;
 template struct gstl::iterator_traits<int*>;
 template struct gstl::iterator_traits<const int*>;
 
+typedef std::deque<int> int_deque_type;
+template class gstl::back_insert_iterator<int_deque_type>;
+template class gstl::front_insert_iterator<int_deque_type>;
+template class gstl::insert_iterator<int_deque_type>;
+
+template class gstl::istream_iterator<int>;
+template class gstl::ostream_iterator<int>;
+template class gstl::istreambuf_iterator<char>;
+template class gstl::ostreambuf_iterator<char>;
+
+namespace std
+{
+template <class Iterator>
+ostream& operator<<(ostream& os, const ::boost::reverse_iterator<Iterator>& i)
+{
+ return os << i.base();
+}
+}  // namespace std
 
 BOOST_FIXTURE_TEST_SUITE( iterator_test, iterator_test_fixture )
 
@@ -416,15 +437,6 @@ BOOST_AUTO_TEST_CASE( test_reverse_iterator )
 	const_nonconst_iterator_test(i, ++j);
 }
 
-	typedef std::deque<int> int_deque_type;
-	template class gstl::back_insert_iterator<int_deque_type>;
-	template class gstl::front_insert_iterator<int_deque_type>;
-	template class gstl::insert_iterator<int_deque_type>;
-
-	template class gstl::istream_iterator<int>;
-	template class gstl::ostream_iterator<int>;
-	template class gstl::istreambuf_iterator<char>;
-	template class gstl::ostreambuf_iterator<char>;
 
 BOOST_AUTO_TEST_CASE( test_insert_iterators )
 {

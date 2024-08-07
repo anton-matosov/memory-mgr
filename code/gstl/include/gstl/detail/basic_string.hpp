@@ -503,9 +503,10 @@ namespace gstl
 			GSTL_DEBUG_RANGE( first, last );
 			if( first != last )
 			{
-				//TODO: erase chars
-				//size_type rlen = last - first;
-				traits_type::copy( &*first, &*last, end() - last );
+				// Move characters from the tail
+				traits_type::move( &*first, &*last, end() - last );
+
+				// Update the end of the string
 				this->set_end( size() - (last - first) );
 			}
 			return last;
@@ -1042,6 +1043,9 @@ namespace gstl
 		}
 	};
 
+	template<class CharT, class Traits, class Alloc>
+	const typename basic_string<CharT, Traits, Alloc>::size_type
+								basic_string<CharT, Traits, Alloc>::npos;
 
 	template<class value_type, class traits, class allocator_type>
 	basic_string<value_type, traits, allocator_type>

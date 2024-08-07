@@ -21,10 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 */
 
+#include <boost/test/unit_test.hpp>
+#include "test_common.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
+#include <random>
 #include <algorithm>
 #include <gstl/allocator>
 
@@ -36,13 +39,16 @@ typedef std::vector<size_t, gstl::allocator<size_t > > vector_type;
 template class std::vector<size_t, gstl::allocator<size_t > >;
 
 typedef std::map<size_t, size_t, std::less<size_t>,  gstl::allocator< std::pair<const size_t, size_t> > > map_type;
-template class std::map<size_t, size_t, std::less<size_t>,  gstl::allocator< std::pair<size_t, size_t> > >;
+template class std::map<size_t, size_t, std::less<size_t>,  gstl::allocator< std::pair<const size_t, size_t> > >;
 
 class allocator_test_fixture
 {
 protected:
-	static const size_t items_count = 1000;
+	const size_t items_count = 1000;
+
 	def_vector_type vec;
+	std::random_device random_device;
+	std::mt19937 random_generator{random_device()};
 public:
 	allocator_test_fixture()
 	{
@@ -51,7 +57,7 @@ public:
 		{
 			*it = rand() % items_count;
 		}
-		std::random_shuffle( vec.begin(), vec.end() );
+		std::shuffle( vec.begin(), vec.end(), random_generator);
 	}
 };
 

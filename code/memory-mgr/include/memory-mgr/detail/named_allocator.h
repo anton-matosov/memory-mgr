@@ -23,6 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
+#include "gstl/hash.hpp"
+#include "gstl/string"
 #include "memory-mgr/allocator_decorator.h"
 #include "memory-mgr/manager_traits.h"
 #include "memory-mgr/offset_allocator.h"
@@ -33,12 +35,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/ptr_helpers.h"
 
 #include <boost/unordered_map.hpp>
+
 #include <functional>
-#include <gstl/hash.hpp>
-#include <gstl/string>
 #include <map>
 #include <string>
-
 
 namespace memory_mgr
 {

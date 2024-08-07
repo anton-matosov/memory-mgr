@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -26,7 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/types.h"
 
 namespace memory_mgr
-{	
+{
 	/**
 	   @brief Memory offset traits
 	   @details Stores associated types and values, e.g. invalid_offset
@@ -144,5 +144,5 @@ namespace memory_mgr
 	};
 
 	template<class T>
-	const typename offset_traits<T*>::offset_type offset_traits<T*>::invalid_offset = 0;
+	const typename offset_traits<T*>::offset_type offset_traits<T*>::invalid_offset = nullptr;
 }
