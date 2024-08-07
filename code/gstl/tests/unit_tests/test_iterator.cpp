@@ -198,10 +198,10 @@ template <bool is_pointer> struct lvalue_test
 		typedef typename Iterator::reference reference;
 		typedef typename Iterator::value_type value_type;
 # endif
-		BOOST_STATIC_ASSERT(boost::is_reference<reference>::value);
-		BOOST_STATIC_ASSERT((boost::is_same<reference,value_type&>::value
+		static_assert(boost::is_reference<reference>::value, "reference is not a reference type");
+		static_assert((boost::is_same<reference,value_type&>::value
 			|| boost::is_same<reference,const value_type&>::value
-			));
+			), "reference is not value_type& or const value_type&");
 	}
 };
 

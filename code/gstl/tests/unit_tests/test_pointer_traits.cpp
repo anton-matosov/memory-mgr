@@ -45,14 +45,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_ptr_traits, ptr_type, pointer_types_list )
 {
 	typedef gstl::pointer_traits<ptr_type> ptr_traits;
 
-	BOOST_STATIC_ASSERT( boost::is_pointer<typename ptr_traits::pointer>::value );
-	BOOST_STATIC_ASSERT( boost::is_pointer<typename ptr_traits::const_pointer>::value );
-	BOOST_STATIC_ASSERT( boost::is_reference<typename ptr_traits::reference>::value );
-	BOOST_STATIC_ASSERT( boost::is_reference<typename ptr_traits::const_reference>::value );
+	static_assert( boost::is_pointer<typename ptr_traits::pointer>::value, "" );
+	static_assert( boost::is_pointer<typename ptr_traits::const_pointer>::value, "" );
+	static_assert( boost::is_reference<typename ptr_traits::reference>::value, "" );
+	static_assert( boost::is_reference<typename ptr_traits::const_reference>::value, "" );
 
-	BOOST_STATIC_ASSERT( ! boost::is_const<typename ptr_traits::value_type>::value );
-	BOOST_STATIC_ASSERT( ! boost::is_volatile<typename ptr_traits::value_type>::value );
-	//BOOST_STATIC_ASSERT( boost::is_const<ptr_traits::const_reference>::value );
+	static_assert( ! boost::is_const<typename ptr_traits::value_type>::value, "" );
+	static_assert( ! boost::is_volatile<typename ptr_traits::value_type>::value, "" );
+	//static_assert( boost::is_const<ptr_traits::const_reference>::value, "" );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
