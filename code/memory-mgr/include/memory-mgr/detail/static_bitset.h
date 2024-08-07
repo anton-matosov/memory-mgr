@@ -26,7 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/assert.h"
 #include "memory-mgr/detail/helpers.h"
 #include "memory-mgr/detail/math.h"
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/detail/type_manip.h"
 #include "memory-mgr/detail/types.h"
 
@@ -294,12 +293,12 @@ class static_bitset : public detail::array<BlockType, BitsCount, StaticArr>
 
   // Default constructor
   // Resets all bits
-  inline static_bitset() { STATIC_ASSERT(num_bits != 0, Bitset_cant_be_empty); }
+  inline static_bitset() { static_assert(num_bits != 0, Bitset_cant_be_empty); }
 
   // Constructor used only by custom arrays to initialize
   // array's pointer
   template<typename U = block_ptr_type>
-  inline explicit static_bitset(block_ptr_type bits_ptr, std::enable_if_t<std::is_constructible<base_type, U>::value>* = 0) : base_type(bits_ptr) { STATIC_ASSERT(num_bits != 0, Bitset_cant_be_empty); }
+  inline explicit static_bitset(block_ptr_type bits_ptr, std::enable_if_t<std::is_constructible<base_type, U>::value>* = 0) : base_type(bits_ptr) { static_assert(num_bits != 0, Bitset_cant_be_empty); }
 
   inline ~static_bitset() {}
 

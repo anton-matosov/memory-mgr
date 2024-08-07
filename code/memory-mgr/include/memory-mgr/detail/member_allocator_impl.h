@@ -44,7 +44,7 @@ namespace memory_mgr
 			inline member_allocator_impl( mgr_type* mgr )
 				:m_mgr( mgr )
 			{
- 				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value)
+ 				static_assert( (is_category_supported< mgr_type, memory_manager_tag >::value)
 					, invalid_memory_manager_class );
 			}
 

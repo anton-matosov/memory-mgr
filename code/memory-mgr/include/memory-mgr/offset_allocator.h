@@ -65,7 +65,7 @@ namespace memory_mgr
 		// construct default offset_allocator (do nothing)
 		inline offset_allocator()
 		{
-			STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
+			static_assert( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
 				//(is_category_supported< mgr_type, size_tracking_tag >::value) &&
 				//(is_category_supported< mgr_type, pointer_conversion_tag >::value) &&
 				(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );

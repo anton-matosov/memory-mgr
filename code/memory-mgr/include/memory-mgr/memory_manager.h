@@ -204,7 +204,7 @@ namespace memory_mgr
 			   @warning If you use explicit template instantiation you will get this error
 						don't remove this assert, better remove explicit template instantiation
 			*/
-			STATIC_ASSERT( false, Default_constructor_cant_be_used_for_creation_of_memory_manage );
+			static_assert( false, Default_constructor_cant_be_used_for_creation_of_memory_manage );
 		}
 
 		/**

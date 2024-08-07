@@ -49,10 +49,10 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 	{
 		mgr_type mgr;
 
-		BOOST_CHECKPOINT( "Allocating one object" );
+		BOOST_TEST_CHECKPOINT( "Allocating one object" );
 		mgr.allocate( chunk_size, std::nothrow_t() );
 		
-		BOOST_CHECKPOINT( "Clear memory" );
+		BOOST_TEST_CHECKPOINT( "Clear memory" );
 		mgr.clear();
 
 		BOOST_CHECK( mgr.is_free() );
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 		block_id_type p = 0;
 		
 		ptrs.reserve( allocable_chunks );
-		BOOST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
+		BOOST_TEST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
 		for( size_t i = 0; i < allocable_chunks; ++i )
 		{
 			p = segmgr.allocate( chunk_size, std::nothrow_t() ) ;
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 
 		std::random_shuffle( ptrs.begin(), ptrs.end() );
 
-		BOOST_CHECKPOINT( "Dellocating all objects" );
+		BOOST_TEST_CHECKPOINT( "Dellocating all objects" );
 		for ( typename ptrs_vec::const_iterator it = ptrs.begin(); it != ptrs.end(); ++it )
 		{
 			segmgr.deallocate( *it, chunk_size );
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_SUITE( test_segment_manager )
 		ptrs_vec ptrs;
 
 		ptrs.reserve( allocable_chunks );
-		BOOST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
+		BOOST_TEST_CHECKPOINT( "Allocating maximum allowed number of the objects" );
 		for( size_t i = 0; i < allocable_chunks && test::is_valid_ptr( p ); ++i )
 		{
 			p = segmgr.allocate( chunk_size, std::nothrow_t() );

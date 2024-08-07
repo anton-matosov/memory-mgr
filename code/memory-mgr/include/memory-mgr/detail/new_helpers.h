@@ -23,7 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/manager_category.h"
 
 #include <cstddef>
@@ -48,32 +47,32 @@ namespace memory_mgr
 
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}
 
 			static inline void* allocate( size_t /*size*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}
 
 			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}	
 
 			static inline void destroy_and_deallocate_array( void* /*p*/, mgr_type& /*mgr*/, const char* /*name*/ )
 			{
-				STATIC_ASSERT( false, Invalid_manager_type );
+				static_assert( false, Invalid_manager_type );
 			}			
 		};
 
@@ -110,7 +109,7 @@ namespace memory_mgr
 			*/
 			static inline void* allocate( size_t size, mgr_type& mgr, const char* name )
 			{
-				STATIC_ASSERT( (is_category_supported< mgr_type, named_objects_manager_tag>::value),		
+				static_assert( (is_category_supported< mgr_type, named_objects_manager_tag>::value),		
 					Memory_manager_does_not_implement_named_objects_concept );
 				return mgr.allocate( size, name );
 			}
@@ -267,7 +266,7 @@ namespace memory_mgr
 			mem_mgr_wrapper( mgr_type& mgr )
 				:m_mgr( mgr )
 			{
-				STATIC_ASSERT( size_tracking_check::value, 
+				static_assert( size_tracking_check::value, 
 					Memory_manager_does_not_implement_size_tracking_concept );
 			}
 

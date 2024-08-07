@@ -123,13 +123,13 @@ namespace memory_mgr
 	private:
 		inline const_pointer do_get_pointer() const
 		{
-			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
+			static_assert( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
 			return static_cast<const_pointer>( detail::offset_to_pointer( this->m_offset, mgr_type::instance() ) );
 		}
 
 		inline void do_set_pointer( const_pointer ptr )
 		{
-			STATIC_ASSERT( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
+			static_assert( (is_category_supported< mgr_type, singleton_manager_tag>::value), Memory_manager_should_be_singleton_manager );
 			this->m_offset = detail::pointer_to_offset( ptr, mgr_type::instance() );
 		}
 	

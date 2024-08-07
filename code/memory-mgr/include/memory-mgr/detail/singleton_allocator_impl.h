@@ -42,7 +42,7 @@ namespace memory_mgr
 
 			inline singleton_allocator_impl()
 			{
-				STATIC_ASSERT( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
+				static_assert( (is_category_supported< mgr_type, memory_manager_tag >::value) &&
 					(is_category_supported< mgr_type, singleton_manager_tag >::value), Invalid_memory_manager_class );
 
 			}

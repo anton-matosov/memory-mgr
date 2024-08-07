@@ -25,7 +25,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/manager_category.h"
 #include "memory-mgr/manager_traits.h"
-#include "memory-mgr/detail/static_assert.h"
 
 namespace memory_mgr
 {
@@ -61,7 +60,7 @@ namespace memory_mgr
 			*/
 			inline decorator_base()
 			{
-				STATIC_ASSERT( (is_category_supported< mgr_type, memory_segment_tag >::value),
+				static_assert( (is_category_supported< mgr_type, memory_segment_tag >::value),
 					Memory_manager_does_not_have_attached_memory_segment );
 			}
 
