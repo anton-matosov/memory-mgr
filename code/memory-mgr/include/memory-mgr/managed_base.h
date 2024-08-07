@@ -25,7 +25,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/manager_category.h"
 #include "memory-mgr/new.h"
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/detail/ptr_helpers.h"
 
 namespace memory_mgr
@@ -71,8 +70,8 @@ namespace memory_mgr
 	protected:
 		~managed_base()
 		{
-			STATIC_ASSERT( (is_category_supported< mem_mgr, singleton_manager_tag>::value),
-				Memory_manager_does_not_implement_required_concepts );
+			static_assert( (is_category_supported< mem_mgr, singleton_manager_tag>::value),
+				"Memory manager does not implement required concepts" );
 		}
 
 		typedef MemMgr mem_mgr;

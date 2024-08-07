@@ -86,17 +86,17 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 	{
 		ptr_type null_ptr;
 
-		BOOST_CHECKPOINT( "dereferencing null ptr" );
+		BOOST_TEST_CHECKPOINT( "dereferencing null ptr" );
 		&*null_ptr;
 
-		BOOST_CHECKPOINT( "before deletion of null ptr" );
+		BOOST_TEST_CHECKPOINT( "before deletion of null ptr" );
 		::delete_<ptr_mem_mgr>( null_ptr );
-		BOOST_CHECKPOINT( "after deletion of null ptr" );
+		BOOST_TEST_CHECKPOINT( "after deletion of null ptr" );
 
 
-		BOOST_CHECKPOINT( "before deletion of null array" );
+		BOOST_TEST_CHECKPOINT( "before deletion of null array" );
 		::delete_array<ptr_mem_mgr>( null_ptr );
-		BOOST_CHECKPOINT( "after deletion of null array" );
+		BOOST_TEST_CHECKPOINT( "after deletion of null array" );
 	}
 
 	BOOST_AUTO_TEST_CASE( test_dereferencing )

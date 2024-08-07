@@ -273,14 +273,14 @@ BOOST_AUTO_TEST_SUITE( test_new )
 	{
 		int* null_ptr = 0;
 
-		BOOST_CHECKPOINT( "before deletion of null ptr" );
+		BOOST_TEST_CHECKPOINT( "before deletion of null ptr" );
 		delete_( mem_mgr<mgr_type>(), null_ptr );
-		BOOST_CHECKPOINT( "after deletion of null ptr" );
+		BOOST_TEST_CHECKPOINT( "after deletion of null ptr" );
 
 
-		BOOST_CHECKPOINT( "before deletion of null array" );
+		BOOST_TEST_CHECKPOINT( "before deletion of null array" );
 		delete_array( mem_mgr<mgr_type>(), null_ptr );
-		BOOST_CHECKPOINT( "after deletion of null array" );
+		BOOST_TEST_CHECKPOINT( "after deletion of null array" );
 	}
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_pointers_array, mgr_type, named_managers_list )
@@ -288,9 +288,9 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		typedef memory_mgr::offset_ptr<builtin_type> builtin_ptr;
 		builtin_ptr* arr( new_<builtin_ptr, mgr_type>( name1_arr )[129]() );
 
-		BOOST_CHECKPOINT( "before deletion of array" );
+		BOOST_TEST_CHECKPOINT( "before deletion of array" );
 		delete_array( mem_mgr<mgr_type>(), arr, name1_arr );
-		BOOST_CHECKPOINT( "after deletion of array" );
+		BOOST_TEST_CHECKPOINT( "after deletion of array" );
 	}
 BOOST_AUTO_TEST_SUITE_END();
 

@@ -59,7 +59,6 @@
 #include "memory-mgr/detail/singleton.h"
 #include "memory-mgr/detail/singleton_allocator_impl.h"
 #include "memory-mgr/detail/sp_typeinfo.hpp"
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/detail/static_bitset.h"
 #include "memory-mgr/detail/temp_buffer.h"
 #include "memory-mgr/detail/type_manip.h"

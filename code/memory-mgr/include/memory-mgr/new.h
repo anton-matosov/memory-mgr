@@ -26,7 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/config/config.h"
 #include "memory-mgr/sync/locks.h"
 #include "memory-mgr/manager_category.h"
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/detail/new_helpers.h"
 
 #include <boost/shared_ptr.hpp>

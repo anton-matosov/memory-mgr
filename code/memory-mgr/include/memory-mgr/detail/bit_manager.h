@@ -100,7 +100,7 @@ namespace memory_mgr
 				num_bits = BitsCount /**< number of bits available for allocations*/,
 			};
 
-			//STATIC_ASSERT( bitset_t::memory_usage == sizeof(bitset_t), MemeoryUsageCalculatedIncorrectly )
+			//static_assert( bitset_t::memory_usage == sizeof(bitset_t), "Memory Usage Calculated Incorrectly" )
 
 			static const size_type npos = bitset_t::npos;
 			

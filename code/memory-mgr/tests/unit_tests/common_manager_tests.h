@@ -23,7 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include "memory-mgr/detail/static_assert.h"
 #include "memory-mgr/detail/ptr_helpers.h"
 #include "memory-mgr/allocator.h"
 
@@ -33,7 +32,7 @@ namespace test
 	void test_data_validness_impl( MemMgr& mgr )
 	{
 		typedef memory_mgr::manager_traits<MemMgr> mgr_traits;
-		STATIC_ASSERT( mgr_traits::memory_size >= 64 * 1024/*minimum_memory_size*/, memory_size_is_too_small );
+		static_assert( mgr_traits::memory_size >= 64 * 1024/*minimum_memory_size*/, "memory size is too small" );
 
 		typedef ValueType									value_type;
 		typedef typename Allocator::template rebind<value_type>::other		allocator;
@@ -139,9 +138,9 @@ namespace test
 		typedef memory_mgr::manager_traits<memmgr_type>		traits_type;
 
 		void* p = NULL;
-		BOOST_CHECKPOINT( "before deallocation of null ptr" );
+		BOOST_TEST_CHECKPOINT( "before deallocation of null ptr" );
 		mgr.deallocate( p, 0 );
-		BOOST_CHECKPOINT( "after deallocation of null ptr" );
+		BOOST_TEST_CHECKPOINT( "after deallocation of null ptr" );
 	}
 
 	template<class MemMgr>
