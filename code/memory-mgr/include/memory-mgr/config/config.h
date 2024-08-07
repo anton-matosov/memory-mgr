@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 //#define DEBUG_MEMORY_POOLS
-#define MGR_ENABLE_ASSERTS
+// #define MGR_ENABLE_ASSERTS
 #define MGR_ENABLE_32_64_BIT_PROCESSES_INTEROPERABILITY
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
