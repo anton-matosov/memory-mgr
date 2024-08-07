@@ -9,3 +9,4 @@ target_link_libraries(${LIBRARY_NAME} INTERFACE VendorBoost gstl $<$<PLATFORM_ID
 target_compile_definitions(${LIBRARY_NAME} INTERFACE $<$<PLATFORM_ID:Windows>:NOMINMAX>)
 
 add_subdirectory(tests)
+add_subdirectory(examples)

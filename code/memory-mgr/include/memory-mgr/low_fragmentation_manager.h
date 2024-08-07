@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -40,7 +40,7 @@ namespace memory_mgr
 	{
 	public:
 		using base_type = detail::decorator_base<MemMgr>;
-		using typename base_type::void_ptr;
+		// using typename base_type::void_ptr;
 		using typename base_type::lock_type;
 		using typename base_type::size_type;
 		using typename base_type::decorated_mgr;
@@ -141,7 +141,7 @@ namespace memory_mgr
 			{
 				size_type segment_allocation_size = 1;
 				size_type pool_object_size = detail::get_allocation_size(size, segment_allocation_size);
-				pool = memory_mgr::make_shared<pool_type>( this->get_decorated_mgr(), 
+				pool = memory_mgr::make_shared<pool_type>( this->get_decorated_mgr(),
 					pool_object_size,
 					detail::get_pool_base_grow_size(segment_allocation_size),
 					detail::get_pool_max_grow_size(segment_allocation_size),
@@ -156,7 +156,7 @@ namespace memory_mgr
 	};
 
 	template< class MemMgr >
-	struct manager_traits< low_fragmentation_manager< MemMgr > > 
+	struct manager_traits< low_fragmentation_manager< MemMgr > >
 		: public manager_traits< MemMgr >
 	{
 		typedef MemMgr base_manager_type;

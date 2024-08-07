@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -22,12 +22,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 #include <iostream>
-#include <algorithm>
-#include <string>
 #include <conio.h>
 #include "memory-mgr/offset_ptr.h"
 #include "memory-mgr/allocator.h"
-#include "../unit_tests/managers.h"
+#include "../tests/unit_tests/managers.h"
+
+#include <boost/lexical_cast.hpp>
 
 static int variable = 123;
 static int* variablePtr = NULL;
@@ -59,7 +59,7 @@ void change_variable()
 
 }
 
-__declspec(noinline) 
+__declspec(noinline)
 void testAssign()
 {
 	//std::cout << *get_var2() << std::endl;
@@ -69,7 +69,7 @@ void testAssign()
 	//std::cout << *get_var2() << std::endl;
 }
 
-__declspec(noinline) 
+__declspec(noinline)
 void testPtrAssign()
 {
 	*get_pvar() = &variable;
@@ -91,12 +91,12 @@ void test_offset_ptr_optimizer_bug_2()
 
 	typedef gstl::basic_string<char, gstl::char_traits<char>, Allocator> MyString;
 
-	//for(int i = 0; i < 10000; ++i) 
+	//for(int i = 0; i < 10000; ++i)
 	{
 		const MyString orig(boost::lexical_cast<std::string>(rand()).c_str());
 		MyString str(orig.begin(), orig.end());
 
-		if (str != str.c_str()) 
+		// if (str != str.c_str())
 		{
 			//std::cout << "i = " << i << std::endl;
 			std::cout << "str = '" << str << "'" << std::endl;
