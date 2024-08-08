@@ -21,13 +21,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
-#include <vector>
 #include "memory-mgr/memory_manager.h"
 #include "memory-mgr/size_tracking.h"
 #include "common_manager_tests.h"
+#include "managers.h"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
+#include <vector>
 
 namespace
 {
@@ -50,7 +51,7 @@ BOOST_AUTO_TEST_SUITE( test_size_tracking )
 	{
 		typedef void* ptr_type;
 
-		std::vector<chunk_type> memory( memory_size );
+		std::vector<typename mgr_type::chunk_type> memory( mgr_type::memory_size );
 		mgr_type track_mgr( &*memory.begin() );
 
 		const typename memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_SUITE( test_size_tracking )
 		typedef sz_track_mgr		mgr_type;
 		typedef void*				ptr_type;
 
-		std::vector<chunk_type> memory( memory_size );
+		std::vector<typename mgr_type::chunk_type> memory( mgr_type::memory_size );
 		mgr_type track_mgr( &*memory.begin() );
 
 		const memory_mgr::manager_traits<mgr_type>::size_type obj_size = 4;
@@ -143,7 +144,7 @@ BOOST_AUTO_TEST_SUITE( test_size_tracking )
 	{
 		enum{ memory_size = 64 * 1024 };
 
-		typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
+		typedef memory_mgr::memory_manager<::chunk_type, memory_size, ::chunk_size > memmgr_type;
 		
 		test::test_data_validness<memory_mgr::size_tracking< memmgr_type > >();
 	}
