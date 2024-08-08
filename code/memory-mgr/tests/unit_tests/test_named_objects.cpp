@@ -34,6 +34,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/offset_traits.h"
 #include "common_manager_tests.h"
 
+
+#include <boost/test/unit_test.hpp>
+
 MGR_DECLARE_SEGMENT_NAME( segmentName, "shared segment" );
 MGR_DECLARE_SEGMENT_NAME( segmentNameTracked, "tracked shared segment" );
 

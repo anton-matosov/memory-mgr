@@ -26,6 +26,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/type_manip.h"
 #include "test_class.h"
 
+#include <boost/test/unit_test.hpp>
+
 struct Struct{};
 union Union{};
 

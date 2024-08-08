@@ -25,6 +25,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <stdio.h>
 #include "memory-mgr/detail/temp_buffer.h"
 
+#include <boost/test/unit_test.hpp>
+
 using memory_mgr::detail::char_buffer;
 using memory_mgr::detail::temp_buffer;
 

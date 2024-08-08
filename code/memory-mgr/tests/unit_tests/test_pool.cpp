@@ -26,6 +26,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "managers.h"
 #include "memory-mgr/pool/pool.hpp"
 
+
+#include <boost/test/unit_test.hpp>
+
 template class memory_mgr::pool<>;
 
 typedef memory_mgr::memory_mgr_pool_allocator<sing_shared_sz_mgr> memory_mgr_pool_allocator;

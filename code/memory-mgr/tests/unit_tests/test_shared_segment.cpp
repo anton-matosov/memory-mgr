@@ -29,6 +29,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/named_objects.h"
 #include "common_manager_tests.h"
 
+#include <boost/test/unit_test.hpp>
+
 namespace
 {
 	typedef unsigned int chunk_type;

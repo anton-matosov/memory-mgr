@@ -23,6 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/detail/static_bitset.h"
 #include <boost/mpl/list.hpp>
+
 #include <boost/test/unit_test.hpp>
 
 typedef memory_mgr::static_bitset<unsigned char, 32, memory_mgr::static_array> bitset_uchar_32_type;

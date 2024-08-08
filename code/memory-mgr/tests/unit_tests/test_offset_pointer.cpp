@@ -30,6 +30,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/new.h"
 
 
+#include <boost/test/unit_test.hpp>
+
 MGR_WRAP_SINGLETON_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
 template class memory_mgr::offset_ptr< builtin_type >;
