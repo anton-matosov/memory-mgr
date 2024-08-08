@@ -16,11 +16,11 @@
 
 #include <boost/config.hpp>
 #include "memory-mgr/offset_ptr.h"
+#include "memory-mgr/allocator.h"
 #include "memory-mgr/smart_ptr/smart_ptr/shared_ptr.hpp"
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <cstddef>
-#include "memory-mgr/allocator.h"
 
 namespace memory_mgr
 {
@@ -101,20 +101,19 @@ template< class T > T&& sp_forward( T & t )
 } // namespace detail
 
 
-#if defined( BOOST_HAS_VARIADIC_TMPL ) && defined( BOOST_HAS_RVALUE_REFS )
+#if defined( BOOST_HAS_VARIADIC_TMPL ) && defined( BOOST_HAS_RVALUE_REFS_ )
 
 // Variadic templates, rvalue reference
 
-template< class T, class Arg1, class... Args > memory_mgr::shared_ptr< T > make_shared( Arg1 && arg1, Args && ... args )
+template< class T, class Alloc, class... Args > memory_mgr::shared_ptr< T > allocate_shared( Alloc const & a, Args && ... args )
 {
-    using deleter_type = memory_mgr::detail::sp_ms_deleter< T >;
-    memory_mgr::shared_ptr< T > pt( memory_mgr::offset_ptr<T>(), deleter_type() );
+    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
 
-    deleter_type* pd = memory_mgr::get_deleter<deleter_type>(pt);
+    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
 
     void * pv = pd->address();
 
-    ::new( pv ) T( memory_mgr::detail::sp_forward<Arg1>( arg1 ), memory_mgr::detail::sp_forward<Args>( args )... );
+    ::new( pv ) T( memory_mgr::detail::sp_forward<Args>( args )... );
     pd->set_initialized();
 
     T * pt2 = static_cast< T* >( pv );
@@ -123,21 +122,18 @@ template< class T, class Arg1, class... Args > memory_mgr::shared_ptr< T > make_
     return memory_mgr::shared_ptr< T >( pt, pt2 );
 }
 
-template< class T, class A, class Arg1, class... Args > memory_mgr::shared_ptr< T > allocate_shared( A const & a, Arg1 && arg1, Args && ... args )
+template< class T, class MemMgr , class... Args>
+shared_ptr< T > make_shared(MemMgr& mgr , Args && ... args)
 {
-    memory_mgr::shared_ptr< T > pt( static_cast< T* >( 0 ), memory_mgr::detail::sp_ms_deleter< T >(), a );
+	memory_mgr::member_allocator<T, MemMgr> alloc( &mgr );
+	return memory_mgr::allocate_shared<T>( alloc , memory_mgr::detail::sp_forward<Args>( args )... );
+}
 
-    memory_mgr::detail::sp_ms_deleter< T > * pd = memory_mgr::get_deleter< memory_mgr::detail::sp_ms_deleter< T > >( pt );
-
-    void * pv = pd->address();
-
-    ::new( pv ) T( memory_mgr::detail::sp_forward<Arg1>( arg1 ), memory_mgr::detail::sp_forward<Args>( args )... );
-    pd->set_initialized();
-
-    T * pt2 = static_cast< T* >( pv );
-
-    memory_mgr::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
-    return memory_mgr::shared_ptr< T >( pt, pt2 );
+template< class T, class MemMgr , class... Args>
+shared_ptr< T > make_shared( Args && ... args)
+{
+    memory_mgr::member_allocator<T, MemMgr> alloc;
+	return memory_mgr::allocate_shared<T>( alloc , memory_mgr::detail::sp_forward<Args>( args )... );
 }
 
 #else

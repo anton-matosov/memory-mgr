@@ -24,17 +24,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/manager_traits.h"
-#include "memory-mgr/allocator_decorator.h"
 #include "memory-mgr/detail/mgr_impl_allocator.h"
 #include "memory-mgr/detail/member_allocator_impl.h"
-#include "memory-mgr/detail/polymorphic_allocator.h"
-
 #include "memory-mgr/detail/singleton_allocator_impl.h"
-#include "memory-mgr/smart_ptr/make_shared.hpp"
 
 namespace memory_mgr
 {
-	
+
 #define MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( allocator_type )				\
 	template<class Other>																\
 	struct rebind																		\
@@ -94,28 +90,6 @@ namespace memory_mgr
 	};
 	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( allocator );
 
-	template<class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
-	class polymorphic_allocator
-		:public allocator_decorator<T, RebindPointersFrom>
-	{
-	public:
-		typedef MemMgr		mgr_type;
-		typedef allocator_decorator<T, RebindPointersFrom> base_type;
-		typedef detail::singleton_allocator_impl<MemMgr, detail::polymorphic_allocator > impl_type;
-
-		typedef polymorphic_allocator	self_type;
-		using typename base_type::pointers_types;
-
-		// construct default allocator (do nothing)
-		inline polymorphic_allocator()
-			: base_type( make_shared<impl_type, mgr_type>() )
-		{
-		}
-
-		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( polymorphic_allocator )
-	};
-	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( polymorphic_allocator );
-
 	template< class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
 	class member_allocator
 		:public detail::mgr_impl_allocator<T, MemMgr, detail::member_allocator_impl< MemMgr >, RebindPointersFrom >
@@ -134,24 +108,4 @@ namespace memory_mgr
 		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( member_allocator )
 	};
 	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( member_allocator );
-
-	template< class T, class MemMgr, class RebindPointersFrom = detail::offset_pointers<T> >
-	class polymorphic_member_allocator
-		:public allocator_decorator<T, RebindPointersFrom>
-	{
-	public:
-		typedef MemMgr mgr_type;
-		typedef allocator_decorator<T, RebindPointersFrom> base_type;
-		typedef detail::member_allocator_impl< MemMgr, detail::polymorphic_allocator > impl_type;
-		using typename base_type::pointers_types;
-
-		// construct allocator from pointer to manager
-		inline polymorphic_member_allocator( mgr_type* mgr )
-			:base_type( mgr ? make_shared<impl_type>( *mgr, mgr ) : base_type::pimpl_type() )
-		{
-		}
-
-		MGR_DECLARE_ALLOCATOR_REBIND_AND_ASSIGN_OPERATORS( polymorphic_member_allocator )
-	};
-	MGR_DECLARE_ALLOCATOR_CMP_OPERATORS( polymorphic_member_allocator );
 }

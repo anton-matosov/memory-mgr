@@ -30,12 +30,12 @@ namespace memory_mgr
 {
 	namespace detail
 	{
-		class polymorphic_allocator
+		class polymorphic_allocator_base
 		{
 		public:
 			typedef ::memory_mgr::detail::portable_size_t size_type;
 
-			virtual ~polymorphic_allocator()
+			virtual ~polymorphic_allocator_base()
 			{
 			}
 
@@ -44,7 +44,7 @@ namespace memory_mgr
 
 			virtual void deallocate( void* ptr, size_type size ) = 0;
 
-			virtual bool equal( const polymorphic_allocator& rhs ) const /*throw()*/ = 0;
+			virtual bool equal( const polymorphic_allocator_base& rhs ) const /*throw()*/ = 0;
 
 		};
 	}
