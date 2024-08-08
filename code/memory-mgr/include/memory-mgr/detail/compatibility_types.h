@@ -26,7 +26,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/config/config.h"
 #include "memory-mgr/detail/types.h"
 
-#include <inttypes.h>
+#include <cstdint>
 
 namespace memory_mgr
 {

@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include "memory-mgr/detail/polymorphic_allocator.h"
+#include "memory-mgr/detail/polymorphic_allocator_base.h"
 #include "memory-mgr/detail/allocator_base.h"
 #include "memory-mgr/smart_ptr/shared_ptr.hpp"
 
@@ -36,7 +36,7 @@ namespace memory_mgr
 	public:
 		typedef allocator_decorator self_type;
 		typedef detail::allocator_base<T, RebindPointersFrom> base_type;
-		typedef detail::polymorphic_allocator impl_type;
+		typedef detail::polymorphic_allocator_base impl_type;
 		typedef shared_ptr<impl_type> pimpl_type;
 
 		using typename base_type::value_type;

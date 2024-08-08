@@ -38,6 +38,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <map>
 #include <boost/unordered_map.hpp>
 
+#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE( test_low_fragmentation_manager )
 

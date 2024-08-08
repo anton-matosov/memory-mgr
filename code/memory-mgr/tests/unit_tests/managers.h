@@ -43,7 +43,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 typedef int chunk_type;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 200 * 1024 * 1024;
-static const size_t memory_size_small = 32 * 1024;
 static const size_t segments_count = 1024;
 
 typedef memory_mgr::sync::critical_section critical_section;
@@ -52,14 +51,11 @@ MGR_DECLARE_BIND_PARAM( MutexName2, const char*, "Default memory sync 2" );
 typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName2 ) def_named_mutex2;
 
 typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section > memmgr_type_base;
-typedef memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, critical_section > memmgr_small_type_base;
 
 #ifdef MEMORY_MGR_DEBUG_MEMORY
 	typedef memory_mgr::memory_debug< memmgr_type_base > memmgr_type;
-	typedef memory_mgr::memory_debug< memmgr_small_type_base > memmgr_small_type;
 #else
 	typedef memmgr_type_base memmgr_type;
-	typedef memmgr_small_type_base memmgr_small_type;
 #endif // MEMORY_MGR_DEBUG_MEMORY
 
 
@@ -92,12 +88,6 @@ typedef memory_mgr::singleton_manager
 <
 	sz_lfm_heap_sz_mgr
 > sing_sz_lfm_heap_sz_mgr;
-
-//////////////////////////////////////////////////////////////////////////
-typedef memory_mgr::heap_segment
-<
-	memmgr_type
-> heap_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

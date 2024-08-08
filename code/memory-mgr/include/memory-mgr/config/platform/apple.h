@@ -39,6 +39,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <unistd.h>  //ftruncate, close
 
 #include <string>
+#include <boost/interprocess/sync/named_recursive_mutex.hpp>
 
 namespace memory_mgr
 {
@@ -88,6 +89,41 @@ static inline int close_file_mapping(const std::string& name, mapping_handle_t m
 {
   shm_unlink(name.c_str());
   return osapi::close_handle(mapping);
+}
+
+
+using mutex_handle_t = pthread_mutex_t*;
+
+static inline mutex_handle_t create_mutex(const std::string& name )
+{
+  throw std::runtime_error("Named mutex is not implemented yet ");
+  return nullptr;
+}
+
+static inline mutex_handle_t open_mutex(const std::string& name, ulong access )
+{
+  throw std::runtime_error("Named mutex is not implemented yet ");
+  return nullptr;
+}
+
+static inline bool release_mutex(mutex_handle_t handle)
+{
+  throw std::runtime_error("Named mutex is not implemented yet ");
+}
+
+enum lock_status{ lock_aquired, lock_abandoned, lock_timeout, lock_failed };
+
+
+static inline lock_status lock_mutex( mutex_handle_t mutex )
+{
+  throw std::runtime_error("Named mutex is not implemented yet ");
+  return lock_failed;
+}
+
+static inline bool unlock_mutex( mutex_handle_t mutex )
+{
+  throw std::runtime_error("Named mutex is not implemented yet ");
+  return false;
 }
 
 static inline std::string get_executable_path()

@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/detail/assert.h"
 #include <limits>
+#include <cstdint>
 
 namespace memory_mgr
 {
@@ -181,7 +182,7 @@ namespace memory_mgr
 		{
 			MGR_ASSERT(x != 0, "prcondition check failed");
 
-			static const char num_clear_low_bits[] =
+			static const int8_t num_clear_low_bits[] =
 					  { -1,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
 						5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,

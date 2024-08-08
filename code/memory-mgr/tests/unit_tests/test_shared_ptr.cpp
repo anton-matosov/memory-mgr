@@ -36,6 +36,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/smart_ptr/make_shared.hpp"
 #include "managers.h"
 #include "memory-mgr/new.h"
+
+#include <boost/test/unit_test.hpp>
+
 //template class memory_mgr::scoped_ptr<int>;
 //template class memory_mgr::scoped_array<int>;
 template class memory_mgr::shared_ptr<int>;
