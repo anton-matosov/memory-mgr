@@ -33,7 +33,7 @@ target_sources(${TARGET} PRIVATE
   # test_shared_segment.cpp
   # test_size_tracking.cpp
   test_static_bitset.cpp
-  # test_temp_buffer.cpp
+  test_temp_buffer.cpp
   test_type_manip.cpp
 
   unit_tests.cpp

@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 using memory_mgr::detail::char_buffer;
 using memory_mgr::detail::temp_buffer;
 
-template class temp_buffer<char>;
+template class memory_mgr::detail::temp_buffer<char>;
 
 const char test_array[] = "Test array";
 const size_t test_array_len = sizeof( test_array )/sizeof( char );
