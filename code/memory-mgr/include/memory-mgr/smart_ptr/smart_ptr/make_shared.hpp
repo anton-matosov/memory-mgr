@@ -101,7 +101,7 @@ template< class T > T&& sp_forward( T & t )
 } // namespace detail
 
 
-#if defined( BOOST_HAS_VARIADIC_TMPL ) && defined( BOOST_HAS_RVALUE_REFS_ )
+#if defined( BOOST_HAS_VARIADIC_TMPL ) && defined( BOOST_HAS_RVALUE_REFS )
 
 // Variadic templates, rvalue reference
 
