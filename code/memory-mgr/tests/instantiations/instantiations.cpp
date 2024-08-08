@@ -78,20 +78,21 @@ template class memory_mgr::static_bitset<unsigned int, 128, memory_mgr::static_a
 template class memory_mgr::static_bitset<unsigned long, 128, memory_mgr::static_array>;
 template class memory_mgr::static_bitset<unsigned long long, 256, memory_mgr::static_array>;
 
-
-using chunk_type = int ;
+using chunk_type = int;
 static const size_t chunk_size = 4;
 static const size_t memory_size = 200 * 1024 * 1024;
-static const size_t memory_size_small = 32 * 1024;
 static const size_t segments_count = 1024;
 
-using critical_section = memory_mgr::sync::critical_section ;
+using critical_section = memory_mgr::sync::critical_section;
 
-MGR_DECLARE_BIND_PARAM( MutexName2, const char*, "Default memory sync 2" );
-typedef MGR_BINDED( memory_mgr::sync::named_mutex, MutexName2 ) def_named_mutex2;
+MGR_DECLARE_BIND_PARAM(MutexName2, const char*, "Default memory sync 2");
+typedef MGR_BINDED(memory_mgr::sync::named_mutex, MutexName2) def_named_mutex2;
 
-using memmgr_type_base = memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section > ;
-using memmgr_small_type_base = memory_mgr::memory_manager<chunk_type, memory_size_small, chunk_size, critical_section > ;
+using memmgr_type = memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section>;
+template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical_section>;
+
+template class memory_mgr::heap_segment<memmgr_type>;
+template class memory_mgr::shared_segment<memmgr_type>;
 
 int main()
 {

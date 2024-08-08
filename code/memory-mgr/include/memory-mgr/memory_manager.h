@@ -135,6 +135,22 @@ namespace memory_mgr
 
 		template<class Mgr>
 		friend class decorator_base;
+
+		/**
+		   @brief Default constructor, declared only to
+					support decorators technology
+		*/
+		memory_manager()
+		{
+			/**
+			   @warning If you use explicit template instantiation you will get this error
+						don't remove this assert, better remove explicit template instantiation
+
+						Constructor is private now and decorator_base is friend.
+						Figure out why decorators needed this c-tor
+			*/
+			// static_assert( false, "Default constructor cant be used for creation of memory manage" );
+		}
 	public:
 		/**
 		   @brief compile time computed constants
@@ -193,19 +209,6 @@ namespace memory_mgr
 		e.g. objects of this type are retured by allocate method
 		*/
 		typedef block_offset_type							block_id_type;
-
-		/**
-		   @brief Default constructor, declared only to
-					support decorators technology
-		*/
-		memory_manager()
-		{
-			/**
-			   @warning If you use explicit template instantiation you will get this error
-						don't remove this assert, better remove explicit template instantiation
-			*/
-			static_assert( false, "Default constructor cant be used for creation of memory manage" );
-		}
 
 		/**
 		   @brief Constructor, performs initialization of manager and
