@@ -94,6 +94,18 @@ template class memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, c
 template class memory_mgr::heap_segment<memmgr_type>;
 template class memory_mgr::shared_segment<memmgr_type>;
 
+using heap_sz_mgr = memory_mgr::heap_segment<memory_mgr::size_tracking<memmgr_type> >;
+template class memory_mgr::heap_segment<memory_mgr::size_tracking<memmgr_type> >;
+
+template class memory_mgr::shared_segment<memory_mgr::size_tracking<memmgr_type> >;
+
+// using sz_lfm_heap_sz_mgr = memory_mgr::size_tracking<memory_mgr::low_fragmentation_manager<memory_mgr::named_objects<heap_sz_mgr> > >;
+// template class memory_mgr::size_tracking<memory_mgr::low_fragmentation_manager<memory_mgr::named_objects<heap_sz_mgr> > >;
+// template class memory_mgr::singleton_manager<sz_lfm_heap_sz_mgr>;
+
+template class memory_mgr::singleton_manager<memory_mgr::heap_segment<memory_mgr::size_tracking<memmgr_type> > >;
+template class memory_mgr::singleton_manager<memory_mgr::shared_segment<memory_mgr::size_tracking<memmgr_type> > >;
+
 int main()
 {
     return 0;
