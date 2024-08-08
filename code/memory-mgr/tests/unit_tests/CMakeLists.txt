@@ -10,8 +10,7 @@ target_sources(${TARGET} PRIVATE
   # pool/time_pool_alloc.cpp
 
   common_manager_tests.h
-  # detect_memory_leaks.cpp
-  # detect_memory_leaks.h
+  $<$<PLATFORM_ID:Windows>:detect_memory_leaks.cpp>
   managers.h
 
   # test_allocator.cpp
