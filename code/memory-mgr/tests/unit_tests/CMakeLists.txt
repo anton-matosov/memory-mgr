@@ -13,7 +13,7 @@ target_sources(${TARGET} PRIVATE
   $<$<PLATFORM_ID:Windows>:detect_memory_leaks.cpp>
   managers.h
 
-  # test_allocator.cpp
+  test_allocator.cpp
   test_bit_manager.cpp
   test_class.cpp
   test_class.h

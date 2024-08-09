@@ -69,7 +69,7 @@ namespace memory_mgr
 
 		// construct allocator from pointer to manager
 		inline polymorphic_member_allocator( mgr_type* mgr )
-			:base_type( mgr ? make_shared<impl_type>( *mgr, mgr ) : base_type::pimpl_type() )
+			:base_type( mgr ? make_shared<impl_type>( *mgr, mgr ) : typename base_type::pimpl_type() )
 		{
 		}
 
