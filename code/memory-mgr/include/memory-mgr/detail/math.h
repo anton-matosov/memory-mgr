@@ -172,8 +172,6 @@ namespace memory_mgr
 		template <typename T>
 		static inline  int lowest_bit(T x)
 		{
-			MGR_ASSERT(x >= 1, "prcondition check failed"); // PRE
-
 			using UT = typename boost::make_unsigned<T>::type;
 
 			auto ux = static_cast<UT>(x);

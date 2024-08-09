@@ -147,7 +147,7 @@ namespace memory_mgr
 		}
 
 		static inline std::string get_executable_path()
-		{		
+		{
 			/*
 			Linux:
 			/proc/<pid>/exe

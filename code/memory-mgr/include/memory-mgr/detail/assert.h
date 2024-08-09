@@ -23,8 +23,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include "memory-mgr/config/config.h"
-
 #include "memory-mgr/detail/debug_break.h"
 
 #include <cstdlib>   // std::abort
@@ -38,10 +36,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
     if (!(expr))                                                                                                                                                         \
     {                                                                                                                                                                    \
       std::cerr << "Assertion failed: (" << #expr << "), " << message << " | function: " << __FUNCTION__ << "\nFile " << __FILE__ << ", line " << __LINE__ << std::endl; \
-      if (osapi::running_under_debugger())                                                                                                                               \
-        debug_break();                                                                                                                                                   \
-      else                                                                                                                                                               \
-        std::abort();                                                                                                                                                    \
+      std::abort();                                                                                                                                                      \
     }                                                                                                                                                                    \
   } while (false)
 
