@@ -29,7 +29,7 @@ target_sources(${TARGET} PRIVATE
   test_pool.cpp
   # test_segment_manager.cpp
   # test_shared_ptr.cpp
-  # test_shared_segment.cpp
+  test_shared_segment.cpp
   test_size_tracking.cpp
   test_static_bitset.cpp
   test_temp_buffer.cpp
