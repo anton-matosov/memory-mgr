@@ -32,6 +32,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <unistd.h>		//ftruncate, close
 #include <sys/stat.h>	//mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
 
+#include <sys/types.h>
+#include <sys/ptrace.h>
+
 #include <sstream>
 #include <iostream>
 
@@ -161,6 +164,20 @@ namespace memory_mgr
 			link << "/proc/" << getpid() << "/exe";
 			readlink( link.str().c_str(), path, path.count() );	
 			return path.get();
+		}
+
+		static inline bool running_under_debugger()
+		{
+			static bool isCheckedAlready = false;
+			static bool underDebugger = false;
+			static std::once_flag flag;
+			std::call_once(flag, [](){
+					if (ptrace(PTRACE_TRACEME, 0, 1, 0) < 0)
+							underDebugger = true;
+					else ptrace(PTRACE_DETACH, 0, 1, 0);
+					isCheckedAlready = true;
+			});
+			return underDebugger;
 		}
 	}
 }

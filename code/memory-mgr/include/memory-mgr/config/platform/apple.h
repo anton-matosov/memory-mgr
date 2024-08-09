@@ -38,6 +38,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <sys/syslimits.h>
 #include <unistd.h>  //ftruncate, close
 
+#include <sys/types.h>
+#include <sys/ptrace.h>
+
 #include <string>
 #include <boost/interprocess/sync/named_recursive_mutex.hpp>
 
@@ -143,6 +146,23 @@ static inline std::string get_executable_path()
     // printf("proc %d: %s\n", pid, pathbuf);
     return std::string(pathbuf);
   }
+}
+
+static inline bool running_under_debugger()
+{
+  static bool isCheckedAlready = false;
+  static bool underDebugger = false;
+  // static std::once_flag flag;
+  // std::call_once(flag,
+  //                []()
+  //                {
+  //                  if (ptrace(PT_TRACE_ME, 0, 1, 0) < 0)
+  //                    underDebugger = true;
+  //                  else
+  //                    ptrace(PT_DETACH, 0, 1, 0);
+  //                  isCheckedAlready = true;
+  //                });
+  return underDebugger;
 }
 
 }  // namespace osapi

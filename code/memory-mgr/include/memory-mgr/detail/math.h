@@ -24,6 +24,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/detail/assert.h"
+
+#include <boost/type_traits/make_unsigned.hpp>
+
 #include <limits>
 #include <cstdint>
 
@@ -171,9 +174,13 @@ namespace memory_mgr
 		{
 			MGR_ASSERT(x >= 1, "prcondition check failed"); // PRE
 
+			using UT = typename boost::make_unsigned<T>::type;
+
+			auto ux = static_cast<UT>(x);
+
 			// clear all bits on except the rightmost one,
 			// then calculate the logarithm base 2
-			return integer_log2<T>( x - ( x & (x-1) ) );
+			return integer_log2<UT>( ux - ( ux & (ux-1) ) );
 
 		}
 
