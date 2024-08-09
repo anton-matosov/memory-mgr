@@ -22,7 +22,7 @@ target_sources(${TARGET} PRIVATE
   test_managed_base.cpp
   test_math.cpp
   test_memory_manager.cpp
-  # test_memory_segment.cpp
+  test_memory_segment.cpp
   # test_named_objects.cpp
   # test_new.cpp
   # test_offset_pointer.cpp

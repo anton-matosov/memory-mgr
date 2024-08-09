@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 MGR_WRAP_SINGLETON_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
