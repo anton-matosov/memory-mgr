@@ -21,22 +21,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
+#include "managers.h"
 
-
+#include "memory-mgr/allocator.h"
+#include "memory-mgr/heap_segment.h"
 #include "memory-mgr/memory_manager.h"
+#include "memory-mgr/offset_allocator.h"
+#include "memory-mgr/polymorphic_allocator.h"
 #include "memory-mgr/singleton_manager.h"
 #include "memory-mgr/size_tracking.h"
-#include "memory-mgr/heap_segment.h"
-#include "memory-mgr/allocator.h"
-#include "memory-mgr/offset_allocator.h"
-#include "managers.h"
-#include <string>
-#include <vector>
-#include <map>
-#include <boost/unordered_map.hpp>
-
 
 #include <boost/test/unit_test.hpp>
+#include <boost/unordered_map.hpp>
+
+#include <map>
+#include <string>
+#include <vector>
 
 typedef memory_mgr::singleton_manager
 < 
@@ -68,7 +68,7 @@ typedef std::vector<int, poly_member_alloc> poly_member_alloc_vector_type;
 template class std::vector<int, allocator >;
 
 //////////////////////////////////////////////////////////////////////////
-typedef memory_mgr::allocator< std::pair<int, int>, allocator_manager, std::allocator<void> > map_allocator;
+typedef memory_mgr::allocator< std::pair<const int, int>, allocator_manager, std::allocator<void> > map_allocator;
 typedef memory_mgr::offset_allocator< std::pair<int, int>, allocator_manager > map_offset_allocator;
 
 typedef std::map<int, int, std::less<int>, map_offset_allocator > map_type;
