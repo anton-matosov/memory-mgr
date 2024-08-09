@@ -23,11 +23,11 @@ target_sources(${TARGET} PRIVATE
   test_math.cpp
   test_memory_manager.cpp
   test_memory_segment.cpp
-  # test_named_objects.cpp
+  test_named_objects.cpp
   # test_new.cpp
   # test_offset_pointer.cpp
   test_pool.cpp
-  # test_segment_manager.cpp
+  # test_segment_manager.cpp # not implemented
   # test_shared_ptr.cpp
   test_shared_segment.cpp
   test_size_tracking.cpp
