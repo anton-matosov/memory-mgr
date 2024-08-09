@@ -86,12 +86,11 @@ namespace memory_mgr
 		class allocate_unnamed_impl
 			:public allocate_base<T, MemMgr>
 		{
+		public:
 			using base_type = allocate_base<T, MemMgr>;
 			using typename base_type::mgr_type;
 			using typename base_type::helper_type;
 			using typename base_type::lockable_type;
-
-		public:
 
 			allocate_unnamed_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
 				: base_type( mgr )
