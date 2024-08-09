@@ -5,9 +5,9 @@ target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${TARGET} memory-mgr)
 
 target_sources(${TARGET} PRIVATE
-  # pool/sys_allocator.hpp
+  pool/sys_allocator.hpp
   # pool/test_pool_alloc.cpp
-  # pool/time_pool_alloc.cpp
+  # pool/time_pool_alloc.cpp # TODO: Move this to performance tests
 
   common_manager_tests.h
   $<$<PLATFORM_ID:Windows>:detect_memory_leaks.cpp>
@@ -26,7 +26,7 @@ target_sources(${TARGET} PRIVATE
   # test_named_objects.cpp
   # test_new.cpp
   # test_offset_pointer.cpp
-  # test_pool.cpp
+  test_pool.cpp
   # test_segment_manager.cpp
   # test_shared_ptr.cpp
   # test_shared_segment.cpp

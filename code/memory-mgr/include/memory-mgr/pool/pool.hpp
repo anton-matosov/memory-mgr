@@ -484,7 +484,7 @@ namespace memory_mgr {
 				}
 
 				// We do not increment prev_free_p because we are in the same block
-				free_p = nextof(free_p);
+				free_p = this->nextof(free_p);
 			}
 
 			// post: if the memory block has any chunks, free_p points to one of them
@@ -501,7 +501,7 @@ namespace memory_mgr {
 					do
 					{
 						prev_free_p = free_p;
-						free_p = nextof(free_p);
+						free_p = this->nextof(free_p);
 					} while (free_p && lt(free_p, end));
 				}
 				// This invariant is now restored:
@@ -531,7 +531,7 @@ namespace memory_mgr {
 				// Remove all entries in the free list from this block
 				if (!! prev_free_p )
 				{
-					nextof(prev_free_p) = free_p;
+					this->nextof(prev_free_p) = free_p;
 				}
 				else
 				{
