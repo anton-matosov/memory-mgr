@@ -28,7 +28,7 @@ target_sources(${TARGET} PRIVATE
   # test_offset_pointer.cpp
   test_pool.cpp
   # test_segment_manager.cpp # not implemented
-  # test_shared_ptr.cpp
+  test_shared_ptr.cpp
   test_shared_segment.cpp
   test_size_tracking.cpp
   test_static_bitset.cpp

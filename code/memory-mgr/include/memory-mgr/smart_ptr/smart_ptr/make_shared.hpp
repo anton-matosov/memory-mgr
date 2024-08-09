@@ -132,7 +132,7 @@ shared_ptr< T > make_shared(MemMgr& mgr , Args && ... args)
 template< class T, class MemMgr , class... Args>
 shared_ptr< T > make_shared( Args && ... args)
 {
-    memory_mgr::member_allocator<T, MemMgr> alloc;
+    memory_mgr::allocator<T, MemMgr> alloc;
 	return memory_mgr::allocate_shared<T>( alloc , memory_mgr::detail::sp_forward<Args>( args )... );
 }
 
