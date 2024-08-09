@@ -37,6 +37,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <sstream>
 #include <iostream>
+#include <mutex>
 
 #include "memory-mgr/detail/temp_buffer.h"
 #include "memory-mgr/detail/types.h"
@@ -168,14 +169,12 @@ namespace memory_mgr
 
 		static inline bool running_under_debugger()
 		{
-			static bool isCheckedAlready = false;
 			static bool underDebugger = false;
 			static std::once_flag flag;
 			std::call_once(flag, [](){
 					if (ptrace(PTRACE_TRACEME, 0, 1, 0) < 0)
 							underDebugger = true;
 					else ptrace(PTRACE_DETACH, 0, 1, 0);
-					isCheckedAlready = true;
 			});
 			return underDebugger;
 		}
