@@ -195,5 +195,10 @@ namespace memory_mgr
 		{
 			return ReleaseMutex( mutex ) != 0;
 		}
+
+		 static inline bool running_under_debugger()
+		 {
+		 	return IsDebuggerPresent() == TRUE;
+		 }
 	}
 }

@@ -23,24 +23,25 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include <iostream> // std::cerr
-#include <cstdlib> // std::abort
+#include "memory-mgr/detail/debug_break.h"
 
-#define MGR_NULL_ASSERT( expr, message )
+#include <cstdlib>   // std::abort
+#include <iostream>  // std::cerr
 
-#define MGR_VERIFY( expr, message ) \
-    do { \
-        if (!(expr)) { \
-            std::cerr << "Assertion failed: (" << #expr << "), function " << __FUNCTION__ \
-                      << ", file " << __FILE__ << ", line " << __LINE__ << ".\n" \
-                      << "Message: " << message << std::endl; \
-            __builtin_trap(); \
-            std::abort(); \
-        } \
-    } while (false)
+#define MGR_NULL_ASSERT(expr, message)
+
+#define MGR_VERIFY(expr, message)                                                                                                                                        \
+  do                                                                                                                                                                     \
+  {                                                                                                                                                                      \
+    if (!(expr))                                                                                                                                                         \
+    {                                                                                                                                                                    \
+      std::cerr << "Assertion failed: (" << #expr << "), " << message << " | function: " << __FUNCTION__ << "\nFile " << __FILE__ << ", line " << __LINE__ << std::endl; \
+      std::abort();                                                                                                                                                      \
+    }                                                                                                                                                                    \
+  } while (false)
 
 #ifdef MGR_ENABLE_ASSERTS
-#	define MGR_ASSERT( expr, message ) MGR_VERIFY( expr, message )
+#define MGR_ASSERT(expr, message) MGR_VERIFY(expr, message)
 #else
-#	define MGR_ASSERT MGR_NULL_ASSERT
+#define MGR_ASSERT MGR_NULL_ASSERT
 #endif

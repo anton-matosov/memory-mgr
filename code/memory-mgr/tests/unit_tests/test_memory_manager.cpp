@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_SUITE( test_memory_manager )
 
 	typedef unsigned int chunk_type;
 	const size_t chunk_size = 4;
-	const size_t memory_size = 20 * 1024;
+	const size_t memory_size = 200 * 1024; // 20 * 1024 causes build error
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 	typedef void* pointer;

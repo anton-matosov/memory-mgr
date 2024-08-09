@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/ptr_casts.h"
 
 #include <cstddef>
 
@@ -137,7 +138,6 @@ namespace memory_mgr
 				template<class T>
 				static inline void destroy( T* ptr )
 				{
-					ptr;//VS 2008 warning
 					(*ptr).~T();
 				}
 

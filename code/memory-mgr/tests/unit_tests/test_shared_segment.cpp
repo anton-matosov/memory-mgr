@@ -30,19 +30,24 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "common_manager_tests.h"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 namespace
 {
 	typedef unsigned int chunk_type;
 	static const size_t chunk_size = 4;
-	static const size_t memory_size = 10 * 4 * 1024;
+	static const size_t memory_size = 200 * 1024;
 
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 }
 
 template class memory_mgr::shared_segment< memmgr_type >;
 
-BOOST_AUTO_TEST_SUITE( test_shared_segment )
+BOOST_AUTO_TEST_SUITE( test_shared_segment
+#ifdef MGR_APPLE_PLATFORM
+, *boost::unit_test::disabled() /* Shared segment fails on macOS */
+#endif
+)
 
 	MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
 

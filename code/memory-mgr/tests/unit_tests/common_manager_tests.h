@@ -26,6 +26,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/ptr_helpers.h"
 #include "memory-mgr/allocator.h"
 
+#include <boost/test/unit_test.hpp>
+#include <map>
+
 namespace test
 {
 	template<class ValueType, class Allocator, class MemMgr>

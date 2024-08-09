@@ -344,6 +344,7 @@ public:
 // Move support
 
 #if defined( BOOST_HAS_RVALUE_REFS )
+    shared_ptr( const shared_ptr & r ) = default;
 
     shared_ptr( shared_ptr && r ): px( r.px ), pn() // never throws
     {

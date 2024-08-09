@@ -60,10 +60,10 @@ namespace memory_mgr
 		}
 
 		// construct allocator from pointer to manager
-		// inline allocator_decorator( pimpl_type pimpl )
-		// 	:m_pimpl( pimpl )
-		// {
-		// }
+		inline allocator_decorator( pimpl_type pimpl )
+			:m_pimpl( pimpl )
+		{
+		}
 
 		template<class other, class OtherRebindPointersFrom>
 		inline allocator_decorator( const allocator_decorator<other, OtherRebindPointersFrom>& rhs ) /*throw()*/
@@ -105,7 +105,6 @@ namespace memory_mgr
 		// destroy object at ptr
 		inline void destroy(pointer ptr)
 		{
-			ptr;//VS 2008 warning
 			(&*ptr)->~value_type();
 		}
 

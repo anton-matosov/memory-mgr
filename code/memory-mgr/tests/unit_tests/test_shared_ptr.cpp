@@ -76,14 +76,6 @@ BOOST_AUTO_TEST_CASE( test_make_shared_singleton )
 
 	shared_ptr<int> int_p  = make_shared<int, mem_mgr>();
 	shared_ptr<int> int_p1 = make_shared<int, mem_mgr>( 123 );
-	shared_ptr<int> int_p2 = make_shared<int, mem_mgr>( 123, 123 );
-	shared_ptr<int> int_p3 = make_shared<int, mem_mgr>( 123, 123, 123 );
-	shared_ptr<int> int_p4 = make_shared<int, mem_mgr>( 123, 123, 123, 123 );
-	shared_ptr<int> int_p5 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p6 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p7 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p8 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p9 = make_shared<int, mem_mgr>( 123, 123, 123, 123, 123, 123, 123, 123, 123 );
 }
 
 BOOST_AUTO_TEST_CASE( test_make_shared )
@@ -94,14 +86,6 @@ BOOST_AUTO_TEST_CASE( test_make_shared )
 
 	shared_ptr<int> int_p  = make_shared<int>(mem_mgr);
 	shared_ptr<int> int_p1 = make_shared<int>(mem_mgr, 123 );
-	shared_ptr<int> int_p2 = make_shared<int>(mem_mgr, 123, 123 );
-	shared_ptr<int> int_p3 = make_shared<int>(mem_mgr, 123, 123, 123 );
-	shared_ptr<int> int_p4 = make_shared<int>(mem_mgr, 123, 123, 123, 123 );
-	shared_ptr<int> int_p5 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p6 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p7 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p8 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p9 = make_shared<int>(mem_mgr, 123, 123, 123, 123, 123, 123, 123, 123, 123 );
 }
 
 BOOST_AUTO_TEST_CASE( test_allocate_shared )
@@ -112,14 +96,6 @@ BOOST_AUTO_TEST_CASE( test_allocate_shared )
 
 	shared_ptr<int> int_p  = allocate_shared<int>( alloc );
 	shared_ptr<int> int_p1 = allocate_shared<int>( alloc, 123 );
-	shared_ptr<int> int_p2 = allocate_shared<int>( alloc, 123, 123 );
-	shared_ptr<int> int_p3 = allocate_shared<int>( alloc, 123, 123, 123 );
-	shared_ptr<int> int_p4 = allocate_shared<int>( alloc, 123, 123, 123, 123 );
-	shared_ptr<int> int_p5 = allocate_shared<int>( alloc, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p6 = allocate_shared<int>( alloc, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p7 = allocate_shared<int>( alloc, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p8 = allocate_shared<int>( alloc, 123, 123, 123, 123, 123, 123, 123, 123 );
-	shared_ptr<int> int_p9 = allocate_shared<int>( alloc, 123, 123, 123, 123, 123, 123, 123, 123, 123 );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

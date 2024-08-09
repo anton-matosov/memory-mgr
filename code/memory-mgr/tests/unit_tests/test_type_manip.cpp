@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_SUITE( test_type_manip )
 
 	BOOST_AUTO_TEST_CASE( test_type_manip )
 	{	
-		memory_mgr::type_manip::int2type<1>::value;
+		(void)memory_mgr::type_manip::int2type<1>::value;
 
 		//////////////////////////////////////////////////////////////////////////
 		// select<>

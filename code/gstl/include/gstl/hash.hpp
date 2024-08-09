@@ -25,6 +25,8 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 
 #include "gstl/string"
 
+#include <boost/container_hash/hash.hpp>
+
 namespace boost
 {
 	template<class char_type, class traits, class allocator_type>

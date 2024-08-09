@@ -31,6 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 typedef 
 memory_mgr::singleton_manager
@@ -120,12 +121,9 @@ BOOST_AUTO_TEST_SUITE( test_new )
 		BOOST_REQUIRE_MESSAGE( (! memory_mgr::is_category_supported<
 			mgr_type, memory_mgr::memory_debugging_tag>::value),
 			"Deletion validation can't be performed when memory debbuging is enabled" );
-		
-#ifdef _WIN64
-		int* base_class_data = (int*)(((ulonglong*)base_ptr) + 1 /*vmptr_ size*/);
-#else
-		int* base_class_data = (int*)base_ptr + 1 /*vmptr_ size*/;
-#endif
+
+		int* base_class_data = (int*)(((uint8_t*)base_ptr) + sizeof(void*) /*vmptr_ size*/);
+
 		BOOST_CHECK_EQUAL( *base_class_data, 0xB );
 
 		//Derived class data
