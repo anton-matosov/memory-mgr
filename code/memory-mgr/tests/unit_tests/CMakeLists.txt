@@ -17,8 +17,8 @@ target_sources(${TARGET} PRIVATE
   test_bit_manager.cpp
   test_class.cpp
   test_class.h
-  # test_intrusive_ptr.cpp
-  # test_low_fragmentation_manager.cpp
+  test_intrusive_ptr.cpp
+  test_low_fragmentation_manager.cpp
   test_managed_base.cpp
   test_math.cpp
   test_memory_manager.cpp
