@@ -14,7 +14,7 @@ target_sources(${TARGET} PRIVATE
   managers.h
 
   # test_allocator.cpp
-  # test_bit_manager.cpp
+  test_bit_manager.cpp
   test_class.cpp
   test_class.h
   # test_intrusive_ptr.cpp

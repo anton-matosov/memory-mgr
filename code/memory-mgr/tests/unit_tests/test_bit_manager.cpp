@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_SUITE( test_bit_manager )
 		bit_manager bitmgr;
 
 		ptr_type p0 = bitmgr.allocate(0);
-		BOOST_CHECK_EQUAL(  p0,  bit_manager::npos );
+		BOOST_CHECK_EQUAL(  p0,  (ptr_type)bit_manager::npos );
 
 		ptr_type p1 = bitmgr.allocate(1);
 		BOOST_CHECK_EQUAL(  p1, 0U );
