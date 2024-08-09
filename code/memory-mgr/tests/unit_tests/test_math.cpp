@@ -27,12 +27,13 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 BOOST_AUTO_TEST_SUITE( test_math_module )
 
 
 	typedef boost::mpl::list< char, unsigned char, short, unsigned short, int, 
-		unsigned int, long, unsigned long, long long, unsigned long long, size_t> test_types_list;
+		unsigned int, long, unsigned long, long long, unsigned long long> test_types_list;
 
 	BOOST_AUTO_TEST_CASE_TEMPLATE( test_lowest_bit, test_type, test_types_list )
 	{
@@ -46,7 +47,7 @@ BOOST_AUTO_TEST_SUITE( test_math_module )
 		for( int i = 0; i < numBits; ++i )
 		{
 			test_type var = test_type(1) << i;
-			BOOST_CHECK_EQUAL( memory_mgr::math::lowest_bit<boost::make_unsigned<test_type>::type >( var ), i );
+			BOOST_CHECK_EQUAL( memory_mgr::math::lowest_bit(var), i );
 			BOOST_REQUIRE_EQUAL( memory_mgr::math::lowest_bit2( var ), i );
 		}
 	}
