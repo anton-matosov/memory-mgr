@@ -1,0 +1,17 @@
+{
+  "name": "Linux Dev Container",
+  "image": "catthehacker/ubuntu:act-22.04",
+  "customizations": {
+    "vscode": {
+      "settings": {
+      },
+      "extensions": [
+        "corker.vscode-micromamba",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "jeff-hykin.better-cpp-syntax"
+      ]
+    }
+  }
+}
