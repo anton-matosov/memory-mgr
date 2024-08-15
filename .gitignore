@@ -6,3 +6,4 @@ CMakeUserPresets.json
 
 # Clangd data
 /.cache/
+/compile_commands.json

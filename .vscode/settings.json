@@ -18,6 +18,8 @@
     "-DCMAKE_CXX_COMPILER=clang++",
     "-DCMAKE_C_COMPILER=clang",
   ],
+  "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+  "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
 
   "git.branchPrefix": "feature/",
   "git.enableSmartCommit": false,
