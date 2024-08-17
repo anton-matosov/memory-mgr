@@ -28,6 +28,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/detail/aux_data_decorator.h"
 #include "memory-mgr/detail/decorator_base.h"
 #include "memory-mgr/detail/ptr_helpers.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 namespace memory_mgr
 {
@@ -43,18 +44,20 @@ namespace memory_mgr
 
 	template< class MemMgr >
 	class size_tracking
-		: public detail::aux_data_decorator< MemMgr, unsigned long >
+		: public detail::aux_data_decorator< MemMgr, detail::portable_size_t >
 	{
-		typedef unsigned long size_tracking_type;
+		/**
+		   @brief size tracking implementation base class
+		*/
+		typedef detail::aux_data_decorator< MemMgr, detail::portable_size_t >	impl_base_type;
+
+		typedef typename impl_base_type::aux_data_type size_tracking_type;
+
 		/**
 		   @brief Memory manager class that should be decorated
 		*/
 		typedef MemMgr								mgr_type;
 
-		/**
-		   @brief size tracking implementation base class
-		*/
-		typedef detail::aux_data_decorator< mgr_type, unsigned long >	impl_base_type;
 
 	public:
 		using typename impl_base_type::size_type;

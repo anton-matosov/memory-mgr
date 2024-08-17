@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/manager_category.h"
+#include "memory-mgr/detail/compatibility_types.h"
 #include "memory-mgr/detail/ptr_casts.h"
 
 #include <cstddef>
@@ -131,7 +132,7 @@ namespace memory_mgr
 				template<class T>
 				static inline size_t get_objects_count( const T* p )
 				{
-					const size_t* full_size = size_cast(p) - 1;
+					const portable_size_t* full_size = size_cast(p) - 1;
 					return *full_size / sizeof(T);
 				}
 
