@@ -4,7 +4,9 @@ add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${TARGET} memory-mgr)
 
-add_elevated_manifest(${TARGET})
+# This fails in GHA CI for some reason with file not found error. 
+# Since UAC is disabled there and proper fix is to use local names in tests, skip it for now
+# add_elevated_manifest(${TARGET}) 
 add_boost_test(${TARGET})
 
 
