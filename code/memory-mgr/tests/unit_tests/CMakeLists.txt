@@ -4,6 +4,10 @@ add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${TARGET} memory-mgr)
 
+add_elevated_manifest(${TARGET})
+add_boost_test(${TARGET})
+
+
 target_sources(${TARGET} PRIVATE
   pool/sys_allocator.hpp
   # pool/test_pool_alloc.cpp
@@ -38,4 +42,3 @@ target_sources(${TARGET} PRIVATE
   unit_tests.cpp
 )
 
-add_boost_test(${TARGET})
