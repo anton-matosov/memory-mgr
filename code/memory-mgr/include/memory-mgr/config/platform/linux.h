@@ -56,7 +56,9 @@ namespace memory_mgr
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
-			pthread_mutexattr_t mutexattr;   // Mutex attribute variable
+			pthread_mutexattr_t mutexattr = {};   // Mutex attribute variable
+
+			pthread_mutexattr_init(&mutexattr);
 			// Set the mutex as a recursive mutex
 			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
 			pthread_mutex_init( cs, &mutexattr );
