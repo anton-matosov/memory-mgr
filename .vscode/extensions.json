@@ -9,6 +9,7 @@
     "eamodio.gitlens",
     "github.copilot",
     "github.vscode-pull-request-github",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
+    "github.vscode-github-actions"
   ]
 }

@@ -32,12 +32,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <unistd.h>		//ftruncate, close
 #include <sys/stat.h>	//mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
 
-// #include <sys/types.h>
-// #include <sys/ptrace.h>
+#include <sys/types.h>
+#include <sys/ptrace.h>
 
 #include <sstream>
 #include <iostream>
-// #include <mutex>
+#include <mutex>
 
 #include "memory-mgr/detail/temp_buffer.h"
 #include "memory-mgr/detail/types.h"
@@ -56,7 +56,9 @@ namespace memory_mgr
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
-			pthread_mutexattr_t mutexattr;   // Mutex attribute variable
+			pthread_mutexattr_t mutexattr = {};   // Mutex attribute variable
+
+			pthread_mutexattr_init(&mutexattr);
 			// Set the mutex as a recursive mutex
 			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
 			pthread_mutex_init( cs, &mutexattr );
@@ -167,17 +169,17 @@ namespace memory_mgr
 			return path.get();
 		}
 
-		// static inline bool running_under_debugger()
-		// {
-		// 	static bool underDebugger = false;
-		// 	static std::once_flag flag;
-		// 	std::call_once(flag, [](){
-		// 			if (ptrace(PTRACE_TRACEME, 0, 1, 0) < 0)
-		// 					underDebugger = true;
-		// 			else ptrace(PTRACE_DETACH, 0, 1, 0);
-		// 	});
-		// 	return underDebugger;
-		// }
+		static inline bool running_under_debugger()
+		{
+			static bool underDebugger = false;
+			static std::once_flag flag;
+			std::call_once(flag, [](){
+					if (ptrace(PTRACE_TRACEME, 0, 1, 0) < 0)
+							underDebugger = true;
+					else ptrace(PTRACE_DETACH, 0, 1, 0);
+			});
+			return underDebugger;
+		}
 	}
 }
 
