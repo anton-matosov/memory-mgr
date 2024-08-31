@@ -1,0 +1,33 @@
+{
+  "name": "Linux Dev Container",
+  "image": "catthehacker/ubuntu:act-22.04",
+
+  // "dockerFile": "Dockerfile",
+  "features": {
+    // "ghcr.io/meaningful-ooo/devcontainer-features/fish:1": {},
+    "ghcr.io/mamba-org/devcontainer-features/micromamba:1": {
+      // "envFile": "/tmp/environment.yml"
+      "envName": "default"
+    }
+  },
+  "onCreateCommand": "micromamba create -f environment.yml -y && echo micromamba activate default >> ~/.bashrc",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "cmake.buildDirectory": "${workspaceFolder}/build-linux",
+        // "lldb.library": "/opt/conda/envs/default/lib/liblldb.so",
+        "python.defaultInterpreterPath": "/opt/conda/envs/default/bin/python",
+        "cmake.cmakePath": "/opt/conda/envs/default/bin/cmake",
+      },
+      "extensions": [
+        "-corker.vscode-micromamba",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "jeff-hykin.better-cpp-syntax",
+        "vadimcn.vscode-lldb"
+      ]
+    }
+  }
+}
