@@ -30,7 +30,7 @@ namespace memory_mgr
 		template<class T>
 		void operator()( T* ptr )
 		{
-			typename Allocator::rebind<T>::other alloc;
+			typename Allocator::template rebind<T>::other alloc;
 			alloc.destroy( ptr );
 			alloc.deallocate( ptr, sizeof(T) );
 		}

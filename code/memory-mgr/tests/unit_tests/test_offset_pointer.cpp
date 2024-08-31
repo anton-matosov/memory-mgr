@@ -30,7 +30,9 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/new.h"
 
 
+#include <boost/test/tools/old/interface.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 MGR_WRAP_SINGLETON_MANAGER_CLASS( ptr_mem_mgr, def_heap_mgr );
 
@@ -42,7 +44,11 @@ template class memory_mgr::offset_pointer< builtin_type, ptr_mem_mgr >;
 template class memory_mgr::offset_pointer< base_test_class, ptr_mem_mgr >;
 template class memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr >;
 
-BOOST_AUTO_TEST_SUITE( test_offset_pointer )
+BOOST_AUTO_TEST_SUITE( test_offset_pointer 
+#ifndef MGR_WINDOWS_PLATFORM
+, *boost::unit_test::disabled() /* Named mutex is not implemented for non windows platforms yet */
+#endif
+)
 	
 	typedef memory_mgr::offset_ptr< builtin_type > builtin_ptr;
 	typedef memory_mgr::offset_ptr< base_test_class > base_class_ptr;
@@ -89,15 +95,15 @@ BOOST_AUTO_TEST_SUITE( test_offset_pointer )
 		ptr_type null_ptr;
 
 		BOOST_TEST_CHECKPOINT( "dereferencing null ptr" );
-		&*null_ptr;
+		BOOST_REQUIRE_NO_THROW((void)&*null_ptr);
 
 		BOOST_TEST_CHECKPOINT( "before deletion of null ptr" );
-		::delete_<ptr_mem_mgr>( null_ptr );
+		BOOST_REQUIRE_NO_THROW(::delete_<ptr_mem_mgr>( null_ptr ));
 		BOOST_TEST_CHECKPOINT( "after deletion of null ptr" );
 
 
 		BOOST_TEST_CHECKPOINT( "before deletion of null array" );
-		::delete_array<ptr_mem_mgr>( null_ptr );
+		BOOST_REQUIRE_NO_THROW(::delete_array<ptr_mem_mgr>( null_ptr ));
 		BOOST_TEST_CHECKPOINT( "after deletion of null array" );
 	}
 

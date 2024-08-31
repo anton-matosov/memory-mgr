@@ -1,7 +1,9 @@
 # Conan generated files CMakePresets.json
-/build
-/.cmake
+/build/
+/build-linux/
+/.cmake/
 CMakeUserPresets.json
 
 # Clangd data
-/.cache
+/.cache/
+/compile_commands.json

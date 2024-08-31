@@ -27,6 +27,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/sync/locks.h"
 #include "memory-mgr/manager_category.h"
 #include "memory-mgr/detail/new_helpers.h"
+#include "memory-mgr/singleton_manager.h" // for mem_mgr for singleton manager
 
 #include <boost/shared_ptr.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -85,12 +86,11 @@ namespace memory_mgr
 		class allocate_unnamed_impl
 			:public allocate_base<T, MemMgr>
 		{
+		public:
 			using base_type = allocate_base<T, MemMgr>;
 			using typename base_type::mgr_type;
 			using typename base_type::helper_type;
 			using typename base_type::lockable_type;
-
-		public:
 
 			allocate_unnamed_impl( const memory_mgr::detail::mem_mgr_wrapper<mgr_type>& mgr )
 				: base_type( mgr )

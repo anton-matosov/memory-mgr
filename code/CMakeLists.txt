@@ -8,7 +8,7 @@ function(add_boost_test TARGET)
   # Set properties for the test
   set_tests_properties( ${TARGET} PROPERTIES
       PASS_REGULAR_EXPRESSION "No errors detected"
-      FAIL_REGULAR_EXPRESSION "failures are detected"
+      FAIL_REGULAR_EXPRESSION "failures are detected|fatal error"
   )
 endfunction()
 

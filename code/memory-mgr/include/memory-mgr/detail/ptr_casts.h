@@ -24,6 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #pragma once
 
 #include "memory-mgr/detail/types.h"
+#include "memory-mgr/detail/compatibility_types.h"
 
 #include <cstddef>
 
@@ -67,24 +68,24 @@ namespace memory_mgr
 			return static_cast<ResultT>(diff(p1, p2));
 		}
 
-		static inline void* shift( void* p, ulonglong offset )
+		static inline void* shift( void* p, portable_size_t offset )
 		{
 			return char_cast(p) + offset;
 		}
 
-		static inline const void* shift( const void* p, const ulonglong offset )
+		static inline const void* shift( const void* p, const portable_size_t offset )
 		{
 			return char_cast(p) + offset;
 		}
 
-		static inline size_t* size_cast( void* p )
+		static inline portable_size_t* size_cast( void* p )
 		{
-			return static_cast< size_t* >( p );
+			return static_cast< portable_size_t* >( p );
 		}
 
-		static inline const size_t* size_cast( const void* p )
+		static inline const portable_size_t* size_cast( const void* p )
 		{
-			return static_cast< const size_t* >( p );
+			return static_cast< const portable_size_t* >( p );
 		}
 	}// namespace detail
 

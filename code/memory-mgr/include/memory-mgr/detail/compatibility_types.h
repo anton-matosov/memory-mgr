@@ -36,8 +36,8 @@ namespace memory_mgr
 		typedef uint64_t portable_size_t;
 		typedef int64_t portable_difference_type;
 #else
-		typedef ulong portable_size_t;
-		typedef long portable_difference_type;
+		typedef size_t portable_size_t;
+		typedef ptrdiff_t portable_difference_type;
 #endif
 	}
 }

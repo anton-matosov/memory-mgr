@@ -39,6 +39,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <unistd.h>  //ftruncate, close
 
 #include <string>
+#include <mutex>
 #include <boost/interprocess/sync/named_recursive_mutex.hpp>
 
 namespace memory_mgr
@@ -55,7 +56,9 @@ static void* invalid_mapping_address = MAP_FAILED;
 
 static inline void initialize_critical_section(critical_section* cs)
 {
-  pthread_mutexattr_t mutexattr;  // Mutex attribute variable
+  pthread_mutexattr_t mutexattr = {};   // Mutex attribute variable
+
+  pthread_mutexattr_init(&mutexattr);
   // Set the mutex as a recursive mutex
   pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
   pthread_mutex_init(cs, &mutexattr);
@@ -144,6 +147,5 @@ static inline std::string get_executable_path()
     return std::string(pathbuf);
   }
 }
-
 }  // namespace osapi
 }  // namespace memory_mgr

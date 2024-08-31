@@ -38,7 +38,7 @@ namespace memory_mgr
 			inline void enter() const	{ osapi::enter_critical_section		(&m_cs); }
 			inline void leave() const	{ osapi::leave_critical_section		(&m_cs); }
 		private:
-			mutable osapi::critical_section m_cs;
+			mutable osapi::critical_section m_cs = {};
 
 			critical_section(const critical_section &);
 			critical_section & operator=(const critical_section &);

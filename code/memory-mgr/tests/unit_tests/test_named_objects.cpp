@@ -36,6 +36,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 MGR_DECLARE_SEGMENT_NAME( segmentName, "shared segment" );
 MGR_DECLARE_SEGMENT_NAME( segmentNameTracked, "tracked shared segment" );
@@ -63,7 +64,11 @@ typedef  memory_mgr::named_objects
 MGR_DECLARE_MANAGER_CLASS( name_sz_shared_mgr, name_sz_shared_mgr_type );
 MGR_DECLARE_MANAGER_CLASS( name_shared_mgr, name_shared_mgr_type );
 
-BOOST_AUTO_TEST_SUITE( test_named_objects )
+BOOST_AUTO_TEST_SUITE( test_named_objects 
+#ifdef MGR_APPLE_PLATFORM
+, *boost::unit_test::disabled() /* Shared segment fails on macOS */
+#endif
+)
 
 	typedef boost::mpl::list< name_sz_shared_mgr, name_shared_mgr > managers_list;
 

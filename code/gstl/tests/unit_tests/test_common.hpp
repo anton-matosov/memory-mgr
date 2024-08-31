@@ -39,8 +39,6 @@ Please feel free to contact me via e-mail: shikin at users.sourceforge.net
 #include <boost/foreach.hpp>
 #include <gstl/detail/boost_warnings_on.hpp>
 
-namespace ut = boost::unit_test;
-
 #define GSTL_ARRAY_LEN( arr ) ( sizeof( arr ) / sizeof( *arr ) )
 #define GSTL_ARRAY_END( arr ) ( arr + GSTL_ARRAY_LEN( arr ) )
 #define GSTL_STR_LEN( s ) ( GSTL_ARRAY_LEN( s ) - 1 )

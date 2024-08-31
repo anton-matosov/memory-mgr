@@ -34,6 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include <sstream>
 #include <iostream>
+#include <mutex>
 
 #include "memory-mgr/detail/temp_buffer.h"
 #include "memory-mgr/detail/types.h"
@@ -52,7 +53,9 @@ namespace memory_mgr
 
 		static inline void initialize_critical_section( critical_section* cs )
 		{
-			pthread_mutexattr_t mutexattr;   // Mutex attribute variable
+			pthread_mutexattr_t mutexattr = {};   // Mutex attribute variable
+
+			pthread_mutexattr_init(&mutexattr);
 			// Set the mutex as a recursive mutex
 			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
 			pthread_mutex_init( cs, &mutexattr );
@@ -143,7 +146,7 @@ namespace memory_mgr
 		}
 
 		static inline std::string get_executable_path()
-		{		
+		{
 			/*
 			Linux:
 			/proc/<pid>/exe

@@ -26,7 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #define MGR_WINDOWS_PLATFORM
 #include <windows.h>
 #include <string>
-#include "memory-mgr/detail/ptr_casts.h"
 #include "memory-mgr/detail/types.h"
 #include "memory-mgr/detail/temp_buffer.h"
 
@@ -119,7 +118,7 @@ namespace memory_mgr
 			int /*open_flag*/, mode_t access_mode, size_t size )
 		{
 			return create_file_mapping( name,
-				access_mode, detail::ulong_cast( size ) );
+				access_mode, static_cast<ulong>( size ) );
 		}
 
 		static inline int resize_file_mapping( osapi::mapping_handle_t /*m_mapping*/, size_t /*size*/ )
