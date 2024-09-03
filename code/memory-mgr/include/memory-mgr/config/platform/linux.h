@@ -35,6 +35,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <sstream>
 #include <iostream>
 #include <mutex>
+#include <algorithm>
 
 #include <semaphore.h>
 
@@ -43,6 +44,14 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 namespace memory_mgr
 {
+	namespace detail
+	{
+		static inline std::string process_name(std::string name)
+		{
+			std::replace(name.begin(), name.end(), ' ', '_');
+			return "/" + name;
+		}
+	}
 	namespace osapi
 	{
 		typedef pthread_mutex_t critical_section;
@@ -114,15 +123,6 @@ namespace memory_mgr
 		}
 
 		using mutex_handle_t = sem_t*;
-
-		namespace detail
-		{
-			static inline std::string process_name(std::string name)
-			{
-				std::replace(name.begin(), name.end(), ' ', '_');
-				return "/" + name;
-			}
-		}
 
 		static inline mutex_handle_t create_mutex(const std::string& name )
 		{
