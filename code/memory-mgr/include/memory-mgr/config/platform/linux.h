@@ -68,7 +68,7 @@ namespace memory_mgr
 
 			pthread_mutexattr_init(&mutexattr);
 			// Set the mutex as a recursive mutex
-			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
+			pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE);
 			pthread_mutex_init( cs, &mutexattr );
 			//After initializing the mutex, the thread attribute can be destroyed
 			pthread_mutexattr_destroy(&mutexattr);
