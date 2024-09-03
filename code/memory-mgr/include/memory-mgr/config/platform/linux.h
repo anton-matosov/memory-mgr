@@ -115,9 +115,18 @@ namespace memory_mgr
 
 		using mutex_handle_t = sem_t*;
 
+		namespace detail
+		{
+			static inline std::string process_name(std::string name)
+			{
+				std::replace(name.begin(), name.end(), ' ', '_');
+				return "/" + name;
+			}
+		}
+
 		static inline mutex_handle_t create_mutex(const std::string& name )
 		{
-			mutex_handle_t mutex = sem_open(("/" + name).c_str(), O_CREAT, 0644, 1);
+			mutex_handle_t mutex = sem_open(detail::process_name(name).c_str(), O_CREAT, 0644, 1);
 			if (mutex == SEM_FAILED) {
 				throw std::runtime_error("sem_open failed");
 			}
