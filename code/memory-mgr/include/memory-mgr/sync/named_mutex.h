@@ -43,7 +43,7 @@ namespace memory_mgr
 			{ osapi::lock_mutex( m_mutex ); }
 
 			inline void leave() const
-			{ osapi::release_mutex( m_mutex ); }
+			{ osapi::unlock_mutex( m_mutex ); }
 		private:
 			mutable osapi::mutex_handle_t m_mutex;
 
