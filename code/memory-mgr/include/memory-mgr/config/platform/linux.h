@@ -36,6 +36,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <iostream>
 #include <mutex>
 
+#include <semaphore.h>
+
 #include "memory-mgr/detail/temp_buffer.h"
 #include "memory-mgr/detail/types.h"
 
@@ -111,23 +113,20 @@ namespace memory_mgr
 			return osapi::close_handle( mapping );
 		}
 
-		using mutex_handle_t = pthread_mutex_t*;
+		using mutex_handle_t = sem_t*;
 
 		static inline mutex_handle_t create_mutex(const std::string& name )
 		{
-			throw std::runtime_error("Named mutex is not implemented yet ");
-			return nullptr;
+			mutex_handle_t mutex = sem_open(("/" + name).c_str(), O_CREAT, 0644, 1);
+			if (mutex == SEM_FAILED) {
+				throw std::runtime_error("sem_open failed");
+			}
+			return mutex;
 		}
 
-		static inline mutex_handle_t open_mutex(const std::string& name, ulong access )
+		static inline bool release_mutex(mutex_handle_t mutex)
 		{
-			throw std::runtime_error("Named mutex is not implemented yet ");
-			return nullptr;
-		}
-
-		static inline bool release_mutex(mutex_handle_t handle)
-		{
-			throw std::runtime_error("Named mutex is not implemented yet ");
+			return sem_close(mutex) != -1;
 		}
 
 		enum lock_status{ lock_aquired, lock_abandoned, lock_timeout, lock_failed };
@@ -135,14 +134,15 @@ namespace memory_mgr
 
 		static inline lock_status lock_mutex( mutex_handle_t mutex )
 		{
-			throw std::runtime_error("Named mutex is not implemented yet ");
-			return lock_failed;
+			if (sem_wait(mutex) == -1) {
+				return lock_failed;
+			}
+			return lock_aquired;
 		}
 
 		static inline bool unlock_mutex( mutex_handle_t mutex )
 		{
-			throw std::runtime_error("Named mutex is not implemented yet ");
-			return false;
+			return sem_post(mutex) != -1;
 		}
 
 		static inline std::string get_executable_path()

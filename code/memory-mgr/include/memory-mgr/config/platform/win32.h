@@ -165,14 +165,9 @@ namespace memory_mgr
 			return CreateMutexA( detail::null_sa(), false, detail::get_name( name ) );
 		}
 
-		static inline mutex_handle_t open_mutex(const std::string& name, ulong access )
-		{ 
-			return OpenMutexA( access, false, detail::get_name( name ) );
-		}
-
 		static inline bool release_mutex(mutex_handle_t handle)
-		{ 
-			return ReleaseMutex(handle) != 0;  
+		{
+			return ReleaseMutex(handle) != FALSE;
 		}
 
 		enum lock_status{ lock_aquired, lock_abandoned, lock_timeout, lock_failed };

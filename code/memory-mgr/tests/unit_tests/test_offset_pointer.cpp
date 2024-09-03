@@ -46,7 +46,7 @@ template class memory_mgr::offset_pointer< derived_test_class, ptr_mem_mgr >;
 
 BOOST_AUTO_TEST_SUITE( test_offset_pointer 
 #ifndef MGR_WINDOWS_PLATFORM
-, *boost::unit_test::disabled() /* Named mutex is not implemented for non windows platforms yet */
+// , *boost::unit_test::disabled() /* Named mutex is not implemented for non windows platforms yet */
 #endif
 )
 	
