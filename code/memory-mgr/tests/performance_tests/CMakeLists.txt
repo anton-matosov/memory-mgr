@@ -17,3 +17,9 @@ target_sources(memory-mgr-performance_tests PRIVATE
 
 target_include_directories(memory-mgr-performance_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(memory-mgr-performance_tests PRIVATE memory-mgr memory-mgr_tests_shared)
+
+add_test(
+  NAME memory-mgr-performance_tests
+  COMMAND memory-mgr-performance_tests
+  CONFIGURATIONS Release RelWithDebInfo MinSizeRel
+)
