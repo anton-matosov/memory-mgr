@@ -23,10 +23,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
-#include "test.h"
+#include "detail/test.h"
 #include <numeric>
 
-#include <boost/thread.hpp>
+#include <chrono>
+#include <thread>
 
 namespace perf_tests
 {
@@ -44,17 +45,18 @@ namespace perf_tests
 			template<class FuncT>
 			void create_thread( FuncT func )
 			{
-				threads_.create_thread( boost::bind( func, op_repeat_, per_alloc_,
+				threads_.emplace_back( boost::bind( func, op_repeat_, per_alloc_,
 					boost::ref( results_ ) ) );
 			}
 
 			void join_all()
 			{
-				threads_.join_all();
+				for (auto &thread : threads_)
+					thread.join();
 			}
 
 			std::vector<long double> results_;
-			boost::thread_group threads_;
+			std::vector<std::thread> threads_;
 
 			const int op_repeat_;
 			const int per_alloc_;
@@ -91,10 +93,9 @@ namespace perf_tests
 	for( int i = 0; i < num_threads; ++i )													\
 	{																						\
 		threads_holder__.create_thread( test_func__ );										\
-		__pragma(warning(suppress:4127))													\
 		if( start_delay )																	\
 		{																					\
-			boost::this_thread::sleep( boost::posix_time::milliseconds( start_delay ) );	\
+			std::this_thread::sleep_for(std::chrono::milliseconds( start_delay ) );	\
 		}																					\
 	}																						\
 	threads_holder__.join_all();

@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
 #include "detail/test_mt.h"
 #include "memory-mgr/offset_ptr.h"
 
@@ -40,7 +39,8 @@ namespace
 {
 	typedef sing_heap_sz_mgr mem_mgr_t;
 
-	enum{ num_test_threads = 25, start_delay = 0 };
+	constexpr auto num_test_threads = 25;
+	constexpr auto start_delay = 0;
 
 	long double test_malloc_free( const int op_repeat, const int per_alloc )
 	{

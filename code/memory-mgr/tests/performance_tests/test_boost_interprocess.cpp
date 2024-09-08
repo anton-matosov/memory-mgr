@@ -21,16 +21,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
-
-
+#include "detail/test.h"
 
 namespace
 {
 	long double test_boost_interprocess( const int op_repeat, const int per_alloc )
 	{
-		op_repeat;
-		per_alloc;
+		(void)op_repeat;
+		(void)per_alloc;
 		return 1.;
 	}
 
