@@ -23,6 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #pragma once
 
+#include "detail/test.h"
+
 template<class TestType>
 long double test_std_new( const int op_repeat, const int per_alloc )
 {
