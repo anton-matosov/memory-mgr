@@ -66,8 +66,6 @@ namespace memory_mgr
 		private:
 			void create_segment()
 			{
-				this->validate_name( m_name );
-
 				//Create file mapping
 				this->m_mapping = osapi::create_file_mapping( this->m_name, this->get_open_flags(),
 					this->get_access_mode(), this->m_size );
@@ -106,7 +104,6 @@ namespace memory_mgr
 			std::string				m_name;
 			size_type				m_size;
 
-			virtual void validate_name( std::string& name ) = 0;
 			virtual osapi::mode_t get_access_mode() = 0;
 			virtual int get_file_access_mask() = 0;
 
@@ -131,20 +128,40 @@ namespace memory_mgr
 		};
 	}
 
-	
+
+#define MGR_SEGMENT_NAME( var_name ) var_name##_name_returner
+
 
 #ifdef MGR_WINDOWS_PLATFORM
+
+#define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
+	struct MGR_SEGMENT_NAME(var_name)\
+	{\
+		static inline std::string get_name( const size_t id = 0 )\
+		{\
+			std::stringstream name;\
+			name << "Global\\mmgr-" << segment_name << "-" << id;\
+			return name.str();\
+		}\
+	};
+
+#define MGR_DECLARE_LOCAL_SEGMENT_NAME( var_name, segment_name )\
+	struct MGR_SEGMENT_NAME(var_name)\
+	{\
+		static inline std::string get_name( const size_t id = 0 )\
+		{\
+			std::stringstream name;\
+			name << "Local\\mmgr-" << segment_name << "-" << id;\
+			return name.str();\
+		}\
+	};
+
 	//Windows shared memory allocator to SegmentAllocatorConcept 
 	template<class SegmentParams>
 	class shared_allocator: public detail::shared_allocator_base
 	{
 		typedef SegmentParams					segment_params;
 		typedef detail::shared_allocator_base	base_type;		
-
-		void validate_name( std::string& name )
-		{
-			name = "Global\\" + name;
-		}
 
 		osapi::mode_t get_access_mode()
 		{
@@ -164,18 +181,35 @@ namespace memory_mgr
 	};
 
 #elif defined( MGR_LINUX_PLATFORM ) || defined( MGR_APPLE_PLATFORM )
-	
+
+#define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
+	struct MGR_SEGMENT_NAME(var_name)\
+	{\
+		static inline std::string get_name( const size_t id = 0 )\
+		{\
+			std::stringstream name;\
+			name << "/mmgr-" << segment_name << "-" << id;\
+			return name.str();\
+		}\
+	};
+
+#define MGR_DECLARE_LOCAL_SEGMENT_NAME( var_name, segment_name )\
+	struct MGR_SEGMENT_NAME(var_name)\
+	{\
+		static inline std::string get_name( const size_t id = 0 )\
+		{\
+			std::stringstream name;\
+			name << "/mmgr-" << getpid() << "-" << segment_name << "-" << id;\
+			return name.str();\
+		}\
+	};
+
 	//Posix shared memory allocator to SegmentAllocatorConcept 
 	template<class SegmentParams>
 	class shared_allocator: public detail::shared_allocator_base
 	{
 		typedef SegmentParams					segment_params;
 		typedef detail::shared_allocator_base	base_type;		
-
-		void validate_name( std::string& name )
-		{
-			helpers::add_leading_slash( name );
-		}
 
 		int get_open_flags()
 		{ 
@@ -203,18 +237,6 @@ namespace memory_mgr
 	};
 #endif
 
-#define MGR_SEGMENT_NAME( var_name ) var_name##_name_returner
-
-#define MGR_DECLARE_SEGMENT_NAME( var_name, segment_name )\
-	struct MGR_SEGMENT_NAME(var_name)\
-	{\
-		static inline std::string get_name( const size_t id = 0 )\
-		{\
-			std::stringstream name;\
-			name << "memory_mgr-" << segment_name << "-" << id;\
-			return name.str();\
-		}\
-	};
 
 MGR_DECLARE_SEGMENT_NAME( default, "default_segment" );
 	

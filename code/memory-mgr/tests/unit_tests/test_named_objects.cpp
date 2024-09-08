@@ -38,8 +38,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
 
-MGR_DECLARE_SEGMENT_NAME( segmentName, "sh-seg" );
-MGR_DECLARE_SEGMENT_NAME( segmentNameTracked, "tracked-seg" );
+MGR_DECLARE_LOCAL_SEGMENT_NAME( segmentName, "sh-seg" );
+MGR_DECLARE_LOCAL_SEGMENT_NAME( segmentNameTracked, "tracked-seg" );
 
 typedef  memory_mgr::named_objects
 <
