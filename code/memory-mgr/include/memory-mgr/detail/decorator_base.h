@@ -34,15 +34,16 @@ namespace memory_mgr
 		class decorator_base
 			:public MemMgr
 		{
-		protected:
+		public:
 			typedef MemMgr mgr_type;
 			typedef decorator_base	decorated_mgr;
 
+		protected:
 			decorated_mgr& get_decorated_mgr()
 			{
 				return *this;
 			}
-		public:	
+		public:
 			//Type definitions to make definition of classes drived from decorator_base easier
 			typedef typename manager_traits<mgr_type>::size_type size_type;
 			typedef typename manager_traits<mgr_type>::block_offset_type block_offset_type;

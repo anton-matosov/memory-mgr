@@ -4,7 +4,6 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 #include "memory-mgr/config/config.h"
-#include <unit_tests/managers.h>
 
 #include <iostream>
 #include <algorithm>

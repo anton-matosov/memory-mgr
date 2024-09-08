@@ -20,8 +20,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
-#ifdef MGR_LINUX_PLATFORM
 
 #include "posix_perf_timer.h"
-
-#endif//MGR_LINUX_PLATFORM

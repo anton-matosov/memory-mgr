@@ -33,7 +33,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/allocator.h"
 #include "memory-mgr/detail/helpers.h"
 #include "memory-mgr/detail/singleton.h"
-#include "../perf_timer.h"
+#include "perf_timer.h"
+#include "tests_shared/managers.h"
 
 typedef memory_mgr::singleton_manager
 < 
@@ -41,7 +42,7 @@ typedef memory_mgr::singleton_manager
 	<
 		memory_mgr::heap_segment
 		< 
-			memory_mgr::memory_manager<size_t, 35 * 1024 * 1024, 4> 
+			memory_mgr::memory_manager<size_t, 50 * 1024 * 1024, 4> // 35 MB causes error CODECRAFT-97
 		> 
 	>
 > alloc_mgr;

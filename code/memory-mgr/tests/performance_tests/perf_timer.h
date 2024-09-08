@@ -33,7 +33,7 @@ namespace memory_mgr
 	typedef detail::win_perf_timer perf_timer;
 }
 	
-#elif defined( MGR_LINUX_PLATFORM )
+#elif defined(MGR_LINUX_PLATFORM) || defined (MGR_APPLE_PLATFORM)
 #	include "detail/posix_perf_timer.h"
 namespace memory_mgr
 {

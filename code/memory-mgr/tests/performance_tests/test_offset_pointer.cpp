@@ -23,6 +23,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include "memory-mgr/offset_ptr.h"
+#include "detail/test.h"
+#include "perf_timer.h"
 
 #ifdef INCLUDE_BOOST_INTERPROCESS_TESTS
 #	include <boost/interprocess/managed_shared_memory.hpp>
