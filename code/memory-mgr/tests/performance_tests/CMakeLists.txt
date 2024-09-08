@@ -1,7 +1,7 @@
 
 add_executable(memory-mgr-performance_tests)
 target_sources(memory-mgr-performance_tests PRIVATE
-  # perf_tests.cpp
+  perf_tests.cpp
   test_math.cpp
   test_offset_pointer.cpp
   detail/test.cpp
