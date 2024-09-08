@@ -73,7 +73,9 @@ namespace memory_mgr
 					this->get_access_mode(), this->m_size );
 				if( this->m_mapping == osapi::invalid_mapping_handle )
 				{
-					throw std::runtime_error( "file mapping creation failed" );
+						std::stringstream ss;
+						ss << "file mapping creation failed. name: " << this->m_name << ". error: " << errno;
+						throw std::runtime_error( ss.str() );
 				}
 
 				//Resize file mapping
