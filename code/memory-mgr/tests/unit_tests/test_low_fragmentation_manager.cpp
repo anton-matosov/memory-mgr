@@ -31,7 +31,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/allocator.h"
 #include "memory-mgr/offset_allocator.h"
 #include "common_manager_tests.h"
-#include "managers.h"
+#include "tests_shared/managers.h"
 #include <string>
 #include <fstream>
 #include <vector>

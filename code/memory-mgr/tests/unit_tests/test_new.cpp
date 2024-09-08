@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 #include "test_class.h"
-#include "managers.h"
+#include "tests_shared/managers.h"
 #include "memory-mgr/new.h"
 #include "memory-mgr/named_objects.h"
 #include "memory-mgr/offset_ptr.h"

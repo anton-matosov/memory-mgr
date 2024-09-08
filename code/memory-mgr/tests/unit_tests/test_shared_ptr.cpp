@@ -34,7 +34,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "memory-mgr/smart_ptr/mgr_deleter.hpp"
 #include "memory-mgr/smart_ptr/make_shared.hpp"
-#include "managers.h"
+#include "tests_shared/managers.h"
 #include "memory-mgr/new.h"
 
 #include <boost/test/unit_test.hpp>

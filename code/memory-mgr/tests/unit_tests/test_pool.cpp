@@ -23,7 +23,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 
 
-#include "managers.h"
+#include "tests_shared/managers.h"
 #include "memory-mgr/pool/pool.hpp"
 
 
