@@ -22,8 +22,11 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
+#include "detail/test.h"
 #include "memory-mgr/detail/math.h"
 #include <boost/type_traits/make_unsigned.hpp>
+
+#include <vector>
 
 namespace
 {
@@ -34,7 +37,7 @@ namespace
 		{
 			if( do_work_ )
 			{
-				std::vector<char> s( ii && 0 + 1 );
+				std::vector<char> s( ii + 1 );
 			}
 
 		}
@@ -61,7 +64,7 @@ namespace
 			int ii = 0;
 		TEST_START_LOOP( op_repeat, per_alloc, char );
 		{
-			ii = memory_mgr::math::lowest_bit2<boost::make_unsigned<test_type>::type >( var );	
+			ii = memory_mgr::math::lowest_bit2<typename boost::make_unsigned<test_type>::type >( var );	
 			stub::work( ii );
 		}
 		TEST_END_LOOP( std::wcout );
