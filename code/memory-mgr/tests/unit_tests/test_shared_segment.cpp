@@ -43,11 +43,7 @@ namespace
 
 template class memory_mgr::shared_segment< memmgr_type >;
 
-BOOST_AUTO_TEST_SUITE( test_shared_segment
-#ifdef MGR_APPLE_PLATFORM
-, *boost::unit_test::disabled() /* Shared segment fails on macOS */
-#endif
-)
+BOOST_AUTO_TEST_SUITE(test_shared_segment)
 
 	MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
 

@@ -56,6 +56,8 @@ typedef ::mode_t mode_t;
 static const mapping_handle_t invalid_mapping_handle = -1;
 static void* invalid_mapping_address = MAP_FAILED;
 
+static inline int get_error_code() { return errno; }
+
 static inline void initialize_critical_section(critical_section* cs)
 {
   pthread_mutexattr_t mutexattr = {};  // Mutex attribute variable
@@ -81,7 +83,22 @@ static inline mapping_handle_t create_file_mapping(const std::string& name, int 
   return shm_open(name.c_str(), open_flag, access_mode);
 }
 
-static inline int resize_file_mapping(mapping_handle_t mapping, size_t size) { return ftruncate(mapping, size); }
+static inline int resize_file_mapping(mapping_handle_t mapping, size_t size)
+{
+  const int result = ftruncate(mapping, size);
+  if (result != 0)
+  {
+    // Shared segment can be resized only upon creation,
+    // if it was resized before, attempting to change size will error and set errno to EINVAL
+    constexpr int kSecondResizeWillFail = EINVAL;
+    if (get_error_code() == kSecondResizeWillFail)
+    {
+      return 0; // Success
+    }
+  }
+
+  return result;
+}
 
 static inline void* map_view_of_file(mapping_handle_t handle, int file_protect, std::size_t numbytes, int flags = MAP_SHARED, off_t offset = 0, void* base_addr = 0)
 {

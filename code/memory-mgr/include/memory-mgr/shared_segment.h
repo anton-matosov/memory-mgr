@@ -73,13 +73,19 @@ namespace memory_mgr
 					this->get_access_mode(), this->m_size );
 				if( this->m_mapping == osapi::invalid_mapping_handle )
 				{
-					throw std::runtime_error( "file mapping creation failed" );
+					const auto lastError = osapi::get_error_code();
+					std::stringstream ss;
+					ss << "file mapping creation failed. name: " << this->m_name << ". error: " << lastError;
+					throw std::runtime_error( ss.str() );
 				}
 
 				//Resize file mapping
-				if( osapi::resize_file_mapping( this->m_mapping, this->m_size ) != 0 )
+				if ( osapi::resize_file_mapping( this->m_mapping, this->m_size ) != 0 )
 				{
-					throw std::runtime_error( "failed to resize file mapping" );
+					const auto lastError = osapi::get_error_code();
+					std::stringstream ss;
+					ss << "failed to resize file mapping. name: " << this->m_name << ". error: " << lastError;
+					throw std::runtime_error( ss.str() );
 				}
 
 				//Map file to memory
@@ -88,7 +94,10 @@ namespace memory_mgr
 
 				if( this->m_base == osapi::invalid_mapping_address )
 				{
-					throw std::runtime_error( "memory mapping failed" );
+					const auto lastError = osapi::get_error_code();
+					std::stringstream ss;
+					ss << "memory mapping failed. name: " << this->m_name << ". error: " << lastError;
+					throw std::runtime_error( ss.str() );
 				}
 			}
 		protected:

@@ -83,6 +83,8 @@ namespace memory_mgr
 			}
 		}
 
+		static inline DWORD get_error_code() { return ::GetLastError(); }
+
 		static inline void initialize_critical_section( critical_section* cs )
 		{
 			return InitializeCriticalSection( cs );
