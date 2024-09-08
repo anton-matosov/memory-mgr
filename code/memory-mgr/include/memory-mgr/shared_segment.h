@@ -77,9 +77,17 @@ namespace memory_mgr
 				}
 
 				//Resize file mapping
-				if( osapi::resize_file_mapping( this->m_mapping, this->m_size ) != 0 )
+				if ( osapi::resize_file_mapping( this->m_mapping, this->m_size ) != 0 )
 				{
-					throw std::runtime_error( "failed to resize file mapping" );
+					// Shared segment can be resized only upon creation,
+					// if it was resized before, attempting to change size will error and set errno to EINVAL
+					constexpr int kSecondResizeWillFail = EINVAL;
+					if (errno != kSecondResizeWillFail)
+					{
+						std::stringstream ss;
+						ss << "failed to resize file mapping. error " << errno;
+						throw std::runtime_error( ss.str() );
+					}
 				}
 
 				//Map file to memory
