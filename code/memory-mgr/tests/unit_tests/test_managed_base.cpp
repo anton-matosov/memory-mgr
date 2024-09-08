@@ -41,11 +41,7 @@ public:
 	}
 };
 
-BOOST_FIXTURE_TEST_SUITE( test_managed_base, managed_base_fixture
-#ifndef MGR_WINDOWS_PLATFORM
-, *boost::unit_test::disabled() /* Named mutex is not implemented for non windows platforms yet */
-#endif
-);
+BOOST_FIXTURE_TEST_SUITE(test_managed_base, managed_base_fixture);
 
 	BOOST_AUTO_TEST_CASE( test_null_ptr )
 	{
