@@ -45,7 +45,7 @@ template class memory_mgr::shared_segment< memmgr_type >;
 
 BOOST_AUTO_TEST_SUITE(test_shared_segment)
 
-	MGR_DECLARE_SEGMENT_NAME( test_segment, "test segment" );
+MGR_DECLARE_LOCAL_SEGMENT_NAME( test_segment, "test segment" );
 
 typedef memory_mgr::shared_segment< memmgr_type, MGR_SEGMENT_NAME(test_segment) > shared_mgr_type;
 typedef memory_mgr::size_tracking<shared_mgr_type > sz_shared_mgr_type;

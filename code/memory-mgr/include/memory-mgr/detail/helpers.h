@@ -40,16 +40,6 @@ static inline void throw_bad_alloc() { throw std::bad_alloc(); }
 static inline void do_nothing() {}
 
 template <class StringT>
-static inline StringT& add_leading_slash(StringT& str)
-{
-  if (str[0] != '/')
-  {
-    str.insert(str.begin(), '/');
-  }
-  return str;
-}
-
-template <class StringT>
 static inline StringT& add_trailing_slash(StringT& str)
 {
   if (str.length() >= 1)
