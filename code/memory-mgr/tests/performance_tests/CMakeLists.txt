@@ -9,7 +9,6 @@ target_sources(memory-mgr-performance_tests PRIVATE
   test_managed_base.cpp
   test_pool.cpp
   test_offset_pointer.cpp
-  test_boost_interprocess.cpp
   test_multithreaded.cpp
 )
 
