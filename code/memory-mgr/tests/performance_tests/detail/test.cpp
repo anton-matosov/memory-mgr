@@ -29,11 +29,19 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )
 :m_bar( 0 )
 {
-	if( is_null( max_value ) )
+	if( is_null( max_value ) && is_null( value ) )
+	{
+		m_percent = 1.;
+	}
+	else if( is_null( max_value ) )
 	{
 		throw std::runtime_error( "progress_bar: max value must be greater then null" );
 	}
-	m_percent = value/max_value;
+	else
+	{
+		m_percent = value/max_value;
+	}
+
 	m_bar = static_cast<size_t>( m_percent * bar_length );
 }
 
@@ -125,12 +133,11 @@ void perf_test_manager::print_results()
 				typedef cmp_test_series::const_iterator cmp_iter_type;
 				for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
 				{
+					auto pb = progress_bar( cmp->second, max_val, graph_length );
 					std::wcout << L"Test '" << cmp->first.c_str() << L"' time:" << cmp->second << L"\n";
-					std::wcout << std::left << progress_bar( cmp->second, max_val, graph_length ) << L"\n";
+					std::wcout << std::left << pb << L"\n";
 
-					result_file << cmp->first << "\t"
-						<< std::left << progress_bar( cmp->second, max_val, graph_length )
-						<< "\t( " << cmp->second << " )\n";
+					result_file << cmp->first << "\t" << std::left << pb << "\t( " << cmp->second << " )\n";
 				}
 				result_file << "\n\n";
 			}
