@@ -58,17 +58,17 @@ void perf_test_manager::print_results()
 		string_type date_time_stamp;
 		{
 			time_t rawtime = {};
-			tm * ptm = nullptr;
+			tm tm = {};
 			time( &rawtime );
-			gmtime_s(ptm,  &rawtime );
+			gmtime_s(&tm,  &rawtime );
 
 			std::stringstream date_time;
-			date_time << 1900 + ptm->tm_year << '.'
-				<< ptm->tm_mon + 1  << '.'
-				<< ptm->tm_mday << ' '
-				<< ptm->tm_hour << ';'
-				<< ptm->tm_min << ';'
-				<< ptm->tm_sec;
+			date_time << 1900 + tm.tm_year << '.'
+				<< tm.tm_mon + 1  << '.'
+				<< tm.tm_mday << ' '
+				<< tm.tm_hour << ';'
+				<< tm.tm_min << ';'
+				<< tm.tm_sec;
 			date_time_stamp = date_time.str();
 		}
 
