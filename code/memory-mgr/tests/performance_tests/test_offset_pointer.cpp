@@ -109,10 +109,6 @@ namespace
 
 bool test_offset_pointer( const int op_repeat, const int per_alloc, const int test_repeat )
 {
-#ifdef MGR_WINDOWS_PLATFORM
-	std::cerr << "Offset pointer tests are disabled due to crash with stack buffer overrun on Windows 0xc0000409. See CODECRAFT-99\n";
-	return false;
-#endif
 	print_perf_test_header<sing_heap_sz_mgr>( L"Testing offset_ptr",
 		0, 0, 0 );
 
