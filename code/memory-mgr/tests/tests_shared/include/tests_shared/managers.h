@@ -61,7 +61,7 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical
 
 typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
 
-MGR_DECLARE_LOCAL_SEGMENT_NAME(shared_segment_name, "sing_shared_sz_mgr");
+MGR_DECLARE_LOCAL_SEGMENT_NAME(shared_segment_name, "def_shared_sz_mgr");
 
 typedef memory_mgr::shared_segment<memmgr_type, MGR_SEGMENT_NAME(shared_segment_name)> shared_mgr;
 
@@ -138,12 +138,14 @@ typedef memory_mgr::singleton_manager
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
+MGR_DECLARE_LOCAL_SEGMENT_NAME( shared_sz_mgr_name, "shared_sz_mgr" );
 typedef memory_mgr::shared_segment
 <
 	memory_mgr::size_tracking
 	<
 		memmgr_type
-	>
+	>,
+	MGR_SEGMENT_NAME(shared_sz_mgr_name)
 > shared_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -41,7 +41,9 @@ namespace
 	typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size > memmgr_type;
 }
 
-template class memory_mgr::shared_segment< memmgr_type >;
+MGR_DECLARE_LOCAL_SEGMENT_NAME(shared_segment_name, "shared_mgr_name");
+
+typedef memory_mgr::shared_segment<memmgr_type, MGR_SEGMENT_NAME(shared_segment_name)> shared_mgr;
 
 BOOST_AUTO_TEST_SUITE(test_shared_segment)
 
