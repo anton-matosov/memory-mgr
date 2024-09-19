@@ -23,8 +23,12 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "test.h"
 
-
+#include "time.h"
 #include <fstream>
+
+#ifdef MGR_WINDOWS_PLATFORM
+#define gmtime_r gmtime_s
+#endif
 
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )
 :m_bar( 0 )
@@ -68,7 +72,7 @@ void perf_test_manager::print_results()
 			time_t rawtime = {};
 			tm tm = {};
 			time( &rawtime );
-			gmtime_s(&tm,  &rawtime );
+			gmtime_r(&tm,  &rawtime );
 
 			std::stringstream date_time;
 			date_time << 1900 + tm.tm_year << '.'
