@@ -82,27 +82,7 @@ void perf_test_manager::print_results()
 	{
 		m_results_printed = true;
 
-		string_type date_time_stamp;
-		{
-
-
-
-			//  std::put_time(std::localtime(&t), "%c %Z")
-			auto now = std::chrono::system_clock::now();
-			auto in_time_t = std::chrono::system_clock::to_time_t(now);
-			// std::tm tm = *std::gmtime(&in_time_t);
-
-			std::stringstream date_time;
-			date_time << std::put_time(std::localtime(&in_time_t), "%c %Z");
-			// date_time << 1900 + tm.tm_year << '.'
-			// 	<< tm.tm_mon + 1 << '.'
-			// 	<< tm.tm_mday << ' '
-			// 	<< tm.tm_hour << ';'
-			// 	<< tm.tm_min << ';'
-			// 	<< tm.tm_sec;
-			date_time_stamp = date_time.str();
-		}
-
+		string_type date_time_stamp = get_current_time_as_string();
 
 		std::wcout << L"\nTesting results: " << date_time_stamp.c_str() << L"\n";
 		typedef test_results_type::iterator res_iter_type;
