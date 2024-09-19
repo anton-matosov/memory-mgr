@@ -23,12 +23,10 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 #include "test.h"
 
-#include "time.h"
+#include <ctime>
+#include <chrono>
 #include <fstream>
-
-#ifdef MGR_WINDOWS_PLATFORM
-#define gmtime_r gmtime_s
-#endif
+#include <iomanip>
 
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )
 :m_bar( 0 )
@@ -61,6 +59,23 @@ void perf_test_manager::add_result( const string_type& category_name, const stri
 	m_test_results[category_name][test_name].push_back( std::make_pair( test_time, count ) );
 }
 
+std::string get_current_time_as_string() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+
+    std::tm localTime;
+#ifdef _WIN32
+    localtime_s(&localTime, &currentTime); // Windows-specific
+#else
+    localtime_r(&currentTime, &localTime); // POSIX-compliant (Linux, macOS)
+#endif
+
+    std::ostringstream oss;
+    oss << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S");
+
+    return oss.str();
+}
+
 void perf_test_manager::print_results()
 {
 	if( !m_test_results.empty() )
@@ -69,18 +84,22 @@ void perf_test_manager::print_results()
 
 		string_type date_time_stamp;
 		{
-			time_t rawtime = {};
-			tm tm = {};
-			time( &rawtime );
-			gmtime_r(&tm,  &rawtime );
+
+
+
+			//  std::put_time(std::localtime(&t), "%c %Z")
+			auto now = std::chrono::system_clock::now();
+			auto in_time_t = std::chrono::system_clock::to_time_t(now);
+			// std::tm tm = *std::gmtime(&in_time_t);
 
 			std::stringstream date_time;
-			date_time << 1900 + tm.tm_year << '.'
-				<< tm.tm_mon + 1  << '.'
-				<< tm.tm_mday << ' '
-				<< tm.tm_hour << ';'
-				<< tm.tm_min << ';'
-				<< tm.tm_sec;
+			date_time << std::put_time(std::localtime(&in_time_t), "%c %Z");
+			// date_time << 1900 + tm.tm_year << '.'
+			// 	<< tm.tm_mon + 1 << '.'
+			// 	<< tm.tm_mday << ' '
+			// 	<< tm.tm_hour << ';'
+			// 	<< tm.tm_min << ';'
+			// 	<< tm.tm_sec;
 			date_time_stamp = date_time.str();
 		}
 
