@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
+#include "detail/test.h"
 
 bool test_memory_manager( const int op_repeat, const int per_alloc, const int test_repeat );
 bool test_managed_base( const int op_repeat, const int per_alloc, const int test_repeat );
@@ -36,19 +36,17 @@ int main(int /*argc*/, char* /*argv*/[])
 	const int per_alloc = 10000;
 	const int test_repeat = 10;
 
-	/**
-	   @todo Get rid of this stub!!!
-	*/
-	alloc_mgr::instance();
+	// Instantiate manager ahead of time to avoid deallocation order assertion (used to happen on Windows in Debug builds)
+	// alloc_mgr::instance();
 
-	//test_math( op_repeat, per_alloc, test_repeat );
-	//test_multithreaded_alloc_dealloc( op_repeat, per_alloc, test_repeat );
+	test_math( op_repeat, per_alloc, test_repeat );
+	test_multithreaded_alloc_dealloc( op_repeat, per_alloc, test_repeat );
 	test_memory_manager( op_repeat, per_alloc, test_repeat );
-	//test_managed_base( op_repeat, per_alloc, test_repeat );
+	test_managed_base( op_repeat, per_alloc, test_repeat );
 	test_pool( op_repeat, per_alloc, test_repeat );
 	test_offset_pointer( op_repeat, per_alloc, test_repeat );
 
 	MGR_PRINT_RESULTS;
-	return std::cin.get();
+	return 0;
 }
 

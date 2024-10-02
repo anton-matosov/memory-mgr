@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -21,24 +21,36 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA <http
 Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
-
 #include "test.h"
+
+#include <ctime>
+#include <chrono>
+#include <fstream>
+#include <iomanip>
 
 progress_bar::progress_bar( long double value, long double max_value, const size_t bar_length )
 :m_bar( 0 )
 {
-	if( is_null( max_value ) )
+	if( is_null( max_value ) && is_null( value ) )
+	{
+		m_percent = 1.;
+	}
+	else if( is_null( max_value ) )
 	{
 		throw std::runtime_error( "progress_bar: max value must be greater then null" );
 	}
-	m_percent = value/max_value;
+	else
+	{
+		m_percent = value/max_value;
+	}
+
 	m_bar = static_cast<size_t>( m_percent * bar_length );
 }
 
 void perf_test_manager::print_entry( const test_entry_type& entry )
 {
 	std::wcout << L"Full time: " << std::fixed << entry.first
-		<< L"\tRepeat count: " << entry.second 
+		<< L"\tRepeat count: " << entry.second
 		<< L"\tOperation time: "<< std::fixed << entry.first / entry.second << std::endl ;
 }
 
@@ -47,29 +59,30 @@ void perf_test_manager::add_result( const string_type& category_name, const stri
 	m_test_results[category_name][test_name].push_back( std::make_pair( test_time, count ) );
 }
 
+std::string get_current_time_as_string() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+
+    std::tm localTime;
+#ifdef _WIN32
+    localtime_s(&localTime, &currentTime); // Windows-specific
+#else
+    localtime_r(&currentTime, &localTime); // POSIX-compliant (Linux, macOS)
+#endif
+
+    std::ostringstream oss;
+    oss << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S");
+
+    return oss.str();
+}
+
 void perf_test_manager::print_results()
 {
 	if( !m_test_results.empty() )
 	{
 		m_results_printed = true;
 
-		string_type date_time_stamp;
-		{
-			time_t rawtime;
-			tm * ptm;
-			time( &rawtime );
-			ptm = gmtime ( &rawtime );
-
-			std::stringstream date_time;
-			date_time << 1900 + ptm->tm_year << '.'
-				<< ptm->tm_mon + 1  << '.'
-				<< ptm->tm_mday << ' '
-				<< ptm->tm_hour << ';'
-				<< ptm->tm_min << ';'
-				<< ptm->tm_sec;
-			date_time_stamp = date_time.str();
-		}
-		
+		string_type date_time_stamp = get_current_time_as_string();
 
 		std::wcout << L"\nTesting results: " << date_time_stamp.c_str() << L"\n";
 		typedef test_results_type::iterator res_iter_type;
@@ -77,7 +90,7 @@ void perf_test_manager::print_results()
 		string_type results_file_path = memory_mgr::osapi::get_exe_dir().c_str();
 		memory_mgr::helpers::add_trailing_slash( results_file_path );
 		results_file_path += "perf_test_results ";
-		
+
 		results_file_path += date_time_stamp;
 		results_file_path += ".txt";
 		std::ofstream result_file(  results_file_path.c_str()  );
@@ -88,19 +101,19 @@ void perf_test_manager::print_results()
 		typedef test_results_type::iterator test_cat_iter_type;
 		typedef test_named_results_type::iterator named_test_iter_type;
 
-		for( test_cat_iter_type cat_test = m_test_results.begin(); cat_test != m_test_results.end(); ++cat_test )		
+		for( test_cat_iter_type cat_test = m_test_results.begin(); cat_test != m_test_results.end(); ++cat_test )
 		{
 			string_type category_name = cat_test->first;
 			test_named_results_type& test = cat_test->second;
 
 			cmp_results.clear();
-			for( named_test_iter_type test_res = test.begin(); test_res != test.end(); ++test_res )		
+			for( named_test_iter_type test_res = test.begin(); test_res != test.end(); ++test_res )
 			{
 				string_type test_name = test_res->first;
 				test_series& tests = test_res->second;
 				//typedef test_series::const_iterator test_iter;
 				//std::wcout << L"Test '" << test_name.c_str() << L"'\n";
-				
+
 				//Sort test series by time (first-->the fastest)
 				std::sort( tests.begin(), tests.end() );
 				//print test with best result
@@ -115,27 +128,26 @@ void perf_test_manager::print_results()
 				size_t fill_count = graph_length;
 				//Print category name
 				std::fill_n( std::ostream_iterator<wchar_t, wchar_t>( std::wcout ), fill_count, L'-' );
-				std::wcout << L"\nCategory: " << category_name.c_str() << L"\n";				
+				std::wcout << L"\nCategory: " << category_name.c_str() << L"\n";
 				result_file << "Category: " << category_name << "\n";
-				
+
 				std::sort( cmp_results.begin(), cmp_results.end() );
 				const long double max_val = std::max_element( cmp_results.begin(), cmp_results.end(), &less_second<string_type, long double> )->second;
-				typedef cmp_test_series::const_iterator cmp_iter_type;		
+				typedef cmp_test_series::const_iterator cmp_iter_type;
 				for( cmp_iter_type cmp = cmp_results.begin(); cmp != cmp_results.end(); ++cmp )
 				{
-					std::wcout << L"Test '" << cmp->first.c_str() << L"' time:" << cmp->second << L"\n";	
-					std::wcout << std::left << progress_bar( cmp->second, max_val, graph_length ) << L"\n";
+					auto pb = progress_bar( cmp->second, max_val, graph_length );
+					std::wcout << L"Test '" << cmp->first.c_str() << L"' time:" << cmp->second << L"\n";
+					std::wcout << std::left << pb << L"\n";
 
-					result_file << cmp->first << "\t" 
-						<< std::left << progress_bar( cmp->second, max_val, graph_length )
-						<< "\t( " << cmp->second << " )\n";
+					result_file << cmp->first << "\t" << std::left << pb << "\t( " << cmp->second << " )\n";
 				}
 				result_file << "\n\n";
 			}
 		}
-		
 
-		
+
+
 
 	}
 }

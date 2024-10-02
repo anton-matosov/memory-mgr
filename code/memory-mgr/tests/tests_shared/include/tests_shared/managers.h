@@ -1,4 +1,4 @@
-/* 
+/*
 Generic Memory Manager (memory-mgr)
 http://memory-mgr.sourceforge.net/
 Copyright (c) 2007-2008 Anton (shikin) Matosov
@@ -61,13 +61,15 @@ typedef memory_mgr::memory_manager<chunk_type, memory_size, chunk_size, critical
 
 typedef memory_mgr::heap_segment< memmgr_type > heap_mgr;
 
-typedef memory_mgr::shared_segment< memmgr_type > shared_mgr;
+MGR_DECLARE_LOCAL_SEGMENT_NAME(shared_segment_name, "def_shared_sz_mgr");
+
+typedef memory_mgr::shared_segment<memmgr_type, MGR_SEGMENT_NAME(shared_segment_name)> shared_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::heap_segment
 <
 	memory_mgr::size_tracking
-	< 
+	<
 		memmgr_type
 	>
 > heap_sz_mgr;
@@ -92,7 +94,7 @@ typedef memory_mgr::singleton_manager
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // typedef memory_mgr::segment_manager
-// < 
+// <
 // 	memory_mgr::heap_segment
 // 	<
 // 		memmgr_small_type
@@ -105,25 +107,25 @@ typedef memory_mgr::singleton_manager
 // typedef memory_mgr::size_tracking
 // <
 // 	memory_mgr::segment_manager
-// 	< 
+// 	<
 // 		memory_mgr::heap_segment
 // 		<
 // 			memmgr_small_type
 // 		>
 // 		,
 // 		segments_count
-// 	> 
+// 	>
 // > seg_heap_sz_mgr;
 
-// 
+//
 // typedef memory_mgr::singleton_manager
-// < 
+// <
 // 	seg_heap_sz_mgr
 // > sing_seg_heap_sz_mgr;
 //////////////////////////////////////////////////////////////////////////
-// 
+//
 // typedef memory_mgr::segment_manager
-// < 
+// <
 // 	memory_mgr::shared_segment
 // 	<
 // 		memmgr_small_type
@@ -136,35 +138,41 @@ typedef memory_mgr::singleton_manager
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
+MGR_DECLARE_LOCAL_SEGMENT_NAME( shared_sz_mgr_name, "shared_sz_mgr" );
 typedef memory_mgr::shared_segment
 <
 	memory_mgr::size_tracking
-	< 
+	<
 		memmgr_type
-	>
+	>,
+	MGR_SEGMENT_NAME(shared_sz_mgr_name)
 > shared_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
 typedef memory_mgr::singleton_manager
-< 
+<
 	memory_mgr::heap_segment
-	< 
+	<
 		memory_mgr::size_tracking
-		< 
+		<
 			memmgr_type
 		>
 	>
 > sing_heap_sz_mgr;
 
 //////////////////////////////////////////////////////////////////////////
+
+MGR_DECLARE_LOCAL_SEGMENT_NAME( sing_shared_sz_mgr_name, "sing_shared_sz_mgr" );
+
 typedef memory_mgr::singleton_manager
-< 
+<
 	memory_mgr::shared_segment
-	< 
+	<
 		memory_mgr::size_tracking
-		< 
-			memmgr_type 
-		>
+		<
+			memmgr_type
+		>,
+		MGR_SEGMENT_NAME(sing_shared_sz_mgr_name)
 	>
 > sing_shared_sz_mgr;
 

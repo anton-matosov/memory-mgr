@@ -30,7 +30,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/smart_ptr/intrusive_ptr.hpp"
 #include "memory-mgr/smart_ptr/intrusive_base.hpp"
 
-#include "managers.h"
+#include "tests_shared/managers.h"
 #include "memory-mgr/new.h"
 
 

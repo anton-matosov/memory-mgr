@@ -25,6 +25,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 
 //#define MEMORY_MGR_DEBUG_MEMORY
 
+#include "memory-mgr/detail/compatibility_types.h"
 #include "memory-mgr/detail/ptr_helpers.h"
 #include "memory-mgr/detail/bit_manager.h"
 #include "memory-mgr/detail/offset_traits.h"
@@ -39,7 +40,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 namespace memory_mgr
 {
-	template<long Value>
+	template<detail::portable_difference_type Value>
 	struct PositiveOrNull
 	{
 		enum
@@ -52,8 +53,8 @@ namespace memory_mgr
 	template
 	<
 		class  ChunkType,
-		size_t MemorySize,
-		size_t ChunkSize
+		detail::portable_size_t MemorySize,
+		detail::portable_size_t ChunkSize
 	>
 	struct allocable_memory_calc
 	{
@@ -71,8 +72,8 @@ namespace memory_mgr
 			used_memory = sizeof(bitmgr_type),
 			used_chunks = used_memory / chunk_size,
 
-			allocable_memory = PositiveOrNull<memory_size - used_memory>::value,
-			allocable_chunks = PositiveOrNull<num_chunks - used_chunks>::value,
+			allocable_memory = PositiveOrNull<(detail::portable_difference_type)memory_size - (detail::portable_difference_type)used_memory>::value,
+			allocable_chunks = PositiveOrNull<(detail::portable_difference_type)num_chunks - (detail::portable_difference_type)used_chunks>::value,
 		};
 
 		typedef detail::bit_manager<ChunkType, allocable_chunks, detail::mcAuto> allocable_bitmgr_type;

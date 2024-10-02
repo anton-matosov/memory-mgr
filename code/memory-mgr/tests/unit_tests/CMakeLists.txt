@@ -2,7 +2,7 @@ set(TARGET memory-mgr_unit_tests)
 
 add_executable(${TARGET})
 target_include_directories(${TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${TARGET} memory-mgr)
+target_link_libraries(${TARGET} PRIVATE memory-mgr memory-mgr_tests_shared)
 
 # This fails in GHA CI for some reason with file not found error. 
 # Since UAC is disabled there and proper fix is to use local names in tests, skip it for now
@@ -17,7 +17,6 @@ target_sources(${TARGET} PRIVATE
 
   common_manager_tests.h
   $<$<PLATFORM_ID:Windows>:detect_memory_leaks.cpp>
-  managers.h
 
   test_allocator.cpp
   test_bit_manager.cpp

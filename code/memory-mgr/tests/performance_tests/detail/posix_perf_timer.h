@@ -26,8 +26,6 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/config/config.h"
 #include <time.h>
 
-#ifdef MGR_LINUX_PLATFORM
-
 namespace memory_mgr
 {
 	namespace detail
@@ -49,7 +47,7 @@ namespace memory_mgr
 
 		class posix_perf_timer
 		{
-			enum {timer_id = CLOCK_THREAD_CPUTIME_ID};
+			static constexpr auto timer_id = CLOCK_THREAD_CPUTIME_ID;
 		public:
 			posix_perf_timer(bool start_now = false) 
 				:m_is_running( false )
@@ -187,6 +185,3 @@ namespace memory_mgr
 		};
 	}
 }
-
-#endif//MGR_LINUX_PLATFORM
-

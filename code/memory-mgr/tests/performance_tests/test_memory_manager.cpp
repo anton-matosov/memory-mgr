@@ -22,6 +22,8 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 */
 
 
+#include "detail/test.h"
+#include "test_templates.h"
 #include "memory-mgr/offset_ptr.h"
 
 #ifdef INCLUDE_BOOST_INTERPROCESS_TESTS

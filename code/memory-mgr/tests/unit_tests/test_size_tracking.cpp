@@ -24,7 +24,7 @@ Please feel free to contact me via e-mail: shikin@users.sourceforge.net
 #include "memory-mgr/memory_manager.h"
 #include "memory-mgr/size_tracking.h"
 #include "common_manager_tests.h"
-#include "managers.h"
+#include "tests_shared/managers.h"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
